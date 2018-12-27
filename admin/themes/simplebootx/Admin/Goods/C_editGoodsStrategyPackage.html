@@ -1,0 +1,308 @@
+<admintpl file="header" />
+<style type="text/css">
+.default_img{width: 45%;margin: 2%;}
+img.selected{background-color: orangered;}
+.ticket{display: none;}
+</style>
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="<?php echo U('Admin/Goods/C_goodsList'); ?>">商品列表</a></li>
+			<li><a href="<?php echo U('Admin/Goods/C_addGoods'); ?>">新建商品</a></li>
+			<li><a href="<?php echo U('Admin/Goods/C_goodsCatesList'); ?>">商品分类</a></li>
+			<li><a href="<?php echo U('Admin/Goods/C_createGoodsCate'); ?>">新建商品分类</a></li>
+			<li><a href="<?php echo U('Admin/Goods/C_goodsStrategyList'); ?>">商品组合列表</a></li>
+			<li><a href="<?php echo U('Admin/Goods/C_addGoodsStrategyPackage'); ?>">新建商品套餐</a></li>
+			<!-- <li><a href="<?php echo U('Admin/Goods/C_goodsWarehouse'); ?>">商品库</a></li> -->
+			<li class="active"><a href="#">修改商品套餐</a></li>
+			
+		</ul>
+		<form action="<?php echo U('Admin/Goods/C_editGoodsStrategyPackagePost'); ?>" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
+			<div class="row-fluid">
+				<div class="span9" style="width:35%">
+					<table class="table table-bordered">
+						<tr>
+							<th width="80">套餐名称</th>
+							<td >
+								<input type="text" style="width: 400px;" name="name" id="title" value="{$goodsStrategy['name']}" placeholder="请输入套餐名称"/>
+								<input type="hidden" name="id" value="{$goodsStrategy['id']}">
+								<span class="form-required">*</span>
+							</td>
+						</tr>
+						
+						
+						<tr>
+							<th>套餐内容</th>
+							<td>
+								<!-- <a href="javascript:void(0);" class="btn btn-small">添加</a> -->
+								<ul id="standard" class="pic-list unstyled">
+									<foreach name="goodsStrategy['ticket']" item="strategy">
+										<li>
+											<input type="hidden" name="ticket[]" value="{$strategy['goods_id']}"> 
+											水票：
+											<select id="selectticket" name="selectticket">
+		    									<option value="">请选择水票</option>
+		    									<foreach name="tickets" key="key" item="vo">
+													<option data-price="{$vo['price']}" <if condition="$strategy['goods_id'] eq $vo['id']" >selected="selected"</if> value="{$vo['id']}" >{$vo['name']}</option>
+		    									</foreach>
+		    								</select>
+											<span style="margin-left: 10px;margin-right: 10px;">数量</span><input type="text" name="num[]" value="{$strategy['num']}" style="width: 30px;margin-right: 10px;" placeholder="" id="ticketprice">
+											<!-- <a id="deloption" href="#">移除</a> -->
+										</li>
+									</foreach>
+									<foreach name="goodsStrategy['goods']" item="strategy">
+										<li>
+											<input type="hidden" name="goods[]" value="{$strategy['goods_id']}"> 
+											商品：
+											<select id="selectgoods" name="selectgoods">
+		    									<option value="">请选择商品</option>
+		    									<foreach name="goods" key="key" item="vo">
+													<option data-price="{$vo['price']}" <if condition="$strategy['goods_id'] eq $vo['id']" >selected="selected"</if> value="{$vo['id']}" >{$vo['name']}</option>
+		    									</foreach>
+		    								</select>
+											<span style="margin-left: 10px;margin-right: 10px;">数量</span><input type="text" name="num[]" value="{$strategy['num']}" style="width: 30px;margin-right: 10px;" placeholder="" id="goodsprice">
+											<!-- <a id="deloption" href="#">移除</a> -->
+										</li>
+									</foreach>
+								</ul>								
+							</td>
+						</tr>
+						<tr>
+							<th width="80">套餐总价</th>
+							<td>
+								<input type="text" style="width: 400px;" name="price" id="price" value="{$goodsStrategy['price']}" placeholder="请输入套餐总价"/>
+								<span class="form-required">*</span>
+							</td>
+						</tr>
+						<tr>
+							<th>状态</th>
+							<td>
+								<select style="min-width: 100px;" name="status">
+									<option <if condition="$strategy['status'] eq 0">selected="selected"</if> value="0">启用</option>
+									<option <if condition="$strategy['status'] eq 1">selected="selected"</if> value="1">禁用</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+				</div>
+				
+			</div>
+			<div class="form-actions">
+				<button class="btn btn-primary js-ajax-submit" type="submit">更新</button>
+				<a class="btn" href="<?php echo U('Admin/Goods/C_goodsStrategyList'); ?>">返回</a>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/content_addtop.js"></script>
+	<script type="text/javascript">
+		//编辑器路径定义
+		var editorURL = GV.DIMAUB;
+	</script>
+	<script type="text/javascript" src="__PUBLIC__/js/ueditor/ueditor.config.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript">
+$(function() {
+
+	$(document).on('click', '#deloption', function(e){
+		$(this).parent().remove();
+	})
+	$(document).on('change', '#selectticket', function(e){
+		var _this = $(this);
+		// _this.find("option:selected").removeAttr("selected");
+		var goodsid = _this.val();
+		_this.prev().attr('value',goodsid);
+		var price = _this.find("option:selected").data("price") * $("#ticketprice").val();
+		var nextprice = $("select[name=selectgoods]").find("option:selected").data("price");
+		if(isNaN(nextprice)){
+			nextprice = 0;
+		}
+		price = price + nextprice*$("#goodsprice").val();
+		$("#price").attr('value',price);
+	});
+	$(document).on('change', '#selectgoods', function(e){
+		var _this = $(this);
+		//_this.find("option:selected").removeAttr("selected");
+		var goodsid = _this.val();
+		_this.prev().attr('value',goodsid);
+		var price = _this.find("option:selected").data("price") * $("#goodsprice").val();
+		var nextprice = $("select[name=selectticket]").find("option:selected").data("price");
+
+		if(isNaN(nextprice)){
+			nextprice = 0;
+		}
+		price = price + nextprice*$("#ticketprice").val();
+		$("#price").attr('value',price);
+	});
+
+	$('#ticketprice').blur(function(){
+		var price = $("select[name=selectticket]").find("option:selected").data("price");
+		price = price * $(this).val();
+		
+		var nextprice = parseInt($("select[name=selectgoods]").find("option:selected").data("price"));
+		if(isNaN(nextprice)){
+			nextprice = 0;
+		}
+		price = price + nextprice*$("#goodsprice").val();
+		$("#price").attr('value',price);
+	});
+	$('#goodsprice').blur(function(){
+		var price = $("select[name=selectgoods]").find("option:selected").data("price");
+		price = price * $(this).val();
+		var nextprice = parseInt($("select[name=selectticket]").find("option:selected").data("price"));
+		if(isNaN(nextprice)){
+			nextprice = 0;
+		}
+		price = price + nextprice*$("#ticketprice").val();
+		$("#price").attr('value',price);
+	});
+	// $('.btn-small').click(function(){
+	// 	var goods = '<?php echo json_encode($goods);?>';
+	// 	var option = '';
+	// 	$.each(JSON.parse(goods),function(i,v){
+	// 		option +="<option value='"+v.id+"'>"+v.name+"</option>";
+	// 	});
+	// 	var html ='<li><input type="hidden" name="goods[]" value=""><select name="selectgoods"><option value="0">请选择商品</option>'+option+'</select><span style="margin-left: 10px;margin-right: 14px;">数量</span><input type="text" name="num[]" value="" style="width: 30px;margin-right: 10px;" placeholder=""><a id="deloption" href="#">移除</a></li>';
+	// 	$('#standard').append(html);
+	// })
+	$('input[type="text"][data-level]').blur(function(){
+		var level = $(this).data('level');
+		var value = $(this).val();
+		if(!isNaN(parseFloat(value)) && parseFloat(value) >= 0.01){
+			for(var i=level; i<=5; ++i){
+				$('input[type="text"][data-level="'+i+'"]').val(value);
+			}
+		}
+		return false;
+	});
+	$(".js-ajax-close-btn").on('click', function(e) {
+		e.preventDefault();
+		Wind.use("artDialog", function() {
+			art.dialog({
+				id : "question",
+				icon : "question",
+				fixed : true,
+				lock : true,
+				background : "#CCCCCC",
+				opacity : 0,
+				content : "您确定需要关闭当前页面嘛？",
+				ok : function() {
+					setCookie("refersh_time", 1);
+					window.close();
+					return true;
+				}
+			});
+		});
+	});
+	/////---------------------
+	Wind.use('validate','ajaxForm','artDialog',function() {
+		
+		
+		var form = $('form.js-ajax-forms');
+		//ie处理placeholder提交问题
+		if ($.browser.msie) {
+			form.find('[placeholder]').each(function() {
+				var input = $(this);
+				if (input.val() == input
+						.attr('placeholder')) {
+					input.val('');
+				}
+			});
+		}
+		//表单验证开始
+		form.validate({
+			//是否在获取焦点时验证
+			onfocusout : false,
+			//是否在敲击键盘时验证
+			onkeyup : false,
+			//当鼠标掉级时验证
+			onclick : false,
+			//验证错误
+			showErrors : function(errorMap,errorArr) {
+				//errorMap {'name':'错误信息'}
+				//errorArr [{'message':'错误信息',element:({})}]
+				try {
+					$(errorArr[0].element).focus();
+					art.dialog({
+						id : 'error',
+						icon : 'error',
+						lock : true,
+						fixed : true,
+						background : "#CCCCCC",
+						opacity : 0,
+						content : errorArr[0].message,
+						cancelVal : '确定',
+						cancel : function() {
+							$(errorArr[0].element).focus();
+						}
+					});
+				} catch (err) {}
+			},
+			//验证规则
+			rules : {
+				'name' : {required : 1},
+				'post[post_content]' : {editorcontent : true}
+			},
+			//验证未通过提示消息
+			messages : {
+				'name' : {required : '请输入商品名称'},
+				'price' : {editorcontent : '请输入商品价格'}
+			},
+			//给未通过验证的元素加效果,闪烁等
+			highlight : false,
+			//是否在获取焦点时验证
+			onfocusout : false,
+			//验证通过，提交表单
+			submitHandler : function(forms) {
+				$(forms).ajaxSubmit({
+					url : form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+					dataType : 'json',
+					beforeSubmit : function(arr,$form,options) {
+
+					},
+					success : function(data,statusText,xhr,$form) {
+						if (data.status) {
+							setCookie("refersh_time",1);
+							//添加成功
+							Wind.use("artDialog",function() {
+								art.dialog({
+									id : "succeed",
+									icon : "succeed",
+									fixed : true,
+									lock : true,
+									background : "#CCCCCC",
+									opacity : 0,
+									content : data.info,
+									button : [
+									{
+										name : '继续修改？',
+										callback : function() {
+											reloadPage(window);
+											return true;
+										},
+										focus : true
+									},
+									{
+										name : '返回列表',
+										callback : function() {
+											location.href = "<?php echo U('Admin/Goods/C_goodsStrategyList'); ?>";
+											return true;
+										}
+									}
+									]
+								});
+							});
+						} else {
+							alert(data.info);
+						}
+					}
+				});
+			}
+		});
+	});
+////-------------------------
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<admintpl file="header" />
+<style type="text/css">
+    .pagination{float: right;margin-right: 20px;}
+    .pagination a, .pagination span{padding: 3px 10px;margin-left: 3px;border-radius: 3px;}
+    .pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
+    .pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+        <div class="well">
+            年费套餐列表 --暂只读
+        </div>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th style="text-align:center;">VIP年费(元)</th>
+            <th style="text-align:center;">时间轴</th>
+            <th style="text-align:center;">优惠比例(折扣)</th>
+            <th style="text-align:center;">年度可用额(元)</th>
+            <th style="text-align:center;">增加时间</th>
+            <th style="text-align:center;">修改时间</th>
+        </tr>
+        </thead>
+        <tbody id="show">
+        <volist name="packages" id="val">
+            <tr>
+                <td style="width:40px;text-align:center;">
+                    {$val['pid']}
+                </td>
+                <td style="text-align:center;">
+                    {:ncPriceFormatb($val['price'])}
+                </td>
+                <td style="text-align:center;">
+                    {:AxisFomat($val['axis'])}
+                </td>
+                <td style="text-align:center;">
+                    {$val['scale']}
+                </td>
+                <td style="text-align:center;">
+                    {:ncPriceFormatb($val['limits'],'limit')}
+                </td>
+                <td style="text-align:center;">
+                    {:dateFomat($val['addtime'])}
+                </td>
+                <td style="text-align:center;">
+                    {:dateFomat($val['updatetime'])}
+                </td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+    <!-- <div id="page" class="pagination"><?php echo $page; ?></div> -->
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

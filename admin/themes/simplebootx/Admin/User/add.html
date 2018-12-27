@@ -1,0 +1,56 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('user/index')}">{:L('ADMIN_USER_INDEX')}</a></li>
+			<li class="active"><a href="{:U('user/add')}">{:L('ADMIN_USER_ADD')}</a></li>
+		</ul>
+		<form method="post" class="form-horizontal js-ajax-form" action="{:U('User/add_post')}">
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label">{:L('USERNAME')}</label>
+					<div class="controls">
+						<input type="text" name="user_login">
+						<input style="display: none;" type="text" id="user-config-id" name="config_id" value="0">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{:L('PASSWORD')}</label>
+					<div class="controls">
+						<input type="password" name="user_pass">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{:L('EMAIL')}</label>
+					<div class="controls">
+						<input type="text" name="user_email">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{:L('ROLE')}</label>
+					<div class="controls">
+						<foreach name="roles" item="vo">
+						<label class="checkbox inline"><input style="margin: -3px 5px 0 0;" value="{$vo.id}" type="radio" data-config_id="{$vo.config_id}" name="role_id[]" <if condition="sp_get_current_admin_id() neq 1 && $vo['id'] eq 1">disabled="true"</if>>{$vo.name}</label>
+						</foreach>
+					</div>
+				</div>
+				
+			</fieldset>
+			<div class="form-actions">
+				<button type="submit" id="admin-add" class="btn btn-primary js-ajax-submit">{:L('ADD')}</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+</body>
+<script type="text/javascript">
+$(function(){
+	$('.checkbox input[type="radio"]').click(function(){
+		var configId = $(this).data('config_id');
+		$('#user-config-id').val(configId);
+	});
+})
+</script>
+</html>

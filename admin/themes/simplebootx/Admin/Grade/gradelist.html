@@ -1,0 +1,217 @@
+<admintpl file="header" />
+<style type="text/css">
+    .pagination{float: right;margin-right: 20px;}
+    .pagination a, .pagination span{padding: 3px 10px;margin-left: 3px;border-radius: 3px;}
+    .pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
+    .pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="<?php echo U('gradelist'); ?>">粉丝列表</a></li>
+    </ul>
+        <!-- 搜索 start by LEE  -->
+        <form class="well form-search" method="post" action="<?php echo U('Admin/Grade/gradelist'); ?>">
+            <!--当前状态： -->
+            <!--<select class="select_1" name="status">-->
+                <!--<option value="-1" <?php if($where['status'] == -1) echo 'selected="selected"';?>>所有</option>-->
+                <!--<option value="0" <?php if(isset($where['status']) && $where['status'] == 0) echo 'selected="selected"';?>>正常</option>-->
+                <!--<option value="1" <?php if($where['status'] == 1) echo 'selected="selected"';?>>禁用</option>-->
+            <!--</select> &nbsp;&nbsp;-->
+            关键字： 
+            <input type="text" name="keyword" style="width: 200px;" value="" placeholder="请输入要查询联系人手机号...">
+            <input type="button" id="selectUser" class="btn btn-primary" value="搜索">
+        </form>
+
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th style="text-align:center;">粉丝信息</th>
+            <!--<th style="text-align:center;">油卡</th>-->
+            <th style="text-align:center;">总充值额度</th>
+            <th style="text-align:center;">总支付额度</th>
+            <th style="text-align:center;">总省额度</th>
+            <th style="text-align:center;">积分</th>
+            <th style="text-align:center;">加入时间</th>
+            <th style="text-align:center;">状态</th>
+            <th style="width:200px; text-align:center;">操作</th>
+        </tr>
+        </thead>
+        <tbody id="show">
+        <volist name="data" id="val">
+        <tr>
+            <td style="width:40px;text-align:center;">
+                {$val['id']}
+            </td>
+            <td style="text-align:center;">
+                {$val['nickname']}
+            </td>
+            <!--<td style="text-align:center;">-->
+                <!--{$val['count']}张-->
+            <!--</td>-->
+            <td style="text-align:center;">
+                <if condition="$val['total_recharge'] eq '0'">
+                    <font style="color:red">无</font>
+                <else/>
+                    <font style="color:red">￥</font>{$val['total_recharge']}
+                </if>
+            </td>
+            <td style="text-align:center;">
+                <if condition="$val['total_add_money'] eq '0'">
+                    <font style="color:red">无</font>
+                <else/>
+                    <font style="color:red">￥</font>{$val['total_add_money']}
+                </if>
+            </td>
+            <td style="text-align:center;">
+                <if condition="$val['already_save_money'] eq '0'">
+                    <font style="color:red">无</font>
+                <else/>
+                    <font style="color:red">￥</font>{$val['already_save_money']}
+                </if>
+            </td>
+            <td style="text-align:center;">
+                {$val['integral']}
+            </td>
+            <td style="text-align:center;">
+                {$val['createtime']}
+            </td>
+            <td style="text-align:center;">
+                <if condition="$val['is_notmal'] eq '1'">
+                	正常
+                <elseif condition="$val['is_notmal'] eq '3'"/>
+                    注销
+                <else/>
+                	冻结
+            	</if>
+            </td>
+            <td style="text-align:center;">
+                <input type="hidden" id="ThisID" value="{$val['id']}">
+                <!--<button class="del" style="background: #2c3e50;border:2px; width: 70px; height: 45px;" ><a href="{:U('del',['id'=>$val['id']])}"><span style="color: white; font-size: 8px;">删除</span></a></button>-->
+                <button class="del" style="background: #2c3e50;border:2px; width: 70px; height: 40px;" ><a><span style="color: white; font-size: 8px;">注销</span></a></button>
+                <button class="Frozen" style="background: #2c3e50;border:2px; width: 70px; height: 40px;" ><a><span style="color: white; font-size: 8px;">冻结</span></a></button>
+                <!--<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;" ><a href="{:U('del',['id'=>$val['id'],'flag'=>1])}"><span style="color: white; font-size: 8px;">冻结</span></a></button>-->
+            </td>
+        </tr>
+        </volist>
+        </tbody>
+    </table>
+    <div id="page" class="pagination"><?php echo $page; ?></div>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>
+
+<script>
+    /** 冻结该用户 */
+    $(document).on('click','.Frozen',function(){
+        var this_id = $(this).parent().children().eq(0).val();
+        var flag = 1;
+        $.ajax({
+            type: 'post',
+            url: 'http://ysy.edshui.com/index.php?g=admin&m=grade&a=del',
+            dataType: 'json',
+            data:{id:this_id,flag:flag},
+            success:function(res){
+                for( var i in res['data'] ){
+                    var str="";
+                    console.log(res.data[i].id);
+                    $('#show').innerHTML+="<tr>" +
+                        "<td style=\"width:40px;text-align:center;\">"+res['data'][i]['id']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['nickname']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['count']+"</td>" +
+                        // "<td style=\"text-align:center;\">"+res.num_count+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['total_recharge']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['total_add_money']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['already_save_money']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['integral']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['createtime']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['is_notmal']+"</td>" +
+                        "<td style=\'text-align:center;\'>"+
+                        "<button style='background: #2c3e50;border:2px; width: 70px; height: 45px;' ><a href='del?id="+res['data'][i]['id']+"'><span style='color: white; font-size: 8px;'>删除</span></a></button>"+"&nbsp;"+
+                        "<button style='background: #2c3e50;border:2px; width: 70px; height: 45px;' ><a href='del?id="+res['data'][i]['id']+"&flag=1'><span style='color: white; font-size: 8px;'>冻结</span></a></button>"+
+                        "</td>"+
+                        "</tr>";
+                }
+                document.getElementById('show').innerHTML = $('#show').html();
+                document.getElementById('page').innerHTML = res['page'];
+            }
+        });
+        window.location.reload();
+    });
+
+    /** 注销该用户 */
+    $(document).on('click','.del',function(){
+        var this_id = $(this).parent().children().eq(0).val();
+        $.ajax({
+            type: 'post',
+            url: 'http://ysy.edshui.com/index.php?g=admin&m=grade&a=del',
+            dataType: 'json',
+            data:{id:this_id},
+            success:function(res){
+                for( var i in res['data'] ){
+                    var str="";
+                    console.log(res.data[i].id);
+                    $('#show').innerHTML+="<tr>" +
+                        "<td style=\"width:40px;text-align:center;\">"+res['data'][i]['id']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['nickname']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['count']+"</td>" +
+                        // "<td style=\"text-align:center;\">"+res.num_count+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['total_recharge']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['total_add_money']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['already_save_money']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['integral']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['createtime']+"</td>" +
+                        "<td style=\"text-align:center;\">"+res['data'][i]['is_notmal']+"</td>" +
+                        "<td style=\'text-align:center;\'>"+
+                        "<button style='background: #2c3e50;border:2px; width: 70px; height: 45px;' ><a href='del?id="+res['data'][i]['id']+"'><span style='color: white; font-size: 8px;'>删除</span></a></button>"+"&nbsp;"+
+                        "<button style='background: #2c3e50;border:2px; width: 70px; height: 45px;' ><a href='del?id="+res['data'][i]['id']+"&flag=1'><span style='color: white; font-size: 8px;'>冻结</span></a></button>"+
+                        "</td>"+
+                        "</tr>";
+                }
+                document.getElementById('show').innerHTML = $('#show').html();
+                document.getElementById('page').innerHTML = res['page'];
+            }
+        });
+        window.location.reload();
+    });
+
+    /** 根据手机号搜索粉丝 */
+    $(document).on('click','#selectUser',function(){
+        var keyword = $('input[name=keyword]').val();
+        $.ajax({
+            type:'post',
+            url:'http://ysy.edshui.com/index.php?g=admin&m=grade&a=userKeyword',
+            dataType:'json',
+            data:{keyword:keyword},
+            success:function(res){
+                for( var i in res['data'] ) {
+                    var this_id = res.data.id;
+                    var str = "";
+                    str += "<tr>" +
+                        "<td style=\"width:40px;text-align:center;\">" + res.data.id + "</td>" +
+                        "<td style=\"text-align:center;\">" + res.data.nickname + '(' + res.data.phone + ')' + "</td>" +
+                        "<td style=\"text-align:center;\">" + res.data.count + "</td>" +
+                        // "<td style=\"text-align:center;\">"+res.num_count+"</td>" +
+                        "<td style=\"text-align:center;\">" + res.data.total_recharge + "</td>" +
+                        "<td style=\"text-align:center;\">" + res.data.total_add_money + "</td>" +
+                        "<td style=\"text-align:center;\">" + res.data.already_save_money + "</td>" +
+                        "<td style=\"text-align:center;\">" + res.data.integral + "</td>" +
+                        "<td style=\"text-align:center;\">" + res.data.createtime + "</td>" +
+                        "<td style=\"text-align:center;\">" + res.data.is_notmal + "</td>" +
+                        "<td style=\'text-align:center;\'>" +
+                        "<button style='background: #2c3e50;border:2px; width: 70px; height: 45px;' >" +
+                        "<a href='Grade/fansReplace?id="+this_id+"'><span style='color: white; font-size: 8px;'>删除</span></a>" +
+                        "</button>" + "&nbsp;" +
+                        "<button style='background: #2c3e50;border:2px; width: 70px; height: 45px;' ><a href='del?id=" + res.data.id + "&flag=1'><span style='color: white; font-size: 8px;'>冻结</span></a></button>" +
+                        "</td>"+
+                        "</tr>";
+                }
+                document.getElementById('show').innerHTML = str;
+                document.getElementById('page').innerHTML = res.page;
+            }
+        })
+    })
+</script>

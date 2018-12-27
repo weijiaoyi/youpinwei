@@ -1,0 +1,86 @@
+<admintpl file="header" />
+<style type="text/css">
+.pagination{float: right;margin-right: 20px;}
+.pagination a, .pagination span{padding: 3px 10px;margin-left: 3px;border-radius: 3px;}
+.pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
+.pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
+</style>
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="<?php echo U('Admin/Station/stationList'); ?>">水站列表</a></li>
+			<li><a href="<?php echo U('Admin/Station/stationAdd'); ?>">新建水站</a></li>
+			<li class="active"><a href="#" onclick="window.location.reload();return false;">设定代理价格</a></li>
+		</ul>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th width="50">商品ID</th>
+					<!-- <th width="80" style="text-align:center;">商品图片</th> -->
+					<th style="text-align:left;">商品分类</th>
+					<th style="text-align:left;">商品名称</th>
+					<th style="text-align:left;">商品规格</th>
+					<th style="text-align:left;">商品原价</th>
+					<th style="text-align:left;">代理价</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($goods as $k => $v) { ?>
+					<tr style="height: 40px;padding: 5px 0;">
+						<td><?php echo $v['id']; ?></td>
+						<!-- <td><?php echo $v['img']; ?></td> -->
+						<td><?php echo $v['cate_name']; ?></td>
+						<td><?php echo $v['goods_name']; ?></td>
+						<td><?php echo $v['standard'].'/'.$v['unit']; ?></td>
+						<td style="text-align:right;font-weight: bolder;color: #000000;">
+							<?php echo sprintf('%.2f', $v['original_price']).' 元'; ?>
+						</td>
+						<td style="padding:5px 10px;">
+							<input class="discount-price" style="height: 20px;width:100px;margin:0;padding:3px;" type="text" gid="<?php echo $v['id']; ?>" value="<?php echo $v['discount_price'] ? sprintf('%.2f', $v['discount_price']) : sprintf('%.2f', $v['original_price']); ?>">&nbsp;&nbsp;元
+						</td>
+					</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+		<div class="well form-search">
+			<input type="button" class="btn btn-primary js-ajax-submit" id="save-price" value="保存">
+		</div>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+</body>
+<script type="text/javascript">
+$(function(){
+	$('#save-price').click(function(){
+		var rowsLen = $('input.discount-price').length;
+		var data = [];
+		for(var i=0; i<rowsLen; ++i){
+			data.push({
+				'goods_id' : parseInt($('input.discount-price').eq(i).attr('gid')),
+				'price' : parseFloat($('input.discount-price').eq(i).val()),
+			});
+		}
+		$.ajax({
+			url : '<?php echo U("Admin/Station/stationGoodsPrice"); ?>',
+			data : {sid:<?php echo intval(I('get.sid')); ?>, data: data},
+			type : 'post',
+			success : function(ajaxRtn){
+				$('#save-price').after('<div id="save-info" style="display:inline-block;margin-left:30px;">'+ajaxRtn.info+'</div>');
+				
+				if(ajaxRtn.status == 1){
+					setTimeout(function(){
+						$('#save-info').remove();
+						window.location.reload();
+					}, 1000);
+				}else{
+					setTimeout(function(){
+						$('#save-info').remove();
+					}, 1000);
+				}
+					
+			}
+		});
+	});
+});
+</script>
+</html>

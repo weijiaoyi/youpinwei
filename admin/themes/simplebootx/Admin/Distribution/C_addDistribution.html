@@ -1,0 +1,177 @@
+<admintpl file="header" />
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";font-size:14px;}
+		#l-map{height:300px;width:100%;}
+		#r-result{width:100%;}
+		#shows{
+			display: none;
+			position: fixed;
+			z-index: 10000;
+			left: 50%;
+			top: 50%;
+			width: 260px;
+			height: 210px;
+			background-color: white;
+			opacity: 1;
+			margin-top: -80px;
+			margin-left: -130px;
+			border-radius: 3px;
+		}
+
+		#bgs{
+			display: none;
+			position: fixed;
+			z-index: 9999;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0.6;
+			background-color: black;
+		}
+		#btnGroupss{
+			font-size: 0.9rem;
+			margin-top: 0.5rem;
+			margin-left: 1rem;
+		}
+		.dizhi{
+			margin-top: 0.5rem;
+			background: #58a4ff;
+			color: #fff;
+			text-align: center;
+			width: 50%;
+			margin-left: 20%;
+		}
+		#shuizhan{margin-top: 0.2rem;margin-left: 1rem}
+
+		#cancelBtnPage{
+			float: left;
+			width: 50%;
+			height: 50px;
+			line-height: 50px;
+			border-right: 1px solid #666666;
+			color: #adadad;
+			text-align: center;
+		}
+
+		.tishi{
+			background: #58a4ff;
+			height: 2rem;
+			text-align: center;
+			line-height: 2rem;
+			color: #fff;
+		}
+		.anniu{
+			background: #58a4ff;
+			margin-top: 2rem;
+			text-align: center;
+			height: 2rem;
+			line-height: 2rem;
+			color: #fff;
+			width: 50%;
+			margin-left: 4rem;
+		}
+	</style>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=B1fe242ae7bea1edfd0a8d3b39d291eb"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
+	<title>关键字输入提示词条</title>
+</head>
+<body>
+<form action="{:U('Admin/Distribution/do_update_disribution')}" enctype="multipart/form-data" method="post">
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="<?php echo U('Admin/Distribution/C_DisributionDetail'); ?>">分润订单列表</a></li>
+			<li class="active"><a href="<?php echo U('Admin/Distribution/C_addDistribution'); ?>">修改分润比例</a></li>
+		</ul>
+		<!--<form action="<?php echo U('Admin/Order/C_doAddOrder'); ?>" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">-->
+		<div class="row-fluid">
+			<div class="span9">
+				<table class="table table-bordered">
+					<tr>
+						<th>分销比例：</th>
+						<td>
+							<input type="text" name="distribution_pro" value="{$val['distribution_pro']}%" id="prop" >
+						</td>
+					</tr>
+					<tr>
+						<th>1级比例：</th>
+						<td>
+							<input type="text" name="three" id="three" value="{$val['three']}%"  placeholder="请输入III级比例">
+						</td>
+					</tr>
+					<tr>
+						<th>2级比例：</th>
+						<td>
+							<input type="text" name="two" id="two" value="{$val['two']}%"  placeholder="请输入II级比例">
+						</td>
+					</tr>
+					<tr>
+						<th>3级比例：</th>
+						<td>
+							<input type="text" name="first" id="first" value="{$val['first']}%"  placeholder="请输入I级比例">
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-primary js-ajax-submit" id="submit" type="submit">修改</button>
+		</div>
+		<div id="shows"></div>
+		<!--</form>-->
+	</div>
+</form>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+<script>
+    $("#uploadImage").on("change", function(){
+        // Get a reference to the fileList
+        var files = !!this.files ? this.files : [];
+
+        // If no files were selected, or no FileReader support, return
+        if (!files.length || !window.FileReader) return;
+
+        // Only proceed if the selected file is an image
+        if (/^image/.test( files[0].type)){
+
+            // Create a new instance of the FileReader
+            var reader = new FileReader();
+
+            // Read the local file as a DataURL
+            reader.readAsDataURL(files[0]);
+
+            // When loaded, set image data as background of div
+            reader.onloadend = function(){
+                $("#image").attr('src',this.result);
+            }
+        }
+
+    });
+    $("#prev_lev").on('change',function () {
+        var lev = $("#prev_lev option:selected").val();
+        $.ajax({
+            url:"{:U('Admin/grade/ajaxGetPrev')}",
+            type:'POST',
+            data:{lev:lev},
+            success:function (res) {
+                if(res.data)
+                {
+                    var data = res.data;
+                    var str = '';
+                    for(var i=0;i<data.length;i++)
+                    {
+                        str += '<option value="'+data[i].id+'">'+data[i].grade_name+'</option>'
+                    }
+                    $("#prev_name").html(str);
+                }else {
+                    $("#prev_name").html('<option value="0">无</option>');
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>

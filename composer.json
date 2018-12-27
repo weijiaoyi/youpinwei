@@ -1,0 +1,7 @@
+{
+    "require": {
+        "overtrue/wechat": "~3.0",
+        "endroid/qr-code": "^1.9",
+        "overtrue/pinyin": "^3.0"
+    }
+}

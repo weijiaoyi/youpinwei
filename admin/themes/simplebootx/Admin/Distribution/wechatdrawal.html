@@ -1,0 +1,59 @@
+<admintpl file="header" />
+<style type="text/css">
+    .pagination{float: right;margin-right: 20px;}
+    .pagination a, .pagination span{padding: 3px 10px;margin-left: 3px;border-radius: 3px;}
+    .pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
+    .pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="<?php echo U('Admin/Distribution/wechatdrawal'); ?>">微信客户提现列表</a></li>
+    </ul>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th style="text-align:center;">创建时间</th>
+            <th style="text-align:center;">微信客户</th>
+            <th style="text-align:center;">提现金额</th>
+            <th style="text-align:center;">审核状态</th>
+            <th style="text-align:center;">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+            <if condition="$draw">
+            <volist name="draw" id="val">
+            <tr>
+            <td style="width:40px;text-align:center;">
+                {$val['id']}
+            </td>
+            <td style="text-align:center;">
+                {$val['create_time']}
+            </td>
+            <td style="width: 160px;text-align:center;">
+                <img src="{$val['headimgurl']}" style="width:40px;height: 40px;margin-right: 10px;border-radius: 100%;">
+                {$val['nickname']}
+            </td>
+            <td style="text-align:center;">
+               {$val['money']}
+            </td>
+            <td style="text-align:center;">
+                {$val['draw_status']}
+            </td>
+            <td style="text-align:center;">
+                <if condition="$val[status] == 0">
+                    <!-- <a href="{:U('dodrawal',['id'=>$val['id']])}">提现</a> -->
+                   <a href="{:U('wechat_docheck',['id'=>$val['id']])}">审核</a>
+                </if>
+            </td>
+            </tr>
+            </volist>
+            </if>
+        </tbody>
+    </table>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

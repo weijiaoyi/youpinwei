@@ -1,0 +1,306 @@
+<admintpl file="header" />
+<style type="text/css">
+.default_img{width: 45%;margin: 2%;}
+img.selected{background-color: orangered;}
+.ticket{display: none;}
+</style>
+<script type="text/javascript">
+function checkTicket(obj){
+		var input  = $(obj).parent().parent().prev().find('input');
+		if(!input.is(':checked') && $(obj).is(':checked')){
+			$(obj).removeAttr('checked');
+			alert('请先选择水票对应的商品');
+		}
+	}
+function checkGoods(obj){
+		var input  = $(obj).parent().parent().parent().parent().parent().next().find('input');
+		console.log(input.val());
+		if(!input.is(':checked')){
+			$(obj).removeAttr('checked');
+			alert('请先选择商品对应的商品分类');
+		}
+	}
+function checkStrategy(obj){
+		var input  = $(obj).parent().parent().prev().find('input');
+		if(!input.is(':checked') && $(obj).is(':checked')){
+			$(obj).removeAttr('checked');
+			alert('请先选择套餐对应的商品');
+			return false;
+		}
+		var strategyId = $(obj).data('stragegyid');
+		var ticket = '#ticketid'+strategyId;
+		var stragegyTicketId = $(ticket).data('stragegyiicketid');
+		var ticketIsTrue = $("#ticket"+stragegyTicketId).is(':checked');
+		if(!ticketIsTrue && $(obj).is(':checked')){
+			$("#ticket"+stragegyTicketId).attr('checked', true);
+			$("#ticket"+stragegyTicketId).parent().parent().prev().find('input').attr('checked', true);
+			$("#ticket"+stragegyTicketId).parent().parent().parent().parent().parent().next().find('input').attr('checked', true);
+		}
+
+	}
+</script>
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="<?php echo U('Admin/Goods/C_goodsList'); ?>">商品列表</a></li>
+			<li><a href="#" onclick="window.location.reload();return false;">新建商品</a></li>
+			<li><a href="<?php echo U('Admin/Goods/C_goodsCatesList'); ?>">商品分类</a></li>
+			<li><a href="<?php echo U('Admin/Goods/C_createGoodsCate'); ?>">新建商品分类</a></li>
+			<li><a href="<?php echo U('Admin/Goods/C_goodsStrategyList'); ?>">商品组合列表</a></li>
+			<li><a href="<?php echo U('Admin/Goods/C_addGoodsStrategyPackage'); ?>">新建商品套餐</a></li>
+			<!-- <li class="active"><a href="<?php echo U('Admin/Goods/C_goodsWarehouse'); ?>">商品库</a></li> -->
+		</ul>
+		<form action="<?php echo U('Admin/Goods/C_goodsWarehousePost'); ?>" method="post" class="form-search js-ajax-forms" >
+			<div class="row-fluid">
+				<div>
+					<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th width="100">商品分类名称</th>
+							<th width="">商品/水票/套餐</th>
+							<th width="">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<foreach name="goodsList" item="goods">
+							<tr>
+								<th width="80">{$goods['name']}</th>
+								<td>
+									<if condition="!empty($goods['goods'])">
+										<foreach name="goods.goods" item="vo">
+											<table class="table table-bordered">
+											<thead>
+												<tr><th style="text-align: center;" colspan=2>{$vo['name']}</th></tr>
+												<tr style="background-color: #6FD2C3">
+													
+													<th>商品：{$vo['name']}
+														<span style="margin-left:50px;">商品价格：{$vo['price']}</span>
+														<span style="margin-left:50px;">规格：{$vo['standard']}/{$vo['unit']}</span>
+													</th>
+													<th width="80" style="text-align:center">
+														<input name="goods[]" type="checkbox" onclick="checkGoods(this)" value="{$vo['id']}" />
+													</th>
+												</tr>
+												<if condition="!empty($vo['ticket'])">
+													<foreach name="vo.ticket" item="ticket">
+															<tr style="background-color: #CC7FAA">
+																<th width="">水票：{$ticket['name']}
+																	<span style="margin-left:50px;">水票价格：{$ticket['price']}</span>
+																</th>
+																<th width="80" style="text-align:center">
+																	<input name="ticket[]" type="checkbox" id="ticket{$ticket['id']}" onclick="checkTicket(this)" value="{$ticket['id']}" />
+																</th>
+															</tr>
+													</foreach>
+												</if>
+												<if condition="!empty($vo['strategy'])">
+												<foreach name="vo.strategy" item="strategy">
+													<tr style="background-color: #8C7BD6">
+														<th>套餐：{$strategy['name']}
+														<?php foreach($strategy['detail'] as $detail){ ?>
+															
+																
+																	<if condition="$detail['type'] eq 1">
+																	<span style="margin-left:50px;" id="ticketid{$strategy['id']}" data-stragegyiicketid="{$detail['goods_id']}">水票：{$detail['goods_name']}</span>
+																	<span style="margin-left:50px;">水票价格：{$detail['goods_price']}</span>
+																	</else>
+																	<span style="margin-left:50px;">商品：{$detail['goods_name']}
+																	<span style="margin-left:50px;">商品价格：{$detail['goods_price']}</span>
+																	</if>
+																	
+																
+														
+														<?php } ?>
+														</th>
+														<th width="80" style="text-align:center">
+															<input name="strategy[]" type="checkbox" data-stragegyid="{$strategy['id']}" onclick="checkStrategy(this)" value="{$strategy['id']}" />
+														</th>
+													</tr>
+												</foreach>
+												</if>
+											</thead>
+											
+											</table>
+										</foreach>
+									</if>
+								</td>
+								<th width="80" style="text-align:center">
+									<input name="cate[]" type="checkbox" value="{$goods['id']}" />
+								</th>
+							</tr>
+						</foreach>
+					</tbody>	
+					</table>
+				</div>
+
+				
+			</div>
+			<div class="form-actions">
+				<button class="btn btn-primary js-ajax-submit" type="submit">添加</button>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/content_addtop.js"></script>
+	<script type="text/javascript">
+		//编辑器路径定义
+		var editorURL = GV.DIMAUB;
+	</script>
+	<!-- <script type="text/javascript" src="__PUBLIC__/js/ueditor/ueditor.config.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/ueditor/ueditor.all.min.js"></script> -->
+<script type="text/javascript">
+$(function() {
+	
+	$('input[type="text"][data-level]').blur(function(){
+		var level = $(this).data('level');
+		var value = $(this).val();
+		if(!isNaN(parseFloat(value)) && parseFloat(value) >= 0.01){
+			for(var i=level; i<=5; ++i){
+				$('input[type="text"][data-level="'+i+'"]').val(value);
+			}
+		}
+		return false;
+	});
+	$(".js-ajax-close-btn").on('click', function(e) {
+		e.preventDefault();
+		Wind.use("artDialog", function() {
+			art.dialog({
+				id : "question",
+				icon : "question",
+				fixed : true,
+				lock : true,
+				background : "#CCCCCC",
+				opacity : 0,
+				content : "您确定需要关闭当前页面嘛？",
+				ok : function() {
+					setCookie("refersh_time", 1);
+					window.close();
+					return true;
+				}
+			});
+		});
+	});
+	/////---------------------
+	Wind.use('validate','ajaxForm','artDialog',function() {
+		//编辑器
+		// editorcontent = new baidu.editor.ui.Editor();
+		// editorcontent.render('content');
+		// try {
+		// 	editorcontent.sync();
+		// } catch (err) {}
+		// //增加编辑器验证规则
+		// jQuery.validator.addMethod('editorcontent',function() {
+		// 	try {
+		// 		editorcontent.sync();
+		// 	} catch (err) {}
+		// 	return editorcontent.hasContents();
+		// });
+		
+		var form = $('form.js-ajax-forms');
+		//ie处理placeholder提交问题
+		if ($.browser.msie) {
+			form.find('[placeholder]').each(function() {
+				var input = $(this);
+				if (input.val() == input
+						.attr('placeholder')) {
+					input.val('');
+				}
+			});
+		}
+		//表单验证开始
+		form.validate({
+			//是否在获取焦点时验证
+			onfocusout : false,
+			//是否在敲击键盘时验证
+			onkeyup : false,
+			//当鼠标掉级时验证
+			onclick : false,
+			//验证错误
+			showErrors : function(errorMap,errorArr) {
+				//errorMap {'name':'错误信息'}
+				//errorArr [{'message':'错误信息',element:({})}]
+				try {
+					$(errorArr[0].element).focus();
+					art.dialog({
+						id : 'error',
+						icon : 'error',
+						lock : true,
+						fixed : true,
+						background : "#CCCCCC",
+						opacity : 0,
+						content : errorArr[0].message,
+						cancelVal : '确定',
+						cancel : function() {
+							$(errorArr[0].element).focus();
+						}
+					});
+				} catch (err) {}
+			},
+			//验证规则
+			rules : {
+				'name' : {required : 1},
+				'post[post_content]' : {editorcontent : true}
+			},
+			//验证未通过提示消息
+			messages : {
+				'name' : {required : '请输入商品名称'},
+				'price' : {editorcontent : '请输入商品价格'}
+			},
+			//给未通过验证的元素加效果,闪烁等
+			highlight : false,
+			//是否在获取焦点时验证
+			onfocusout : false,
+			//验证通过，提交表单
+			submitHandler : function(forms) {
+				$(forms).ajaxSubmit({
+					url : form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+					dataType : 'json',
+					beforeSubmit : function(arr,$form,options) {
+
+					},
+					success : function(data,statusText,xhr,$form) {
+						if (data.status) {
+							setCookie("refersh_time",1);
+							//添加成功
+							Wind.use("artDialog",function() {
+								art.dialog({
+									id : "succeed",
+									icon : "succeed",
+									fixed : true,
+									lock : true,
+									background : "#CCCCCC",
+									opacity : 0,
+									content : data.info,
+									button : [
+									{
+										name : '继续添加？',
+										callback : function() {
+											reloadPage(window);
+											return true;
+										},
+										focus : true
+									},
+									{
+										name : '返回列表',
+										callback : function() {
+											location.href = "<?php echo U('Admin/Goods/C_goodsList'); ?>";
+											return true;
+										}
+									}
+									]
+								});
+							});
+						} else {
+							alert(data.info);
+						}
+					}
+				});
+			}
+		});
+	});
+////-------------------------
+});
+</script>
+</body>
+</html>

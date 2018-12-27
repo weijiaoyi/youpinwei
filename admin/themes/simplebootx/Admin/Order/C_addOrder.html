@@ -1,0 +1,315 @@
+<admintpl file="header" />
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";font-size:14px;}
+        #l-map{height:300px;width:100%;}
+        #r-result{width:100%;}
+        #shows{
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 50%;
+            top: 50%;
+            width: 260px;
+            height: 210px;
+            background-color: white;
+            opacity: 1;
+            margin-top: -80px;
+            margin-left: -130px;
+            border-radius: 3px;
+        }
+
+        #bgs{
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.6;
+            background-color: black;
+        }
+        #btnGroupss{
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            margin-left: 1rem;
+        }
+        .dizhi{
+            margin-top: 0.5rem;
+            background: #58a4ff;
+            color: #fff;
+            text-align: center;
+            width: 50%;
+            margin-left: 20%;
+        }
+        #shuizhan{margin-top: 0.2rem;margin-left: 1rem}
+
+        #cancelBtnPage{
+            float: left;
+            width: 50%;
+            height: 50px;
+            line-height: 50px;
+            border-right: 1px solid #666666;
+            color: #adadad;
+            text-align: center;
+        }
+
+        .tishi{
+            background: #58a4ff;
+            height: 2rem;
+            text-align: center;
+            line-height: 2rem;
+            color: #fff;
+        }
+        .anniu{
+            background: #58a4ff;
+            margin-top: 2rem;
+            text-align: center;
+            height: 2rem;
+            line-height: 2rem;
+            color: #fff;
+            width: 50%;
+            margin-left: 4rem;
+        }
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=B1fe242ae7bea1edfd0a8d3b39d291eb"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
+    <title>关键字输入提示词条</title>
+</head>
+<body>
+<form action="{:U('Admin/Order/doAddOrder')}" method="post">
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="<?php echo U('Admin/Order/C_orderList'); ?>">订单列表</a></li>
+        <li class="active"><a href="<?php echo U('Admin/Deliver/C_addOrder'); ?>">添加新订单</a></li>
+    </ul>
+    <!--<form action="<?php echo U('Admin/Order/C_doAddOrder'); ?>" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">-->
+    <div class="row-fluid">
+        <div class="span9">
+            <table class="table table-bordered">
+                <tr>
+                    <th>订单号：</th>
+                    <td>
+                        <input type="text" name="serverNum" id="serverNum"   placeholder="请输入订单号">
+                    </td>
+                </tr>
+                <tr>
+                    <th>下单人：</th>
+                    <td>
+                        <input type="text" name="user" id="user"   placeholder="请输入下单人">
+                    </td>
+                </tr>
+                <tr>
+                    <th>下单人联系方式：</th>
+                    <td>
+                        <input type="text" name="tel" id="tel"  placeholder="请输入下单人联系方式">
+                    </td>
+                </tr>
+                <tr>
+                    <th>送货地址：</th>
+                    <td>
+                        <div id="l-map" ></div>
+                        <input type="text" id="suggestId" name="address" size="20" placeholder="送货地址" style="width:266px;" />
+                        <input type="hidden" id="lal">
+                        <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:266px;height:auto; display:none;"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>详细送货地址：</th>
+                    <td>
+                        <input type="text" name="detail" id="detail"   placeholder="详细送货地址">
+                    </td>
+                </tr>
+                <tr>
+                    <th>选择水站：</th>
+                    <td>
+                        <select name="stations" id="stations">
+                            <option value="0">未选择水站</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>商品名称	：</th>
+                    <td>
+                        <select name="commity" id="commity">
+                            <volist name="goods" id="val">
+                                <option value="{$val.id}">{$val.name}{$val.price}元/{$val.unit}</option>
+                            </volist>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>商品数量	：</th>
+                    <td>
+                        <input type="text" id="nums" name="nums">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <input type="hidden" name="point" id="point">
+    <div class="form-actions">
+        <button class="btn btn-primary js-ajax-submit" id="submit" type="submit">添加</button>
+        <a class="btn" href="<?php echo U('Admin/Order/C_orderList'); ?>">返回</a>
+    </div>
+    <div id="shows"></div>
+    <!--</form>-->
+</div>
+</form>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+    $(function() {
+        var lng;
+        var lat;
+        $(".js-ajax-close-btn").on('click', function (e) {
+            e.preventDefault();
+            Wind.use("artDialog", function () {
+                art.dialog({
+                    id: "question",
+                    icon: "question",
+                    fixed: true,
+                    lock: true,
+                    background: "#CCCCCC",
+                    opacity: 0,
+                    content: "您确定需要关闭当前页面嘛？",
+                    ok: function () {
+                        setCookie("refersh_time", 1);
+                        window.close();
+                        return true;
+                    }
+                });
+            });
+        });
+
+        // 百度地图API功能
+        function G(id) {
+            return document.getElementById(id);
+        }
+
+        function A(id) {
+            return document.getElementById(id);
+        }
+
+        var map = new BMap.Map("l-map");
+        map.centerAndZoom("北京", 12);                   // 初始化地图,设置城市和地图级别。
+
+        var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+            {
+                "input": "suggestId"
+                , "location": map
+            });
+
+        ac.addEventListener("onhighlight", function (e) {  //鼠标放在下拉列表上的事件
+            var str = "";
+            var _value = e.fromitem.value;
+            var value = "";
+            if (e.fromitem.index > -1) {
+                value = _value.province + _value.city + _value.district + _value.street + _value.business;
+            }
+            str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+            value = "";
+            if (e.toitem.index > -1) {
+                _value = e.toitem.value;
+                value = _value.province + _value.city + _value.district + _value.street + _value.business;
+            }
+            str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+            G("searchResultPanel").innerHTML = str;
+        });
+
+        var myValue;
+        ac.addEventListener("onconfirm", function (e) {    //鼠标点击下拉列表后的事件
+            var _value = e.item.value;
+            myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+            A("searchResultPanel").innerHTML = myValue;
+            setPlace();
+            var myGeo = new BMap.Geocoder();
+            myGeo.getPoint(myValue, function (point) {
+                if (point) {
+                    map.centerAndZoom(point, 11);
+                    map.addOverlay(new BMap.Marker(point));
+                    //console.log(point);
+                    // console.log(_point);
+
+                    myGeo.getLocation(point, function (rs) {
+                        var addComp = rs.addressComponents;
+                        var _in = pointInStationRange(point);
+                        //console.log(_in);
+                        if (_in) {
+                            var _inStation = '';
+                            var orderHtml = '<option value="0">未选择水站</option>';
+                            for (var i = 0; i < _in.length; ++i) {
+                                orderHtml += '<option value="'+_in[i]['id']+'">'+_in[i]['name']+'</option>';
+                            }
+                            checks = 1;
+                            $('#stations').html(orderHtml);
+                            //alert('您选择的位置是:\r\n'+addComp.province+'-'+addComp.city+'-'+addComp.district+'-'+addComp.street+'-'+addComp.streetNumber+'\r\n 在下列门店服务范围：\r\n'+_inStation);
+                        } else {
+                            var html = '<div class="tishi">' +
+                                '<span>提示</span>' +
+                                '</div>' +
+                                '<div id="shuizhan" >您的收货地址不在本店的配送范围，请您联系客服或更改地址</div>' +
+                                '<div class="anniu">知道了</div>';
+                            $('#shows').html(html);
+                            $("#shows").show();
+                            $("#bgs").show();
+                            //alert('您选择的位置是:\r\n'+addComp.province+'-'+addComp.city+'-'+addComp.district+'-'+addComp.street+'-'+addComp.streetNumber+'\r\n不在任何门店服务范围！');
+                            checks = 0;
+                        }
+                    });
+                }
+            });
+        });
+        $(document).on('click','.anniu',function () {
+            $('#shows').hide();
+        });
+
+
+        function pointInStationRange(point) {
+            var stations = [];
+            var _rangePolygon = JSON.parse('{$station}');
+            for (var i = 0; i < _rangePolygon.length; ++i) {
+                var _id = _rangePolygon[i]['station_id'],
+                    _name = _rangePolygon[i]['desc'],
+                    _range = _rangePolygon[i]['range'];
+                for (var j = 0; j < _range.length; ++j) {
+                    var points = [];
+                    for (var k = 0; k < _range[j].length; ++k) {
+                        points.push(new BMap.Point(_range[j][k]['lng'], _range[j][k]['lat']));
+                    }
+                    var polygon = new BMap.Polygon(points, {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5});
+                    map.addOverlay(polygon);
+                    var result = BMapLib.GeoUtils.isPointInPolygon(point, polygon);
+                    if (result) {
+                        stations.push({id: _id, name: _name});
+                    }
+                }
+            }
+            return stations.length > 0 ? stations : false;
+        }
+
+        function setPlace() {
+            map.clearOverlays();    //清除地图上所有覆盖物
+            function myFun() {
+                var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+                _point = pp.lng + ',' + pp.lat;
+                $("#point").val(_point);
+                // map.centerAndZoom(pp, 18);
+                // map.addOverlay(new BMap.Marker(pp));    //添加标注
+            }
+
+            var local = new BMap.LocalSearch(map, { //智能搜索
+                onSearchComplete: myFun
+            });
+            local.search(myValue);
+        }
+
+
+    });
+
+</script>
+</body>
+</html>

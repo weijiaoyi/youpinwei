@@ -1,0 +1,85 @@
+<admintpl file="header" />
+<style type="text/css">
+    .pagination{float: right;margin-right: 20px;}
+    .pagination a, .pagination span{padding: 3px 10px;margin-left: 3px;border-radius: 3px;}
+    .pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
+    .pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+        <!-- 搜索 start by LEE  -->
+        <form class="well form-search" method="post" action="<?php echo U('Admin/Grade/gradelist'); ?>">
+            <!--当前状态： -->
+            <!--<select class="select_1" name="status">-->
+                <!--<option value="-1" <?php if($where['status'] == -1) echo 'selected="selected"';?>>所有</option>-->
+                <!--<option value="0" <?php if(isset($where['status']) && $where['status'] == 0) echo 'selected="selected"';?>>正常</option>-->
+                <!--<option value="1" <?php if($where['status'] == 1) echo 'selected="selected"';?>>禁用</option>-->
+            <!--</select> &nbsp;&nbsp;-->
+            关键字： 
+            <input type="text" name="keyword" style="width: 200px;" value="" placeholder="请输入要查询联系人名称...">
+            <input type="button" id="selectUser" class="btn btn-primary order-number-pay-keyword" value="搜索">
+        </form>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th style="text-align:center;">订单ID</th>
+            <th style="text-align:center;">时间</th>
+            <th style="text-align:center;">卡号</th>
+            <th style="text-align:center;">操作人</th>
+            <th style="text-align:center;">充值金额</th>
+            <th style="text-align:center;">支付金额</th>
+        </tr>
+        </thead>
+        <tbody id="show">
+        <volist name="data" id="val">
+            <tr>
+                <td style="width:40px;text-align:center;">
+                    {$val['id']}
+                </td>
+                <td style="width:40px;text-align:center;">
+                    {$val['serial_number']}
+                </td>
+                <td style="text-align:center;">
+                    {$val['createtime']}
+                </td>
+                <td style="text-align:center;">
+                    {$val['card_no']}
+                </td>
+                <td style="text-align:center;">
+                    <font style="color:red"></font>Admin
+                </td>
+                <td style="text-align:center;">
+                    <font style="color:red">￥</font>{$val['money']}
+                </td>
+                <td style="text-align:center;">
+                    <font style="color:red">￥</font>{$val['real_pay']}
+                </td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+    <div id="page" class="pagination"><?php echo $page; ?></div>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>
+
+<script type="text/javascript">
+    /** 订单编号(关键字搜索) */
+    $(document).on('click','.order-number-pay-keyword',function(){
+        var keyword = $('input[name=keyword]').val();
+        $.ajax({
+            type:'post',
+            url:'http://ysy.edshui.com/index.php?g=admin&m=order&a=R_orderNumberKeyword',
+            data:{keyword:keyword},
+            dataType:'json',
+            success:function(result){
+                $('#show').html(result.str);
+                $('#page').html(result.page);
+            }
+        })
+
+    })
+</script>

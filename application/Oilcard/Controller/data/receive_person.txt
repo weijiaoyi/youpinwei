@@ -1,0 +1,5 @@
+Array
+(
+    [errcode] => 47001
+    [errmsg] => data format error hint: [Be1E03094122]
+)

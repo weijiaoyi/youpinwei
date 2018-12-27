@@ -1,0 +1,69 @@
+<admintpl file="header" />
+<style type="text/css">
+    .pagination{float: right;margin-right: 20px;}
+    .pagination a, .pagination span{padding: 3px 10px;margin-left: 3px;border-radius: 3px;}
+    .pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
+    .pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="<?php echo U('Admin/Distribution/C_DisributionDetail'); ?>">代理商收益列表</a></li>
+        <li><a href="<?php echo U('Admin/Distribution/C_addDistribution'); ?>">修改分润比例</a></li>
+    </ul>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th style="text-align:center;">交易时间</th>
+             <th style="text-align:center;">代理商</th>
+            <th style="text-align:center;">消费金额</th>
+            <!-- <th style="text-align:right;">优惠券</th> -->
+            <!-- <th style="text-align:center;">发票信息</th> -->
+            <th style="text-align:center;">订单号</th>
+            <th style="text-align:center;">收益金额</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist name="detail" id="val">
+            <tr>
+                <td style="width:40px;text-align:center;">
+                    {$val['id']}
+                </td>
+                <td style="text-align:center;">
+                    {$val['create_time']}
+                </td>
+                <td style="text-align:center;">
+                    {$val['grade_name']}
+                </td>
+                <td style="text-align:center;">
+                    {$val['charge']}
+                </td>
+                <td style="text-align:center;">
+                    {$val['order_sn']}
+                </td>
+                <td style="text-align:center;">
+                    {$val['recharge']}
+                </td>
+                <!-- <td style="text-align:right;"><?php echo $v['coupon_money']; ?></td> -->
+                <!-- <td style="text-align:center;">
+                <?php
+                    if($v['invoice_type'] == 0){
+                        echo '无';
+                    }else{
+                        echo $v['invoice_type'] == 1 ? '[普通]' : '[专用]';
+                        echo $v['invoice_name'];
+                        echo '-'.$v['order_total'].'元';
+                    }
+                ?>
+                </td> -->
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+    <div class="pagination"><?php echo $data['show']; ?></div>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

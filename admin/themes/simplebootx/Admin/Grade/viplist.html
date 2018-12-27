@@ -1,0 +1,93 @@
+<admintpl file="header" />
+<style type="text/css">
+    .pagination{float: right;margin-right: 20px;}
+    .pagination a, .pagination span{padding: 3px 10px;margin-left: 3px;border-radius: 3px;}
+    .pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
+    .pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+        <!-- 搜索 start by LEE  -->
+        <form class="well form-search" method="post" action="<?php echo U('Admin/Grade/gradelist'); ?>">
+            当前状态： 
+            <select class="select_1" name="status">
+                <option value="-1" <?php if($where['status'] == -1) echo 'selected="selected"';?>>所有</option>
+                <option value="0" <?php if(isset($where['status']) && $where['status'] == 0) echo 'selected="selected"';?>>正常</option>
+                <option value="1" <?php if($where['status'] == 1) echo 'selected="selected"';?>>禁用</option>
+            </select> &nbsp;&nbsp;
+            关键字： 
+            <input type="text" name="keyword" style="width: 200px;" value="" placeholder="请输入要查询联系人名称...">
+            <input type="submit" id="selectUser" class="btn btn-primary" value="搜索">
+        </form>
+
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th style="text-align:center;">VIP名称</th>
+            <th style="text-align:center;">代理称号</th>
+            <th style="text-align:center;">押金</th>
+            <th style="text-align:center;">发展来源</th>
+            <th style="text-align:center;">状态</th>
+            <th style="text-align:center;">创建时间</th>
+            <th style="text-align:center;">过期时间</th>
+            <th style="text-align:center;">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist name="data" id="val">
+        <tr>
+            <td style="width:40px;text-align:center;">
+                {$val['id']}
+            </td>
+            <td style="text-align:center;">
+                <if condition="$val['nickname'] eq ''">
+                    {$val['openid']}
+                    <else/>
+                    {$val['nickname']}
+                </if>
+
+            </td>
+            <td style="text-align:center;">
+            	<if condition="$val['role'] eq '2'">
+                	vip
+            	</if>
+            </td>
+            <td style="text-align:center;">
+                <font style="color:red">￥</font>{$val['deposit']}
+            </td>
+            <td style="text-align:center;">
+            	<if condition="$val['development'] eq '1'">
+                	总部发展
+                <elseif condition="$val['development'] eq '2'"/>
+                	代理商发展
+                <else/>
+                	业务员发展
+            	</if>
+            </td>
+            <td style="text-align:center;">
+                <if condition="$val['status'] eq '1'">
+                	正常
+                <else/>
+                	不可使用
+            	</if>
+            </td>
+            <td style="text-align:center;">
+                {$val['createtime']}
+            </td>
+            <td style="text-align:center;">
+                {$val['expire_time']}
+            </td>
+            <td style="text-align:center;">
+                <button style="background: #2c3e50;border:0px; width: 70px; height: 36px;" ><a href="{:U('getOffline',['id'=>$val['id']])}"><span style="color: white; font-size: 8px;">查看下线</span></a></button>
+            </td>
+        </tr>
+        </volist>
+        </tbody>
+    </table>
+    <div class="pagination"><?php echo $page; ?></div>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>
