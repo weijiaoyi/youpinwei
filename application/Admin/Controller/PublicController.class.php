@@ -10,6 +10,8 @@
  */
 namespace Admin\Controller;
 use Common\Controller\AdminbaseController;
+use think\Model;
+
 class PublicController extends AdminbaseController {
 
     public function _initialize() {
@@ -62,14 +64,14 @@ class PublicController extends AdminbaseController {
     		$this->error(L('CAPTCHA_NOT_RIGHT'));
     	}else{
     		$user = M("admin_user");
-    		if(strpos($name,"@")>0){//邮箱登陆
-    			$where['user_email']=$name;
-    		}else{
-    			$where['user_login']=$name;
-    		}
+//    		if(strpos($name,"@")>0){//邮箱登陆
+//    			$where['user_email']=$name;
+//    		}else{
+//    			$where['user_login']=$name;
+    			$where['username']=$name;
+//    		}
 
     		$result = $user->where($where)->find();
-
     		if(!empty($result) && $result['status']==1){
 
     			if(sp_compare_password($pass,$result['password'])){
