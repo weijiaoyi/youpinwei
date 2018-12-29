@@ -1,111 +1,56 @@
 <admintpl file="header" />
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-        body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";font-size:14px;}
-        #l-map{height:300px;width:100%;}
-        #r-result{width:100%;}
-        #shows{
-            display: none;
-            position: fixed;
-            z-index: 10000;
-            left: 50%;
-            top: 50%;
-            width: 260px;
-            height: 210px;
-            background-color: white;
-            opacity: 1;
-            margin-top: -80px;
-            margin-left: -130px;
-            border-radius: 3px;
-        }
-
-        #bgs{
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.6;
-            background-color: black;
-        }
-        #btnGroupss{
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            margin-left: 1rem;
-        }
-        .dizhi{
-            margin-top: 0.5rem;
-            background: #58a4ff;
-            color: #fff;
-            text-align: center;
-            width: 50%;
-            margin-left: 20%;
-        }
-        #shuizhan{margin-top: 0.2rem;margin-left: 1rem}
-
-        #cancelBtnPage{
-            float: left;
-            width: 50%;
-            height: 50px;
-            line-height: 50px;
-            border-right: 1px solid #666666;
-            color: #adadad;
-            text-align: center;
-        }
-
-        .tishi{
-            background: #58a4ff;
-            height: 2rem;
-            text-align: center;
-            line-height: 2rem;
-            color: #fff;
-        }
-        .anniu{
-            background: #58a4ff;
-            margin-top: 2rem;
-            text-align: center;
-            height: 2rem;
-            line-height: 2rem;
-            color: #fff;
-            width: 50%;
-            margin-left: 4rem;
-        }
-    </style>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=B1fe242ae7bea1edfd0a8d3b39d291eb"></script>
-    <script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
-    <title>关键字输入提示词条</title>
-</head>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <style type="text/css">
+            body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";font-size:14px;}
+            #l-map{height:300px;width:100%;}
+            #r-result{width:100%;}
+           #error{
+               color: red;
+               font-size: 16px;
+               margin-left:400px;
+               display: none;
+           }
+            .true{
+                color: red;
+            }
+        </style>
+        <title></title>
+    </head>
 <body>
 <!-- <form action="" enctype="multipart/form-data" method=""> -->
 <div class="wrap js-check-wrap">
     <ul class="nav nav-tabs">
         <li class="active"><a href="<?php echo U('sendCard'); ?>">发卡</a></li>
-        <li><a href="<?php echo U('agentlist'); ?>">代理商列表</a></li>
     </ul>
-    <input type="hidden" class="uid" value="<?php echo $data['uid'] ?>">
-    <input type="hidden" class="openid" value="<?php echo $data['openid'] ?>">
-    <!--<form action="<?php echo U('Admin/Order/C_doAddOrder'); ?>" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">-->
+
     <div class="row-fluid">
         <div class="span9">
             <table class="table table-bordered">
                 <tr>
-                    <th>开始卡号：</th>
-                    <td>
-                        <input type="text" name="start_card" id="start_card" value="<?php echo $data['card_no'];?>"  disabled="disabled"  placeholder="开始卡号">
+                    <th>代理商名称：</th>
+                    <td style="font-size: 16px;line-height: 39px;">
+                        <span>{$user['nickname']}&nbsp;&nbsp;&nbsp;&nbsp;<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 39px;" /></span>
+                        <!--<input type="text" name="nickname" class="nickname" value="" style="width:150px" disabled="disabled" placeholder="请输入代理商名称">-->
+                        <!--<input type="button" value="搜索" style="width:60px;height: 36px; margin-bottom:10px;" class="server-keyword">-->
                     </td>
                 </tr>
                 <tr>
-                    <th>结尾卡号：</th>
+                    <th>开始卡号：</th>
+                    <td style="font-size: 16px;line-height: 39px;">
+                        <span>{$data['card_no']}</span>
+                        <!--<input type="text" name="start_card" id="start_card" value="<?php echo $data['card_no'];?>"  disabled="disabled"  placeholder="开始卡号">-->
+                    </td>
+                </tr>
+                <tr>
+                    <th>结尾卡号<span class="true">*</span>：</th>
                     <td>
                         <input type="text" name="end_card" id="end_card"  placeholder="请输入结束卡号">
                     </td>
                 </tr>
                 <tr>
-                    <th>拿卡状态：</th>
+                    <th>拿卡状态<span class="true">*</span>：</th>
                     <td>
                         <select name='mode' class="mode">
                             <option selected="selected">请选择</option>
@@ -115,28 +60,26 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>拿卡价格：</th>
+                    <th>拿卡价格<span class="true">*</span>：</th>
                     <td>
                         <input type="text" name="each_price" class="each_price" placeholder="请输入拿卡价格">
                     </td>
                 </tr>
 
-                <input type="hidden" value="" class="openid">
-                <input type="hidden" value="" class="uid">
                 <tr>
-                    <th>送货地址：</th>
+                    <th>送货地址<span class="true">*</span>：</th>
                     <td>
-                        <input type="text" id="address" name="address" size="20" placeholder="送货地址" style="width:205px;" />
+                        <textarea style="width:300px;" id="address" name="address"  placeholder="送货地址"></textarea>
                     </td>
                 </tr>
                 <tr>
-                    <th>联系人：</th>
+                    <th>联系人<span class="true">*</span>：</th>
                     <td>
                         <input type="text" name="tel_name" id="detail"   placeholder="联系人">
                     </td>
                 </tr>
                 <tr>
-                    <th>联系电话：</th>
+                    <th>联系电话<span class="true">*</span>：</th>
                     <td>
                         <input type="text" name="tel" id="peopel"   placeholder="联系电话">
                     </td>
@@ -144,37 +87,40 @@
             </table>
         </div>
     </div>
+    <p id="error"></p>
     <div class="form-actions" >
         <button style="margin-left:400px;" class="btn btn-primary js-ajax-submit" id="sendCard" type="submit">确认发卡</button>
-        <a class="btn" href="<?php echo U('Admin/Grade/gradelist'); ?>">返回</a>
+        <a class="btn" href="javascript:history.go(-1);">返回</a>
     </div>
-    <div id="shows"></div>
-    <!--</form>-->
-    <!--   opacity: 0.2; background-position: initial initial; background-repeat: initial initial; top: 0px; left: 0px; right: 0px; bottom: 0px; padding-left: 700px;-->
 </div>
 
 <!-- 成败获成功显示 -->
 <div class="mengban" style="position: fixed;width:100%;height: 100%;background: #337ab7;opacity: 0.5;display: none"></div>
 <div class="alert" style="width:200px;height: 110px;background: white;position: absolute;top:50%;left: 50%;margin-top: -80px;margin-left:-300px;display:none;line-height: 80px;text-align: center;font-size:20px;color: #000"></div>
-
 <!-- </form> -->
 <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
 <script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
 <script>
     /** 给代理商发卡(确认发卡) */
     $(document).on('click','#sendCard',function(){
-        var start_card = $('#start_card').val();
+        var start_card = "<?php echo $data['card_no'] ?>";
+        var openid = "<?php echo $data['openid'] ?>";
+        var user_id = "<?php echo $data['uid'] ?>";
         var end_card = $('#end_card').val();
         var mode = $('.mode').val();
         var each_price = $('.each_price').val();
         var address = $('#address').val();
         var name = $('#detail').val();
         var phone = $('#peopel').val();
-        var openid = $('.openid').val();
-        var user_id = $('.uid').val();
-
+        if(end_card == '' || mode == '' || each_price == '' || address == '' || name == '' || phone == ''){
+            $('#error').html('错误提示：请补全完整的信息内容！！！');
+            $('#error').show();
+        }else{
+            $('#error').html('');
+            $('#error').hide();
+        }
         $.ajax({
-            url:"http://ysy.edshui.com/index.php?g=admin&m=grade&a=confirmSendCard",
+            url:"{:U('confirmSendCard')}",
             type:'post',
             data:{start:start_card,end:end_card,each_price:each_price,mode:mode,address:address,name:name,phone:phone,openid:openid,user_id:user_id},
             success:function (res) {

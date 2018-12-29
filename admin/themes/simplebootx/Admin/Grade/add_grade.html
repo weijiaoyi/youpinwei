@@ -83,7 +83,7 @@
 <!-- <form action="" enctype="multipart/form-data" method=""> -->
     <div class="wrap js-check-wrap">
         <ul class="nav nav-tabs">
-            <li><a href="<?php echo U('agentlist'); ?>">代理商列表</a></li>
+            <!--<li><a href="<?php echo U('agentlist'); ?>">代理商列表</a></li>-->
             <li class="active"><a href="<?php echo U('add_grade'); ?>">添加代理商</a></li>
         </ul>
         <!--<form action="<?php echo U('Admin/Order/C_doAddOrder'); ?>" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">-->
@@ -93,15 +93,17 @@
                     <tr>
                     <tr>
                         <th>代理商名称：</th>
-                        <td>
-                            <input type="text" name="nickname" class="nickname" style="width:150px"  placeholder="请输入代理商名称">
-                            <input type="button" value="搜索" style="width:60px;height: 36px; margin-bottom:10px;" class="server-keyword">
+                        <td style="font-size: 16px;line-height: 39px;">
+                            <span>{$user['nickname']}&nbsp;&nbsp;&nbsp;&nbsp;<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 39px;" /></span>
+                            <!--<input type="text" name="nickname" class="nickname" value="" style="width:150px" disabled="disabled" placeholder="请输入代理商名称">-->
+                            <!--<input type="button" value="搜索" style="width:60px;height: 36px; margin-bottom:10px;" class="server-keyword">-->
                         </td>
                     </tr>
                     <tr>
                         <th>开始卡号：</th>
-                        <td>
-                            <input type="text" name="start_card" id="start_card"  disabled="disabled"  placeholder="开始卡号">
+                        <td style="font-size: 16px;line-height: 39px;">
+                            <span>{$start_card}</span>
+                            <!--<input type="text" name="start_card" id="start_card"  disabled="disabled"  placeholder="开始卡号">-->
                         </td>
                     </tr>
                     <tr>
@@ -127,8 +129,8 @@
                         </td>
                     </tr>
                    
-                    <input type="hidden" value="" class="openid">
-                    <input type="hidden" value="" class="uid">
+                    <input type="hidden" value="{$user['openid']}" class="openid">
+                    <input type="hidden" value="{$user['id']}" class="uid">
                     <tr>
                         <th>送货地址：</th>
                         <td>
@@ -147,12 +149,36 @@
                             <input type="text" name="tel" id="peopel"   placeholder="联系电话">
                         </td>
                     </tr>
+                    <tr>
+                        <th>VIP直属会员充值分成：</th>
+                        <td>
+                            <input type="text" name="vip_direct_scale" id="vip_direct_scale"   placeholder="VIP直属会员充值分成">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>普通直属会员充值分成：</th>
+                        <td>
+                            <input type="text" name="user_direct_scale" id="user_direct_scale"   placeholder="普通直属会员充值分成">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>VIP间接会员充值分成：</th>
+                        <td>
+                            <input type="text" name="vip_indirect_scale" id="vip_indirect_scale"   placeholder="VIP间接会员充值分成">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>普通间接会员充值分成：</th>
+                        <td>
+                            <input type="text" name="user_indirect_scale" id="user_indirect_scale"   placeholder="普通间接会员充值分成">
+                        </td>
+                    </tr>
                 </table>
             </div>
         </div>
         <div class="form-actions">
             <button style="margin-left:400px" class="btn btn-primary js-ajax-submit" id="addagent" type="submit">添加</button>
-            <a class="btn" href="<?php echo U('Admin/Grade/gradelist'); ?>">返回</a>
+            <a class="btn" href="javascript:history.go(-1);">返回</a>
         </div>
         <div id="shows"></div>
         <!--</form>-->
@@ -167,7 +193,7 @@
 <script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
 <script>
     //点击代理商名称
-    $(document).on('click','.server-keyword',function(){
+  /*  $(document).on('click','.server-keyword',function(){
         var nickname = $('.nickname').val();
         if(!nickname){alert('会员名称不能为空！');$('.nickname').focus();return false;}
         $.ajax({
@@ -181,7 +207,7 @@
                 $('.uid').val(res.id);
             }
         })
-    });
+    });*/
 
     //添加代理商
     $(document).on('click','#addagent',function(){

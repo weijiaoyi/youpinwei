@@ -8,16 +8,21 @@
 </head>
 <body>
 <div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="<?php echo U('gradelist'); ?>">VIP会员列表</a></li>
+        <!--<li><a href="<?php echo U('add_grade'); ?>">添加代理商</a></li>-->
+    </ul>
         <!-- 搜索 start by LEE  -->
-        <form class="well form-search" method="post" action="<?php echo U('Admin/Grade/gradelist'); ?>">
-            当前状态： 
+        <form class="well form-search" method="post" action="<?php echo U('Admin/Grade/viplist'); ?>">
+            当前用户状态：
             <select class="select_1" name="status">
-                <option value="-1" <?php if($where['status'] == -1) echo 'selected="selected"';?>>所有</option>
-                <option value="0" <?php if(isset($where['status']) && $where['status'] == 0) echo 'selected="selected"';?>>正常</option>
-                <option value="1" <?php if($where['status'] == 1) echo 'selected="selected"';?>>禁用</option>
+                <option value="" >所有</option>
+                <option value="1" <?php if(isset($status) && $status == 1) echo 'selected="selected"';?>>正常</option>
+                <option value="2" <?php if(isset($status) && $status == 2) echo 'selected="selected"';?>>冻结</option>
+                <option value="3" <?php if(isset($status) && $status == 3) echo 'selected="selected"';?>>注销</option>
             </select> &nbsp;&nbsp;
-            关键字： 
-            <input type="text" name="keyword" style="width: 200px;" value="" placeholder="请输入要查询联系人名称...">
+            关键字：
+            <input type="text" name="keywords" style="width: 200px;" value="{$keywords}" placeholder="请输入要查询联系人名称">
             <input type="submit" id="selectUser" class="btn btn-primary" value="搜索">
         </form>
 
@@ -26,6 +31,7 @@
         <tr>
             <th>ID</th>
             <th style="text-align:center;">VIP名称</th>
+            <th style="text-align:center;">头像</th>
             <th style="text-align:center;">代理称号</th>
             <th style="text-align:center;">押金</th>
             <th style="text-align:center;">发展来源</th>
@@ -48,6 +54,9 @@
                     {$val['nickname']}
                 </if>
 
+            </td>
+            <td style="width:40px;text-align:center;">
+                <img src="{$val['user_img']}" alt="{$val['user_img']}" />
             </td>
             <td style="text-align:center;">
             	<if condition="$val['role'] eq '2'">
@@ -80,13 +89,17 @@
                 {$val['expire_time']}
             </td>
             <td style="text-align:center;">
-                <button style="background: #2c3e50;border:0px; width: 70px; height: 36px;" ><a href="{:U('getOffline',['id'=>$val['id']])}"><span style="color: white; font-size: 8px;">查看下线</span></a></button>
+                <button style="background: #2c3e50;border:0px; width: 70px; height: 40px;" ><a href="{:U('getOffline',['id'=>$val['id']])}"><span style="color: white; font-size: 8px;">查看下线</span></a></button>
+                <button style="background: #2c3e50;border:2px; width: 110px; height: 40px;" ><a href="{:U('getMyCard',['user_id'=>$val['id']])}"><span style="color: white; font-size: 8px;">查看我的油卡</span></a></button>
+                <button style="background: #1dccaa;border:2px; width: 110px; height: 40px;" ><a href="{:U('addAgent',['openid'=>$val['openid'],'user_id'=>$val['id']])}"><span style="color: white; font-size: 8px;">升级为代理商</span></a></button>
             </td>
         </tr>
         </volist>
         </tbody>
     </table>
-    <div class="pagination"><?php echo $page; ?></div>
+    <if condition="$page neq ''">
+        <div id="page" class="pagination"><span class="page"><?php echo $page; ?></span></div>
+    </if>
 </div>
 <script src="__PUBLIC__/js/common.js"></script>
 </body>
