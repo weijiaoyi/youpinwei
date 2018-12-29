@@ -19,6 +19,29 @@ class CommentoilcardController extends Controller
 		parent::__construct();
 	}
     
+
+    public function GetLogin(){
+        $openid = I('post.openid');
+        $info = M('user')->where(['openid'=>$openid])->find();
+        if ($info) {
+            $info['agent'] = M('agent')->where(['openid'=>$openid])->find();
+            if ($info['agent']) {
+                switch ($info['agent']['role']) {
+                    case '1':
+                        $info['agent']['sign'] ='普通用户';
+                        break;
+                    case '2':
+                        $info['agent']['sign'] ='VIP用户';
+                        break;
+                    case '3':
+                        $info['agent']['sign'] ='代理商';
+                        break;
+                }
+            }
+        }
+        return $info;
+    }
+
     /**
     *返回失败信息
     *$msg       失败提示信息

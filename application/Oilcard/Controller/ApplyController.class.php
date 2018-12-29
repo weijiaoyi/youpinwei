@@ -80,7 +80,10 @@ class ApplyController extends CommentoilcardController
 
 
     /**
-     * 银牌代理申领-
+     * 申领VIP油卡
+     * @Author 老王
+     * @创建时间   2018-12-29
+     * @return [type]     [description]
      */
     public function agentApply(){
 //       $aaa=json_encode($_POST['data']);

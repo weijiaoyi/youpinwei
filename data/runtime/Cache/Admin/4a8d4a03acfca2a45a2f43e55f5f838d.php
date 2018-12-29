@@ -1,19 +1,68 @@
-<admintpl file="header" />
+<?php if (!defined('THINK_PATH')) exit();?><!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<!-- Set render engine for 360 browser -->
+	<meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- HTML5 shim for IE8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <![endif]-->
+
+	<link href="/public/simpleboot/themes/<?php echo C('SP_ADMIN_STYLE');?>/theme.min.css" rel="stylesheet">
+    <link href="/public/simpleboot/css/simplebootadmin.css" rel="stylesheet">
+    <link href="/public/js/artDialog/skins/default.css" rel="stylesheet" />
+    <link href="/public/simpleboot/font-awesome/4.4.0/css/font-awesome.min.css"  rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/public/Api.js"></script>
+    <style>
+		form .input-order{margin-bottom: 0px;padding:3px;width:40px;}
+		.table-actions{margin-top: 5px; margin-bottom: 5px;padding:0px;}
+		.table-list{margin-bottom: 0px;}
+	</style>
+	<!--[if IE 7]>
+	<link rel="stylesheet" href="/public/simpleboot/font-awesome/4.4.0/css/font-awesome-ie7.min.css">
+	<![endif]-->
+	<script type="text/javascript">
+	//全局变量
+	var GV = {
+		DIMAUB: "/",
+	    ROOT: "/",
+	    WEB_ROOT: "/",
+	    JS_ROOT: "public/js/",
+	    APP:'<?php echo (MODULE_NAME); ?>'/*当前应用名*/
+	};
+	</script>
+    <script src="/public/js/jquery.js"></script>
+    <script src="/public/js/wind.js"></script>
+    <script src="/public/simpleboot/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+    	// $(function(){
+    	// 	$("[data-toggle='tooltip']").tooltip();
+    	// });
+    </script>
+<?php if(APP_DEBUG): ?><style>
+		#think_page_trace_open{
+			z-index:9999;
+		}
+	</style><?php endif; ?>
 </head>
 <body>
 	<div class="wrap js-check-wrap">
 		<ul class="nav nav-tabs">
 			<li class="active" sid='s'><a href="#S" data-toggle="tab">分润设置</a></li>
-			<!-- <li class="active"><a href="#A" data-toggle="tab">{:L('WEB_SITE_INFOS')}</a></li>
-			<li><a href="#B" data-toggle="tab">{:L('SEO_SETTING')}</a></li>
-			<li><a href="#C" data-toggle="tab">{:L('URL_SETTING')}</a></li>
-			<li><a href="{:U('route/index')}">{:L('URL_OPTIMIZATION')}</a></li>
-			<li><a href="#D" data-toggle="tab">{:L('UCENTER_SETTING')}</a></li>
-			<li><a href="#E" data-toggle="tab">{:L('COMMENT_SETTING')}</a></li>
-			<li><a href="#F" data-toggle="tab">{:L("USERNAME_FILTER")}</a></li>
+			<!-- <li class="active"><a href="#A" data-toggle="tab"><?php echo L('WEB_SITE_INFOS');?></a></li>
+			<li><a href="#B" data-toggle="tab"><?php echo L('SEO_SETTING');?></a></li>
+			<li><a href="#C" data-toggle="tab"><?php echo L('URL_SETTING');?></a></li>
+			<li><a href="<?php echo U('route/index');?>"><?php echo L('URL_OPTIMIZATION');?></a></li>
+			<li><a href="#D" data-toggle="tab"><?php echo L('UCENTER_SETTING');?></a></li>
+			<li><a href="#E" data-toggle="tab"><?php echo L('COMMENT_SETTING');?></a></li>
+			<li><a href="#F" data-toggle="tab"><?php echo L("USERNAME_FILTER");?></a></li>
 			<li><a href="#G" data-toggle="tab">CDN设置</a></li> -->
 		</ul>
-		<form class="form-horizontal js-ajax-forms" action="{:U('setting/site_post')}" method="post">
+		<form class="form-horizontal js-ajax-forms" action="<?php echo U('setting/site_post');?>" method="post">
 			<fieldset>
 				<div class="tabbable">
 					<div class="tab-content">
@@ -29,7 +78,7 @@
 								<div class="control-group">
 									<label class="control-label">VIP会员</label>
 									<div class="controls">
-										<input type="text" name="scroll" id="scroll" value="{$scroll}"> % <span>加油卷</span>
+										<input type="text" name="scroll" id="scroll" value="<?php echo ($scroll); ?>"> % <span>加油卷</span>
 									</div>
 								</div>
 								<!-- <div class="well"><label>充值奖励：只针对代理人设置<br/>1,当推荐人下级会员充值油卡时，会将此次充值的金额的1%奖励给此推荐人</label></div>
@@ -50,84 +99,78 @@
 						<div class="tab-pane" id="A">
 							<fieldset>
 								<div class="control-group">
-									<label class="control-label">{:L('WEBSITE_NAME')}</label>
+									<label class="control-label"><?php echo L('WEBSITE_NAME');?></label>
 									<div class="controls">
-										<input type="text" name="options[site_name]" value="{$site_name}"><span class="form-required">*</span>
-										<php>if($option_id):</php>
-										<input type="hidden" name="option_id" value="{$option_id}">
-										<php>endif;</php>
+										<input type="text" name="options[site_name]" value="<?php echo ($site_name); ?>"><span class="form-required">*</span>
+										<?php if($option_id): ?>
+										<input type="hidden" name="option_id" value="<?php echo ($option_id); ?>">
+										<?php endif; ?>
 									</div>
 								</div>
 								<div class="control-group">
 									<label class="control-label">后台地址加密码：</label>
 									<div class="controls">
-										<input type="text" name="options[site_admin_url_password]" value="{$site_admin_url_password}" id="js-site-admin-url-password"><span class="form-required">*</span>
+										<input type="text" name="options[site_admin_url_password]" value="<?php echo ($site_admin_url_password); ?>" id="js-site-admin-url-password"><span class="form-required">*</span>
 										<span class="help-block" style="color: red;">设置加密码后必须通过以下地址访问后台,请劳记此地址，为了安全，您也可以定期更换此加密码!</span>
-										<php>$site_admin_url_password =C("SP_SITE_ADMIN_URL_PASSWORD");</php>
-										<if condition="!empty($site_admin_url_password)">
-										<span class="help-block">后台地址：<span id="js-site-admin-url">{:sp_get_host()}__ROOT__?g=admin&upw={:C('SP_SITE_ADMIN_URL_PASSWORD')}</span></span>
-										</if>
+										<?php $site_admin_url_password =C("SP_SITE_ADMIN_URL_PASSWORD"); ?>
+										<?php if(!empty($site_admin_url_password)): ?><span class="help-block">后台地址：<span id="js-site-admin-url"><?php echo sp_get_host();?>?g=admin&upw=<?php echo C('SP_SITE_ADMIN_URL_PASSWORD');?></span></span><?php endif; ?>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('WEBSITE_THEME')}</label>
+									<label class="control-label"><?php echo L('WEBSITE_THEME');?></label>
 									<div class="controls">
 										<select name="options[site_tpl]">
-											<foreach name="templates" item="vo">
-											<php>$tpl_selected=$site_tpl==$vo?"selected":"";</php>
-											<option value="{$vo}" {$tpl_selected}>{$vo}</option>
-											</foreach>
+											<?php if(is_array($templates)): foreach($templates as $key=>$vo): $tpl_selected=$site_tpl==$vo?"selected":""; ?>
+											<option value="<?php echo ($vo); ?>" <?php echo ($tpl_selected); ?>><?php echo ($vo); ?></option><?php endforeach; endif; ?>
 										</select>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('ENABLE_MOBILE_THEME')}：</label>
+									<label class="control-label"><?php echo L('ENABLE_MOBILE_THEME');?>：</label>
 									<div class="controls">
-										<php>$mobile_tpl_enabled_checked=empty($mobile_tpl_enabled)?'':'checked';</php>
-										<label class="checkbox inline"><input type="checkbox" name="options[mobile_tpl_enabled]" value="1" {$mobile_tpl_enabled_checked}></label>
+										<?php $mobile_tpl_enabled_checked=empty($mobile_tpl_enabled)?'':'checked'; ?>
+										<label class="checkbox inline"><input type="checkbox" name="options[mobile_tpl_enabled]" value="1" <?php echo ($mobile_tpl_enabled_checked); ?>></label>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('WEBSITE_ADMIN_THEME')}</label>
+									<label class="control-label"><?php echo L('WEBSITE_ADMIN_THEME');?></label>
 									<div class="controls">
-										<php>$site_adminstyle=empty($site_adminstyle)?'flat':$site_adminstyle;</php>
+										<?php $site_adminstyle=empty($site_adminstyle)?'flat':$site_adminstyle; ?>
 										<select name="options[site_adminstyle]">
-											<foreach name="adminstyles" item="vo">
-											<php>$adminstyle_selected=$site_adminstyle==$vo?"selected":"";</php>
-											<option value="{$vo}" {$adminstyle_selected}>{$vo}</option>
-											</foreach>
+											<?php if(is_array($adminstyles)): foreach($adminstyles as $key=>$vo): $adminstyle_selected=$site_adminstyle==$vo?"selected":""; ?>
+											<option value="<?php echo ($vo); ?>" <?php echo ($adminstyle_selected); ?>><?php echo ($vo); ?></option><?php endforeach; endif; ?>
 										</select>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('HTML_CACHE')}：</label>
+									<label class="control-label"><?php echo L('HTML_CACHE');?>：</label>
 									<div class="controls">
-										<php>$html_cache_on_checked=empty($html_cache_on)?'':'checked';</php>
-										<label class="checkbox inline"><input type="checkbox" name="options[html_cache_on]" value="1" {$html_cache_on_checked}></label>
+										<?php $html_cache_on_checked=empty($html_cache_on)?'':'checked'; ?>
+										<label class="checkbox inline"><input type="checkbox" name="options[html_cache_on]" value="1" <?php echo ($html_cache_on_checked); ?>></label>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('WEBSITE_ICP')}</label>
+									<label class="control-label"><?php echo L('WEBSITE_ICP');?></label>
 									<div class="controls">
-										<input type="text" name="options[site_icp]" value="{$site_icp}">
+										<input type="text" name="options[site_icp]" value="<?php echo ($site_icp); ?>">
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('WEBMASTER_EMAIL')}</label>
+									<label class="control-label"><?php echo L('WEBMASTER_EMAIL');?></label>
 									<div class="controls">
-										<input type="text" name="options[site_admin_email]" value="{$site_admin_email}">
+										<input type="text" name="options[site_admin_email]" value="<?php echo ($site_admin_email); ?>">
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L("WEBSITE_STATISTICAL_CODE")}</label>
+									<label class="control-label"><?php echo L("WEBSITE_STATISTICAL_CODE");?></label>
 									<div class="controls">
-										<textarea name="options[site_tongji]" rows="5" cols="57">{$site_tongji}</textarea>
+										<textarea name="options[site_tongji]" rows="5" cols="57"><?php echo ($site_tongji); ?></textarea>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('WEBSITE_COPYRIGHT_INFOMATION')}</label>
+									<label class="control-label"><?php echo L('WEBSITE_COPYRIGHT_INFOMATION');?></label>
 									<div class="controls">
-										<textarea name="options[site_copyright]" rows="5" cols="57">{$site_copyright}</textarea>
+										<textarea name="options[site_copyright]" rows="5" cols="57"><?php echo ($site_copyright); ?></textarea>
 									</div>
 								</div>
 							</fieldset>
@@ -135,21 +178,21 @@
 						<div class="tab-pane" id="B">
 							<fieldset>
 								<div class="control-group">
-									<label class="control-label">{:L('WEBSITE_SEO_TITLE')}</label>
+									<label class="control-label"><?php echo L('WEBSITE_SEO_TITLE');?></label>
 									<div class="controls">
-										<input type="text" name="options[site_seo_title]" value="{$site_seo_title}">
+										<input type="text" name="options[site_seo_title]" value="<?php echo ($site_seo_title); ?>">
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('WEBSITE_SEO_KEYWORDS')}</label>
+									<label class="control-label"><?php echo L('WEBSITE_SEO_KEYWORDS');?></label>
 									<div class="controls">
-										<input type="text" name="options[site_seo_keywords]" value="{$site_seo_keywords}">
+										<input type="text" name="options[site_seo_keywords]" value="<?php echo ($site_seo_keywords); ?>">
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('WEBSITE_SEO_DESCRIPTION')}</label>
+									<label class="control-label"><?php echo L('WEBSITE_SEO_DESCRIPTION');?></label>
 									<div class="controls">
-										<textarea name="options[site_seo_description]" rows="5" cols="57">{$site_seo_description}</textarea>
+										<textarea name="options[site_seo_description]" rows="5" cols="57"><?php echo ($site_seo_description); ?></textarea>
 									</div>
 								</div>
 							</fieldset>
@@ -157,23 +200,21 @@
 						<div class="tab-pane" id="C">
 							<fieldset>
 								<div class="control-group">
-									<label class="control-label">{:L('URL_MODE')}</label>
+									<label class="control-label"><?php echo L('URL_MODE');?></label>
 									<div class="controls">
-										<php>$urlmodes=array( "0"=>L('URL_NORMAL_MODE'), "1"=>L('URL_PATHINFO_MODE'), "2"=>L('URL_REWRITE_MODE'));</php>
+										<?php $urlmodes=array( "0"=>L('URL_NORMAL_MODE'), "1"=>L('URL_PATHINFO_MODE'), "2"=>L('URL_REWRITE_MODE')); ?>
 										<select name="options[urlmode]">
-											<foreach name="urlmodes" item="vo">
-											<php>$urlmode_selected=$key==$urlmode?"selected":"";</php>
-											<option value="{$key}" {$urlmode_selected}>{$vo}</option>
-											</foreach>
+											<?php if(is_array($urlmodes)): foreach($urlmodes as $key=>$vo): $urlmode_selected=$key==$urlmode?"selected":""; ?>
+											<option value="<?php echo ($key); ?>" <?php echo ($urlmode_selected); ?>><?php echo ($vo); ?></option><?php endforeach; endif; ?>
 										</select>
-										<span class="form-required">* {:L('URL_MODE_HELP_TEXT')}</span>
+										<span class="form-required">* <?php echo L('URL_MODE_HELP_TEXT');?></span>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('URL_REWRITE_SUFFIX')}</label>
+									<label class="control-label"><?php echo L('URL_REWRITE_SUFFIX');?></label>
 									<div class="controls">
-										<input type="text" name="options[html_suffix]" value="{$html_suffix}">
-										<span class="form-required">{:L('URL_REWRITE_SUFFIX_HELP_TEXT')}</span>
+										<input type="text" name="options[html_suffix]" value="<?php echo ($html_suffix); ?>">
+										<span class="form-required"><?php echo L('URL_REWRITE_SUFFIX_HELP_TEXT');?></span>
 									</div>
 								</div>
 							</fieldset>
@@ -181,16 +222,16 @@
 						<div class="tab-pane" id="E">
 							<fieldset>
 								<div class="control-group">
-									<label class="control-label">{:L('COMMENT_CHECK')}</label>
+									<label class="control-label"><?php echo L('COMMENT_CHECK');?></label>
 									<div class="controls">
-										<php>$comment_need_checked=empty($comment_need_check)?"":"checked";</php>
-										<input type="checkbox" class="js-check" name="options[comment_need_check]" value="1" {$comment_need_checked}>
+										<?php $comment_need_checked=empty($comment_need_check)?"":"checked"; ?>
+										<input type="checkbox" class="js-check" name="options[comment_need_check]" value="1" <?php echo ($comment_need_checked); ?>>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">{:L('COMMENT_TIME_INTERVAL')}</label>
+									<label class="control-label"><?php echo L('COMMENT_TIME_INTERVAL');?></label>
 									<div class="controls">
-										<input type="number" name="options[comment_time_interval]" value="{$comment_time_interval|default=60}" style="width:40px;">{:L('SECONDS')}
+										<input type="number" name="options[comment_time_interval]" value="<?php echo ((isset($comment_time_interval) && ($comment_time_interval !== ""))?($comment_time_interval):60); ?>" style="width:40px;"><?php echo L('SECONDS');?>
 									</div>
 								</div>
 							</fieldset>
@@ -198,9 +239,9 @@
 						<div class="tab-pane" id="F">
 							<fieldset>
 								<div class="control-group">
-									<label class="control-label">{:L('SPECAIL_USERNAME')}</label>
+									<label class="control-label"><?php echo L('SPECAIL_USERNAME');?></label>
 									<div class="controls">
-										<textarea name="cmf_settings[banned_usernames]" rows="5" cols="57">{$cmf_settings.banned_usernames}</textarea>
+										<textarea name="cmf_settings[banned_usernames]" rows="5" cols="57"><?php echo ($cmf_settings["banned_usernames"]); ?></textarea>
 									</div>
 								</div>
 							</fieldset>
@@ -210,7 +251,7 @@
 								<div class="control-group">
 									<label class="control-label">静态资源cdn地址</label>
 									<div class="controls">
-										<input type="text" name="cdn_settings[cdn_static_root]" value="{$cdn_settings.cdn_static_root}">
+										<input type="text" name="cdn_settings[cdn_static_root]" value="<?php echo ($cdn_settings["cdn_static_root"]); ?>">
 										<span class="help-block">
 											不能以/结尾；设置这个地址后，请将ThinkCMF下的静态资源文件放在其下面；<br>
 											ThinkCMF下的静态资源文件大致包含以下(如果你自定义后，请自行增加)：<br>
@@ -228,12 +269,12 @@
 				</div>
 				
 				<!-- <div class="form-actions">
-					<button type="submit" class="btn btn-primary  js-ajax-submit">{:L("SAVE")}</button>
+					<button type="submit" class="btn btn-primary  js-ajax-submit"><?php echo L("SAVE");?></button>
 				</div> -->
 			</fieldset>
 		</form>
 		<div style="text-align: center;" id="profit">
-			<button class="btn btn-primary" id="saveProfit">{:L("SAVE")}</button>
+			<button class="btn btn-primary" id="saveProfit"><?php echo L("SAVE");?></button>
 		</div>
 	<script type="text/javascript">
 		$(function(){
@@ -251,7 +292,7 @@
 			 // if(!vipprofit){$('#vipprofit').focus();alert('当前选项不能为空！');return false;}
 			if (confirm('是否重新设置分润标准？')) {
 				$.ajax({
-					url: "{:U('Setting/ProfitSetting')}",
+					url: "<?php echo U('Setting/ProfitSetting');?>",
 					type: 'POST',
 					dataType: 'json',
 					data: {'scroll': scroll},
@@ -264,7 +305,7 @@
 		});
 	</script>
 	</div>
-	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+	<script type="text/javascript" src="/public/js/common.js"></script>
 	<script>
 		/////---------------------
 		$(function(){
@@ -315,7 +356,7 @@
 							background : "#CCCCCC",
 							opacity : 0,
 							content : errorArr[0].message,
-							cancelVal : "{:L('OK')}",
+							cancelVal : "<?php echo L('OK');?>",
 							cancel : function() {
 								$(errorArr[0].element).focus();
 							}
@@ -338,10 +379,10 @@
 				//验证未通过提示消息
 				messages : {
 					'options[site_name]' : {
-						required : "{:L('WEBSITE_SITE_NAME_REQUIRED_MESSAGE')}"
+						required : "<?php echo L('WEBSITE_SITE_NAME_REQUIRED_MESSAGE');?>"
 					},
 					'options[site_host]' : {
-						required : "{:L('WEBSITE_SITE_HOST_REQUIRED_MESSAGE')}"
+						required : "<?php echo L('WEBSITE_SITE_HOST_REQUIRED_MESSAGE');?>"
 					}
 				},
 				//给未通过验证的元素加效果,闪烁等
@@ -373,14 +414,14 @@
 										opacity : 0,
 										content : message,
 										button : [ {
-											name : "{:L('OK')}",
+											name : "<?php echo L('OK');?>",
 											callback : function() {
 												reloadPage(window);
 												return true;
 											},
 											focus : true
 										}, {
-											name : "{:L('CLOSE')}",
+											name : "<?php echo L('CLOSE');?>",
 											callback : function() {
 												reloadPage(window);
 												return true;
