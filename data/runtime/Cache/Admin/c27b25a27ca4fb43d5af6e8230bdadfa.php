@@ -1,11 +1,60 @@
-<admintpl file="header" />
+<?php if (!defined('THINK_PATH')) exit();?><!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<!-- Set render engine for 360 browser -->
+	<meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- HTML5 shim for IE8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <![endif]-->
+
+	<link href="/public/simpleboot/themes/<?php echo C('SP_ADMIN_STYLE');?>/theme.min.css" rel="stylesheet">
+    <link href="/public/simpleboot/css/simplebootadmin.css" rel="stylesheet">
+    <link href="/public/js/artDialog/skins/default.css" rel="stylesheet" />
+    <link href="/public/simpleboot/font-awesome/4.4.0/css/font-awesome.min.css"  rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/public/Api.js"></script>
+    <style>
+		form .input-order{margin-bottom: 0px;padding:3px;width:40px;}
+		.table-actions{margin-top: 5px; margin-bottom: 5px;padding:0px;}
+		.table-list{margin-bottom: 0px;}
+	</style>
+	<!--[if IE 7]>
+	<link rel="stylesheet" href="/public/simpleboot/font-awesome/4.4.0/css/font-awesome-ie7.min.css">
+	<![endif]-->
+	<script type="text/javascript">
+	//全局变量
+	var GV = {
+		DIMAUB: "/",
+	    ROOT: "/",
+	    WEB_ROOT: "/",
+	    JS_ROOT: "public/js/",
+	    APP:'<?php echo (MODULE_NAME); ?>'/*当前应用名*/
+	};
+	</script>
+    <script src="/public/js/jquery.js"></script>
+    <script src="/public/js/wind.js"></script>
+    <script src="/public/simpleboot/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+    	// $(function(){
+    	// 	$("[data-toggle='tooltip']").tooltip();
+    	// });
+    </script>
+<?php if(APP_DEBUG): ?><style>
+		#think_page_trace_open{
+			z-index:9999;
+		}
+	</style><?php endif; ?>
 <style type="text/css">
     .pagination{float: right;margin-right: 20px;}
     .pagination a, .pagination span{padding: 3px 10px;margin-left: 3px;border-radius: 3px;}
     .pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
     .pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
 </style>
-<!--<link rel="stylesheet" href="__PUBLIC__/js/bootstrap.min.css">-->
+<!--<link rel="stylesheet" href="/public/js/bootstrap.min.css">-->
 </head>
 <body>
 <div class="wrap js-check-wrap">
@@ -14,7 +63,7 @@
     </ul>
     <!-- 搜索 start by LEE  -->
     <form class="well form-search" method="post" action="<?php echo U('getMyCard',['user_id'=>$user['id']]); ?>">
-        <p style="float: right;">操作用户名称：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;">{$user['nickname']}</span></p>
+        <p style="float: right;">操作用户名称：<img src="<?php echo ($user['user_img']); ?>" alt="<?php echo ($user['user_img']); ?>" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;"><?php echo ($user['nickname']); ?></span></p>
         当前卡状态：
         <select class="select_1" name="status">
             <option value="" >所有</option>
@@ -23,7 +72,7 @@
             <option value="3" <?php if(isset($status) && $status == 3) echo 'selected="selected"';?>>注销</option>
         </select> &nbsp;&nbsp;
         关键字：
-        <input type="text" name="keywords" style="width: 200px;" value="{$keywords}" placeholder="请输入要查询卡号">
+        <input type="text" name="keywords" style="width: 200px;" value="<?php echo ($keywords); ?>" placeholder="请输入要查询卡号">
         <input type="submit" id="selectUser" class="btn btn-primary" value="搜索">
     </form>
 
@@ -40,41 +89,37 @@
         </tr>
         </thead>
         <tbody>
-        <volist name="data" id="val">
-            <tr>
+        <?php if(is_array($data)): $i = 0; $__LIST__ = $data;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$val): $mod = ($i % 2 );++$i;?><tr>
                 <td style="text-align:center;">
-                    {$val['id']}
+                    <?php echo ($val['id']); ?>
                 </td>
                 <td style="text-align:center;">
-                    {$val['card_no']}
+                    <?php echo ($val['card_no']); ?>
                 </td>
                 <td style="text-align:center;">
-                    {$val['scale']}折
+                    <?php echo ($val['scale']); ?>折
                 </td>
                 <td style="text-align:center;">
-                    {$val['createtime']}
+                    <?php echo ($val['createtime']); ?>
                 </td>
                 <td style="text-align:center;">
-                    {$val['apply_fo_time']}
+                    <?php echo ($val['apply_fo_time']); ?>
                 </td>
                 <td style="text-align:center;">
-                    <if condition="$val['is_notmal'] eq '1'">
-                        正常
-                    <elseif condition="$val['is_notmal'] eq '2'"/>
+                    <?php if($val['is_notmal'] == '1'): ?>正常
+                    <?php elseif($val['is_notmal'] == '2'): ?>
                         冻结
-                        <else/>
-                        注销
-                    </if>
+                        <?php else: ?>
+                        注销<?php endif; ?>
                 </td>
                 <td style="text-align:center;">
-                    <!--<a href="{:U('del',['id'=>$val['id']])}">删除</a>-->
-                    <!--<a href="{:U('del',['id'=>$val['id'],'flag'=>1])}">冻结</a>-->
+                    <!--<a href="<?php echo U('del',['id'=>$val['id']]);?>">删除</a>-->
+                    <!--<a href="<?php echo U('del',['id'=>$val['id'],'flag'=>1]);?>">冻结</a>-->
                     <!--<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="xiajia"><span style="color: white; font-size: 8px;">下架</span></button>-->
                     <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">充值记录</span></button>
                     <!--<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button>-->
                 </td>
-            </tr>
-        </volist>
+            </tr><?php endforeach; endif; else: echo "" ;endif; ?>
         </tbody>
     </table>
 
@@ -170,9 +215,9 @@
 
     <div class="pagination"><?php echo $page; ?></div>
 </div>
-<script src="__PUBLIC__/js/common.js"></script>
-<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-<script src="__PUBLIC__/js/bootstrap.min.js"></script>
+<script src="/public/js/common.js"></script>
+<script src="/public/js/jquery-1.9.1.min.js"></script>
+<script src="/public/js/bootstrap.min.js"></script>
 </body>
 </html>
 <script>

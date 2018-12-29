@@ -58,12 +58,12 @@
 <body>
 <div class="wrap js-check-wrap">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="<?php echo U('agentlist'); ?>">代理商列表</a></li>
-        <!--<li><a href="<?php echo U('add_grade'); ?>">添加代理商</a></li>-->
+        <li class="active"><a href="javascript:;">下线列表</a></li>
     </ul>
 
         <!-- 搜索 start by LEE  -->
-        <form class="well form-search" method="post" action="<?php echo U('Admin/Grade/agentlist'); ?>">
+        <form class="well form-search" method="post" action="<?php echo U('getOffline',['id'=>$user['id']]); ?>">
+            <p style="float: right;">操作用户名称：<img src="<?php echo ($user['user_img']); ?>" alt="<?php echo ($user['user_img']); ?>" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;"><?php echo ($user['nickname']); ?></span></p>
             当前用户状态：
             <select class="select_1" name="status">
                 <option value="" >所有</option>
@@ -75,25 +75,20 @@
             <input type="text" name="keywords" style="width: 200px;" value="<?php echo ($keywords); ?>" placeholder="请输入要查询联系人名称">
             <input type="submit" id="selectUser" class="btn btn-primary" value="搜索">
         </form>
-
     <table class="table table-hover table-bordered">
         <thead>
         <tr>
             <th>ID</th>
-            <th style="text-align:center;">代理商名称</th>
+            <th style="text-align:center;">用户名称</th>
             <th style="text-align:center;">头像</th>
             <th style="text-align:center;">代理称号</th>
-            <th style="text-align:center;">押金</th>
-            <th style="text-align:center;">发展来源</th>
             <th style="text-align:center;">状态</th>
             <th style="text-align:center;">创建时间</th>
-            <th style="text-align:center;">过期时间</th>
-            <th style="text-align:center;">操作</th>
         </tr>
         </thead>
         <tbody>
         <?php if(is_array($data)): $i = 0; $__LIST__ = $data;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$val): $mod = ($i % 2 );++$i;?><tr>
-            <td style="width:40px;text-align:center;">
+            <td style="text-align:center;">
                 <?php echo ($val['id']); ?>
             </td>
             <td style="text-align:center;">
@@ -103,35 +98,12 @@
                 <img src="<?php echo ($val['user_img']); ?>" alt="<?php echo ($val['user_img']); ?>" />
             </td>
             <td style="text-align:center;">
-            	<?php if($val['role'] == '3'): ?>代理商<?php endif; ?>
-            </td>
-            <td style="text-align:center;">
-                <font style="color:red">￥</font><?php echo ($val['deposit']); ?>
-            </td>
-            <td style="text-align:center;">
-            	<?php if($val['development'] == '1'): ?>总部发展
-                <?php elseif($val['development'] == '2'): ?>
-                	代理商发展
-                <?php else: ?>
-                	业务员发展<?php endif; ?>
-            </td>
-            <td style="text-align:center;">
-                <?php if($val['status'] == '1'): ?>正常
-                <?php else: ?>
-                	不可使用<?php endif; ?>
+                <?php if($val['role'] == '1'): ?>普通用户
+                    <?php else: ?>
+                    VIP用户<?php endif; ?>
             </td>
             <td style="text-align:center;">
                 <?php echo ($val['createtime']); ?>
-            </td>
-            <td style="text-align:center;">
-                <?php echo ($val['expire_time']); ?>
-            </td>
-            <td style="width:500px; height: 53px; text-align:center;">
-                <button style="background: #2c3e50;border:0; width: 70px; height: 40px;" ><a href="<?php echo U('sendCard',['id'=>$val['id']]);?>"><span style="color: white; font-size: 8px;">发卡</span></a></button>
-                <button style="background: #2c3e50;border:0; width: 70px; height: 40px;" ><a href="<?php echo U('getOffline',['id'=>$val['id']]);?>"><span style="color: white; font-size: 8px;">查看下线</span></a></button>
-                <button style="background: #2c3e50;border:2px; width: 110px; height: 40px;" ><a href="<?php echo U('getMyCard',['user_id'=>$val['id']]);?>"><span style="color: white; font-size: 8px;">查看我的油卡</span></a></button>
-                <button style="background: #2c3e50;border:2px; width: 100px; height: 40px;" ><a href="<?php echo U('sendCardRecord',['id'=>$val['id']]);?>"><span style="color: white; font-size: 8px;">查看发卡记录</span></a></button>
-                <button style="background: #2c3e50;border:2px; width: 100px; height: 40px;" ><a href="<?php echo U('payCard',['id'=>$val['id']]);?>"><span style="color: white; font-size: 8px;">查看所购油卡</span></a></button>
             </td>
         </tr><?php endforeach; endif; else: echo "" ;endif; ?>
         </tbody>
