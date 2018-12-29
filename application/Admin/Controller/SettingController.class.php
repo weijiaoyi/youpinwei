@@ -30,10 +30,12 @@ class SettingController extends AdminbaseController{
 		$plainprofit = I('post.plainprofit',2.5);
 		$data = [
 			'scroll' =>$scroll,
-			'vipprofit' =>$vipprofit,
-			'plainprofit' =>$plainprofit,
+			// 'vipprofit' =>$vipprofit,
+			// 'plainprofit' =>$plainprofit,
 		];
+
 		$result=M('setting')->where('id=1')->save($data);
+		p($result);exit;
 		exit(json_encode($result));
 	}
 	
@@ -56,7 +58,8 @@ class SettingController extends AdminbaseController{
 		}
 		
 		$cdn_settings=sp_get_option('cdn_settings');
-		
+		$profit = M('setting')->find();
+		$this->assign($profit);
 		$this->assign("cdn_settings",$cdn_settings);
 		
 		$this->assign("cmf_settings",json_decode($cmf_settings,true));

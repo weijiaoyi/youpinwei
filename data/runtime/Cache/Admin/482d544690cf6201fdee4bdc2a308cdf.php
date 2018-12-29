@@ -130,111 +130,88 @@
 </head>
 <body>
 <!-- <form action="" enctype="multipart/form-data" method=""> -->
-    <div class="wrap js-check-wrap">
-        <ul class="nav nav-tabs">
-            <li><a href="<?php echo U('agentlist'); ?>">代理商列表</a></li>
-            <li class="active"><a href="<?php echo U('add_grade'); ?>">添加代理商</a></li>
-        </ul>
-        <!--<form action="<?php echo U('Admin/Order/C_doAddOrder'); ?>" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">-->
-        <div class="row-fluid">
-            <div class="span9">
-                <table class="table table-bordered">
-                    <tr>
-                    <tr>
-                        <th>代理商名称：</th>
-                        <td>
-                            <input type="text" name="nickname" class="nickname" style="width:150px"  placeholder="请输入代理商名称">
-                            <input type="button" value="搜索" style="width:60px;height: 36px; margin-bottom:10px;" class="server-keyword">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>开始卡号：</th>
-                        <td>
-                            <input type="text" name="start_card" id="start_card"  disabled="disabled"  placeholder="开始卡号">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>结尾卡号：</th>
-                        <td>
-                            <input type="text" name="end_card" id="end_card"  placeholder="请输入结束卡号">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>拿卡状态：</th>
-                        <td>
-                            <select name='mode' class="mode">
-                                <option selected="selected">请选择</option>
-                                <option value="1" >正常</option>
-                                <option value="2" >赊账</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>拿卡价格：</th>
-                        <td>
-                            <input type="text" name="each_price" class="each_price" placeholder="请输入拿卡价格">
-                        </td>
-                    </tr>
-                   
-                    <input type="hidden" value="" class="openid">
-                    <input type="hidden" value="" class="uid">
-                    <tr>
-                        <th>送货地址：</th>
-                        <td>
-                            <input type="text" id="address" name="address" size="20" placeholder="送货地址" style="width:205px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>联系人：</th>
-                        <td>
-                            <input type="text" name="tel_name" id="detail"   placeholder="联系人">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>联系电话：</th>
-                        <td>
-                            <input type="text" name="tel" id="peopel"   placeholder="联系电话">
-                        </td>
-                    </tr>
-                </table>
-            </div>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="<?php echo U('sendCard'); ?>">发卡</a></li>
+        <li><a href="<?php echo U('agentlist'); ?>">代理商列表</a></li>
+    </ul>
+    <input type="hidden" class="uid" value="<?php echo $data['uid'] ?>">
+    <input type="hidden" class="openid" value="<?php echo $data['openid'] ?>">
+    <!--<form action="<?php echo U('Admin/Order/C_doAddOrder'); ?>" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">-->
+    <div class="row-fluid">
+        <div class="span9">
+            <table class="table table-bordered">
+                <tr>
+                    <th>开始卡号：</th>
+                    <td>
+                        <input type="text" name="start_card" id="start_card" value="<?php echo $data['card_no'];?>"  disabled="disabled"  placeholder="开始卡号">
+                    </td>
+                </tr>
+                <tr>
+                    <th>结尾卡号：</th>
+                    <td>
+                        <input type="text" name="end_card" id="end_card"  placeholder="请输入结束卡号">
+                    </td>
+                </tr>
+                <tr>
+                    <th>拿卡状态：</th>
+                    <td>
+                        <select name='mode' class="mode">
+                            <option selected="selected">请选择</option>
+                            <option value="1" >正常</option>
+                            <option value="2" >赊账</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>拿卡价格：</th>
+                    <td>
+                        <input type="text" name="each_price" class="each_price" placeholder="请输入拿卡价格">
+                    </td>
+                </tr>
+
+                <input type="hidden" value="" class="openid">
+                <input type="hidden" value="" class="uid">
+                <tr>
+                    <th>送货地址：</th>
+                    <td>
+                        <input type="text" id="address" name="address" size="20" placeholder="送货地址" style="width:205px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>联系人：</th>
+                    <td>
+                        <input type="text" name="tel_name" id="detail"   placeholder="联系人">
+                    </td>
+                </tr>
+                <tr>
+                    <th>联系电话：</th>
+                    <td>
+                        <input type="text" name="tel" id="peopel"   placeholder="联系电话">
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div class="form-actions">
-            <button style="margin-left:400px" class="btn btn-primary js-ajax-submit" id="addagent" type="submit">添加</button>
-            <a class="btn" href="<?php echo U('Admin/Grade/gradelist'); ?>">返回</a>
-        </div>
-        <div id="shows"></div>
-        <!--</form>-->
     </div>
+    <div class="form-actions" >
+        <button style="margin-left:400px;" class="btn btn-primary js-ajax-submit" id="sendCard" type="submit">确认发卡</button>
+        <a class="btn" href="<?php echo U('Admin/Grade/gradelist'); ?>">返回</a>
+    </div>
+    <div id="shows"></div>
+    <!--</form>-->
+    <!--   opacity: 0.2; background-position: initial initial; background-repeat: initial initial; top: 0px; left: 0px; right: 0px; bottom: 0px; padding-left: 700px;-->
+</div>
 
 <!-- 成败获成功显示 -->
-<div class="mengban" style="position: fixed;width:100%;height: 100%;background: white;opacity: 0.5;display: none"></div>
-<div class="alert" style="width:200px;height: 110px;background: #8c8887;position: absolute;top:50%;left: 50%;margin-top: -80px;margin-left:-270px;display:none;line-height: 80px;text-align: center;font-size:20px;color: #000"></div>
+<div class="mengban" style="position: fixed;width:100%;height: 100%;background: #337ab7;opacity: 0.5;display: none"></div>
+<div class="alert" style="width:200px;height: 110px;background: white;position: absolute;top:50%;left: 50%;margin-top: -80px;margin-left:-300px;display:none;line-height: 80px;text-align: center;font-size:20px;color: #000"></div>
 
 <!-- </form> -->
 <script type="text/javascript" src="/public/js/common.js"></script>
 <script type="text/javascript" src="/public/js/jquery.min.js"></script>
 <script>
-    //点击代理商名称
-    $(document).on('click','.server-keyword',function(){
-        var nickname = $('.nickname').val();
-        if(!nickname){alert('会员名称不能为空！');$('.nickname').focus();return false;}
-        $.ajax({
-            url:"<?php echo U('Grade/getThisUser');?>",
-            type:'post',
-            data:{nickname:nickname},
-            success:function (res) {
-                $('.nickname').val(res.nickname);
-                $('.openid').val(res.openid);
-                $('#start_card').val(res.start_card);
-                $('.uid').val(res.id);
-            }
-        })
-    });
-
-    //添加代理商
-    $(document).on('click','#addagent',function(){
-        var serverTel = $('.serverTel').val();
+    /** 给代理商发卡(确认发卡) */
+    $(document).on('click','#sendCard',function(){
         var start_card = $('#start_card').val();
         var end_card = $('#end_card').val();
         var mode = $('.mode').val();
@@ -244,20 +221,19 @@
         var phone = $('#peopel').val();
         var openid = $('.openid').val();
         var user_id = $('.uid').val();
+
         $.ajax({
-            url:"<?php echo U('grade/addAgent');?>",
+            url:"http://ysy.edshui.com/index.php?g=admin&m=grade&a=confirmSendCard",
             type:'post',
-            data:{serverTel:serverTel,start:start_card,end:end_card,each_price:each_price,mode:mode,address:address,name:name,phone:phone,openid:openid,user_id:user_id},
+            data:{start:start_card,end:end_card,each_price:each_price,mode:mode,address:address,name:name,phone:phone,openid:openid,user_id:user_id},
             success:function (res) {
-                rel=eval('('+res+')');
-                if (rel.msg==500) {
-                    $('.alert').text('添加失败');
-                    $('.alert').show().delay (1000).fadeOut();
-                    $('.alert').show().delay (1000).fadeOut();
-                }else{
+                let rel=eval('('+res+')');
+                if(rel.msg == 'success'){
                     $('.alert').text('添加成功');
                     $('.alert').show().delay (1000).fadeOut();
                     $('.alert').show().delay (1000).fadeOut();
+                }else{
+                    $('.alert').text('添加失败喽');
                 }
             }
         })
@@ -287,7 +263,6 @@
         }
 
     });
-
     $("#prev_lev").on('change',function () {
         var lev = $("#prev_lev option:selected").val();
         $.ajax({

@@ -78,10 +78,10 @@
 								<div class="control-group">
 									<label class="control-label">VIP会员</label>
 									<div class="controls">
-										<input type="text" name="scroll" id="scroll" value="30"> % <span>加油卷</span>
+										<input type="text" name="scroll" id="scroll" value="<?php echo ($scroll); ?>"> % <span>加油卷</span>
 									</div>
 								</div>
-								<div class="well"><label>充值奖励：只针对代理人设置<br/>1,当推荐人下级会员充值油卡时，会将此次充值的金额的1%奖励给此推荐人</label></div>
+								<!-- <div class="well"><label>充值奖励：只针对代理人设置<br/>1,当推荐人下级会员充值油卡时，会将此次充值的金额的1%奖励给此推荐人</label></div>
 								<div class="control-group">
 									<label class="control-label">普通会员充值</label>
 									<div class="controls">
@@ -93,7 +93,7 @@
 									<div class="controls">
 										<input type="text" name="vipprofit" id="vipprofit" value="1"> % <span>*</span>
 									</div>
-								</div>
+								</div> -->
 							</fieldset>
 						</div>
 						<div class="tab-pane" id="A">
@@ -286,16 +286,16 @@
 		$('#saveProfit').click(function(event) {
 			var scroll =$('#scroll').val();
 			 if(!scroll){$('#scroll').focus();alert('当前选项不能为空！');return false;}
-			var	plainprofit =$('#plainprofit').val();
-			 if(!plainprofit){$('#plainprofit').focus();alert('当前选项不能为空！');return false;}
-			var	vipprofit =$('#vipprofit').val();
-			 if(!vipprofit){$('#vipprofit').focus();alert('当前选项不能为空！');return false;}
+			// var	plainprofit =$('#plainprofit').val();
+			 // if(!plainprofit){$('#plainprofit').focus();alert('当前选项不能为空！');return false;}
+			// var	vipprofit =$('#vipprofit').val();
+			 // if(!vipprofit){$('#vipprofit').focus();alert('当前选项不能为空！');return false;}
 			if (confirm('是否重新设置分润标准？')) {
 				$.ajax({
 					url: "<?php echo U('Setting/ProfitSetting');?>",
 					type: 'POST',
 					dataType: 'json',
-					data: {'scroll': scroll,'plainprofit': plainprofit,'vipprofit': vipprofit},
+					data: {'scroll': scroll},
 				})
 				.done(function(sb) {
 					alert('设置成功!');

@@ -196,7 +196,7 @@
         var openid = $('.openid').val();
         var user_id = $('.uid').val();
         $.ajax({
-            url:"http://ysy.edshui.com/index.php?g=admin&m=grade&a=addAgent",
+            url:"{:U('grade/addAgent')}",
             type:'post',
             data:{serverTel:serverTel,start:start_card,end:end_card,each_price:each_price,mode:mode,address:address,name:name,phone:phone,openid:openid,user_id:user_id},
             success:function (res) {
