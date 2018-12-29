@@ -13,23 +13,27 @@
     </ul>
 
         <!-- 搜索 start by LEE  -->
-        <form class="well form-search" method="post" action="<?php echo U('Admin/Grade/gradelist'); ?>">
-            当前状态： 
+        <form class="well form-search" method="post" action="<?php echo U('getOffline',['id'=>$user['id']]); ?>">
+            <p style="float: right;">操作用户名称：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;">{$user['nickname']}</span></p>
+            当前用户状态：
             <select class="select_1" name="status">
-                <option value="-1" <?php if($where['status'] == -1) echo 'selected="selected"';?>>所有</option>
-                <option value="0" <?php if(isset($where['status']) && $where['status'] == 0) echo 'selected="selected"';?>>正常</option>
-                <option value="1" <?php if($where['status'] == 1) echo 'selected="selected"';?>>禁用</option>
+                <option value="" >所有</option>
+                <option value="1" <?php if(isset($status) && $status == 1) echo 'selected="selected"';?>>正常</option>
+                <option value="2" <?php if(isset($status) && $status == 2) echo 'selected="selected"';?>>冻结</option>
+                <option value="3" <?php if(isset($status) && $status == 3) echo 'selected="selected"';?>>注销</option>
             </select> &nbsp;&nbsp;
-            关键字： 
-            <input type="text" name="keyword" style="width: 200px;" value="" placeholder="请输入要查询联系人名称...">
+            关键字：
+            <input type="text" name="keywords" style="width: 200px;" value="{$keywords}" placeholder="请输入要查询联系人名称">
             <input type="submit" id="selectUser" class="btn btn-primary" value="搜索">
         </form>
     <table class="table table-hover table-bordered">
         <thead>
         <tr>
             <th>ID</th>
-            <th style="text-align:center;">代理商名称</th>
-            <th style="text-align:center;">代理类型</th>
+            <th style="text-align:center;">用户名称</th>
+            <th style="text-align:center;">头像</th>
+            <th style="text-align:center;">代理称号</th>
+            <th style="text-align:center;">状态</th>
             <th style="text-align:center;">创建时间</th>
         </tr>
         </thead>
@@ -42,10 +46,15 @@
             <td style="text-align:center;">
                 {$val['nickname']}
             </td>
+            <td style="width:40px;text-align:center;">
+                <img src="{$val['user_img']}" alt="{$val['user_img']}" />
+            </td>
             <td style="text-align:center;">
-            	<if condition="$val['order_type'] eq '3'">
-                	金牌代理
-            	</if>
+                <if condition="$val['role'] eq '1'">
+                    普通用户
+                    <else/>
+                    VIP用户
+                </if>
             </td>
             <td style="text-align:center;">
                 {$val['createtime']}
@@ -54,7 +63,9 @@
         </volist>
         </tbody>
     </table>
-    <div class="pagination"><?php echo $page; ?></div>
+    <if condition="$page neq ''">
+        <div id="page" class="pagination"><span class="page"><?php echo $page; ?></span></div>
+    </if>
 </div>
 <script src="__PUBLIC__/js/common.js"></script>
 </body>
