@@ -60,7 +60,7 @@
             	</if>
             </td>
             <td style="text-align:center;">
-                <font style="color:red">￥</font>{$val['deposit']}
+                <span style="font-size: 20px;color: red;font-weight: bold;">{$val['deposit']}</span>元
             </td>
             <td style="text-align:center;">
             	<if condition="$val['development'] eq '1'">
@@ -73,9 +73,9 @@
             </td>
             <td style="text-align:center;">
                 <if condition="$val['status'] eq '1'">
-                	正常
+                    <span style="font-size: 14px;color: #00FF00;font-weight: bold;">正常</span>
                 <else/>
-                	不可使用
+                    <span style="font-size: 14px;color: red;font-weight: bold;">不可使用</span>
             	</if>
             </td>
             <td style="text-align:center;">

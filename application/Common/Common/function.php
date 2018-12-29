@@ -11,6 +11,9 @@ function p($arr){
 function dateFomat($time){
 	return date('Y-m-d',$time);
 }
+function dateFomatH($time){
+    return date('Y-m-d H:i:s',$time);
+}
 
 /**
  * 价格展示设置，保留两位小数

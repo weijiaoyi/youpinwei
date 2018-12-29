@@ -183,7 +183,7 @@ class GradeController extends AdminbaseController
 
 
         if($role == 2){
-            $where = ' agent.openid = user.openid AND user.parentid = "'.$id.'"';
+            $where = ' agent.openid = user.openid AND user.parentid = "'.$id.'" AND agent.role<3';
             if(!empty($status)){
                 $where .= ' AND is_notmal = "'.$status.'"';
             }
@@ -200,7 +200,7 @@ class GradeController extends AdminbaseController
                 -> where($where)
                 -> count();
         }else if($role == 3){
-            $where = ' agent.openid = user.openid AND user.agentid = "'.$id.'"';
+            $where = ' agent.openid = user.openid AND user.agentid = "'.$id.'" AND agent.role<3';
             if(!empty($status)){
                 $where .= ' AND is_notmal = "'.$status.'"';
             }
@@ -237,64 +237,75 @@ class GradeController extends AdminbaseController
      * 添加(添加代理商)
      */
     public function addAgent(){
-        $data = I('post.');
+        if(!empty($_POST)){
+            $data = I('post.');
+            $agentModel=M('agent');
+            $agent = $agentModel->where('openid="'.$data["openid"].'"')->find();
+            if(empty($agent)){
+                echo json_encode(['msg' => '代理不存在，无法分配','status' => 100]);
+            }
+            $OilCardModel = M('oil_card');
+            //判断用户是否是代理商如果是代理->agent_earnings添加卡区间信息
+            $save_oilcard_where =' card_no <= "'.$data["end"].'" AND card_no >= "'.$data["start"].'"';
 
-        $where = [ 'openid' => $data['openid'] ];
-        $AgentModel = M('agent');
-        $agent_info = $AgentModel -> where( $where ) -> find();
-        //判断用户是否是代理商如果是代理->agent_earnings添加卡区间信息
-        if( $agent_info ){
-            //记录该代理拿卡信息
-            $AgentLibraryModel = M('agent_library');
-            $insert_agent_library_data = [
-                'user_id' => $data['user_id'],
-                'start_card_no' => $data['start'],
-                'end_card_no' => $data['end'],
-                'openid' => $data['openid'],
-                'each_price' => $data['each_price'],
-                'card_mode' => $data['mode'],
-                'createtime' => date('Y-m-d H:i:s')
-            ];
-
-            $AgentLibraryModel = M('agent_library');
-            $result1 = $AgentLibraryModel -> add( $insert_agent_library_data );
-
-
-
-            //代理拿到卡后修改卡状态
-            for( $i = $data['start'] ; $i <= $data['end'] ; $i++ ){
-                //拿卡的数量
-                $arr[] = $i;
-                //修改卡状态和入手时间
-                $save_data = [
-                     'status' => 1,
-                    'agent_create_time' => date('Y-m-d H:i:s'),
-                    'agent_id' => $agent_info['id'],
-                    'chomd'=>2
-                ];
-                $OilCardModel = M('oil_card');
-                $result2 = $OilCardModel -> where( ['card_no' => $i ] ) -> save( $save_data );
+            $res =$OilCardModel->where('card_no >= "'.$data["end"].'"')->getField('id');
+            if(!$res){
+                echo json_encode(['msg' => '结束卡号超出，请重新分配','status' => 100]);exit;
+            }
+            $res2 =$OilCardModel->where('card_no = "'.$data["start"].'"')->getField('agent_id');
+            if($res2['agent_id']){
+                echo json_encode(['msg' => '开始卡号已被分配，请重新分配','status' => 100]);exit;
             }
 
-            //记录代理申领的信息
-            $UserApplyModel = M('user_apply');
-            $insert_user_apply_data = [
-                'user_id' => $data['user_id'],
-                'card_number' => count($arr),
-                'shop_name' => '中石油加油卡',
-                'receive_person' => $data['name'],
-                'phone' => $data['phone'],
-                'address' => $data['address'],
-                'deliver_number' => count($arr),
-                'serial_number' => '20181130'.rand(100000,999999),
-                'status' => 1,
-                'createtime' => date('Y-m-d H:i:s')
+            $save_oilcard_data = [
+                'agent_create_time' => time(),
+                'agent_id' => $data['user_id'],
+                'agent_status' => 1,
+                'chomd' => 2
             ];
-
-            $result3 = $UserApplyModel -> add( $insert_user_apply_data );
+            # 将此区间的卡状态更改为启用
+            $result1 = $OilCardModel -> where( $save_oilcard_where ) -> save( $save_oilcard_data );
+            if($result1) {
+                //添加卡附属信息（记录该代理拿卡区间）
+                $card_no_num = $data['end']-$data['start']+1;
+                $insert_agent_library_data = [
+                    'user_id' => $data['user_id'],
+                    'openid' => $data['openid'],
+                    'start_card_no' => $data['start'],
+                    'end_card_no' => $data['end'],
+                    'card_no_num' => $card_no_num,
+                    'each_price' => $data['each_price'],
+                    'card_mode' => $data['mode'],
+                    'createtime' => date('Y-m-d H:i:s'),
+                    'status' => 2,
+                ];
+                $AgentLibraryModel = M('agent_library');
+                $result2 = $AgentLibraryModel->add($insert_agent_library_data);
+                //修改押金和角色 过期时间
+                $new_deposit = $card_no_num*$data['each_price'];
+                $old_deposit = $agent['deposit'];
+                $deposit= $new_deposit+$old_deposit;
+                $update_data=array(
+                    'deposit'=>$deposit,
+                    'role' =>3,
+                    'vip_direct_scale' =>$data['vip_direct_scale'],
+                    'user_direct_scale' =>$data['user_direct_scale'],
+                    'vip_indirect_scale' =>$data['vip_indirect_scale'],
+                    'user_indirect_scale' =>$data['user_indirect_scale'],
+                    'expire_time' => date('Y-m-d H:i:s',strtotime('+1year')),
+                );
+                $result3 = $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
+                if ($result2) {
+                    echo json_encode(['msg' => '发卡成功', 'status' => 200]);
+                    exit;
+                } else {
+                    echo json_encode(['msg' => '发卡失败', 'status' => 100]);
+                    exit;
+                }
+            }
 
             //修改代理的过期时间
-            $save_expire_time = [
+           /* $save_expire_time = [
                 'expire_time' => date('Y-m-d H:i:s',strtotime('+1year')),
             ];
             $result4 = $AgentModel -> where( $where ) -> save( $save_expire_time );
@@ -314,10 +325,9 @@ class GradeController extends AdminbaseController
                     'msg' => 500,
                     'status' => '添加失败'
                 ]);exit;
-            }
+            }*/
         }else{
             //添加代理
-
 //            $AgentModel = M('agent');
 //            $insert_agent_data = [
 //                'openid' => $data['openid'],
@@ -380,7 +390,6 @@ class GradeController extends AdminbaseController
 //            }else{
 //                echo json_encode(['msg' => 500,'status' => '添加失败']);
 //            }
-
             $user_id = I('get.user_id');
             $openid = I('get.openid');
             $user = M('user')->where('id="'.$user_id.'" AND openid="'.$openid.'"')->find();
@@ -423,42 +432,67 @@ class GradeController extends AdminbaseController
      */
     public function confirmSendCard(){
         $data = I('post.');
+        $agentModel=M('agent');
+        $agent = $agentModel->where('openid="'.$data["openid"].'"')->find();
+        if(empty($agent)){
+            echo json_encode(['msg' => '代理不存在，无法分配','status' => 100]);
+        }
+        $OilCardModel = M('oil_card');
+        $save_oilcard_where =' card_no <= "'.$data["end"].'" AND card_no >= "'.$data["start"].'"';
 
-        $UserModel = M('user');
-        $user_info = $UserModel -> where( ['openid' => $data['openid']] ) -> find();
-
-        // 获取发卡卡段区间（操作修改oil_Card）
-        for( $i = $data['start']; $i <= $data['end']; $i++ ){
-            $arr[] = $i;
-            $save_oilcard_where = [ 'card_no' => $i ];
-            $save_oilcard_data = [
-                // 'status' => 2,
-                'agent_create_time' => date('Y-m-d H:i:s'),
-                'agent_id' => $data['user_id'],
-                'agent_status' => 1,
-                'user_id' => $user_info['id'],
-                'chomd' => 2
-            ];
-            # 将此区间的卡状态更改为启用
-            $OilCardModel = M('oil_card');
-            $result1 = $OilCardModel -> where( $save_oilcard_where ) -> save( $save_oilcard_data );
+        $res =$OilCardModel->where('card_no >= "'.$data["end"].'"')->getField('id');
+        if(!$res){
+            echo json_encode(['msg' => '结束卡号超出，请重新分配','status' => 100]);exit;
+        }
+        $res2 =$OilCardModel->where('card_no = "'.$data["start"].'"')->getField('agent_id');
+        if($res2['agent_id']){
+            echo json_encode(['msg' => '开始卡号已被分配，请重新分配','status' => 100]);exit;
         }
 
-        //添加卡附属信息（记录该代理拿卡区间）
-        $insert_agent_library_data = [
-            'user_id' => $data['user_id'],
-            'openid' => $data['openid'],
-            'start_card_no' => $data['start'],
-            'end_card_no' => $data['end'],
-            'each_price' => $data['each_price'],
-            'card_mode' => $data['mode'],
-            'createtime' => date('Y-m-d H:i:s'),
+        $save_oilcard_data = [
+            'agent_create_time' => time(),
+            'agent_id' => $data['user_id'],
+            'agent_status' => 1,
+            'chomd' => 2
         ];
-        $AgentLibraryModel = M('agent_library');
-        $result2 = $AgentLibraryModel -> add( $insert_agent_library_data );
+        # 将此区间的卡状态更改为启用
+        $result1 = $OilCardModel -> where( $save_oilcard_where ) -> save( $save_oilcard_data );
+        if($result1){
+            //添加卡附属信息（记录该代理拿卡区间）
+            $card_no_num = $data['end']-$data['start']+1;
+            $insert_agent_library_data = [
+                'user_id' => $data['user_id'],
+                'openid' => $data['openid'],
+                'start_card_no' => $data['start'],
+                'end_card_no' => $data['end'],
+                'card_no_num' => $card_no_num,
+                'each_price' => $data['each_price'],
+                'card_mode' => $data['mode'],
+                'createtime' => date('Y-m-d H:i:s'),
+                'status' => 2,
+            ];
+            $AgentLibraryModel = M('agent_library');
+            $result2 = $AgentLibraryModel -> add( $insert_agent_library_data );
+            //修改押金
+            $new_deposit = $card_no_num*$data['each_price'];
+            $old_deposit = $agent['deposit'];
+            $deposit= $new_deposit+$old_deposit;
+            $update_data=array(
+              'deposit'=>$deposit
+            );
+            $result3 = $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
+            if($result2){
+                echo json_encode(['msg' => '发卡成功','status' => 200]);exit;
+            }else{
+                echo json_encode(['msg' => '发卡失败','status' => 100]);exit;
+            }
+        }else{
+            echo json_encode(['msg' => '修改卡状态失败','status' => 100]);
+        }
+
 
         //记录代理的附属信息
-        $insert_user_apply_data = [
+       /* $insert_user_apply_data = [
             'user_id' => $data['user_id'],
             'receive_person' => $data['name'],
             'phone' => $data['phone'],
@@ -469,13 +503,13 @@ class GradeController extends AdminbaseController
             'serial_number' => '20180313'.rand(100000,999999)
         ];
         $UserApplyModel = M('user_apply');
-        $result3 = $UserApplyModel -> add($insert_user_apply_data);
+        $result3 = $UserApplyModel -> add($insert_user_apply_data);*/
 
-        if( $result1 && $result2 && $result3 ){
+       /* if( $result1 && $result2  ){
             echo json_encode(['msg' => 'success','status' => 1000]);
         }else{
             echo json_encode(['msg' => 'error','status' => 500]);
-        }
+        }*/
     }
 
     /**
@@ -484,6 +518,7 @@ class GradeController extends AdminbaseController
     public function sendCardRecord(){
         $id = trim( I('get.id') );
         $p = I('get.p',1);
+        $pageNum = 10;
         if( empty($id) ){
             echo '操作失败';exit;
         }
@@ -494,15 +529,18 @@ class GradeController extends AdminbaseController
             echo '操作失败';exit;
         }
         $AgentLibraryModel = M('agent_library');
-        $select_where = [
-            'openid' => $agent_info['openid']
-        ];
-        $agent_library_data = $AgentLibraryModel -> where( $select_where ) -> page( $p , 10 ) -> select();
-        foreach( $agent_library_data as $k => $v ){
-            $agent_library_data[$k]['nickname'] = M('user') -> where(['openid' => $v['openid']] ) -> getField('nickname');
-        }
-        $count = $AgentLibraryModel -> where( $select_where ) -> count();
-        $Page = new \Think\Page($count,10);
+        $select_where ='agent_library.user_id="'.$id.'" ';
+
+        $agent_library_data = $AgentLibraryModel
+            -> where( $select_where )
+            -> page( $p , $pageNum )
+            ->order('id desc')
+            -> select();
+        $count = $AgentLibraryModel
+            -> where( $select_where )
+            -> count();
+
+        $Page = new \Think\Page($count,$pageNum);
         $show = $Page -> show();
         $this -> assign('data' , $agent_library_data);
         $this -> assign('page' , $show);
@@ -534,7 +572,7 @@ class GradeController extends AdminbaseController
             if($status>3){
                 $where .= ' AND oil_card.status = 1';
             }else{
-                $where .= ' AND oil_card.is_notmal = "'.$status.'"';
+                $where .= ' AND oil_card.status = 2 AND oil_card.is_notmal = "'.$status.'"';
             }
 
         }
@@ -545,6 +583,7 @@ class GradeController extends AdminbaseController
             ->join('user ON user.id=oil_card.user_id',LEFT)
             ->where($where)
             ->page( $p , $pageNum )
+            ->order('oil_card.id desc')
             ->select();
 
         $count = $oilCardModel

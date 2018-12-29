@@ -64,7 +64,7 @@
             	</if>
             </td>
             <td style="text-align:center;">
-                <font style="color:red">￥</font>{$val['deposit']}
+                <span style="font-size: 20px;color: red;font-weight: bold;">{$val['deposit']}</span>元
             </td>
             <td style="text-align:center;">
             	<if condition="$val['development'] eq '1'">
@@ -76,11 +76,13 @@
             	</if>
             </td>
             <td style="text-align:center;">
-                <if condition="$val['status'] eq '1'">
-                	正常
-                <else/>
-                	不可使用
-            	</if>
+                <if condition="$val['is_notmal'] eq '1'">
+                    <span style="font-size: 14px;color: #00FF00;font-weight: bold;">正常</span>
+                    <elseif condition="$val['is_notmal'] eq '2'"/>
+                    <span style="font-size: 14px;color: #9a161a;font-weight: bold;">冻结</span>
+                    <elseif condition="$val['is_notmal'] eq '3'"/>
+                    <span style="font-size: 14px;color: #999999;font-weight: bold;">注销</span>
+                </if>
             </td>
             <td style="text-align:center;">
                 {$val['createtime']}
