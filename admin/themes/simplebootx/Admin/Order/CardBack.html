@@ -71,7 +71,7 @@
 					<th style="text-align:center;">操作时间</th>
 					<th style="text-align:center;">申请理由</th>
 					<th style="text-align:center;">处理状态</th>
-					<th style="text-align:center;">操作</th>
+					<!-- <th style="text-align:center;">操作</th> -->
 				</tr>
 			</thead>
 			<tbody id="show">
@@ -89,7 +89,7 @@
 						<td style="text-align:center;">
 							<?php echo $v['addtime']; ?>
 						</td>
-						<td style="text-align:center;" title="<?php echo $v['name']; ?>">
+						<td style="text-align:center;" title="">
 							<?php echo $v['updatetime'];?>
 						</td>
 						<td style="text-align:center;">	
@@ -111,11 +111,11 @@
 						?>
 						</td>
 						
-						<td style="width:300px; height: 53px; text-align:center;">
-							<!-- <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="xiajia"><span style="color: white; font-size: 8px;">下架</span></button>
+						<!-- <td style="width:300px; height: 53px; text-align:center;">
+							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="xiajia"><span style="color: white; font-size: 8px;">下架</span></button>
 							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">充值</span></button>
-							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button> -->
-						</td>
+							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button>
+						</td> -->
 					</tr>
 				<?php } ?>
 				
