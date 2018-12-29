@@ -45,6 +45,7 @@ define("THINKCMF_VERSION", 'X2.2.3');
 
 define("THINKCMF_CORE_TAGLIBS", 'cx,Common\Lib\Taglib\TagLibSpadmin,Common\Lib\Taglib\TagLibHome');
 
+define('TIMESTAMP',time());
 //载入框架核心文件
 require SPAPP_PATH.'Core/ThinkPHP.php';
 

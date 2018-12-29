@@ -49,17 +49,16 @@
 
 	<div class="wrap js-check-wrap" style="margin-top:-50px;">
 		<ul class="nav nav-tabs">
-			<li class="active"><a href="<?php echo U('Admin/Order/C_orderList'); ?>">油卡列表</a></li>
+			<li><a href="<?php echo U('Admin/Order/C_orderList'); ?>">油卡列表</a></li>
 			<li><a href="<?php echo U('Admin/Order/CardBack'); ?>">退卡申请</a></li>
-			<li><a href="<?php echo U('Admin/Order/CardLoss'); ?>">挂失申请</a></li>
+			<li class="active"><a href="<?php echo U('Admin/Order/CardLoss'); ?>">挂失申请</a></li>
 		</ul>
 		<form class="well form-search" method="post" action="<?php echo U('Admin/Order/C_orderList'); ?>">
 			
-			关键字： 
+			<!-- 关键字： 
 			<input type="text" name="keyword" style="width: 190px; height:34px;" value="" placeholder="请输入要查询的油卡...">
 			<input type="button" class="btn btn-primary CardKeyword " value="搜索">
-			<a href="javascript:;" class="import-many btn">批量导入</a>
-			<!-- <a href="javascript:;" class="discount-many btn">批量折扣</a> -->
+			<a href="javascript:;" class="import-many btn">批量导入</a>-->
 		</form>
 
 		<table class="table table-hover table-bordered">
@@ -68,14 +67,11 @@
 					<th>ID</th>
 					<th>用户</th>
 					<th style="text-align:center;">卡号</th>
-					<if condition="$_isAdmin === true">
-					<th style="text-align:center;">优惠折扣</th>
-					</if>
-					<th style="text-align:center;">入库时间</th>
-					<th style="text-align:center;">申领时间</th>
-					<th style="text-align:center;">代理发卡</th>
-					<th style="text-align:center;">油卡状态</th>
-					<th style="text-align:center;">查看</th>
+					<th style="text-align:center;">申请时间</th>
+					<th style="text-align:center;">操作时间</th>
+					<th style="text-align:center;">申请理由</th>
+					<th style="text-align:center;">处理状态</th>
+					<th style="text-align:center;">操作</th>
 				</tr>
 			</thead>
 			<tbody id="show">
@@ -87,58 +83,37 @@
 						<td style="text-align:center;">
 							<?php echo empty($v['nickname'])?'未绑定':$v['nickname'].'&nbsp;&nbsp;'.'<img src="'.$v['user_img'].'" width="35" hight="35">'; ?>
 						</td>
+                        <td style="text-align:center;">
+                            <?php echo $v['card_no']; ?>
+                        </td>
 						<td style="text-align:center;">
-							<?php echo $v['card_no']; ?>
-						</td>
-						<td style="text-align:center;">
-							{:number_format($v['scale'])}折
+							<?php echo $v['addtime']; ?>
 						</td>
 						<td style="text-align:center;" title="<?php echo $v['name']; ?>">
-							<?php echo $v['createtime'];?>
+							<?php echo $v['updatetime'];?>
 						</td>
 						<td style="text-align:center;">	
-							<?php echo $v['apply_fo_time']; ?>
+							<?php echo $v['desc']; ?>
 						</td>
 						<td style="text-align:center;">
 						<?php 
-							switch ($v['chomd']) {
+							switch ($v['status']) {
 								case '1':
-									echo "总部卡";
+									echo "已处理";
 									break;
 								case '2':
-									echo "代理卡";
+									echo "未处理";
 									break;
 								default:
-									echo "总部卡";
+									echo "未处理";
 									break;
-							}
+							} 
 						?>
 						</td>
-						<td style="text-align:center;">
-						<?php 
-							switch ($v['is_notmal']) {
-								case '1':
-									echo '<span style="color: green;">正常</span>';
-									break;
-								case '2':
-									echo '<span style="color: red;">冻结使用</span>';
-									break;
-								case '3':
-									echo '<span style="color: gray;">注销油卡</span>';
-									break;
-								default:
-									echo '<span style="color: green;">正常</span>';
-									break;
-							}
-						?>
-						</td>
+						
 						<td style="width:300px; height: 53px; text-align:center;">
-							<?php if ($v['is_notmal'] == 2){?>
-							<button style="background: #1dccaa;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="depro"><span style="color: white; font-size: 8px;">启用</span></button>
-							<?php }else{?>
-								<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="edpro"><span style="color: white; font-size: 8px;">禁用</span></button>
-							<?php }?>
-							<!-- <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">充值</span></button>
+							<!-- <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="xiajia"><span style="color: white; font-size: 8px;">下架</span></button>
+							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">充值</span></button>
 							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button> -->
 						</td>
 					</tr>
@@ -198,7 +173,6 @@
 <script src="__PUBLIC__/js/bootstrap.min.js"></script>
 
 <script>
-	layer.msg('sssss');
 	/** 根据卡号查询该油卡信息 */
 	$(document).on('click','.CardKeyword',function(){
 	    var card_no = $('input[name=keyword]').val();
@@ -245,11 +219,11 @@
 	});
 
 	/** 下架 */
-	$(document).on('click','.edpro',function(){
+	$(document).on('click','.xiajia',function(){
 		var id = $(this).val();
 		$.ajax({
 			type:'post',
-			url:"{:U('order/ProhibitCard')}",
+			url:"{:U('order/underGoods')}",
 			dataType:'json',
 			data:{id:id},
 			// async:false,
@@ -257,28 +231,7 @@
 				if(res.msg == 'success'){
                     window.location.reload();
 				}else{
-                    $('.alert').text('禁用失败');
-                    $('.alert').show().delay (1000).fadeOut();
-                    $('.alert').show().delay (1000).fadeOut();
-				}
-
-			}
-		});
-	});
-
-	$(document).on('click','.depro',function(){
-		var id = $(this).val();
-		$.ajax({
-			type:'post',
-			url:"{:U('order/deProhibitCard')}",
-			dataType:'json',
-			data:{id:id},
-			// async:false,
-			success:function(res){
-				if(res.msg == 'success'){
-                    window.location.reload();
-				}else{
-                    $('.alert').text('启用失败');
+                    $('.alert').text('下架失败啦');
                     $('.alert').show().delay (1000).fadeOut();
                     $('.alert').show().delay (1000).fadeOut();
 				}

@@ -18,18 +18,32 @@
 				<div class="tabbable">
 					<div class="tab-content">
 						<div class="tab-pane active" id="S">
-							<div class="well"><label>拉新奖励：只有VIP会获取此奖励<br/>
-									充值奖励：只有代理人会获取此奖励</label></div>
+							<!-- <div class="well"><label>拉新奖励：只有VIP会获取此奖励<br/>
+									充值奖励：只有代理人会获取此奖励</label></div> -->
 							<fieldset>
 								<div class="well"><label>拉新奖励：当推荐人A推荐新会员B时<br/>
 									VIP说明：1,获取油卡 2,购买年费<br/>
-									1,当推荐人A推荐新会员B时，当时无奖励<br/>
-									2,当新会员B升级为VIP时，如果A为普通会员,无奖励<br/>
-									3,当新会员B升级为VIP时，如果A为VIP，将给予A奖励N加油卷 此加油卷与充值金额为1：1</label></div>
+									1,当推荐人A推荐新会员B时<br/>
+									2,当新会员B第一次申领油卡时,如果套餐为普通套餐,无奖励，即使之后再次申领VIP套餐，也无奖励。<br/>
+									3,当新会员B第一次申领油卡时,如果套餐为VIP套餐，将按百分比奖励A加油卷 此加油卷与充值金额为1：1</label></div>
 								<div class="control-group">
-									<label class="control-label">VIP会员</label>
+									<label class="control-label">加油卷奖励</label>
 									<div class="controls">
 										<input type="text" name="scroll" id="scroll" value="{$scroll}"> % <span>加油卷</span>
+									</div>
+								</div>
+								<div class="well"><label>油卡申领押金：针对所有油卡<br/><br/>1,0代表不收取押金</label></div>
+								<div class="control-group">
+									<label class="control-label">押金</label>
+									<div class="controls">
+										<input type="text" name="deposit" id="deposit" value="{$deposit}"> % <span>元</span>
+									</div>
+								</div>
+								<div class="well"><label>邮费：只针对普通油卡设置<br/>1,油卡由代理发货时，将会把此邮费退还到代理余额内<br/>2,0代表不收取邮费</label></div>
+								<div class="control-group">
+									<label class="control-label">邮费</label>
+									<div class="controls">
+										<input type="text" name="postage" id="postage" value="{$postage}"> % <span>元</span>
 									</div>
 								</div>
 								<!-- <div class="well"><label>充值奖励：只针对代理人设置<br/>1,当推荐人下级会员充值油卡时，会将此次充值的金额的1%奖励给此推荐人</label></div>
@@ -244,17 +258,17 @@
 		})
 		$('#saveProfit').click(function(event) {
 			var scroll =$('#scroll').val();
-			 if(!scroll){$('#scroll').focus();alert('当前选项不能为空！');return false;}
-			// var	plainprofit =$('#plainprofit').val();
-			 // if(!plainprofit){$('#plainprofit').focus();alert('当前选项不能为空！');return false;}
-			// var	vipprofit =$('#vipprofit').val();
-			 // if(!vipprofit){$('#vipprofit').focus();alert('当前选项不能为空！');return false;}
+			 if(!scroll){$('#scroll').focus();alert('加油卷不能为空！');return false;}
+			var	deposit =$('#deposit').val();
+			 if(!deposit){$('#deposit').focus();alert('押金不能为空！');return false;}
+			var	postage =$('#postage').val();
+			 if(!postage){$('#postage').focus();alert('邮费不能为空！');return false;}
 			if (confirm('是否重新设置分润标准？')) {
 				$.ajax({
 					url: "{:U('Setting/ProfitSetting')}",
 					type: 'POST',
 					dataType: 'json',
-					data: {'scroll': scroll},
+					data: {'scroll': scroll,'postage':postage,'deposit':deposit},
 				})
 				.done(function(sb) {
 					alert('设置成功!');

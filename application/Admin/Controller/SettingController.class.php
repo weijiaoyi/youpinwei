@@ -26,16 +26,19 @@ class SettingController extends AdminbaseController{
 	 */
 	public function ProfitSetting(){
 		$scroll = I('post.scroll',30);
-		$vipprofit = I('post.vipprofit',1);
-		$plainprofit = I('post.plainprofit',2.5);
+		// $vipprofit = I('post.vipprofit',1);
+		// $plainprofit = I('post.plainprofit',2.5);
+		$deposit = I('post.deposit',25);
+		$postage = I('post.postage',10);
 		$data = [
 			'scroll' =>$scroll,
 			// 'vipprofit' =>$vipprofit,
 			// 'plainprofit' =>$plainprofit,
+			'deposit' => $deposit,
+			'postage' =>$postage,
 		];
 
 		$result=M('setting')->where('id=1')->save($data);
-		p($result);exit;
 		exit(json_encode($result));
 	}
 	
