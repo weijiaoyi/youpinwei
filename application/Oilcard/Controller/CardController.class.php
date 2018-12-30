@@ -129,7 +129,12 @@ class CardController extends CommentoilcardController
         //     redirect(U('oilcard/wechat/getCode'));
         // }
 
-        $cardList = M('OilCard')->where(['user_id'=>$user['id']])->order("createtime desc")->select();
+        $cardList = M('OilCard')
+            ->alias('o')
+            ->join('__PACKAGES__ p ON p.pid=o.pkgid',LEFT)
+            ->where(['o.user_id'=>$user['id']])
+            ->order("o.createtime desc")
+            ->select();
         if (empty($cardList)){
             $this->success('账户下无对应的加油卡','1001');exit;
         }
@@ -143,44 +148,57 @@ class CardController extends CommentoilcardController
         foreach ($cardList as $k=>$v)
         {
             // var_dump($v);
-            if ($v['end_time']>date("Y-m-d H:i:s") && !empty($v['preferential']) && $v['preferential']>0) {
+            if($v['pkgid']>1){
                 $role =2;
-                $end_time=$v['end_time'];
             }else{
                 $role=1;
+            }
+            if ($v['end_time']>date("Y-m-d H:i:s")) {
+                $end_time=$v['end_time'];
+            }else{
                 $end_time='';
             }
+            $normal[$k]['role'] =$role;
+            $normal[$k]['card_no'] = $v['card_no'];
+            $normal[$k]['status'] = $v['status'];
+            $normal[$k]['now_scale'] = $v['scale'];
+            $normal[$k]['end_time'] = $end_time;
+            $normal[$k]['discount'] = $v['discount'];
+            $normal[$k]['createtime'] = $v['createtime'];
+            $normal[$k]['card_note'] = $v['card_note'] ?: '暂无备注';
+            $normal[$k]['preferential'] = $v['preferential'] ?: '';
+            $normal[$k]['end_time'] = $v['end_time'] ?: '';
 
-            if ($v['is_sale']==3){
-                $abnormal[$k]['card_no'] = $v['card_no'];
-                $abnormal[$k]['role'] =$role;
-                $abnormal[$k]['status'] = $v['status'];
-                $abnormal[$k]['end_time'] = $end_time;
-                $abnormal[$k]['is_sale'] = $v['is_sale'];
-                $abnormal[$k]['discount'] = $v['discount'];
-                $abnormal[$k]['createtime'] = $v['createtime'];
-                $abnormal[$k]['card_note'] = $v['card_note'] ?: '暂无备注';
-            }else if($v['is_sale']==2){
-                $process[$k]['role'] =$role;
-                $process[$k]['card_no'] = $v['card_no'];
-                $process[$k]['status'] = $v['status'];
-                $process[$k]['end_time'] = $end_time;
-                $process[$k]['is_sale'] = $v['is_sale'];
-                $process[$k]['discount'] = $v['discount'];
-                $process[$k]['createtime'] = $v['createtime'];
-                $process[$k]['card_note'] = $v['card_note'] ?: '暂无备注';
-            }else{
-                $normal[$k]['role'] =$role;
-                $normal[$k]['card_no'] = $v['card_no'];
-                $normal[$k]['status'] = $v['status'];
-                $normal[$k]['is_sale'] = $v['is_sale'];
-                $normal[$k]['end_time'] = $end_time;
-                $normal[$k]['discount'] = $v['discount'];
-                $normal[$k]['createtime'] = $v['createtime'];
-                $normal[$k]['card_note'] = $v['card_note'] ?: '暂无备注';
-                $normal[$k]['preferential'] = $v['preferential'] ?: '';
-                $normal[$k]['end_time'] = $v['end_time'] ?: '';
-            }
+//            if ($v['is_sale']==3){
+//                $abnormal[$k]['card_no'] = $v['card_no'];
+//                $abnormal[$k]['role'] =$role;
+//                $abnormal[$k]['status'] = $v['status'];
+//                $abnormal[$k]['end_time'] = $end_time;
+//                $abnormal[$k]['is_sale'] = $v['is_sale'];
+//                $abnormal[$k]['discount'] = $v['discount'];
+//                $abnormal[$k]['createtime'] = $v['createtime'];
+//                $abnormal[$k]['card_note'] = $v['card_note'] ?: '暂无备注';
+//            }else if($v['is_sale']==2){
+//                $process[$k]['role'] =$role;
+//                $process[$k]['card_no'] = $v['card_no'];
+//                $process[$k]['status'] = $v['status'];
+//                $process[$k]['end_time'] = $end_time;
+//                $process[$k]['is_sale'] = $v['is_sale'];
+//                $process[$k]['discount'] = $v['discount'];
+//                $process[$k]['createtime'] = $v['createtime'];
+//                $process[$k]['card_note'] = $v['card_note'] ?: '暂无备注';
+//            }else{
+//                $normal[$k]['role'] =$role;
+//                $normal[$k]['card_no'] = $v['card_no'];
+//                $normal[$k]['status'] = $v['status'];
+//                $normal[$k]['is_sale'] = $v['is_sale'];
+//                $normal[$k]['end_time'] = $end_time;
+//                $normal[$k]['discount'] = $v['discount'];
+//                $normal[$k]['createtime'] = $v['createtime'];
+//                $normal[$k]['card_note'] = $v['card_note'] ?: '暂无备注';
+//                $normal[$k]['preferential'] = $v['preferential'] ?: '';
+//                $normal[$k]['end_time'] = $v['end_time'] ?: '';
+//            }
 
         }
         if (empty($abnormal)){$abnormal='';}//已退卡
