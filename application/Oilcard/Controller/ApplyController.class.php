@@ -111,8 +111,8 @@ class ApplyController extends CommentoilcardController
             'serial_number' => $sn,
             'online' => $checked,
             'createtime' => date('Y-m-d H:i:s',TIMESTAMP),
-            'parentid' => isset($ParentMember['id'])?$ParentMember['id']:0,//本次购卡时 最近的邀请人id--暂不锁定邀请人
-            'agent_id' =$card['agent_id'], // 0总部发放，2代理id  --暂不锁定代理id
+            'parentid' => isset($ParentMember['id'])?$ParentMember['id']:0 ,//本次购卡时 最近的邀请人id--暂不锁定邀请人
+            'agent_id' =>$card['agent_id'], // 0总部发放，2代理id  --暂不锁定代理id
         ];
         $SysWhere=[
             'agent_id' =>0,
