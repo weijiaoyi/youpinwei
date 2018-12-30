@@ -102,7 +102,7 @@ class ApplyController extends CommentoilcardController
         //获取当前代理商信息
         $Agent= M('agent')->where(['id'=>$Member['agentid'],'role'=>3])->find();
         //获取当前上级邀请人
-        $ParentMember= M('user')->where(['id'=>$Member['parentid'])->find();
+        $ParentMember= M('user')->where(['id'=>$Member['parentid']])->find();
         //生成订单号
         $sn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
         //生成订单信息
@@ -196,7 +196,7 @@ class ApplyController extends CommentoilcardController
             $user_applu_data['address']=$data['address'];
 
             // $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
-            
+
             $wechat = new WechatController();
             if ($checked==='1'){
                 $data = $wechat->agentPay($openId,$data,$money,$card_no,$from_id,$res);
