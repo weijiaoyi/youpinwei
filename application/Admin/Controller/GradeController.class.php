@@ -601,6 +601,21 @@ class GradeController extends AdminbaseController
     }
 
     /**
+     * @desc 还账
+     * @author langzhiyao
+     *
+     */
+    public function Repayment(){
+        $id = trim( I('post.id') );
+        $user_id = trim( I('post.user_id') );
+        $openid = trim( I('post.openid') );
+        
+
+
+
+    }
+
+    /**
      * 根据关键字查询相关数据
      */
     public function userKeyword(){

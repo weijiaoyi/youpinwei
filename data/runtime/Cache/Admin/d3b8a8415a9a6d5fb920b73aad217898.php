@@ -85,6 +85,7 @@
             <th style="text-align:center;">拿卡类型</th>
             <th style="text-align:center;">发卡时间</th>
             <th style="text-align:center;">当前状态</th>
+            <th style="text-align:center;">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -118,6 +119,11 @@
                         <?php else: ?>
                         已发货<?php endif; ?>
                 </td>
+                <th style="text-align:center;">
+                    <?php if($val['card_mode'] == '1'): ?><button style="border:0; width: 70px; height: 40px;" disabled="disabled"><span style="color: white; font-size: 8px;">操作完成</span></button>
+                        <?php else: ?>
+                        <button style="background: #1dccaa;border:0; width: 70px; height: 40px;" ><a href="<?php echo U('sendCard',['id'=>$val['id']]);?>"><span style="color: white; font-size: 8px;">清账</span></a></button><?php endif; ?>
+                </th>
             </tr><?php endforeach; endif; else: echo "" ;endif; ?>
         </tbody>
     </table>

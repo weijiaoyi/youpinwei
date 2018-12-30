@@ -34,6 +34,7 @@
             <th style="text-align:center;">拿卡类型</th>
             <th style="text-align:center;">发卡时间</th>
             <th style="text-align:center;">当前状态</th>
+            <th style="text-align:center;">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -72,6 +73,13 @@
                         已发货
                     </if>
                 </td>
+                <th style="text-align:center;">
+                    <if condition="$val['card_mode'] eq '1'">
+                        <button style="border:0; width: 70px; height: 40px;" disabled="disabled"><span style="color: white; font-size: 8px;">操作完成</span></button>
+                        <else/>
+                        <button style="background: #1dccaa;border:0; width: 70px; height: 40px;" id="Repayment" data-id="{$val['id']}"><span style="color: white; font-size: 8px;">清账</span></button>
+                    </if>
+                </th>
             </tr>
         </volist>
         </tbody>
@@ -81,5 +89,32 @@
     </if>
 </div>
 <script src="__PUBLIC__/js/common.js"></script>
+<script>
+    $(function(){
+        $("#Repayment").click(function(){
+            $(this).attr('disabled','disabled');
+            var user_id="<?php echo $user['id'];?>";
+            var openid = "<?php echo $user['openid'];?>";
+            var id=$(this).attr('data-id');
+            $.ajax({
+                type:'POST',
+                url:"{:U('Grade/Repayment')}",
+                data:{id:id,user_id:user_id,openid:openid},
+                success:function(response){
+                        response=$.parseJSON(response);
+                        if(response.status == 200){
+                            layer.msg(response.msg,{icon:1,time:3000},function(){
+                                window.location.reload();
+                            })
+                        }else{
+                            layer.msg(response.msg,{icon:2,time:3000},function(){
+                                window.location.reload();
+                            })
+                        }
+                }
+            })
+        })
+    })
+</script>
 </body>
 </html>

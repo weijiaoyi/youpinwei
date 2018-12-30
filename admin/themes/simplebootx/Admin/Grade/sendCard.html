@@ -116,7 +116,7 @@
                 res = $.parseJSON(res);
                 if(res.status == 200){
                     layer.msg(res.msg,{icon:1,time:3000},function(){
-                        window.location.reload();
+                        window.location.href="{:U('Grade/sendCardRecord',['id'=>'"+user_id+"'])}";
                     });
                 }else{
                     layer.msg(res.msg,{icon:2,time:3000},function(){
