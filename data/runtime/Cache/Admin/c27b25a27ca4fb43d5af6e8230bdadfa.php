@@ -87,7 +87,7 @@
             <th style="text-align:center;">入库时间</th>
             <th style="text-align:center;">申领时间</th>
             <th style="text-align:center;">状态</th>
-            <th style="text-align:center;">操作</th>
+            <!--<th style="text-align:center;">操作</th>-->
         </tr>
         </thead>
         <tbody>
@@ -114,13 +114,13 @@
                         <?php else: ?>
                         注销<?php endif; ?>
                 </td>
-                <td style="text-align:center;">
+                <!--<td style="text-align:center;">-->
                     <!--<a href="<?php echo U('del',['id'=>$val['id']]);?>">删除</a>-->
                     <!--<a href="<?php echo U('del',['id'=>$val['id'],'flag'=>1]);?>">冻结</a>-->
                     <!--<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="xiajia"><span style="color: white; font-size: 8px;">下架</span></button>-->
-                    <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">充值记录</span></button>
+                    <!--<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">充值记录</span></button>-->
                     <!--<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button>-->
-                </td>
+                <!--</td>-->
             </tr><?php endforeach; endif; else: echo "" ;endif; ?>
         </tbody>
     </table>
