@@ -122,7 +122,7 @@
                 <th style="text-align:center;">
                     <?php if($val['card_mode'] == '1'): ?><button style="border:0; width: 70px; height: 40px;" disabled="disabled"><span style="color: white; font-size: 8px;">操作完成</span></button>
                         <?php else: ?>
-                        <button style="background: #1dccaa;border:0; width: 70px; height: 40px;" ><a href="<?php echo U('sendCard',['id'=>$val['id']]);?>"><span style="color: white; font-size: 8px;">清账</span></a></button><?php endif; ?>
+                        <button style="background: #1dccaa;border:0; width: 70px; height: 40px;" id="Repayment" data-id="<?php echo ($val['id']); ?>"><span style="color: white; font-size: 8px;">清账</span></button><?php endif; ?>
                 </th>
             </tr><?php endforeach; endif; else: echo "" ;endif; ?>
         </tbody>
@@ -130,5 +130,40 @@
     <?php if($page != ''): ?><div id="page" class="pagination"><span class="page"><?php echo $page; ?></span></div><?php endif; ?>
 </div>
 <script src="/public/js/common.js"></script>
+<script>
+    $(function(){
+        $("#Repayment").click(function(){
+            $(this).attr('disabled','disabled');
+            var user_id="<?php echo $user['id'];?>";
+            var openid = "<?php echo $user['openid'];?>";
+            var id=$(this).attr('data-id');
+            layer.confirm('确定还账吗？该操作不可逆转，请谨慎操作', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                $.ajax({
+                    type:'POST',
+                    url:"<?php echo U('Grade/Repayment');?>",
+                    data:{id:id,user_id:user_id,openid:openid},
+                    success:function(response){
+                        response=$.parseJSON(response);
+                        if(response.status == 200){
+                            layer.msg(response.msg,{icon:1,time:3000},function(){
+                                window.location.reload();
+                            })
+                        }else{
+                            layer.msg(response.msg,{icon:2,time:3000},function(){
+                                window.location.reload();
+                            })
+                        }
+                    }
+                });
+            }, function(){
+                $('#Repayment').removeAttr('disabled');
+                layer.msg('操作取消',{icon:1});
+            });
+
+        })
+    })
+</script>
 </body>
 </html>

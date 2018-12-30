@@ -609,10 +609,24 @@ class GradeController extends AdminbaseController
         $id = trim( I('post.id') );
         $user_id = trim( I('post.user_id') );
         $openid = trim( I('post.openid') );
-        
-
-
-
+        //查看记录是否存在
+        $agentLibraryModel=M('agent_library');
+        $where = 'id="'.$id.'" AND user_id="'.$user_id.'" AND openid="'.$openid.'"';
+        $result = $agentLibraryModel->where($where)->find();
+        if($result && $result['card_mode'] ==2){
+            $agentLibrary_data=array(
+                    'card_mode'=>1,
+                    'repaymenttime'=>time()
+            );
+            $res=$agentLibraryModel->where($where)->save($agentLibrary_data);
+            if($res){
+                echo json_encode(array('status'=>200,'msg'=>'还账成功'));exit;
+            }else{
+                echo json_encode(array('status'=>100,'msg'=>'操作失败，请重新操作'));exit;
+            }
+        }else{
+            echo json_encode(array('status'=>100,'msg'=>'该记录已还账，无需重复操作'));exit;
+        }
     }
 
     /**

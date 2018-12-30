@@ -172,14 +172,10 @@ right: initial !important;}
 				<ul class="nav simplewind-nav pull-right">
 					<li class="light-blue">
 						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-    						<?php if($admin['avatar']): ?><img class="nav-user-photo" width="30" height="30" src="<?php echo sp_get_user_avatar_url($admin['avatar']);?>" alt="<?php echo ($admin["user_login"]); ?>">
-							<?php else: ?>
-								<img class="nav-user-photo" width="30" height="30" src="/admin/themes/simplebootx/Public/assets/images/logo-18.png" alt="<?php echo ($admin["user_login"]); ?>"><?php endif; ?>
+    						
 							<span class="user-info">
 								<!--<?php $admin = cookie('admin_username'); print_R($admin); ?>-->
 								欢迎，<?php print_R($admin); ?>
-								<!--<?php echo L('WELCOME_USER',array('username'=>$admin['user_nicename']));?>-->
-								<!--<?php echo L('WELCOME_USER',array('username'=>empty($admin['user_nicename'])?$admin['user_login']:$admin['user_nicename']));?>-->
 							</span>
 							<i class="fa fa-caret-down"></i>
 						</a>

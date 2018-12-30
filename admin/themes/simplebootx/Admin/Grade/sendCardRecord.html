@@ -96,11 +96,14 @@
             var user_id="<?php echo $user['id'];?>";
             var openid = "<?php echo $user['openid'];?>";
             var id=$(this).attr('data-id');
-            $.ajax({
-                type:'POST',
-                url:"{:U('Grade/Repayment')}",
-                data:{id:id,user_id:user_id,openid:openid},
-                success:function(response){
+            layer.confirm('确定还账吗？该操作不可逆转，请谨慎操作', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                $.ajax({
+                    type:'POST',
+                    url:"{:U('Grade/Repayment')}",
+                    data:{id:id,user_id:user_id,openid:openid},
+                    success:function(response){
                         response=$.parseJSON(response);
                         if(response.status == 200){
                             layer.msg(response.msg,{icon:1,time:3000},function(){
@@ -111,8 +114,13 @@
                                 window.location.reload();
                             })
                         }
-                }
-            })
+                    }
+                });
+            }, function(){
+                $('#Repayment').removeAttr('disabled');
+                layer.msg('操作取消',{icon:1});
+            });
+
         })
     })
 </script>
