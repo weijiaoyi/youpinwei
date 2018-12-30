@@ -86,102 +86,108 @@ class ApplyController extends CommentoilcardController
      * @return [type]     [description]
      */
     public function agentApply(){
-//       $aaa=json_encode($_POST['data']);
-//       log::record($aaa);exit;
-//       exit;
+        $openId=I('post.openid','');
+        if (empty($openId))$this->openidError('参数错误！');
+        $this->issetLogin($openId);
+
         $data['phone']=I('post.phone','');
         $data['address']=I('post.address','');
         $data['receive_person']=I('post.receive_person','');
-
-        $openId=I('post.openid','');
         $from_id=I('post.from_id','');
         $money=I('post.money','');
         $card_no=I('post.card_no','');
         $checked=I('post.checked');
-      
-        // if ($checked ) {
-        if ($checked==2 ) {
-            $checked_card=I('post.checked_card','');
-            $card= M('OilCard')->where(['card_no'=>$checked_card,'status'=>1])->find();
-            $a=M('')->getlastsql();
-            log::record($a);
-            if(empty($card))
-            {
-                $this->error('卡号不正确，请输入我平台发放的正确卡号！');
-            }
+        $Member = M('user')->where(['openid'=>$openid])->find();
+        if (empty($Member['nickname']) && empty($Member['user_img']) ) $this->error('请先授权登录');
+        //获取当前代理商信息
+        $Agent= M('agent')->where(['id'=>$Member['agentid'],'role'=>3])->find();
+        //获取当前上级邀请人
+        $ParentMember= M('user')->where(['id'=>$Member['parentid'])->find();
+        //生成订单号
+        $sn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
+        //生成订单信息
+        $OrderInfo = [
+            'user_id' =>$Member['id'],//购买人id
+            'serial_number' => $sn,
+            'online' => $checked,
+            'createtime' => date('Y-m-d H:i:s',TIMESTAMP),
+            'parentid' => isset($ParentMember['id'])?$ParentMember['id']:0,//本次购卡时 最近的邀请人id--暂不锁定邀请人
+            'agent_id' =$card['agent_id'], // 0总部发放，2代理id  --暂不锁定代理id
+        ];
+        $SysWhere=[
+            'agent_id' =>0,
+            'is_notmal'=>1,
+            'activate' =>1,
+            'status'=>1,
+            'chomd' =>1
+        ]; 
+        $Syscount = M('oil_card')->where($SysWhere)->count();
+        switch ($checked) {
+            case '1'://线上办卡-邮寄油卡
 
-            if (isset($card['user_id']) && $card['user_id']){
-                $this->error('该卡号已经被绑定！');
-            }
-
+                //查询代理名下油卡库存是否足够
+                if ($Agent && $Agent['agent_oilcard_stock_num']>=1) {
+                    $OrderInfo['card_from'] =2; // 最终由代理发卡
+                }elseif ($Agent && $Agent['agent_oilcard_stock_num'] <1 && $Syscount<1) {
+                    $OrderInfo['card_from'] =2; // 最终由代理发卡
+                }else{
+                    $OrderInfo['card_from'] =1;//最终由总部发卡
+                }
+                break;
+            case '2'://现场办卡
+                $checked_card=I('post.checked_card','');
+                $card= M('OilCard')->where(['card_no'=>$checked_card])->find();
+                if(!$card) $this->error('油卡号不正确，请输入我平台发放的正确油卡号！');
+                if (!empty($card['user_id'])) $this->error('该卡号已经被绑定！');
+                switch ($card['is_notmal']) {
+                    case '2':# code...冻结使用
+                        $log = M('oil_option')->where(['cardid'=>$card['id']])->order('id desc')->find();
+                        switch ($log['type']) {
+                            case '1':
+                                $this->error('该油卡正在办理退卡！');
+                                break;
+                            case '2':
+                                $this->error('该油卡已有用户挂失！');
+                                break;
+                            default:
+                                $this->error('系统已禁止此油卡使用！');
+                                break;
+                        }
+                        break;
+                    case '3':# code...注销油卡
+                        $this->error('此油卡已被系统废弃！');
+                        break;
+                }
+                $OrderInfo['card_from'] =$card['agent_id']==0?1:2; // 1总部卡，2代理卡
+                $OrderInfo['card_no'] =$checked_card; // 线下绑定的卡号
+                break;
         }
-        $issetLoginRes=$this->issetLogin($openId);
-        
-        // $year=I('post.money');
-        // $discount=I('post.discount');
 
-        // $this->_empty($data,'填写数据不可为空');
-        // $this->_empty($data['receive_person'],'收货人不可为空');
-        // $this->_empty($data['phone'],'联系电话不可为空');
-        // $this->_empty($data['address'],'收货地址不可为空');
-        // $this->_empty($money,'支付金额为空');
-
-        if (empty($openId)){
-            $this->openidError('数据传输错误');
-        }
-
-        $agent_id=M('agent_relation')->where("openid='$openId'")->getField('agent_id');
-        $agent_arr= M('agent')->where("id='$agent_id'")->find();
-        $first_agent_id=M('agent_relation')->where("openid='".$agent_arr['openid']."'")->getField('agent_id');
-        if (!empty($agent_id)  && $agent_arr['role']==3 || !empty($first_agent_id)){
-            if (!empty($first_agent_id)){
-                $OilCardData=M('oil_card')->where("agent_status=1 and agent_id='$first_agent_id' and chomd=2")->find(); //从用户油卡表取出1张卡
-            }else{
-                $OilCardData=M('oil_card')->where("agent_status=1 and agent_id='$agent_id' and chomd=2")->find(); //从用户油卡表取出1张卡
-            }
-
-            if(empty($OilCardData)){
-                $this->error('油卡无库存');
-            }
-            $id=$OilCardData['id'];
-        }else{
-            $OilCardData=M('oil_card')->where("status=1 and agent_id=0 and chomd=1 and discount=96")->find(); //从用户油卡表取出1张卡
-            if(empty($OilCardData)){
-                $this->error('油卡无库存');
-            }
-            $id=$OilCardData['id'];
-        }
-
-        Log::record('银牌申领:2');
-        $userData=M('user')->where('openid="'.$openId.'"')->find();  //根据微信openid查询对应的用户
-      
-        if (empty($userData)) {
-            $this->error('用户不存');
-        }
         $address_data=[
             'openid'=>$openId,
-            'address'=>$data['address'],
             'phone'=>$data['phone'],
             'receive_person'=>$data['receive_person']
         ];
-
+        //收货人地址
         $address_res=M('address')->where($address_data)->find();
         if (empty($address_res)){
-            M('address')->add($address_data);
+            $address_data['address']=$data['address'];
+            $OrderInfo['addressid']=M('address')->add($address_data);
         }else{
-            $address_id=$address_res['id'];
-            M('address')->where("id='$address_id'")->save(['use_time'=>time()]);
+            M('address')->where(['id'=>$address_res['id']])->save(['use_time'=>time()]);
+            $OrderInfo['addressid'] =$address_res['id']
         }
+
 
         if($OilCardData){
             /*
              * 调取支付200元方法
              */
-            if (!empty($checked_card)) {
+            if (!empty($checked_card)) {//线下领卡
                  $user_applu_data['card_no']=$checked_card;
             }
             $user_data=M('user')->where("openid='$openId'")->find();
-            $user_applu_data['user_id']=$user_data['id'];
+            $user_applu_data['user_id']=$Member['id'];
             $user_applu_data['status']='1';
             $user_applu_data['openid']=$openId;
 
@@ -189,7 +195,8 @@ class ApplyController extends CommentoilcardController
             $user_applu_data['phone']=$data['phone'];
             $user_applu_data['address']=$data['address'];
 
-            $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
+            // $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
+            
             $wechat = new WechatController();
             if ($checked==='1'){
                 $data = $wechat->agentPay($openId,$data,$money,$card_no,$from_id,$res);
@@ -205,22 +212,6 @@ class ApplyController extends CommentoilcardController
             }
             $Wechat = A('Wechat');
             $Wechat->templateMessage($openId,$data,1,$from_id);
-
-            // if ($flag==1){  
-            //     $card_preferential=M('oil_card')->where("card_no='$card_no'")->getField('preferential');
-            //     if ($initial_money<=$card_preferential){
-            //         $last_preferential=$card_preferential-$initial_money;
-            //         M('oil_card')->where("card_no='$card_no'")->save(['preferential'=>$last_preferential]);
-            //      }
-            // }else{
-            //     $user_preferential=M('user')->where("openid='$openid'")->getField('preferential_quota');
-            //     if ($initial_money<=$user_preferential){
-            //         $last_preferential=$user_preferential-$initial_money;
-            //         M('user')->where("openid='$openid'")->save(['preferential_quota'=>$last_preferential]);
-            //     }
-            // }
-
-
             echo json_encode(['msg'=>'success','status'=>1000,'data'=>$data]);
             exit();
 

@@ -212,9 +212,8 @@ class OrderController extends AdminbaseController{
     public function ProhibitCard(){
         $id = trim( I('post.id') );
         $desc = trim( I('post.desc') );
-        $time = time();
         $OilCardModel = M('oil_card');
-        $result = $OilCardModel -> where( ['id' => $id] ) -> save(['is_notmal' => 2]);
+        $result = $OilCardModel -> where( ['id' => $id] ) -> save(['is_notmal' => 2,'desc'=>!empty($desc)?:'系统禁用']);
         $uid = $OilCardModel->where( ['id' => $id] ) -> getField('user_id');
 
         if ($result) {
@@ -222,14 +221,15 @@ class OrderController extends AdminbaseController{
           $addLog = [
             'userid'     => $uid?:0,
             'cardid'     => $id,
-            'addtime'    => $time,
-            'updatetime' => $time,
+            'addtime'    => TIMESTAMP,
+            'updatetime' => TIMESTAMP,
             'desc'       => !empty($desc)?:'系统禁用',
-            'type'       => 2,
+            'type'       => 3,
+            'hand'       => 2,
             'status'     => 1,
             'adminid'    => session('ADMIN_ID'),
           ];
-          M('oil_option_log')->add($addLog);
+          M('oil_option')->add($addLog);
           echo json_encode([
                 'msg' => 'success',
                 'status' => 1000
@@ -248,9 +248,8 @@ class OrderController extends AdminbaseController{
     public function deProhibitCard(){
         $id = trim( I('post.id') );
         $desc = trim( I('post.desc') );
-        $time = time();
         $OilCardModel = M('oil_card');
-        $result = $OilCardModel -> where( ['id' => $id] ) -> save(['is_notmal' => 1]);
+        $result = $OilCardModel -> where( ['id' => $id] ) -> save(['is_notmal' => 1,'desc'=>!empty($desc)?:'系统启用']);
         $uid = $OilCardModel->where( ['id' => $id] ) -> getField('user_id');
 
         if ($result) {
@@ -261,11 +260,12 @@ class OrderController extends AdminbaseController{
             'addtime'    => TIMESTAMP,
             'updatetime' => TIMESTAMP,
             'desc'       => !empty($desc)?:'系统启用',
-            'type'       => 2,
+            'type'       => 3,
+            'hand'       => 2,
             'status'     => 1,
             'adminid'    => session('ADMIN_ID'),
           ];
-          M('oil_option_log')->add($addLog);
+          M('oil_option')->add($addLog);
           echo json_encode([
                 'msg' => 'success',
                 'status' => 1000

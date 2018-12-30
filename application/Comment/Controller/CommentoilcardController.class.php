@@ -137,10 +137,11 @@ class CommentoilcardController extends Controller
     public function issetLogin($openid=''){
         
         if (empty($openid)) {
-            $this->openidError($openid);
+            //openid 错误
+            $this->openidError('登陆信息错误！');
         }
         
-        $user_data=M('user')->where("openid='$openid'")->find();
+        $user_data=M('user')->where(['openid'=>$openid])->find();
         if (empty($user_data['nickname']) && empty($user_data['user_img']) ) {
             $this->error('请先授权登录');
         }

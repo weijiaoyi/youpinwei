@@ -1226,59 +1226,9 @@ class WechatController extends CommentoilcardController
             'end_time'=>date("Y-m-d H:i:s",strtotime('+1year'))
         ];
         M('agency_preferences')->add($agency_data);
-        // $only_data=[
-        //     'openid'=>$openid,
-        //     'agent_id'=>$agent_id,
-        //     'order_type'=>1,
-        // ];
-        // $result=M('agent_earnings')->where($only_data)->find();
-        // if(empty($result)){
-            //向分销收益表添加数据
-            // $earnings_data=[
-            //     'openid'=>$openid,
-            //     'agent_id'=>$agent_id,
-            //     'order_type'=>4,
-            //     'earnings'=>$money,
-            //     'createtime'=>date("Y-m-d H:i:s",time())
-            // ];
-            // M('agent_earnings')->add($earnings_data);
-
-            // $agent_data=[
-            //     'add_total'=>$house_openid['add_total']+$recharge,
-            //     'currt_earnings'=>$house_openid['currt_earnings']+$money,
-            //     'total_earnings'=>$house_openid['total_earnings']+$money
-            // ];
-            // M('agent')->where("id='$agent_id'")->save($agent_data);
-
-            M('agent_relation')->where("openid='$openid'")->save(['agent_id'=>$a]);
-            //更新代理商表
-            // $agent_data=[
-            //       'add_total'=>$house_openid['add_total']+$recharge,
-            //       'new_earnings'=>$house_openid['new_earnings']+$money,
-            //       'currt_earnings'=>$house_openid['currt_earnings']+$money,
-            //       'total_earnings'=>$house_openid['total_earnings']+$money
-            // ];
-            // M('agent')->where("id='$agent_id'")->save($agent_data);
-            // //充值的钱*100 是优惠额度
-            // $data=[
-            //     'preferential_quota'=> $user['preferential_quota']+$recharge
-            // ];
-            // M('user')->where("openid='$openid'")->save($data);
-        // }
-//        else{
-//            //更新代理商表
-//            // $agent_data=[
-//            //       'add_total'=>$house_openid['add_total']+$recharge,
-//            //       'currt_earnings'=>$house_openid['currt_earnings']+$money,
-//            //       'total_earnings'=>$house_openid['total_earnings']+$money
-//            // ];
-//            // M('agent')->where("id='$agent_id'")->save($agent_data);
-//            //充值的钱*100 是优惠额度
-//            $data=[
-//                'preferential_quota'=> $user['preferential_quota']+$recharge*100
-//            ];
-//            M('user')->where("openid='$openid'")->save($data);
-//        }
+        
+        M('agent_relation')->where("openid='$openid'")->save(['agent_id'=>$a]);
+            
     }
 
 
@@ -1382,11 +1332,7 @@ class WechatController extends CommentoilcardController
      * $recharge 充值金额
      */
     public function GoldPullOrdinary($openid,$recharge){
-        // $openid='os2aR0Xw35QanKcflDq1sDNmMnNU';
-//        $openid=I('post.openid');
-//         $recharge=80;
-//        $discount=10;
-        // $money=10;
+   
         //查找上家的id和上家的openid
         $agent_house=M('agent_relation')->where("openid='$openid'")->find();
         $agent_id=$agent_house['agent_id'];//上家的id
@@ -1419,176 +1365,9 @@ class WechatController extends CommentoilcardController
             'end_time'=>date("Y-m-d H:i:s",strtotime('+1year'))
         ];
         M('agency_preferences')->add($agency_data);
-        // $only_data=[
-        //     'openid'=>$openid,
-        //     'agent_id'=>$agent_id,
-        //     'order_type'=>4,
-        // ];
-        // $result=M('agent_earnings')->where($only_data)->find();
-        // if(empty($result)){
-            //分销收益表添加数据
-//            $earnings_data=[
-//                'openid'=>$openid,
-//                'agent_id'=>$agent_id,
-//                'earnings'=>$money,
-//                'order_type'=>4,
-//                'createtime'=>date("Y-m-d H:i:s",time())
-//            ];
-//            M('agent_earnings')->add($earnings_data);
-//            $a=M('')->getLastSql();
-//            //更新代理商表
-//            $agent_data=[
-//                'add_total'=>$house_openid['add_total']+$recharge,
-//                'new_earnings'=>$house_openid['new_earnings']+$money,
-//                'currt_earnings'=>$house_openid['currt_earnings']+$money,
-//                'total_earnings'=>$house_openid['total_earnings']+$money
-//            ];
-//            M('agent')->where("id='$agent_id'")->save($agent_data);
-
-            //充值的钱*100 是优惠额度
-//            $data=[
-//                'preferential_quota'=> $user['preferential_quota']+$recharge*100
-//            ];
-//            M('user')->where("openid='$openid'")->save($data);
-        // }
-//        else{
-//            $where=[
-//                'openid'=>$openid,
-//                'order_type'=>1
-//            ];
-//            $earnings_money=M('agent_earnings')->where($where)->find();
-//            $earnings_data=[
-//                'openid'=>$openid,
-//                'agent_id'=>$agent_id,
-//                'earnings'=>$earnings_money['earnings']+$money,
-//            ];
-//
-//            M('agent_earnings')->where($where)->save($earnings_data);
-//            //更新代理商表
-//            $agent_data=[
-//                'add_total'=>$house_openid['add_total']+$recharge,
-//                'new_earnings'=>$house_openid['new_earnings']+$money,
-//                'currt_earnings'=>$house_openid['currt_earnings']+$money,
-//                'total_earnings'=>$house_openid['total_earnings']+$money
-//            ];
-//            M('agent')->where("id='$agent_id'")->save($agent_data);
-//
-//            //充值的钱*100 是优惠额度
-//            // $data=[
-//            //     'preferential_quota'=> $user['preferential_quota']+$recharge*100
-//            // ];
-//            // M('user')->where("openid='$openid'")->save($data);
-//        }
-
     }
 
-    /**
-     * 金牌拉银牌
-     * $openid 银牌openid
-     * $recharge 充值金额
-     */
-//    public function GoldPullVip($openid,$recharge){
-//        // $openid='os2aR0Xw35QanKcflDq1sDNmMnNU';
-//        // $recharge=80;
-//        $discount=0.6;
-//        $money=$recharge*$discount;
-//
-//        //查找上家的id和上家的openid
-//        $agent_house=M('agent_relation')->where("openid='$openid'")->find();
-//        $agent_id=$agent_house['agent_id'];//上家的id
-//        $house_openid=M('agent')->where("id='$agent_id'")->find();
-//        $agent_openid=$house_openid['openid'];//上家的openid
-//        //根据上线的id查出上家在user的数据
-//        $user_data=M('user')->where("id='$agent_id'")->find();
-//
-//        $user=M('user')->where("openid='$openid'")->find();
-//
-//        //向订单表中添加数据
-//        $order_data=[
-//            'user_id'=>$user['id'],
-//            'order_type'=>1,
-//            'order_status'=>1,
-//            'agent_id'=>$agent_id,
-//            'money'=>$recharge,
-//            'real_pay'=>$recharge,
-//            'createtime'=>date("Y-m-d H:i:s",time())
-//        ];
-//        $res=M('order_record')->add($order_data);
-//
-//        //向个人优惠表中添加数据
-//        $agency_data=[
-//            'user_id'=>$user['id'],
-//            'openid'=>$openid,
-//            'discount'=>'93折',
-//            'preferential_quota'=>$recharge*100,
-//            'status'=>1,
-//            'start_time'=>date("Y-m-d H:i:s",time()),
-//            'end_time'=>date("Y-m-d H:i:s",strtotime('+1year'))
-//        ];
-//        M('agency_preferences')->add($agency_data);
-//        //查看分销表是否一个人拉新
-//        $only_data=[
-//            'openid'=>$openid,
-//            'agent_id'=>$agent_id,
-//            'order_type'=>2
-//        ];
-//        $result=M('agent_earnings')->where($only_data)->find();
-//        if(empty($result)){
-//            //分销收益表更新数据
-//            $earnings_data=[
-//                'agent_id'=>$agent_id,
-//                'earnings'=>$money
-//            ];
-//            $where=[
-//                'openid'=>$openid,
-//                'order_type'=>2
-//            ];
-//            M('agent_earnings')->where($where)->save($earnings_data);
-//            //更新代理商表
-//            $agent_data=[
-//                'add_total'=>$house_openid['add_total']+$recharge,
-//                'new_earnings'=>$house_openid['new_earnings']+$money,
-//                'currt_earnings'=>$house_openid['currt_earnings']+$money,        var_dump($relation_data);exit;
-//                'total_earnings'=>$house_openid['total_earnings']+$money
-//            ];
-//            M('agent')->where("id='$agent_id'")->save($agent_data);
-//
-//            //充值的钱*100 是优惠额度
-//            $data=[
-//                'preferential_quota'=> $user['preferential_quota']+$recharge*100
-//            ];
-//            M('user')->where("openid='$openid'")->save($data);
-//
-//        }else{
-//            //分销收益表更新数据
-//            $where=[
-//                'openid'=>$openid,
-//                'order_type'=>2
-//            ];
-//            $earnings_money=M('agent_earnings')->where($where)->find();
-//
-//            $earnings_data=[
-//                'agent_id'=>$agent_id,
-//                'earnings'=>$earnings_money['earnings']+$money
-//            ];
-//            M('agent_earnings')->where($where)->save($earnings_data);
-//            //更新代理商表
-//            $agent_data=[
-//                'add_total'=>$house_openid['add_total']+$recharge,
-//                'new_earnings'=>$house_openid['new_earnings']+$money,
-//                'currt_earnings'=>$house_openid['currt_earnings']+$money,
-//                'total_earnings'=>$house_openid['total_earnings']+$money
-//            ];
-//            M('agent')->where("id='$agent_id'")->save($agent_data);
-//            //充值的钱*100 是优惠额度
-//            $data=[
-//                'preferential_quota'=> $user['preferential_quota']+$recharge*100
-//            ];
-//            M('user')->where("openid='$openid'")->save($data);
-//
-//        }
-//    }
-
+    
 
     /**
      * 新的代理拉vip
@@ -1596,11 +1375,7 @@ class WechatController extends CommentoilcardController
      * $recharge vip充值的年费 一次性的
      */
     public function AgentPullVip($openid,$recharge){
-        // $openid='os2aR0QqEutxi-P515cUo4ec2CgI';
-        // $recharge='100';
-        // $discount=70;
-        // $recharge=$recharge-20;
-        // $money=$recharge/100*$discount;
+        
         //查找上家的id和上家的openid
         $agent_house=M('agent_relation')->where("openid='$openid'")->find();
         $agent_id=$agent_house['agent_id'];//上家的id
@@ -1634,70 +1409,12 @@ class WechatController extends CommentoilcardController
             'end_time'=>date("Y-m-d H:i:s",strtotime('+1year'))
         ];
         M('agency_preferences')->add($agency_data);
-        //查看分销表是否一个人拉新
-        // $only_data=[
-        //     'openid'=>$openid,
-        //     'agent_id'=>$agent_id,
-        //     'order_type'=>2
-        // ];
-//         $result=M('agent_earnings')->where($only_data)->find();
-// //        if(empty($result)){
-//             //分销收益表更新数据
-//             $where=[
-//                 'openid'=>$openid,
-//                 'order_type'=>2
-//             ];
-//            $earnings_money=M('agent_earnings')->where($where)->find();
-            // print_r($earnings_moneys);exit;
-            // $earnings_data=[
-            //     'openid'=>$openid,
-            //     'agent_id'=>$agent_id,
-            //     'order_type'=>2,
-            //     'earnings'=>$money
-            // ];
-            // M('agent_earnings')->where($where)->add($earnings_data);
-            // //更新代理商表
-            // $agent_data=[
-            //     'add_total'=>$house_openid['add_total']+$recharge,
-            //     'new_earnings'=>$house_openid['new_earnings']+$money,
-            //     'currt_earnings'=>$house_openid['currt_earnings']+$money,
-            //     'total_earnings'=>$house_openid['total_earnings']+$money
-            // ];
-            // M('agent')->where("id='$agent_id'")->save($agent_data);
-
-            //充值的钱*100 是优惠额度
-            // $data=[
-            //     'preferential_quota'=> $user['preferential_quota']+$recharge
-            // ];
-            // M('user')->where("openid='$openid'")->save($data);
-
-//        }
-//        else{
-//            //更新代理商表
-//            $agent_data=[
-//                'add_total'=>$house_openid['add_total']+$recharge,
-//                // 'new_earnings'=>$house_openid['new_earnings']+$money,
-//                // 'currt_earnings'=>$house_openid['currt_earnings']+$money,
-//                // 'total_earnings'=>$house_openid['total_earnings']+$money
-//            ];
-//            M('agent')->where("id='$agent_id'")->save($agent_data);
-//            //充值的钱*100 是优惠额度
-//            $data=[
-//                'preferential_quota'=> $user['preferential_quota']+$recharge
-//            ];
-//            M('user')->where("openid='$openid'")->save($data);
-//
-//        }
     }
 
     /**
      * 全新的vip拉vip
      */
     public function VipPullVipNew($openid,$recharge){
-//        $agentopenid='os2aR0QzCHW2sqbrDGj1s0L5TJSQ';//代理商的openid
-//        $openid='oKBRH4-nLGXUms_fY0xglT8xfesE';//新进的vip的openid
-//
-//        $recharge=30;
         $recharge=$recharge-20;
 
         
@@ -1724,12 +1441,6 @@ class WechatController extends CommentoilcardController
             'role'=>3
         ];
         $pullmoney=M('agent')->where($agent_where)->find();
-
-        // $benefit_data=[
-        //     'new_earnings'=>$pullmoney['new_earnings']+$agent_quota,
-        // ];
-        // M('agent')->where($agent_where)->save($benefit_data);
-
         $order_data=[
             'user_id'=>$user['id'],
             'order_type'=>1,
@@ -1769,14 +1480,7 @@ class WechatController extends CommentoilcardController
                 'order_type'=>2
             ];
             M('agent_earnings')->add($earnings_data);
-            // $agent_earnings_data=[
-            //     'agent_id'=>$a,
-            //     'earnings'=>$agent_money,
-            //     'openid'=>$openid,
-            //     'order_type'=>2
-            // ];
-            // M('agent_earnings')->add($agent_earnings_data);
-
+            
             log::record("添加agent——earnings数据结果");
             //更新代理商表
             $agent_data=[
@@ -1787,50 +1491,10 @@ class WechatController extends CommentoilcardController
             ];
             M('agent')->where("id='$agent_id'")->save($agent_data);
 
-            // $a_data=M('agent')->where("id='$a'")->find();  //代理的openid
-            // $agent_data=[
-            //     'add_total'=>$a_data['add_total']+$recharge,
-            //     'new_earnings'=>$a_data['new_earnings']+$agent_money,
-            //     'currt_earnings'=>$a_data['currt_earnings']+$agent_money,
-            //     'total_earnings'=>$a_data['total_earnings']+$agent_money
-            // ];
-            // M('agent')->where("id='$a'")->save($agent_data);
+            
             M('agent_relation')->where("openid='$openid'")->save(['agent_id'=>$a]);
-// //            //充值的钱*120 是优惠额度
-//             $data=[
-//                 'preferential_quota'=> $user['preferential_quota']+$recharge
-//             ];
-//             M('user')->where("openid='agent_id'")->save($data);
 
         }
-//        else{
-//            //分销收益表更新数据
-//            $where=[
-//                'openid'=>$openid,
-//                'order_type'=>2
-//            ];
-//            $earnings_money=M('agent_earnings')->where($where)->find();
-//
-//            $earnings_data=[
-//                'agent_id'=>$agent_id,
-//                'earnings'=>$earnings_money['earnings']+$money
-//            ];
-//            M('agent_earnings')->where($where)->save($earnings_data);
-//            //更新代理商表
-//            $agent_data=[
-//                'add_total'=>$house_openid['add_total']+$recharge,
-//                'new_earnings'=>$house_openid['new_earnings']+$money,
-//                'currt_earnings'=>$house_openid['currt_earnings']+$money,
-//                'total_earnings'=>$house_openid['total_earnings']+$money
-//            ];
-//            M('agent')->where("id='$agent_id'")->save($agent_data);
-//            //充值的钱*100 是优惠额度
-//            $data=[
-//                'preferential_quota'=> $user['preferential_quota']+$recharge*120
-//            ];
-//            M('user')->where("openid='$openid'")->save($data);
-//
-//        }
     }
 
     /**
