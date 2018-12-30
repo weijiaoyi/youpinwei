@@ -8,62 +8,6 @@ use Admin\Controller\WechaController;
 
 class OrderController extends AdminbaseController{
 
-    /**
-     * 根据卡号查询该卡的相信信息
-     */
-    public function R_cardKeyword(){
-        $card_no = trim(I('post.card_no'));
-        if(empty($card_no)){
-            echo json_encode(['msg' => '请输入要查询的卡号','status' => 500]);
-        }
-        $Card = M('oil_card');
-        $card_info = $Card -> where( ['card_no' => $card_no] ) -> find ();
-        if($card_info['status'] == '1'){
-            $card_info['status'] = '库存';
-        }else if($card_info['status'] == '2'){
-            $card_info['status'] = '启用';
-        }else{
-            $card_info['status'] = '下架';
-        }
-
-        if( $card_info ){
-            $str = '';
-            $str.="<tr>
-						<td style='width:40px;text-align:center;'>
-							{$card_info['id']}
-						</td>
-						<td style='text-align:center;'>
-							{$card_info['system_id']}
-						</td>
-						<td style='text-align:center;'>
-							{$card_info['card_no']}
-						</td>
-						<td style='text-align:center;'>
-							{$card_info['discount']}
-						</td>
-						<td style='text-align:center;' title=''>
-							{$card_info['createtime']}
-						</td>
-						<td style='text-align:center;'>
-							{$card_info['apply_fo_time']}
-						</td>
-						<td style='text-align:center;'>
-						    {$card_info['status']}
-						</td>
-						<td style='width:300px; height: 53px; text-align:center;'>
-							<button style='background: #2c3e50;border:2px; width: 70px; height: 40px;'  value='{$card_info['id']}' class='xiajia'><span style='color: white; font-size: 8px;'>下架</span></button>
-							<button style='background: #2c3e50;border:2px; width: 70px; height: 40px;'  value='{$card_info['id']}' class='chongzhi'><span style='color: white; font-size: 8px;'>充值</span></button>
-							<button style='background: #2c3e50;border:2px; width: 70px; height: 40px;'  value='{$card_info['id']}' class='tuika'><span style='color: white; font-size: 8px;'>退卡</span></button>
-						</td>
-					</tr>";
-            $data['str'] = $str;
-            $data['page'] = '';
-            $this -> ajaxReturn( $data );
-        }
-
-
-
-    }
 
     /**
      * （支付-订单编号）关键字搜索
@@ -347,14 +291,22 @@ class OrderController extends AdminbaseController{
      */
     public function C_orderList(){
         $p = trim(I('get.p','1'));
+        $card_no = trim(I('post.card_no',''));
         $Card = M('oil_card');
+        $where = [];
+        $condition=[];
+        if (!empty($card_no)) {
+          $where['o.card_no'] = ['LIKE','%'.$card_no.'%'];
+          $condition = ['card_no'=>$card_no];
+        }
         $card_info = M('oil_card') 
               ->alias('o')
               ->join('__PACKAGES__ p ON o.pkgid = p.pid','LEFT')
               ->join('__USER__ u ON o.user_id = u.id','LEFT')
               ->field('o.*,p.pid,p.price,p.limits,p.scale,u.nickname,u.user_img')
+              ->where($where)
               ->order('o.id desc')-> page($p,'10') ->select();
-        $count = $Card -> count();
+        $count = $Card ->where($condition)-> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
         $this -> assign('page',$show);

@@ -22,7 +22,7 @@ class UserController extends CommentoilcardController
         }
         $agent_role=M('agent')->where("openid='$openid'")->getField('role');
         $userInfo = M('user')->where(['openid'=>$openid])->find();
-        $card_count = count(M('OilCard')->where(['user_id'=>$userInfo['id'],'is_sale=1'])->select());
+        $card_count = count(M('OilCard')->where(['user_id'=>$userInfo['id']])->select());
 
 //        if (!$userInfo)
 //        {

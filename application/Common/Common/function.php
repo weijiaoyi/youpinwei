@@ -7,6 +7,10 @@ function p($arr){
 	echo "</pre>";
 }
 
+function GetAgentInfo($agentid){
+	$info = M('user')->field('nickname,user_img')->where(['id'=>$agentid])->find();
+	return $info['nickname'].'&nbsp;&nbsp;&nbsp;'.'<img src="'.$info['user_img'].'" width="40" height="40">';
+}
 
 function dateFomat($time){
 	return date('Y-m-d',$time);

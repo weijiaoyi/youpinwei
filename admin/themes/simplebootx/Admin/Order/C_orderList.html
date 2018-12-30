@@ -54,11 +54,11 @@
 			<li><a href="<?php echo U('Admin/Order/CardBack'); ?>">退卡申请</a></li>
 			<li><a href="<?php echo U('Admin/Order/CardLoss'); ?>">挂失申请</a></li>
 		</ul>
-		<form class="well form-search" method="post" action="<?php echo U('Admin/Order/C_orderList'); ?>">
+		<form class="well form-search" method="post" action="{:U('order/C_orderList')}">
 			
 			关键字： 
-			<input type="text" name="keyword" style="width: 190px; height:34px;" value="" placeholder="请输入要查询的油卡...">
-			<input type="button" class="btn btn-primary CardKeyword " value="搜索">
+			<input type="text" name="card_no" style="width: 190px; height:34px;" value="" placeholder="请输入要查询的油卡...">
+			<input type="submit" class="btn btn-primary CardKeyword " value="搜索">
 			<a href="javascript:;" class="import-many btn">批量导入</a>
 			<!-- <a href="javascript:;" class="discount-many btn">批量折扣</a> -->
 		</form>
@@ -74,7 +74,9 @@
 					</if>
 					<th style="text-align:center;">入库时间</th>
 					<th style="text-align:center;">申领时间</th>
-					<th style="text-align:center;">代理发卡</th>
+					<th style="text-align:center;">油卡所属</th>
+					<th style="text-align:center;">发货状态</th>
+					<th style="text-align:center;">激活</th>
 					<th style="text-align:center;">油卡状态</th>
 					<th style="text-align:center;">查看</th>
 				</tr>
@@ -102,15 +104,33 @@
 						</td>
 						<td style="text-align:center;">
 						<?php 
+							if($v['agent_id'] ==0 ){
+								echo "总部卡";
+							}else{
+								echo GetAgentInfo($v['agent_id']);
+							}
+						?>
+						</td>
+						<td style="text-align:center;">
+						<?php 
 							switch ($v['chomd']) {
 								case '1':
-									echo "总部卡";
+									echo '未发放';
 									break;
 								case '2':
-									echo "代理卡";
+									echo '已发放';
 									break;
-								default:
-									echo "总部卡";
+							}
+						?>
+						</td>
+						<td style="text-align:center;">
+						<?php 
+							switch ($v['activate']) {
+								case '1':
+									echo '未激活';
+									break;
+								case '2':
+									echo '已激活';
 									break;
 							}
 						?>
@@ -200,19 +220,19 @@
 
 <script>
 	/** 根据卡号查询该油卡信息 */
-	$(document).on('click','.CardKeyword',function(){
-	    var card_no = $('input[name=keyword]').val();
-	    $.ajax({
-			type:'post',
-			url:"{:U('order/R_cardKeyword')}",
-			dataType:'json',
-			data:{card_no:card_no},
-			success:function(result){
-				$('#show').html(result.str);
-				$('#page').html(result.page);
-			}
-		});
-	});
+	// $(document).on('click','.CardKeyword',function(){
+	//     var card_no = $('input[name=keyword]').val();
+	//     $.ajax({
+	// 		type:'post',
+	// 		url:"{:U('order/C_orderList')}",
+	// 		dataType:'json',
+	// 		data:{card_no:card_no},
+	// 		success:function(result){
+	// 			$('#show').html(result.str);
+	// 			$('#page').html(result.page);
+	// 		}
+	// 	});
+	// });
 
 	/** 批量导入 */
 	$(document).on('click','.import-many',function(){
