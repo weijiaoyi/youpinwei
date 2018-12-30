@@ -50,6 +50,7 @@
 	<div class="wrap js-check-wrap" style="margin-top:-50px;">
 		<ul class="nav nav-tabs">
 			<li class="active"><a href="<?php echo U('Admin/Order/C_orderList'); ?>">油卡列表</a></li>
+			<!-- <li><a href="<?php echo U('Admin/Order/CardApply'); ?>">申领列表</a></li> -->
 			<li><a href="<?php echo U('Admin/Order/CardBack'); ?>">退卡申请</a></li>
 			<li><a href="<?php echo U('Admin/Order/CardLoss'); ?>">挂失申请</a></li>
 		</ul>
@@ -93,7 +94,7 @@
 						<td style="text-align:center;">
 							{:number_format($v['scale'])}折
 						</td>
-						<td style="text-align:center;" title="<?php echo $v['name']; ?>">
+						<td style="text-align:center;" title="">
 							<?php echo $v['createtime'];?>
 						</td>
 						<td style="text-align:center;">	
@@ -198,7 +199,6 @@
 <script src="__PUBLIC__/js/bootstrap.min.js"></script>
 
 <script>
-	layer.msg('sssss');
 	/** 根据卡号查询该油卡信息 */
 	$(document).on('click','.CardKeyword',function(){
 	    var card_no = $('input[name=keyword]').val();

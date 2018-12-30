@@ -17,9 +17,9 @@ class AdminbaseController extends AppframeController {
 		parent::__construct();
 		$time=time();
 		$this->assign("js_debug",APP_DEBUG?"?v=$time":"");
-		$configId = intval($_SESSION['CONFIG_ID']);
-		$this->_isAdmin = $configId == 0 ? true : false;
-		$this->assign('_isAdmin', $this->_isAdmin);
+		// $configId = intval($_SESSION['CONFIG_ID']);
+		// $this->_isAdmin = $configId == 0 ? true : false;
+		$this->assign('_isAdmin', true);
 	}
 
 	function _initialize(){
