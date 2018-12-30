@@ -2364,11 +2364,9 @@ class WechatController extends CommentoilcardController
         include_once "wxBizDataCrypt.php";
 
         if (!empty($code)){
-
             $url="https://api.weixin.qq.com/sns/jscode2session?appid=".$APPID."&secret=".$AppSecret."&js_code=".$code."&grant_type=authorization_code";
             $arr = $this->vget($url);  // 一个使用curl实现的get方法请求
             $arr = json_decode($arr,true);
-            p($arr);exit;
             $openid = $arr['openid'];
             $session_key = $arr['session_key'];
             S('session_key',$session_key);
@@ -2404,7 +2402,7 @@ class WechatController extends CommentoilcardController
             log::record('小程序登录返回数据'.$arr);
 
         }else {
-            $data= M('user')->where("openid='$openid'")->find();
+            $data= M('user')->where(['openid'=>$openid])->find();
             if (empty($data)){
                 M('user')->add(['openid'=>$openid]);
                 $agent_id=M('agent')->add(['openid'=>$openid]);
