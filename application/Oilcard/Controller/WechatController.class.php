@@ -2393,7 +2393,7 @@ class WechatController extends CommentoilcardController
             }
             $data= M('user')->where("openid='$openid'")->find();
             if (empty($data)){
-                $user_id=M('user')->insertGetId(['openid'=>$openid]);
+                $user_id=M('user')->add(['openid'=>$openid]);
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
             $this->success($arr);
@@ -2402,7 +2402,7 @@ class WechatController extends CommentoilcardController
         }else {
             $arr= M('user')->where("openid='$openid'")->find();
             if (empty($arr)){
-                $user_id=M('user')->insertGetId(['openid'=>$openid]);
+                $user_id=M('user')->add(['openid'=>$openid]);
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
 //            $nickname=(array)json_decode($nickname);
