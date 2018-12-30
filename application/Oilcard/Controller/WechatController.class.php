@@ -2047,7 +2047,7 @@ class WechatController extends CommentoilcardController
                     }else{
                         $earnings_data=M('agent_earnings')->where("openid='$openid' and agent_id='$ad'")->find();
                         if (empty($earnings_data)) {
-                            $res= M('agent_relation')->save(['agent_id'=>$a_id]);
+                             M('agent_relation')->save(['agent_id'=>$a_id]);
                         }
                         $res= M('agent_relation')->save(['agent_id'=>$aid]);
                     }
@@ -2057,23 +2057,23 @@ class WechatController extends CommentoilcardController
             }
             $data= M('user')->where("openid='$openid'")->find();
             if (empty($data)){
-                M('user')->add(['openid'=>$openid]);
-                $agent_id=M('agent')->add(['openid'=>$openid]);
-
+                $user_id=M('user')->add(['openid'=>$openid]);
+                M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
-
             $this->success($arr);
             log::record('小程序登录返回数据'.$arr);
 
         }else {
-            $data= M('user')->where(['openid'=>$openid])->find();
-            if (empty($data)){
-                M('user')->add(['openid'=>$openid]);
-                $agent_id=M('agent')->add(['openid'=>$openid]);
+            $arr= M('user')->where("openid='$openid'")->find();
+            if (empty($arr)){
+                $user_id=M('user')->add(['openid'=>$openid]);
+                M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
 //            $nickname=(array)json_decode($nickname);
             M('user')->where("openid='$openid'")->save(['nickname'=>$nickname,'user_img'=>$user_img]);
-
+            $arr= M('user')->where("openid='$openid'")->find();
+            $this->success($arr);
+            exit;
         }
 
 
