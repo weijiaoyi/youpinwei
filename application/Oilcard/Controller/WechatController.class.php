@@ -2368,6 +2368,7 @@ class WechatController extends CommentoilcardController
             $url="https://api.weixin.qq.com/sns/jscode2session?appid=".$APPID."&secret=".$AppSecret."&js_code=".$code."&grant_type=authorization_code";
             $arr = $this->vget($url);  // 一个使用curl实现的get方法请求
             $arr = json_decode($arr,true);
+            p($arr);exit;
             $openid = $arr['openid'];
             $session_key = $arr['session_key'];
             S('session_key',$session_key);
