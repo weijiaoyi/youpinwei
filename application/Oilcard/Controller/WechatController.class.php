@@ -1960,11 +1960,25 @@ class WechatController extends CommentoilcardController
             if(empty($user_apply)){
                 if (!empty($agent_openid)){
                     //查询邀请人ID及邀请人代理商ID
-                    $parent=M('user')->where('openid="'.$agent_openid.'"')->find();
-                    $parent_data=array(
-                        'parentid'=>$parent['id'],//邀请人ID
-                        'agentid'=>$parent['agentid']//邀请人代理商ID
-                    );
+                    $parent=M('user')
+                        ->alias('u')
+                        ->join('__AGENT__ a ON a.openid=u.openid',LEFT)
+                        ->where('u.openid="'.$agent_openid.'"')
+                        ->find();
+                    if($parent['role'] == 3){
+                        $parent_data=array(
+                            'parentid'=>$parent['id'],//邀请人ID
+                            'agentid'=>$parent['id'],//邀请人代理商ID
+                            'agent_relation'=>1//直接关系
+                        );
+                    }else{
+                        $parent_data=array(
+                            'parentid'=>$parent['id'],//邀请人ID
+                            'agentid'=>$parent['agentid'],//邀请人代理商ID
+                            'agent_relation'=>2//间接关系
+                        );
+                    }
+
                     M('user')->where("openid='$openid'")->save($parent_data);
                     /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
                     if (!empty($agent_openid)){
@@ -2005,11 +2019,24 @@ class WechatController extends CommentoilcardController
             if(empty($user_apply)){
                 if (!empty($agent_openid)){
                     //查询邀请人ID及邀请人代理商ID
-                    $parent=M('user')->where('openid="'.$agent_openid.'"')->find();
-                    $parent_data=array(
-                        'parentid'=>$parent['id'],//邀请人ID
-                        'agentid'=>$parent['agentid']//邀请人代理商ID
-                    );
+                    $parent=M('user')
+                        ->alias('u')
+                        ->join('__AGENT__ a ON a.openid=u.openid',LEFT)
+                        ->where('u.openid="'.$agent_openid.'"')
+                        ->find();
+                    if($parent['role'] == 3){
+                        $parent_data=array(
+                            'parentid'=>$parent['id'],//邀请人ID
+                            'agentid'=>$parent['id'],//邀请人代理商ID
+                            'agent_relation'=>1//直接关系
+                        );
+                    }else{
+                        $parent_data=array(
+                            'parentid'=>$parent['id'],//邀请人ID
+                            'agentid'=>$parent['agentid'],//邀请人代理商ID
+                            'agent_relation'=>2//间接关系
+                        );
+                    }
                     M('user')->where("openid='$openid'")->save($parent_data);
                     /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
                     if (!empty($agent_openid)){
