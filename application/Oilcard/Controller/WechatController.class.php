@@ -795,7 +795,7 @@ class WechatController extends CommentoilcardController
                     'chomd'                => 2,
                     'agent_status'         => 1,
                     'end_time'             => $EndTime,
-                    'preferential'         => $Package['limit'],
+                    'preferential'         => $Package['limits'],
                     'pkgid'                => $OrderInfo['pid'],
                     'desc'                 => '线下绑定油卡',
                 ];
