@@ -89,6 +89,7 @@ class ApplyController extends CommentoilcardController
         $openid=I('post.openid','');
         if (empty($openid))$this->openidError('参数错误！');
         $this->issetLogin($openid);
+        //获取config
         $config = M('setting')->find();
         
         $data['phone']=I('post.phone','');
@@ -114,9 +115,8 @@ class ApplyController extends CommentoilcardController
         $ParentMember= M('user')->where(['id'=>$Member['parentid']])->find();
         //生成订单号
         $sn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
-        //获取config
-        
-        
+        //获取套餐信息
+        $packages = M('packages')->where(['pid'=>$pid])->find();
         //生成订单信息
         $OrderInfo = [
             'user_id' =>$Member['id'],//购买人id
@@ -131,6 +131,7 @@ class ApplyController extends CommentoilcardController
             'postage' => $postage,
             'order_type'=>$checked,
             'order_status'=>1,
+            'preferential'=>$packages['limits'],
         ];
         $SysWhere=[
             'agent_id' =>0,
@@ -208,6 +209,10 @@ class ApplyController extends CommentoilcardController
         $user_applu_data['address']=$data['address'];
         $user_applu_data['serial_number']=$OrderInfo['serial_number'];
         $user_applu_data['agentid']=$Member['agentid'];
+        $user_applu_data['money']=$money - ($postage + $user_deposit);
+        $user_applu_data['name']=$checked==1?'线上申领油卡':'线下绑定油卡';
+        $user_applu_data['discount']=$packages['scale'];
+
         $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
         
         $wechat = new WechatController();
