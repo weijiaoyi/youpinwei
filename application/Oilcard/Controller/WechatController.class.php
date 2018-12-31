@@ -2003,8 +2003,15 @@ class WechatController extends CommentoilcardController
 
                         log::record($res);
                     }*/
+                }else{
+                    //非邀请进入
+                    $data=array(
+                        'parentid'=>'1',//邀请人ID
+                        'agent_id'=>'1'//邀请人代理商ID
+                    );
+                    M('user')->where("openid='$openid'")->save($data);
                 }
-                //非邀请进入
+
 
             }
 
@@ -2047,8 +2054,14 @@ class WechatController extends CommentoilcardController
 
                         log::record($res);
                     }*/
+                }else{
+                    //非邀请进入
+                    $data=array(
+                        'parentid'=>'2',//邀请人ID
+                        'agent_id'=>'2'//邀请人代理商ID
+                    );
+                    M('user')->where("openid='$openid'")->save($data);
                 }
-                //非邀请进入
 
             }
             $arr= M('user')->where("openid='$openid'")->find();
