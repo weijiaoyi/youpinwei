@@ -796,7 +796,7 @@ class WechatController extends CommentoilcardController
                     'agent_status'         => 1,
                     'end_time'             => $EndTime,
                     'preferential'         => $Package['limit'],
-                    'pkgid'                => $pkgid,
+                    'pkgid'                => $OrderInfo['pid'],
                     'desc'                 => '线下绑定油卡',
                 ];
                 $CardSaveResult = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->save($CardSave);
