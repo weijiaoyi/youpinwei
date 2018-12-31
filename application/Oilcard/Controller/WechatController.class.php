@@ -768,12 +768,11 @@ class WechatController extends CommentoilcardController
             $Package =M('packages')->where(['pid'=>$OrderInfo['pid']])->find();
             //获取config  押金 邮费
             $config = M('setting')->find();
-            if ($obj_arr['result_code']=='SUCCESS') {
-            }
+            
             $OrderSave =[
                 'order_status' => 2,
                 'updatetime' => $NowTime,
-                'pay_sn' => $$obj_arr['transaction_id'],
+                'pay_sn' => $obj_arr['transaction_id'],
             ];
             //申领记录更新数据
             $ApplySave =[
