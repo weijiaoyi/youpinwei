@@ -1974,6 +1974,13 @@ class WechatController extends CommentoilcardController
             $session_key = $arr['session_key'];
             S('session_key',$session_key);
             log::record($agent_openid);
+
+
+            $data= M('user')->where("openid='$openid'")->find();
+            if (empty($data)){
+                $user_id=M('user')->add(['openid'=>$openid]);
+                M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
+            }
             //判断是否申领过
             $user_apply = M('user_apply')->where("openid='$openid'")->getField('user_id');
             if(empty($user_apply)){
@@ -2014,16 +2021,19 @@ class WechatController extends CommentoilcardController
 
 
             }
-
-            $data= M('user')->where("openid='$openid'")->find();
-            if (empty($data)){
-                $user_id=M('user')->add(['openid'=>$openid]);
-                M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
-            }
             $this->success($arr);
             log::record('小程序登录返回数据'.$arr);
 
         }else {
+
+            $arr= M('user')->where("openid='$openid'")->find();
+            if (empty($arr)){
+                $user_id=M('user')->add(['openid'=>$openid]);
+                M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
+            }
+//            $nickname=(array)json_decode($nickname);
+            M('user')->where("openid='$openid'")->save(['nickname'=>$nickname,'user_img'=>$user_img]);
+            $arr= M('user')->where("openid='$openid'")->find();
             log::record($agent_openid);
             //判断是否申领过
             $user_apply = M('user_apply')->where("openid='$openid'")->getField('user_id');
@@ -2064,14 +2074,6 @@ class WechatController extends CommentoilcardController
                 }
 
             }
-            $arr= M('user')->where("openid='$openid'")->find();
-            if (empty($arr)){
-                $user_id=M('user')->add(['openid'=>$openid]);
-                M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
-            }
-//            $nickname=(array)json_decode($nickname);
-            M('user')->where("openid='$openid'")->save(['nickname'=>$nickname,'user_img'=>$user_img]);
-            $arr= M('user')->where("openid='$openid'")->find();
             $this->success($arr);
             exit;
         }
