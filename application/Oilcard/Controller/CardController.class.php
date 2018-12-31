@@ -49,7 +49,8 @@ class CardController extends CommentoilcardController
 //                return redirect(U('oilcard/wechat/getCode'));
 //            }
 
-            $card = M('OilCard')->where(['card_no'=>$card_no,'status'=>2])->find();
+            $card = M('OilCard')->where(['card_no'=>$card_no,'status'=>1])->find();
+            //判断卡号是否已申领/已有人
             if(empty($card))
             {
                 $this->error('无效的卡号！');
