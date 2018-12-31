@@ -1964,7 +1964,6 @@ class WechatController extends CommentoilcardController
 //        }
         //开发者使用登陆凭证 code 获取 session_key 和 openid
         include_once "wxBizDataCrypt.php";
-
         if (!empty($code)){
             $url="https://api.weixin.qq.com/sns/jscode2session?appid=".$APPID."&secret=".$AppSecret."&js_code=".$code."&grant_type=authorization_code";
             $arr = $this->vget($url);  // 一个使用curl实现的get方法请求

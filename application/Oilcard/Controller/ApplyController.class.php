@@ -345,7 +345,6 @@ class ApplyController extends CommentoilcardController
     *获取VIP优惠套餐
     */
     public function applySetMeal(){
-
         $data=M('packages')->select();
         foreach ($data as $key => $v) {
             if ($key==0) {
