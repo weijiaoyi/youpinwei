@@ -738,7 +738,7 @@ class WechatController extends CommentoilcardController
                 'data' =>$data,
             ))
         );
-        // M('testt')->add($insert);
+        M('testt')->add($insert);
         $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
         $RAW = json_decode($RAW);
         $obj_arr = object_to_array($RAW);
