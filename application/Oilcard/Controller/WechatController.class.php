@@ -743,9 +743,9 @@ class WechatController extends CommentoilcardController
             ))
         );
         M('testt')->add($insert);
-        $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
-        $RAW = json_decode($RAW);
-        $obj_arr = object_to_array($RAW);
+        // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
+        // $RAW = json_decode($RAW);
+        // $obj_arr = object_to_array($RAW);
         $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
         $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
