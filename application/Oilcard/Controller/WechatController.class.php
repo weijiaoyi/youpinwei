@@ -1,4 +1,5 @@
 <?php
+header('content-type:text/html;charset=utf-8');
 /**
  * Created by PhpStorm.
  * User: Administrator
@@ -821,7 +822,11 @@ class WechatController extends CommentoilcardController
                         $Robate['parent_bind']=1;//锁定上级邀请人
                     }
                     //判断是否给上级邀请人拉新奖
+<<<<<<< HEAD
                     if ($OrderInfo['pid'] >1 && $Member['is_rebate']==1){//并且如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
+=======
+                    if ($pid >1 && $Member['is_rebate']==1){//并且如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
+>>>>>>> 22109c23cec5fd4e7e8429dabaa3cc44a8accaab
                         $Robate['is_rebate']=2; //已完成拉新奖励
                         //发放拉新奖
                         if ($Invite) {
@@ -1840,9 +1845,10 @@ class WechatController extends CommentoilcardController
         }
         $qcode ="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=$access_token";
 //        $param = json_encode(['page'=>'pages/vip/vip','scene'=>$openid]);
-        $param = json_encode(['scene'=>$openid]);
-        $json = $param;
-        $result = $this->api_notice_increment($qcode, $json);
+        $param = json_encode(array('page'=>'pages/homepage/homepage','scene'=>$openid));
+//        $json = $param;
+//        $result = $this->api_notice_increment($qcode, $json);
+        $result = $this->httpRequest($qcode, $param,"POST");
 //        }
 //
 
@@ -1853,6 +1859,54 @@ class WechatController extends CommentoilcardController
 //        file_put_contents($path,print_r($result,true));
         $this->success($path);
 
+
+    }
+//把请求发送到微信服务器换取二维码
+    function httpRequest($url, $data='', $method='GET'){
+
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_URL, $url);
+
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+
+        curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+
+        curl_setopt($curl, CURLOPT_AUTOREFERER, 1);
+
+        if($method=='POST')
+
+        {
+
+            curl_setopt($curl, CURLOPT_POST, 1);
+
+            if ($data != '')
+
+            {
+
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+            }
+
+        }
+
+
+
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($curl);
+
+        curl_close($curl);
+
+        return $result;
 
     }
     public function api_notice_increment($url, $data)
