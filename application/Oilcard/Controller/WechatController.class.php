@@ -795,8 +795,8 @@ class WechatController extends CommentoilcardController
                     'chomd'                => 2,
                     'agent_status'         => 1,
                     'end_time'             => $EndTime,
-                    'preferential'         => $Package['limit'],
-                    'pkgid'                => $pkgid,
+                    'preferential'         => $Package['limits'],
+                    'pkgid'                => $OrderInfo['pid'],
                     'desc'                 => '线下绑定油卡',
                 ];
                 $CardSaveResult = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->save($CardSave);
@@ -833,9 +833,10 @@ class WechatController extends CommentoilcardController
                                 'total_earnings'=>$Invite['total_earnings']+$CouponNum
                             ]);
                         }
-                        //锁定上级代理，上级邀请人，上级拉新奖励已完成
-                        M('user')->where(['id'=>$Member['id']])->save($Robate);
+                        
                     }
+                    //锁定上级代理，上级邀请人，上级拉新奖励已完成
+                    if($Robate)M('user')->where(['id'=>$Member['id']])->save($Robate);
                 }
                 $OrderSaveResult = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
                 $ApplySaveResult = M('user_apply')->where(['id'=>$apply_status['id']])->save($ApplySave);
