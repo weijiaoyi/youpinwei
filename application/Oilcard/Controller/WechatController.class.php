@@ -738,10 +738,8 @@ class WechatController extends CommentoilcardController
                 'data' =>$data,
             ))
         );
-        // M('testt')->add($insert);
-        $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
-        $obj_arr = json_decode(json_encode(simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
-        p($obj_arr);exit;
+        M('testt')->add($insert);
+        
         $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
         unset($obj_arr['sign']);
