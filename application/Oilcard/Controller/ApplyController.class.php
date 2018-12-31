@@ -119,26 +119,28 @@ class ApplyController extends CommentoilcardController
         $packages = M('packages')->where(['pid'=>$pid])->find();
         //生成订单信息
         $OrderInfo = [
-            'user_id' =>$Member['id'],//购买人id
+            'user_id'       =>$Member['id'],//购买人id
             'serial_number' => $sn,
-            'pid' => $pid,
-            'online' => $checked,
-            'createtime' => date('Y-m-d H:i:s',TIMESTAMP),
-            'parentid' => isset($ParentMember['id'])?$ParentMember['id']:0 ,//本次购卡时 最近的邀请人id--暂不锁定邀请人
-            'agent_id' =>$card['agent_id']?:0, // 0总部发放，2代理id  --暂不锁定代理id
-            'real_pay' => $money,
-            'user_deposit' => $user_deposit,
-            'postage' => $postage,
-            'order_type'=>$checked,
-            'order_status'=>1,
-            'preferential'=>$packages['limits'],
+            'pid'           => $pid,
+            'online'        => $checked,
+            'createtime'    => date('Y-m-d H:i:s',TIMESTAMP),
+            //本次购卡时 最近的邀请人id--暂不锁定邀请人
+            'parentid'      => isset($ParentMember['id'])?$ParentMember['id']:0 ,
+            // 0总部发放，代理id  --暂不锁定代理id
+            'agent_id'      =>$card['agent_id']?:0, 
+            'real_pay'      => $money,
+            'user_deposit'  => $user_deposit,
+            'postage'       => $postage,
+            'order_type'    =>$checked,
+            'order_status'  =>1,
+            'preferential'  =>$packages['limits'],
         ];
         $SysWhere=[
-            'agent_id' =>0,
-            'is_notmal'=>1,
-            'activate' =>1,
-            'status'=>1,
-            'chomd' =>1
+            'agent_id'  =>0,
+            'is_notmal' =>1,
+            'activate'  =>1,
+            'status'    =>1,
+            'chomd'     =>1
         ]; 
         $Syscount = M('oil_card')->where($SysWhere)->count();
         switch ($checked) {
@@ -200,18 +202,17 @@ class ApplyController extends CommentoilcardController
         }
 
         $user_data=M('user')->where("openid='$openid'")->find();
-        $user_applu_data['user_id']=$Member['id'];
-        $user_applu_data['status']='1';
-        $user_applu_data['openid']=$openid;
-
-        $user_applu_data['receive_person']=$data['receive_person'];
-        $user_applu_data['phone']=$data['phone'];
-        $user_applu_data['address']=$data['address'];
-        $user_applu_data['serial_number']=$OrderInfo['serial_number'];
-        $user_applu_data['agentid']=$Member['agentid'];
-        $user_applu_data['money']=$money - ($postage + $user_deposit);
-        $user_applu_data['name']=$checked==1?'线上申领油卡':'线下绑定油卡';
-        $user_applu_data['discount']=$packages['scale'];
+        $user_applu_data['user_id']        =$Member['id'];
+        $user_applu_data['status']         ='1';
+        $user_applu_data['openid']         =$openid;
+        $user_applu_data['receive_person'] =$data['receive_person'];
+        $user_applu_data['phone']          =$data['phone'];
+        $user_applu_data['address']        =$data['address'];
+        $user_applu_data['serial_number']  =$OrderInfo['serial_number'];
+        $user_applu_data['agentid']        =$Member['agentid'];
+        $user_applu_data['money']          =$packages['price'];
+        $user_applu_data['name']           =$checked==1?'线上申领油卡':'线下绑定油卡';
+        $user_applu_data['discount']       =$packages['scale'];
 
         $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
         
