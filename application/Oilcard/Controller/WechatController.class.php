@@ -722,34 +722,12 @@ class WechatController extends CommentoilcardController
         ob_end_clean();return XML::build($data);
     }
 
-    /**
-     * 更新订单信息
-     * @Author 老王
-     * @创建时间   2018-12-31
-     * @param  [type]     $OrderInfo    [订单信息]
-     * @param  [type]     $Member       [用户信息]
-     * @param  [type]     $apply_status [申领记录]
-     * @param  [type]     $config       [description]
-     */
-    public function UpdateOrderInfo($OrderInfo,$Member,$apply_status,$config,$obj_arr){
-        //订单信息更新数据
-        $OrderSave =[
-            'order_status' => 2,
-            'updatetime' => date('Y-m-d H:i:s',TIMESTAMP),
-            'pay_sn' => $$obj_arr['transaction_id'],
-        ];
-        //申领记录更新数据
-        $ApplySave =[
-            'note' => '油卡申领支付成功',
-            'updatetime' => date('Y-m-d H:i:s',TIMESTAMP),
-            'apply_status' => 2,
-        ];
-        $OrderSaveResult = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
-        $ApplySaveResult = M('user_apply')->where(['id'=>$apply_status['id']])->save($ApplySave);
-    }
 
     /**
-     * 申领银牌支付回调
+     * 申领油卡异步回掉，包含线上 线下
+     * @Author 老王
+     * @创建时间   2018-12-31
+     * @return [type]     [description]
      */
     public function wxAgentNoticePay()
     {
@@ -765,118 +743,104 @@ class WechatController extends CommentoilcardController
             ))
         );
         M('testt')->add($insert);
-        $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
-        $RAW = json_decode($RAW);
-        $obj_arr = object_to_array($RAW);
+        // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
+        // $RAW = json_decode($RAW);
+        // $obj_arr = object_to_array($RAW);
         $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
-
+        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
+        $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
         unset($obj_arr['sign']);
         ksort($obj_arr);
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
         //签名验证
-        if($cur_sign === $sign) {
-            //添加到代理表
+        if($cur_sign === $sign) {                                                   
             //获取用户信息 根据微信openid查询对应的用户
             $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
-            p($Member);exit;
-            //获取代理上信息
-            $Agent = M('agent')->where(['openid'=>$openId])->find();
+            //获取上级邀请人信息
+            $Invite=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.id'=>$Member['parentid']])->find();
             //获取订单信息
             $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
             //获取申领记录
             $apply_status=M('user_apply')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
+            //套餐信息
+            $Package =M('packages')->where(['pid'=>$OrderInfo['pid']])->find();
             //获取config  押金 邮费
             $config = M('setting')->find();
+            
+            $OrderSave =[
+                'order_status' => 2,
+                'updatetime' => $NowTime,
+                'pay_sn' => $obj_arr['transaction_id'],
+            ];
+            //申领记录更新数据
+            $ApplySave =[
+                'note' => '油卡申领支付成功',
+                'updatetime' => $NowTime,
+                'apply_status' => 2,
+            ];
+            //线下绑卡设置 -- 直接成功发放油卡，并绑定到用户名下
+            if ($OrderInfo['online']==2) {
+                //修改油卡信息
+                $CardSave = [
+                    'user_id'              => $Member['id'],
+                    'apply_fo_time'        => $NowTime,
+                    'status'               => 2,
+                    'updatetime'           => $NowTime,
+                    'chomd'                => 2,
+                    'agent_status'         => 1,
+                    'end_time'             => $EndTime,
+                    'preferential'         => $Package['limit'],
+                    'pkgid'                => $pkgid,
+                    'desc'                 => '线下绑定油卡',
+                ];
+                $CardSaveResult = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->save($CardSave);
+                //修改申领记录信息
+                $ApplySave['deliver_number'] =1;
+                $ApplySave['status'] =3;
+                //订单修改
+                $OrderSave['preferential_type'] =2;
+            }
             if ($obj_arr['result_code']=='SUCCESS') {
-                $this->UpdateOrderInfo($OrderInfo,$Member,$apply_status,$config,$obj_arr);
-            }
-
-            //申领记录表
-            if (empty($apply_status)) {
-                    if (empty($checked_card)){
-                        $this->cardIncreaseQuota($card_no,$checked_card,$money);
-                        //修改为银牌代理身份
-                        $vip_money=$money-20;
-                        file_put_contents(__DIR__.'/vip.log',print_r($vip_money,true));
-                        $arr= M('agent')->where('openid="'.$openId.'"')->find();
-                        if ($money>20){
-                                $agent_arr=M('agent')->where("openid='$openId'")->find();
-                                if ($agent_arr['role']==3) {
-                                    $role=3;
-                                }else{
-                                    $role=2;
-                                }
-                                $agent_data=[
-                                    'openid'=>$openId,
-                                    'status'=>'1',
-                                    'role'=>$role,
-                                    'expire_time'=>date("Y-m-d H:i:s",strtotime("+1years")),
-                                ];
-                            if (!empty($arr)){
-                                $agent_res=M('agent')->where("openid='$openId'")->save($agent_data);
-                                // 修改订单表订单状态
-                                $record_res = M('order_record')->where("serial_number='$out_trade_no'")->save(['order_status'=>2]);
-
-                            }else{
-                                $agent_res=M('agent')->add($agent_data);
-                            }
-                        }
-                        // 修改申领表订单状态
-                        M('user_apply')->where("serial_number='$out_trade_no'")->save(['apply_status'=>2]);   //修改申领状态
-                    }else{
-                            log::record('线下申领逻辑');
-                        if (!empty($checked_card)){
-                            $card_arr=M('oil_card')->where("card_no='$checked_card'")->find();
-                            $lastmoney=($money-20)*120;
-                            if ($card_arr['end_time']<date('Y-m-d H:i:s')){
-                                M('oil_card')->where("card_no='$checked_card'")->save(['end_time'=>date("Y-m-d H:i:s",strtotime("+1years")),'preferential'=>$lastmoney]);
-                            }else{
-
-                                $last_money=(string)$card_arr['preferential']+(string)$lastmoney;
-                                M('oil_card')->where("card_no='$checked_card'")->save(['end_time'=>date("Y-m-d H:i:s",strtotime("+1years")),'preferential'=>$last_money]);
-                            }
-                        }
-
-                        M('order_record')->where("serial_number='$out_trade_no'")->save(['order_status'=>2]);
-
+                /* 
+                1，判断用户是否为第一张卡，如果是第一次申领，锁定上级邀请人，如果没有，则为总部，锁定上级代理，如果没有，则为总部
+                2，继续判断 此次申领油卡套餐是否为VIP套餐 
+                    2.1 如果为普通套餐 ，上级邀请人无加油卷返利，对上级代理不做任何操作
+                    2.2 如果为VIP套餐，对上级邀请人 返利加油卷 config里获取百分比，对上级代理不做操作
+                */
+                $isFirst = M('user_apply')->where(['user_id'=>$Member['id']])->count();
+                if ($isFirst==1) { //如果为第一次购买
+                    $Robate=[];
+                    if ($Member['parent_bind'] ==0 && $Member['agent_bind']==0) {
+                        $Robate['agent_bind']=1;//锁定上级代理
+                        $Robate['parent_bind']=1;//锁定上级邀请人
                     }
-                //申请代理未上线添加拉新收益
-                $agent_data=M('agent')->where("openid='$openId'")->find();
-
-                if ($vip_money>0){
-                    $role=2;
-                }else{
-                    $role=1;
+                    //判断是否给上级邀请人拉新奖
+                    if ($pid>1 && $Member['is_rebate']==1){//并且如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
+                        $Robate['is_rebate']=2; //已完成拉新奖励
+                        //发放拉新奖
+                        if ($Invite) {
+                            //保留两位小数
+                            $CouponNum = number_format(($Package['price'] * ($config['scroll']/100)), 2, ".", "");
+                            //给上级邀请人增加 拉新奖励池和总收益 
+                            M('user')->where(['id'=>$Invite['id']])->save([
+                                'new_earnings'=>$Invite['new_earnings']+$CouponNum,
+                                'total_earnings'=>$Invite['total_earnings']+$CouponNum
+                            ]);
+                        }
+                        //锁定上级代理，上级邀请人，上级拉新奖励已完成
+                        M('user')->where(['id'=>$Member['id']])->save($Robate);
+                    }
                 }
-
-                $agent_id=M('agent_relation')->where("openid='$openId'")->getField('agent_id');
-                $b=M('')->getLastSql();
-                $agent_role=M('agent')->where("id='$agent_id'")->getField('role');
-                $a=M('')->getLastSql();
-
-                    log::record("role".$a);
-                    log::record("role".$role);
-                    log::record("role".$agent_role);
-
-                if ($role==1 && $agent_role==2){
-                    $this->VipPullOrdinary($openId,$money);
-                }else if($role==1 && $agent_role==3){
-                    $this->GoldPullOrdinary($openId,$money);
-                }else if($role==2 && $agent_role==3){
-                    $this->AgentPullVip($openId,$money);
-                }else if($role==2 && $agent_role==2){
-                    $this->VipPullVipNew($openId,$money);
-                }
-
+                $OrderSaveResult = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
+                $ApplySaveResult = M('user_apply')->where(['id'=>$apply_status['id']])->save($ApplySave);
             }
-
+            
             $result = [];
-            $data[' requestPayment'] = 'success';
+            $data['requestPayment'] = 'success';
             $data['return_msg'] = 'OK';
-
-            echo log::record(XML::build($result));
+            return log::record(XML::build($data));
         } else {
            Log::record('签名错误，订单号:'.$obj_arr['out_trade_no']);
         }
@@ -1872,9 +1836,9 @@ class WechatController extends CommentoilcardController
         }
         $qcode ="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=$access_token";
 //        $param = json_encode(['page'=>'pages/vip/vip','scene'=>$openid]);
-        $param = json_encode(['scene'=>$openid]);
+        $param = json_encode(['page'=>'pages/homepage/homepage','scene'=>$openid]);
         $json = $param;
-        $result = $this->api_notice_increment($qcode, $json,'POST');
+        $result = $this->api_notice_increment($qcode, $json);
 //        }
 //
 
@@ -1887,42 +1851,26 @@ class WechatController extends CommentoilcardController
 
 
     }
-    public function api_notice_increment($url, $data,  $method='POST')
+    public function api_notice_increment($url, $data)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-//        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
-        curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-//        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if($method=='POST')
-        {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            if ($data != '')
-            {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            }
-        }
-
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
-        /*$tmpInfo = curl_exec($ch);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $tmpInfo = curl_exec($ch);
         if (curl_errno($ch)) {
             curl_close($ch);
             return $ch;
         } else {
             curl_close($ch);
             return $tmpInfo;
-        }*/
+        }
     }
 
 
@@ -1981,7 +1929,7 @@ class WechatController extends CommentoilcardController
 //            $this->error('数据传输有误');
 //        }
         $test_data = array(
-            'content'=>$agent_openid
+            'content'=>'aaaaa'
         );
         M('testt')->add($test_data);
         //开发者使用登陆凭证 code 获取 session_key 和 openid
