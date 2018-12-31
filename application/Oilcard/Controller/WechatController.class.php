@@ -207,48 +207,34 @@ class WechatController extends CommentoilcardController
     /**
      * 申请为银牌代理下单接口
      */
-    public function agentPay($openid,$data,$money,$card_no,$from_id,$res,$checked_card='')
+    public function agentPay($OrderInfo,$data,$openid)
     {
         log::record('线下申领卡号：'.$checked_card);
 
-        $money=$money-20;
-        file_put_contents(__DIR__.'/data/'.$openid.'receive_person.txt',print_r($data['receive_person'],true));
-        file_put_contents(__DIR__.'/data/'.$openid.'address.txt',print_r($data['address'],true));
-        file_put_contents(__DIR__.'/data/'.$openid.'phone.txt',print_r($data['phone'],true));
-        file_put_contents(__DIR__.'/data/'.$openid.'money.txt',print_r($money,true));
-        file_put_contents(__DIR__.'/data/'.$openid.'from_id.txt',print_r($from_id,true));
-        if (empty($checked_card)) {
-            file_put_contents(__DIR__.'/data/'.$openid.'checked_card.txt',print_r('',true));
-        }else{
-            file_put_contents(__DIR__.'/data/'.$openid.'checked_card.txt',print_r($checked_card,true));
-        }
-        
-        $date=date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
+        //获取套餐信息
+        $package = M('packages')->where(['pid'=>$OrderInfo['pid']])->find();
         //微信统一下单
         $data = [];
-        $data['appid'] = CardConfig::$wxconf['appid'];
-        $data['mch_id'] = CardConfig::$wxconf['mch_id'];
-        $data['device_info'] = 'WEB';
-        $data['nonce_str'] = Tool::randomStr(20);
-        $data['sign_type'] = 'MD5';
-        $data['body'] = '银牌代理年费';
-        $data['detail'] = '办理银牌代理';
-        $data['attach'] = '缴纳年费';
-        $data['out_trade_no'] = $date;
-        $data['fee_type'] = 'CNY';
-        $data['total_fee'] = 1;//$money*100
+        $data['appid']            = CardConfig::$wxconf['appid'];
+        $data['mch_id']           = CardConfig::$wxconf['mch_id'];
+        $data['device_info']      = 'WEB';
+        $data['nonce_str']        = Tool::randomStr(20);
+        $data['sign_type']        = 'MD5';
+        $data['body']             = $OrderInfo['online']==1?'线上申领油卡':'线下绑定油卡';
+        $data['detail']           = '油卡业务办理';
+        $data['attach']           = '缴纳年费';
+        $data['out_trade_no']     = $OrderInfo['serial_number'];
+        $data['fee_type']         = 'CNY';
+        $data['total_fee']        = 1;//$OrderInfo['real_pay']*100
         $data['spbill_create_ip'] = Tool::getClientIp();
-        $data['time_start'] = date('YmdHis');
-        $data['time_expire'] = date('YmdHis',time()+7200);
-
-        $data['notify_url'] = $this->my_uri.'/agentMoneyNotify.php';
-
-        $data['trade_type'] = 'JSAPI';
+        $data['time_start']       = date('YmdHis');
+        $data['time_expire']      = date('YmdHis',time()+7200);
+        $data['notify_url']       = $this->my_uri.'/agentMoneyNotify.php';
+        $data['trade_type']       = 'JSAPI';
         $data['openid'] = $openid;
         ksort($data);
         $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
         $data['sign'] = md5($string1);
-
         $content = XML::build($data);
 
         $ch_url=$this->pay_uri.'/pay/unifiedorder';
@@ -262,52 +248,28 @@ class WechatController extends CommentoilcardController
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         $content = curl_exec($ch);
         curl_close($ch);
-        Log::record('申请为银牌代理下单接口');
         $data = [];
         $obj_arr = XML::parse($content);
 
         if (!$obj_arr){
             return $data;
         }
-        $agent_id=M('agent_relation')->where("openid='$openid'")->getField('agent_id');
-        $agent_arr= M('agent')->where("id='$agent_id'")->find();
-
-            Log::record('银牌申领:2');
-            $userData=M('user')->where("openid='$openid'")->find(); 
-        Log::record($userData);
-        $res= M('user_apply')->where("id='$res'")->save(['serial_number'=>$date]);   //单独申领表添加申领信息（未支付成功）
-
-        $vip_money=$money-20;
-        if ($vip_money>0) {
-            $order_record['preferential']=$vip_money*120;
-            $order_record['preferential_type']=1;
-        }
-        
-
-         //申领记录
-        $order_record['user_id']         = $userData['id'];
-        $order_record['order_type']      = 1;
-        $order_record['serial_number']   = $date;
-        $order_record['money']           = $money;
-        $order_record['real_pay']        = $money;
-        $order_record['discount_money']  = 0;
-        $order_record['order_status']  = 1;
-        $order_record['shop_name']  = '中国石油加油卡';
-        $order_record['serial_name']  = $date;
-        $record_res = M('order_record')->add($order_record);
-
+        $order = false;
         if($obj_arr['result_code'] == 'SUCCESS') {
             $data['appId'] = CardConfig::$wxconf['appid'];
             $data['timeStamp'] = time();
             $data['nonceStr'] = Tool::randomStr(20);
             $data['package'] = 'prepay_id='.$obj_arr['prepay_id'];
             $data['signType'] = 'MD5';
-
             ksort($data);
             $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
             $data['paySign'] = md5($string1);
+            //写入订单表
+            $order = M('order_record')->add($OrderInfo);
         }
+        if (!$order) return [];
         return $data;
+        
 
     }
 
@@ -501,6 +463,7 @@ class WechatController extends CommentoilcardController
         $data = file_get_contents('php://input');
         $obj_arr = XML::parse($data);
         Log::record('微信回调data:'.json_encode($obj_arr));
+
         $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
         unset($obj_arr['sign']);
@@ -767,27 +730,29 @@ class WechatController extends CommentoilcardController
         $data = file_get_contents('php://input');
         Log::record('银牌申领回调:');
         $obj_arr = XML::parse($data);
-        $openId=$obj_arr['openid'];
-//        $openId="oKBRH4-nLGXUms_fY0xglT8xfesE";
 
+        $insert = array(
+            'content'=>json_encode(array(
+                'InsertTime'=>date('Y-m-d H:i:s',time()),
+                'input' =>$obj_arr,
+                'data' =>$data,
+            ))
+        );
+        // M('testt')->add($insert);
+        $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
+        $obj_arr = json_decode(json_encode(simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        p($obj_arr);exit;
+        $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
         unset($obj_arr['sign']);
         ksort($obj_arr);
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
-
         if($cur_sign === $sign) {
             //添加到代理表
             //如果有上级，给上级40元
             Log::record('银牌申领回调1');
-
-
-//            Log::record('银牌申领回调:2');
-            $userData=M('user')->where("openid='$openId'")->find();  //根据微信openid查询对应的用户
-//            if (empty($userData)) {
-//                $this->error('用户不存在');
-//            }
-           
+            $userData=M('user')->where(['openid'=>$openId])->find();  //根据微信openid查询对应的用户
             //将指定的卡号添加93优惠套餐
             Log::record('银牌申领回调:3');
             $card_no=file_get_contents(__DIR__.'/data/'.$openId.'card_no.txt');
@@ -1520,20 +1485,13 @@ class WechatController extends CommentoilcardController
     public function templateMessage($openid,$data,$flage,$from_id){
 
         Log::record('模板消息:'.json_encode($data));
-
         if (empty($openid)) {
-            echo json_encode([
+            exit(json_encode([
                 'msg'=>'数据传输有误',
                 'status'=>'500'
-            ]);exit;
+            ]));
         }
-
         $user_data=M('user')->where("openid='".$openid."'")->find();
-
-//        $access_token=S('access_token');
-//        if(empty($access_token)){
-//        $getAccessTokenUrl="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$this->appid."&secret=".$this->secret;  ##公众号
-
         $getAccessTokenUrl="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$this->appid."&secret=".$this->secret;
         $accessTokenData=(array)json_decode($this->curlGet($getAccessTokenUrl));
         $access_token=$accessTokenData['access_token'];
@@ -1702,29 +1660,9 @@ class WechatController extends CommentoilcardController
                        "value":"'.$data['receive_person'].'",
                    },
                }';
-            //     $template_data='{
-            //     "keyword1": {
-            //         "value": "339208499"
-            //     },
-            //     "keyword2": {
-            //         "value": "2015年01月05日 12:30"
-            //     },
-            //     "keyword3": {
-            //         "value": "腾讯微信总部"
-            //     },
-            //     "keyword4": {
-            //         "value": "广州市海珠区新港中路397号"
-            //     }
-            // },';
                 break;
         }
 
-//        $templateData='{
-//           "touser":"'.$openid.'",
-//           "template_id":"'.$template_id.'",
-//           "data":'.$template_data.'
-//        }';
-        // log::recode($b);
         $templateData='{
             "touser":"'.$openid.'",
             "template_id": "'.$template_id.'",

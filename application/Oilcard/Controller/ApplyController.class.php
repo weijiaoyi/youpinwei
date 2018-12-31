@@ -86,17 +86,26 @@ class ApplyController extends CommentoilcardController
      * @return [type]     [description]
      */
     public function agentApply(){
-        $openId=I('post.openid','');
-        if (empty($openId))$this->openidError('参数错误！');
-        $this->issetLogin($openId);
-
+        $openid=I('post.openid','');
+        if (empty($openid))$this->openidError('参数错误！');
+        $this->issetLogin($openid);
+        $config = M('setting')->find();
+        
         $data['phone']=I('post.phone','');
         $data['address']=I('post.address','');
         $data['receive_person']=I('post.receive_person','');
-        $from_id=I('post.from_id','');
-        $money=I('post.money','');
+        $money=I('post.money',0);
         $card_no=I('post.card_no','');
         $checked=I('post.checked');
+        $checked_card=I('post.checked_card','');
+        $pid = intval(I('post.pid',1));
+        if ($checked == 2 || $pid >1) { //任意VIP套餐 和 现场绑卡不需要邮费
+            $postage = 0 ;//油卡邮费
+        }else{
+            $postage=I('post.postage',$config['postage']);
+        }
+        $user_deposit = I('post.user_deposit',$config['user_deposit']);
+        
         $Member = M('user')->where(['openid'=>$openid])->find();
         if (empty($Member['nickname']) && empty($Member['user_img']) ) $this->error('请先授权登录');
         //获取当前代理商信息
@@ -105,14 +114,23 @@ class ApplyController extends CommentoilcardController
         $ParentMember= M('user')->where(['id'=>$Member['parentid']])->find();
         //生成订单号
         $sn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
+        //获取config
+        
+        
         //生成订单信息
         $OrderInfo = [
             'user_id' =>$Member['id'],//购买人id
             'serial_number' => $sn,
+            'pid' => $pid,
             'online' => $checked,
             'createtime' => date('Y-m-d H:i:s',TIMESTAMP),
             'parentid' => isset($ParentMember['id'])?$ParentMember['id']:0 ,//本次购卡时 最近的邀请人id--暂不锁定邀请人
-            'agent_id' =>$card['agent_id'], // 0总部发放，2代理id  --暂不锁定代理id
+            'agent_id' =>$card['agent_id']?:0, // 0总部发放，2代理id  --暂不锁定代理id
+            'real_pay' => $money,
+            'user_deposit' => $user_deposit,
+            'postage' => $postage,
+            'order_type'=>$checked,
+            'order_status'=>1,
         ];
         $SysWhere=[
             'agent_id' =>0,
@@ -135,7 +153,6 @@ class ApplyController extends CommentoilcardController
                 }
                 break;
             case '2'://现场办卡
-                $checked_card=I('post.checked_card','');
                 $card= M('OilCard')->where(['card_no'=>$checked_card])->find();
                 if(!$card) $this->error('油卡号不正确，请输入我平台发放的正确油卡号！');
                 if (!empty($card['user_id'])) $this->error('该卡号已经被绑定！');
@@ -164,7 +181,7 @@ class ApplyController extends CommentoilcardController
         }
 
         $address_data=[
-            'openid'=>$openId,
+            'openid'=>$openid,
             'phone'=>$data['phone'],
             'receive_person'=>$data['receive_person']
         ];
@@ -175,49 +192,28 @@ class ApplyController extends CommentoilcardController
             $OrderInfo['addressid']=M('address')->add($address_data);
         }else{
             M('address')->where(['id'=>$address_res['id']])->save(['use_time'=>time()]);
-            $OrderInfo['addressid'] =$address_res['id']
+            $OrderInfo['addressid'] =$address_res['id'];
         }
-
-
-        if($OilCardData){
-            /*
-             * 调取支付200元方法
-             */
-            if (!empty($checked_card)) {//线下领卡
-                 $user_applu_data['card_no']=$checked_card;
-            }
-            $user_data=M('user')->where("openid='$openId'")->find();
-            $user_applu_data['user_id']=$Member['id'];
-            $user_applu_data['status']='1';
-            $user_applu_data['openid']=$openId;
-
-            $user_applu_data['receive_person']=$data['receive_person'];
-            $user_applu_data['phone']=$data['phone'];
-            $user_applu_data['address']=$data['address'];
-
-            // $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
-
-            $wechat = new WechatController();
-            if ($checked==='1'){
-                $data = $wechat->agentPay($openId,$data,$money,$card_no,$from_id,$res);
-            }else{
-                $data = $wechat->agentPay($openId,$data,$money,$card_no,$from_id,$res,$checked_card);
-            }
-
-            Log::record('创建订单返回:'.json_encode($data));
-            if (empty($data))
-            {
-                echo json_encode(['msg'=>'微信下单失败！','status'=>500]);
-                exit();
-            }
-            $Wechat = A('Wechat');
-            $Wechat->templateMessage($openId,$data,1,$from_id);
-            echo json_encode(['msg'=>'success','status'=>1000,'data'=>$data]);
-            exit();
-
-        }else{
-            $this->error('创建订单失败');
+        if (!empty($checked_card)) {//线下领卡
+             $user_applu_data['card_no']=$checked_card;
         }
+        $user_data=M('user')->where("openid='$openid'")->find();
+        $user_applu_data['user_id']=$Member['id'];
+        $user_applu_data['status']='1';
+        $user_applu_data['openid']=$openid;
+
+        $user_applu_data['receive_person']=$data['receive_person'];
+        $user_applu_data['phone']=$data['phone'];
+        $user_applu_data['address']=$data['address'];
+        $user_applu_data['serial_number']=$OrderInfo['serial_number'];
+        // $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
+        
+        $wechat = new WechatController();
+        $data = $wechat->agentPay($OrderInfo,$data,$openid);
+        if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
+        $Wechat = A('Wechat');
+        $Wechat->templateMessage($openid,$data,1,$from_id);
+        exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
     }
 
     /**
@@ -374,11 +370,14 @@ class ApplyController extends CommentoilcardController
     public function GetCommentInfo(){
         $img = D("Common/Slide")->where(array('slide_id'=>1))->find();
         $packages = M('packages')->select();
+        $config = M('setting')->find();
         $data = [
             'img'=>sp_get_image_preview_url($img['slide_pic']),
             'plainMember'=>$packages[0]['scale'],
             'vipMember'=>end($packages)['scale'],
         ];
+        unset($config['id']);
+        $data=array_merge($data,$config);
         $this->success($data);
     }
 
