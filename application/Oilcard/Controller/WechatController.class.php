@@ -1984,7 +1984,7 @@ class WechatController extends CommentoilcardController
             if(empty($user_apply)){
                 if (!empty($agent_openid)){
                     $test_data = array(
-                        'content'=>'777'
+                        'content'=>$agent_openid
                     );
                     M('testt')->add($test_data);
                     //查询邀请人ID及邀请人代理商ID
