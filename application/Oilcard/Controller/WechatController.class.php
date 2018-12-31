@@ -776,10 +776,13 @@ class WechatController extends CommentoilcardController
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
         //签名验证
-        if($cur_sign === $sign) {
+        if($cur_sign === $sign) {                                                   
             //添加到代理表
-            //获取用户信息
-            $Member=M('user')->where(['openid'=>$openId])->find();  //根据微信openid查询对应的用户
+            //获取用户信息 根据微信openid查询对应的用户
+            $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
+            p($Member);exit;
+            //获取代理上信息
+            $Agent = M('agent')->where(['openid'=>$openId])->find();  
             //获取订单信息
             $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
             //获取申领记录
@@ -788,7 +791,6 @@ class WechatController extends CommentoilcardController
             $config = M('setting')->find();
             if ($obj_arr['result_code']=='SUCCESS') {
                 $this->UpdateOrderInfo($OrderInfo,$Member,$apply_status,$config,$obj_arr);
-                
             }
 
             //申领记录表
