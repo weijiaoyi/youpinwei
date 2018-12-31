@@ -197,6 +197,7 @@ class ApplyController extends CommentoilcardController
         if (!empty($checked_card)) {//线下领卡
              $user_applu_data['card_no']=$checked_card;
         }
+
         $user_data=M('user')->where("openid='$openid'")->find();
         $user_applu_data['user_id']=$Member['id'];
         $user_applu_data['status']='1';
@@ -206,7 +207,8 @@ class ApplyController extends CommentoilcardController
         $user_applu_data['phone']=$data['phone'];
         $user_applu_data['address']=$data['address'];
         $user_applu_data['serial_number']=$OrderInfo['serial_number'];
-        // $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
+        $user_applu_data['agentid']=$Member['agentid'];
+        $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
         
         $wechat = new WechatController();
         $data = $wechat->agentPay($OrderInfo,$data,$openid);
