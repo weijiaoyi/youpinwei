@@ -1983,14 +1983,14 @@ class WechatController extends CommentoilcardController
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
             //判断是否申领过
-            $user_apply = M('user_apply')->where("openid='$openid'")->getField('user_id');
+            $user_apply = M('user_apply')->where("openid='$openid'")->find();
             if(empty($user_apply)){
                 if (!empty($agent_openid)){
                     //查询邀请人ID及邀请人代理商ID
                     $parent=M('user')->where('openid="'.$agent_openid.'"')->find();
                     $parent_data=array(
                         'parentid'=>$parent['id'],//邀请人ID
-                        'agent_id'=>$parent['agent_id']//邀请人代理商ID
+                        'agentid'=>$parent['agentid']//邀请人代理商ID
                     );
                     M('user')->where("openid='$openid'")->save($parent_data);
                     /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
@@ -2032,14 +2032,14 @@ class WechatController extends CommentoilcardController
             );
             M('testt')->add($test_data);
             //判断是否申领过
-            $user_apply = M('user_apply')->where("openid='$openid'")->getField('user_id');
+            $user_apply = M('user_apply')->where("openid='$openid'")->find();
             if(empty($user_apply)){
                 if (!empty($agent_openid)){
                     //查询邀请人ID及邀请人代理商ID
                     $parent=M('user')->where('openid="'.$agent_openid.'"')->find();
                     $parent_data=array(
                         'parentid'=>$parent['id'],//邀请人ID
-                        'agent_id'=>$parent['agent_id']//邀请人代理商ID
+                        'agentid'=>$parent['agentid']//邀请人代理商ID
                     );
                     M('user')->where("openid='$openid'")->save($parent_data);
                     /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
