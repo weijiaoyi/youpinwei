@@ -723,6 +723,32 @@ class WechatController extends CommentoilcardController
     }
 
     /**
+     * 更新订单信息
+     * @Author 老王
+     * @创建时间   2018-12-31
+     * @param  [type]     $OrderInfo    [订单信息]
+     * @param  [type]     $Member       [用户信息]
+     * @param  [type]     $apply_status [申领记录]
+     * @param  [type]     $config       [description]
+     */
+    public function UpdateOrderInfo($OrderInfo,$Member,$apply_status,$config,$obj_arr){
+        //订单信息更新数据
+        $OrderSave =[
+            'order_status' => 2,
+            'updatetime' => date('Y-m-d H:i:s',TIMESTAMP),
+            'pay_sn' => $$obj_arr['transaction_id'],
+        ];
+        //申领记录更新数据
+        $ApplySave =[
+            'note' => '油卡申领支付成功',
+            'updatetime' => date('Y-m-d H:i:s',TIMESTAMP),
+            'apply_status' => 2,
+        ];
+        $OrderSaveResult = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
+        $ApplySaveResult = M('user_apply')->where(['id'=>$apply_status['id']])->save($ApplySave);
+    }
+
+    /**
      * 申领银牌支付回调
      */
     public function wxAgentNoticePay()
@@ -742,7 +768,6 @@ class WechatController extends CommentoilcardController
         $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
         $RAW = json_decode($RAW);
         $obj_arr = object_to_array($RAW);
-
         $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
 
@@ -753,47 +778,28 @@ class WechatController extends CommentoilcardController
         //签名验证
         if($cur_sign === $sign) {
             //添加到代理表
-            //如果有上级，给上级40元
-            $userData=M('user')->where(['openid'=>$openId])->find();  //根据微信openid查询对应的用户
+            //获取用户信息
+            $Member=M('user')->where(['openid'=>$openId])->find();  //根据微信openid查询对应的用户
+            //获取订单信息
             $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
-            
-                        
-            $card_no=file_get_contents(__DIR__.'/data/'.$openId.'card_no.txt');
-            $money=file_get_contents(__DIR__.'/data/'.$openId.'money.txt');
-            
-            $checked_card=file_get_contents(__DIR__.'/data/'.$openId.'checked_card.txt');
-            $from_id=file_get_contents(__DIR__.'/data/'.$openId.'from_id.txt');
-
-            $out_trade_no=$obj_arr['out_trade_no'];
-            log::record("订单编号：".$out_trade_no);
+            //获取申领记录
             $apply_status=M('user_apply')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
-            p($out_trade_no);exit;
-            log::record($apply_status);
-            log::record("是否由此单好".$apply_status);
+            //获取config  押金 邮费
+            $config = M('setting')->find();
+            if ($obj_arr['result_code']=='SUCCESS') {
+                $this->UpdateOrderInfo($OrderInfo,$Member,$apply_status,$config,$obj_arr);
+                
+            }
+
+            //申领记录表
             if (empty($apply_status)) {
-
-                $agent_id=M('agent_relation')->where("openid='$openId'")->getField('agent_id');
-                $agent_arr= M('agent')->where("id='$agent_id'")->find();
-                $first_agent_id=M('agent_relation')->where("openid='".$agent_arr['openid']."'")->getField('agent_id');
-
-                //判断是否油卡有库存
-                log::record("线下申领逻辑卡".$checked_card);
-                //判断是否存在此油卡，
-                $this->issetCard($openId,$agent_id,$agent_arr,$first_agent_id,$checked_card,$out_trade_no);
-
                     if (empty($checked_card)){
-
                         $this->cardIncreaseQuota($card_no,$checked_card,$money);
-                        
-                        Log::record('银牌申领回调:33');
-
                         //修改为银牌代理身份
                         $vip_money=$money-20;
                         file_put_contents(__DIR__.'/vip.log',print_r($vip_money,true));
                         $arr= M('agent')->where('openid="'.$openId.'"')->find();
-
                         if ($money>20){
-
                                 $agent_arr=M('agent')->where("openid='$openId'")->find();
                                 if ($agent_arr['role']==3) {
                                     $role=3;
@@ -807,16 +813,9 @@ class WechatController extends CommentoilcardController
                                     'expire_time'=>date("Y-m-d H:i:s",strtotime("+1years")),
                                 ];
                             if (!empty($arr)){
-                                if ($arr['expire_time']>date('Y-m-d H:i:s')){
-                                    $catime = strtotime($arr['expire_time'])+60*60*24*365;
-                                    $nowtimes = date('Y-m-d H:i:s',$catime);
-                                }
-                                log::record("agent修改状态：".$agent_data['role']);
                                 $agent_res=M('agent')->where("openid='$openId'")->save($agent_data);
-                                log::record("修改用户为代理商;".$agent_res);
                                 // 修改订单表订单状态
                                 $record_res = M('order_record')->where("serial_number='$out_trade_no'")->save(['order_status'=>2]);
-                                log::record('添加订单银牌代理充值记录记录表记录'.$record_res);
 
                             }else{
                                 $agent_res=M('agent')->add($agent_data);
@@ -841,7 +840,6 @@ class WechatController extends CommentoilcardController
                         M('order_record')->where("serial_number='$out_trade_no'")->save(['order_status'=>2]);
 
                     }
-
                 //申请代理未上线添加拉新收益
                 $agent_data=M('agent')->where("openid='$openId'")->find();
 
