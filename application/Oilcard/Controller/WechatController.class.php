@@ -1840,10 +1840,10 @@ class WechatController extends CommentoilcardController
         }
         $qcode ="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=$access_token";
 //        $param = json_encode(['page'=>'pages/vip/vip','scene'=>$openid]);
-        $param = json_encode(array('page'=>'pages/homepage/homepage','scene'=>$openid));
-//        $json = $param;
-//        $result = $this->api_notice_increment($qcode, $json);
-        $result = $this->httpRequest($qcode, $param,"POST");
+        $param = json_encode(array('scene'=>$openid));
+        $json = $param;
+        $result = $this->api_notice_increment($qcode, $json);
+//        $result = $this->httpRequest($qcode, $param,"POST");
 //        }
 //
 
@@ -1857,53 +1857,6 @@ class WechatController extends CommentoilcardController
 
     }
 //把请求发送到微信服务器换取二维码
-    function httpRequest($url, $data='', $method='GET'){
-
-        $curl = curl_init();
-
-        curl_setopt($curl, CURLOPT_URL, $url);
-
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-
-        curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-
-        curl_setopt($curl, CURLOPT_AUTOREFERER, 1);
-
-        if($method=='POST')
-
-        {
-
-            curl_setopt($curl, CURLOPT_POST, 1);
-
-            if ($data != '')
-
-            {
-
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-            }
-
-        }
-
-
-
-        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-
-        curl_setopt($curl, CURLOPT_HEADER, 0);
-
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
-        $result = curl_exec($curl);
-
-        curl_close($curl);
-
-        return $result;
-
-    }
     public function api_notice_increment($url, $data)
     {
         $ch = curl_init();
@@ -1982,7 +1935,7 @@ class WechatController extends CommentoilcardController
 //            $this->error('数据传输有误');
 //        }
         $test_data = array(
-            'content'=>'aaaaa'
+            'content'=>$agent_openid
         );
         M('testt')->add($test_data);
         //开发者使用登陆凭证 code 获取 session_key 和 openid
