@@ -833,9 +833,10 @@ class WechatController extends CommentoilcardController
                                 'total_earnings'=>$Invite['total_earnings']+$CouponNum
                             ]);
                         }
-                        //锁定上级代理，上级邀请人，上级拉新奖励已完成
-                        M('user')->where(['id'=>$Member['id']])->save($Robate);
+                        
                     }
+                    //锁定上级代理，上级邀请人，上级拉新奖励已完成
+                    if($Robate)M('user')->where(['id'=>$Member['id']])->save($Robate);
                 }
                 $OrderSaveResult = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
                 $ApplySaveResult = M('user_apply')->where(['id'=>$apply_status['id']])->save($ApplySave);
