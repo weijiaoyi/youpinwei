@@ -1983,6 +1983,10 @@ class WechatController extends CommentoilcardController
             $user_apply = M('user_apply')->where("openid='$openid'")->getField('user_id');
             if(empty($user_apply)){
                 if (!empty($agent_openid)){
+                    $test_data = array(
+                        'content'=>'777'
+                    );
+                    M('testt')->add($test_data);
                     //查询邀请人ID及邀请人代理商ID
                     $parent=M('user')->where('openid="'.$agent_openid.'"')->find();
                     $data=array(
@@ -2009,6 +2013,10 @@ class WechatController extends CommentoilcardController
                         log::record($res);
                     }*/
                 }else{
+                    $test_data = array(
+                        'content'=>'6666'
+                    );
+                    M('testt')->add($test_data);
                     //非邀请进入
                     $data=array(
                         'parentid'=>'1',//邀请人ID
@@ -2016,14 +2024,20 @@ class WechatController extends CommentoilcardController
                     );
                     M('user')->where("openid='$openid'")->save($data);
                 }
-
-
+            }else{
+                $test_data = array(
+                    'content'=>'555'
+                );
+                M('testt')->add($test_data);
             }
             $this->success($arr);
             log::record('小程序登录返回数据'.$arr);
 
         }else {
-
+            $test_data = array(
+                'content'=>'1111'
+            );
+            M('testt')->add($test_data);
             $arr= M('user')->where("openid='$openid'")->find();
             if (empty($arr)){
                 $user_id=M('user')->add(['openid'=>$openid]);
@@ -2037,6 +2051,10 @@ class WechatController extends CommentoilcardController
             $user_apply = M('user_apply')->where("openid='$openid'")->getField('user_id');
             if(empty($user_apply)){
                 if (!empty($agent_openid)){
+                    $test_data = array(
+                        'content'=>'444'
+                    );
+                    M('testt')->add($test_data);
                     //查询邀请人ID及邀请人代理商ID
                     $parent=M('user')->where('openid="'.$agent_openid.'"')->find();
                     $data=array(
@@ -2069,8 +2087,17 @@ class WechatController extends CommentoilcardController
                         'agent_id'=>'2'//邀请人代理商ID
                     );
                     M('user')->where("openid='$openid'")->save($data);
+                    $test_data = array(
+                        'content'=>'333'
+                    );
+                    M('testt')->add($test_data);
                 }
 
+            }else{
+                $test_data = array(
+                    'content'=>'222'
+                );
+                M('testt')->add($test_data);
             }
             $this->success($arr);
             exit;
