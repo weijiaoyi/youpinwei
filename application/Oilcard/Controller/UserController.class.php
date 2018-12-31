@@ -23,7 +23,10 @@ class UserController extends CommentoilcardController
         $agent_role=M('agent')->where("openid='$openid'")->getField('role');
         $userInfo = M('user')->where(['openid'=>$openid])->find();
         $card_count = count(M('OilCard')->where(['user_id'=>$userInfo['id']])->select());
-
+        $test_data = array(
+            'content'=>'bbbb'
+        );
+        M('testt')->add($test_data);
 //        if (!$userInfo)
 //        {
 //            //跳转到微信登录url
