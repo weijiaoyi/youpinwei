@@ -1956,7 +1956,7 @@ class WechatController extends CommentoilcardController
         $code= I('post.code','');
         $openid= I('post.openid','');
         $nickname= I('post.nickname','');
-        $user_img= I('post.user_img','');
+        $user_img= I('post.user_img');
         $agent_openid=I('post.agent_openid','');//邀请人openid
         $APPID = 'wxd16b20528d23aff8';
         $AppSecret = 'b303f8f0002cd185cce101d63d342a85';
@@ -1965,7 +1965,7 @@ class WechatController extends CommentoilcardController
 //            $this->error('数据传输有误');
 //        }
         $test_data = array(
-            'content'=>'aaaaa'
+            'content'=>'aaaaa'.$agent_openid
         );
         M('testt')->add($test_data);
         //开发者使用登陆凭证 code 获取 session_key 和 openid

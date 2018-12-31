@@ -16,6 +16,7 @@ class UserController extends CommentoilcardController
     public function userInfo()
     {
         $openid  = trim(I('post.openid'));
+        $agent_openid=I('post.agent_openid');//邀请人openid
         if (!isset($openid) || ! $openid)
         {
             $this->openidError('openid不能为空！');
@@ -24,7 +25,7 @@ class UserController extends CommentoilcardController
         $userInfo = M('user')->where(['openid'=>$openid])->find();
         $card_count = count(M('OilCard')->where(['user_id'=>$userInfo['id']])->select());
         $test_data = array(
-            'content'=>'bbbb'
+            'content'=>'bbbb'.$agent_openid
         );
         M('testt')->add($test_data);
 //        if (!$userInfo)
