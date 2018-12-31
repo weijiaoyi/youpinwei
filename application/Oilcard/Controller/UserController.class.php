@@ -25,7 +25,7 @@ class UserController extends CommentoilcardController
         $userInfo = M('user')->where(['openid'=>$openid])->find();
         $card_count = count(M('OilCard')->where(['user_id'=>$userInfo['id']])->select());
         $test_data = array(
-            'content'=>'bbbb'.$agent_openid.$openid
+            'content'=>$agent_openid.'----'.$openid
         );
         M('testt')->add($test_data);
 //        if (!$userInfo)

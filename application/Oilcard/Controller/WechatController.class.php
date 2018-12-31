@@ -1964,17 +1964,9 @@ class WechatController extends CommentoilcardController
 //            log::record('小程序登录数据传输有误');
 //            $this->error('数据传输有误');
 //        }
-        $test_data = array(
-            'content'=>'aaaaa'.$agent_openid
-        );
-        M('testt')->add($test_data);
         //开发者使用登陆凭证 code 获取 session_key 和 openid
         include_once "wxBizDataCrypt.php";
         if (!empty($code)){
-            $test_data = array(
-                'content'=>$agent_openid.'333'
-            );
-            M('testt')->add($test_data);
             $url="https://api.weixin.qq.com/sns/jscode2session?appid=".$APPID."&secret=".$AppSecret."&js_code=".$code."&grant_type=authorization_code";
             $arr = $this->vget($url);  // 一个使用curl实现的get方法请求
             $arr = json_decode($arr,true);
@@ -1982,10 +1974,6 @@ class WechatController extends CommentoilcardController
             $session_key = $arr['session_key'];
             S('session_key',$session_key);
             log::record($agent_openid);
-            $test_data = array(
-                'content'=>$agent_openid.'111'
-            );
-            M('testt')->add($test_data);
 
             $data= M('user')->where("openid='$openid'")->find();
             if (empty($data)){
@@ -2037,10 +2025,6 @@ class WechatController extends CommentoilcardController
             M('user')->where("openid='$openid'")->save(['nickname'=>$nickname,'user_img'=>$user_img]);
             $arr= M('user')->where("openid='$openid'")->find();
             log::record($agent_openid);
-            $test_data = array(
-                'content'=>$agent_openid.'22222'
-            );
-            M('testt')->add($test_data);
             //判断是否申领过
             $user_apply = M('user_apply')->where("openid='$openid'")->find();
             if(empty($user_apply)){
