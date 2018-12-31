@@ -822,11 +822,7 @@ class WechatController extends CommentoilcardController
                         $Robate['parent_bind']=1;//锁定上级邀请人
                     }
                     //判断是否给上级邀请人拉新奖
-<<<<<<< HEAD
                     if ($OrderInfo['pid'] >1 && $Member['is_rebate']==1){//并且如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
-=======
-                    if ($pid >1 && $Member['is_rebate']==1){//并且如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
->>>>>>> 22109c23cec5fd4e7e8429dabaa3cc44a8accaab
                         $Robate['is_rebate']=2; //已完成拉新奖励
                         //发放拉新奖
                         if ($Invite) {
