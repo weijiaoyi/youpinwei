@@ -1974,68 +1974,27 @@ class WechatController extends CommentoilcardController
             $session_key = $arr['session_key'];
             S('session_key',$session_key);
             log::record($agent_openid);
-            //判断是否申领过
-            $user_apply = M('user_apply')->where("openid='$openid'")->getField('user_id');
-            if(empty($user_apply)){
-                if (!empty($agent_openid)){
-                    //查询邀请人ID及邀请人代理商ID
-                    $parent=M('user')->where('openid="'.$agent_openid.'"')->find();
-                    $data=array(
-                        'parentid'=>$parent['id'],//邀请人ID
-                        'agent_id'=>$parent['agent_id']//邀请人代理商ID
-                    );
-                    M('user')->where("openid='$openid'")->save($data);
-                    /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
-                    if (!empty($agent_openid)){
-                        $a_id= M('agent')->where("openid='$agent_openid'")->getField('id');
-
-                        $ad= M('agent_relation')->where("openid='$openid'")->find();
-                        if (empty($ad)) {
-
-                            $res= M('agent_relation')->add(['agent_id'=>$a_id,'openid'=>$openid]);
-                        }else{
-                            $earnings_data=M('agent_earnings')->where("openid='$openid' and agent_id='$ad'")->find();
-                            if (empty($earnings_data)) {
-                                M('agent_relation')->save(['agent_id'=>$a_id]);
-                            }
-                            $res= M('agent_relation')->save(['agent_id'=>$aid]);
-                        }
-
-                        log::record($res);
-                    }*/
-                }else{
-                    //非邀请进入
-                    $data=array(
-                        'parentid'=>'1',//邀请人ID
-                        'agent_id'=>'1'//邀请人代理商ID
-                    );
-                    M('user')->where("openid='$openid'")->save($data);
-                }
-
-
-            }
+            $test_data = array(
+                'content'=>$agent_openid.'111'
+            );
+            M('testt')->add($test_data);
 
             $data= M('user')->where("openid='$openid'")->find();
             if (empty($data)){
                 $user_id=M('user')->add(['openid'=>$openid]);
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
-            $this->success($arr);
-            log::record('小程序登录返回数据'.$arr);
-
-        }else {
-            log::record($agent_openid);
             //判断是否申领过
             $user_apply = M('user_apply')->where("openid='$openid'")->getField('user_id');
             if(empty($user_apply)){
                 if (!empty($agent_openid)){
                     //查询邀请人ID及邀请人代理商ID
                     $parent=M('user')->where('openid="'.$agent_openid.'"')->find();
-                    $data=array(
+                    $parent_data=array(
                         'parentid'=>$parent['id'],//邀请人ID
                         'agent_id'=>$parent['agent_id']//邀请人代理商ID
                     );
-                    M('user')->where("openid='$openid'")->save($data);
+                    M('user')->where("openid='$openid'")->save($parent_data);
                     /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
                     if (!empty($agent_openid)){
                         $a_id= M('agent')->where("openid='$agent_openid'")->getField('id');
@@ -2054,16 +2013,13 @@ class WechatController extends CommentoilcardController
 
                         log::record($res);
                     }*/
-                }else{
-                    //非邀请进入
-                    $data=array(
-                        'parentid'=>'2',//邀请人ID
-                        'agent_id'=>'2'//邀请人代理商ID
-                    );
-                    M('user')->where("openid='$openid'")->save($data);
                 }
-
             }
+            $this->success($arr);
+            log::record('小程序登录返回数据'.$arr);
+
+        }else {
+
             $arr= M('user')->where("openid='$openid'")->find();
             if (empty($arr)){
                 $user_id=M('user')->add(['openid'=>$openid]);
@@ -2072,6 +2028,42 @@ class WechatController extends CommentoilcardController
 //            $nickname=(array)json_decode($nickname);
             M('user')->where("openid='$openid'")->save(['nickname'=>$nickname,'user_img'=>$user_img]);
             $arr= M('user')->where("openid='$openid'")->find();
+            log::record($agent_openid);
+            $test_data = array(
+                'content'=>$agent_openid.'22222'
+            );
+            M('testt')->add($test_data);
+            //判断是否申领过
+            $user_apply = M('user_apply')->where("openid='$openid'")->getField('user_id');
+            if(empty($user_apply)){
+                if (!empty($agent_openid)){
+                    //查询邀请人ID及邀请人代理商ID
+                    $parent=M('user')->where('openid="'.$agent_openid.'"')->find();
+                    $parent_data=array(
+                        'parentid'=>$parent['id'],//邀请人ID
+                        'agent_id'=>$parent['agent_id']//邀请人代理商ID
+                    );
+                    M('user')->where("openid='$openid'")->save($parent_data);
+                    /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
+                    if (!empty($agent_openid)){
+                        $a_id= M('agent')->where("openid='$agent_openid'")->getField('id');
+
+                        $ad= M('agent_relation')->where("openid='$openid'")->find();
+                        if (empty($ad)) {
+
+                            $res= M('agent_relation')->add(['agent_id'=>$a_id,'openid'=>$openid]);
+                        }else{
+                            $earnings_data=M('agent_earnings')->where("openid='$openid' and agent_id='$ad'")->find();
+                            if (empty($earnings_data)) {
+                                M('agent_relation')->save(['agent_id'=>$a_id]);
+                            }
+                            $res= M('agent_relation')->save(['agent_id'=>$aid]);
+                        }
+
+                        log::record($res);
+                    }*/
+                }
+            }
             $this->success($arr);
             exit;
         }
