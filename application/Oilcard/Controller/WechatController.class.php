@@ -826,7 +826,7 @@ class WechatController extends CommentoilcardController
                             $CouponNum = number_format(($Package['price'] * ($config['scroll']/100)), 2, ".", "");
                             //给上级邀请人增加 拉新奖励池和总收益 
                             M('user')->where(['id'=>$Invite['id']])->save([
-                                'new_earnings'=>$Invite['new_earnings']+$CouponNum
+                                'new_earnings'=>$Invite['new_earnings']+$CouponNum,
                                 'total_earnings'=>$Invite['total_earnings']+$CouponNum
                             ]);
                         }
