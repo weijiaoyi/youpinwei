@@ -1,12 +1,10 @@
 <?php
-header('content-type:text/html;charset=utf-8');
 /**
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2018/11/14
  * Time: 15:08
  */
-
 namespace Oilcard\Controller;
 
 use Common\Lib\Tool;
@@ -34,6 +32,7 @@ class WechatController extends CommentoilcardController
     public function __construct()
     {
         parent::__construct();
+        header('content-type:text/html;charset=utf-8');
         $this->appid = CardConfig::$wxconf['appid'];
         $this->secret = CardConfig::$wxconf['appsecret'];
     }
