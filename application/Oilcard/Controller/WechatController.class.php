@@ -739,31 +739,35 @@ class WechatController extends CommentoilcardController
             ))
         );
         M('testt')->add($insert);
-        
+        $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
+        $RAW = json_decode($RAW);
+        $obj_arr = object_to_array($RAW);
+
         $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
+
         unset($obj_arr['sign']);
         ksort($obj_arr);
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
+        //签名验证
         if($cur_sign === $sign) {
             //添加到代理表
             //如果有上级，给上级40元
-            Log::record('银牌申领回调1');
             $userData=M('user')->where(['openid'=>$openId])->find();  //根据微信openid查询对应的用户
-            //将指定的卡号添加93优惠套餐
-            Log::record('银牌申领回调:3');
+            $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
+            
+                        
             $card_no=file_get_contents(__DIR__.'/data/'.$openId.'card_no.txt');
             $money=file_get_contents(__DIR__.'/data/'.$openId.'money.txt');
-            $user_applu_data['receive_person']=file_get_contents(__DIR__.'/data/'.$openId.'receive_person.txt');
-            $user_applu_data['phone']=file_get_contents(__DIR__.'/data/'.$openId.'phone.txt');
-            $user_applu_data['address']=file_get_contents(__DIR__.'/data/'.$openId.'address.txt');
+            
             $checked_card=file_get_contents(__DIR__.'/data/'.$openId.'checked_card.txt');
             $from_id=file_get_contents(__DIR__.'/data/'.$openId.'from_id.txt');
 
             $out_trade_no=$obj_arr['out_trade_no'];
             log::record("订单编号：".$out_trade_no);
-            $apply_status=M('user_apply')->where("serial_number='$out_trade_no'")->find();
+            $apply_status=M('user_apply')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
+            p($out_trade_no);exit;
             log::record($apply_status);
             log::record("是否由此单好".$apply_status);
             if (empty($apply_status)) {
