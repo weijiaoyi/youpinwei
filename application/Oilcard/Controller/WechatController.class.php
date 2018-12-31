@@ -743,9 +743,13 @@ class WechatController extends CommentoilcardController
             ))
         );
         M('testt')->add($insert);
+
         // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
         // $RAW = json_decode($RAW);
         // $obj_arr = object_to_array($RAW);
+        
+
+
         $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
         $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
@@ -817,7 +821,7 @@ class WechatController extends CommentoilcardController
                         $Robate['parent_bind']=1;//锁定上级邀请人
                     }
                     //判断是否给上级邀请人拉新奖
-                    if ($pid>1 && $Member['is_rebate']==1){//并且如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
+                    if ($OrderInfo['pid'] >1 && $Member['is_rebate']==1){//并且如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
                         $Robate['is_rebate']=2; //已完成拉新奖励
                         //发放拉新奖
                         if ($Invite) {
