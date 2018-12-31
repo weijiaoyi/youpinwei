@@ -1934,10 +1934,10 @@ class WechatController extends CommentoilcardController
 //            log::record('小程序登录数据传输有误');
 //            $this->error('数据传输有误');
 //        }
-        $test_data = array(
-            'content'=>$agent_openid
-        );
-        M('testt')->add($test_data);
+//        $test_data = array(
+//            'content'=>$agent_openid
+//        );
+//        M('testt')->add($test_data);
         //开发者使用登陆凭证 code 获取 session_key 和 openid
         include_once "wxBizDataCrypt.php";
         if (!empty($code)){
