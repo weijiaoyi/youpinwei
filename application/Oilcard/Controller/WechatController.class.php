@@ -1973,7 +1973,7 @@ class WechatController extends CommentoilcardController
             S('session_key',$session_key);
             log::record($agent_openid);
             $test_data = array(
-                'content'=>$agent_openid
+                'content'=>$agent_openid.'111'
             );
             M('testt')->add($test_data);
 
@@ -2028,7 +2028,7 @@ class WechatController extends CommentoilcardController
             $arr= M('user')->where("openid='$openid'")->find();
             log::record($agent_openid);
             $test_data = array(
-                'content'=>$agent_openid
+                'content'=>$agent_openid.'22222'
             );
             M('testt')->add($test_data);
             //判断是否申领过
