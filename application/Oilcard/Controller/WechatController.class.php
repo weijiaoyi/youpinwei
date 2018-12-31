@@ -1935,7 +1935,7 @@ class WechatController extends CommentoilcardController
 //            $this->error('数据传输有误');
 //        }
         $test_data = array(
-            'content'=>'aaaaa'
+            'content'=>$agent_openid
         );
         M('testt')->add($test_data);
         //开发者使用登陆凭证 code 获取 session_key 和 openid
