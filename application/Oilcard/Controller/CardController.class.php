@@ -80,7 +80,7 @@ class CardController extends CommentoilcardController
 
 //                M('order_record')->add(['order_type'=>2,'user_id'=>$user['id'],'card_no'=>$card_no,'order_status'=>2]);
                 //修改订单状态
-                M('order_record')->where(['id'=>$id,'order_type'=>1,'user_id'=>$user['id'],'card_no'=>$card_no,'order_status'=>2])->save(['preferential_type'=>2,'order_type'=>2,'updatetime'=>date('Y-m-d H:i:s',time())]);
+                M('order_record')->where(['id'=>$id,'order_type'=>1,'user_id'=>$user['id'],'order_status'=>2])->save(['order_type'=>2,'updatetime'=>date('Y-m-d H:i:s',time())]);
 
 //                    M('order_record')->where("id='$id'")->save(['preferential_type'=>2]);
                     $preferential=M('order_record')->where("id='$id'")->getField('preferential');
@@ -89,9 +89,9 @@ class CardController extends CommentoilcardController
 //                    if ($end_time<date('Y-m-d H:i:s')){
 //                        M('oil_card')->where("card_no='$card_no'")->save(['preferential'=>$preferential,'end_time'=>date("Y-m-d H:i:s",strtotime("+1years"))]);
 //                    }else{
-                        $end_preferential=$card_arr['preferential'];
-                        $send_preferential=$preferential+$end_preferential;
-                        M('oil_card')->where("card_no='$card_no'")->save(['preferential'=>$send_preferential,'end_time'=>date("Y-m-d H:i:s",strtotime("+1years"))]);
+//                        $end_preferential=$card_arr['preferential'];
+//                        $send_preferential=$preferential+$end_preferential;
+                        M('oil_card')->where("card_no='$card_no'")->save(['end_time'=>date("Y-m-d H:i:s",strtotime("+1years"))]);
 //                    }
                 }
 
