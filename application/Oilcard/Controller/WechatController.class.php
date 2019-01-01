@@ -130,17 +130,8 @@ class WechatController extends CommentoilcardController
     /**
      * 微信充值下单接口
      */
-    public function payOrder($order_id,$openid,$flag,$flage,$initial_money)
+    public function payOrder($create_res,$record_res,$openid)
     {
-        file_put_contents(__DIR__.'/data/'.$openid.'flag.txt',print_r($flag,true));
-        file_put_contents(__DIR__.'/data/'.$openid.'flage.txt',print_r($flage,true));
-        file_put_contents(__DIR__.'/data/'.$openid.'initial_money.txt',print_r($initial_money,true));
-        $order_item = M('AddMoney')->where(['id'=>$order_id])->find();
-        $out_trade_no = $order_item['order_no'];
-        $card_no = $order_item['card_no'];
-        file_put_contents(__DIR__.'/data/'.$openid.'card_no.txt',print_r($card_no,true));
-
-
         //微信统一下单
         $data = [];
         $data['appid'] = CardConfig::$wxconf['appid'];
@@ -151,7 +142,7 @@ class WechatController extends CommentoilcardController
         $data['body'] = '中国石油加油卡';
         $data['detail'] = '购买加油卡';
         $data['attach'] = '充值购买';
-        $data['out_trade_no'] = $out_trade_no;
+        $data['out_trade_no'] = $create_res['order_no'];
         $data['fee_type'] = 'CNY';
         $data['total_fee'] = 1;//$order_item['real_pay'] * 100; // 分
         $data['spbill_create_ip'] = Tool::getClientIp();
@@ -159,17 +150,13 @@ class WechatController extends CommentoilcardController
         $data['time_expire'] = date('YmdHis',time()+7200);
 //        $data['notify_url'] = $this->my_uri.'/index.php?g=oilcard&m=wechat&a=wxNoticePay';
         $data['notify_url'] = $this->my_uri.'/addMoneyNotify.php';
-        Log::record('notify_url:'.$data['notify_url']);
-
         $data['trade_type'] = 'JSAPI';
-        $data['openid'] = $order_item['openid'];
+        $data['openid'] = $openid;
         ksort($data);
         $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
         $data['sign'] = md5($string1);
 
         $content = XML::build($data);
-        Log::record('传给微信的XML:'.$content);
-
         $ch_url = $this->pay_uri.'/pay/unifiedorder';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $ch_url);
@@ -182,7 +169,6 @@ class WechatController extends CommentoilcardController
         $content = curl_exec($ch);
         curl_close($ch);
         Log::record('微信统一下单返回:'.$content);
-
         $data = [];
         $obj_arr = XML::parse($content);
         if (!$obj_arr){
@@ -194,14 +180,11 @@ class WechatController extends CommentoilcardController
             $data['nonceStr'] = Tool::randomStr(20);
             $data['package'] = 'prepay_id='.$obj_arr['prepay_id'];
             $data['signType'] = 'MD5';
-
             ksort($data);
             $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
             $data['paySign'] = md5($string1);
         }
-
         return $data;
-
     }
 
     /**
@@ -463,6 +446,15 @@ class WechatController extends CommentoilcardController
         $data = file_get_contents('php://input');
         $obj_arr = XML::parse($data);
         Log::record('微信回调data:'.json_encode($obj_arr));
+        $insert = array(
+            'content'=>json_encode(array(
+                'InsertTime'=>date('Y-m-d H:i:s',time()),
+                'desc' =>'充值油卡异步回调',
+                'input' =>$obj_arr,
+                'data' =>$data,
+            ))
+        );
+        M('testt')->add($insert);
 
         $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];

@@ -153,6 +153,7 @@ class IntegralController extends CommentoilcardController
         if ($Member['is_notmal'] !=1)$this->error('当前用户信息异常，已被冻结用户信息，请向管理员或代理查询！');
         //当前油卡所选择的套餐信息
         $Package = M('packages')->where(['pid'=>$CardInfo['pkgid']])->find(); 
+        $config = M('setting')->find();
         //不是正常油卡
         if ($CardInfo['is_notmal'] !=1) {
             //对此卡的操作信息
@@ -173,144 +174,74 @@ class IntegralController extends CommentoilcardController
                 $this->error('系统已对此油卡冻结使用，理由：'.$CardInfo['is_notmal']==2?'油卡信息异常':'用户挂失或已废弃');  
             }
         }
-        
-        
-        p($CardInfo);
-        p($Member);
-        p($Package);
-        p($CardOption);
-        exit;
-        $RechageCount = M('AddMoney')->count();
-        $AddMoneySave = [
-            'user_id' => $Member['id'],
-            'openid' => $openid,
-            'card_no' => $card_no,
-            'money' => $money,
-            'discount_money' => $save,
-            'real_pay' => $pay_money,
-            'pay_way' => 1,
-            'note' => $RechageCount ==1?'用户对此油卡的首次充值':'油卡额度充值',
-            'status' => 2,
-            'createtime' => $NowTime,
-            'order_no' => '',
-            'agent_id' => '',
+        //订单号
+        $orderSn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
+        $OrderAdd = [
+            'user_id'        => $Member['id'],
+            'card_no'        => $card_no,
+            'order_type'     => 3,
+            'serial_number'  => $orderSn,
+            'order_status'   => 1,
+            'real_pay'       => $pay_money,
+            'recharge_money' => $money,
+            'createtime'     => $NowTime,
+            'card_from'      => $CardInfo['agent_id']==0?1:2,
+            'agent_id'       => empty($CardInfo['agent_id'])?$CardInfo['agent_id']:0,
+            'parentid'       => $Member['parentid'],
         ];
-        $flage=96;
-        if (empty($flag)){
-            $flage=1;
-        }
-        Log::record('创建订单金额:'.$money.'元！');
-        $oil_card = M('OilCard')->where(['card_no'=>$card_no,'status'=>'2'])->find();
-
-        $user = M('User')->where(['openid'=>$openid])->find();
-
-        $order_record = [];
-        $order_item = [];
-        $order_item['user_id']           = $user['id'];
-        $order_item['openid']            = $openid;
-        $order_item['card_no']           = $card_no;
-        $order_item['money']             = $money;
-        if ($flag==1){
-            $date=date('Y-m-d H:i:s');
-            $card_arr=M('oil_card')->where("card_no='$card_no' and end_time>'$date' and is_sale!='3' ")->find();
-            $preferential=$card_arr['preferential'];
-            log::record($card_no);
-            log::record($preferential);
-            if (empty($preferential)){
-                $order_item['real_pay']= ($money * $oil_card['discount'])/100;
-                log::record('折扣定型1');
-                $flage=96;
-            }else{
-//                if($preferential<($money * $oil_card['discount'])/100){
-                if($preferential>$money){
-//                    $order_item['real_pay']= $money /100* $oil_card['discount']-$preferential;
-                    $order_item['real_pay']= $money /100*93.5;
-                    $flage=93;
-                    log::record('折扣定型2');
-                    log::record($money);
-                    log::record($preferential);
-                }else{
-                    $order_item['real_pay']=$money /100* $oil_card['discount'];
-                    $flage=96;
-                    log::record('折扣定型3');
-                }
-            }
+        //判断当前油卡额度
+        $BeforRechage =$CardInfo['preferential'];
+        $AfterRechage = $CardInfo['preferential'] - $money;
+        if ($BeforRechage < 1 || $AfterRechage <0) {
+            $OrderAdd['pid'] = 1;
         }else{
-            $card_order=M('agent')->where("openid='$openid'")->find();
-            if (empty($card_order['preferential']) && $card_order['currt_earnings']<$money){
-                $order_item['real_pay']= $money/100 * 93.5;
-                $flage=96;
-                log::record('折扣定型4');
-            }else{
-                $order_item['real_pay']= $money /100* $oil_card['discount'];
-                $flage=93;
-                log::record('折扣定型5');
-            }
-
+            $OrderAdd['pid'] = $CardInfo['pkgid'];
         }
-
-        $order_item['discount_money']    = $money-$order_item['real_pay'];
-        $order_item['pay_way']           = '1';
-        $order_item['order_no']          = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
-        $order_item['status']            = 4;//待支付
-
-
-        //如果不是代理并且有上线，添加分销关系
-        $is_agent = M('Agent')->where(['openid'=>$openid])->find();
-        if (!empty($is_agent)) {
-            $user_agent = M('AgentRelation')->where(['openid'=>$openid])->find();
-            log::record("充值下单添加addmoney数据".json_encode($order_item));
-            if (!empty($user_agent['agent_id'])) {
-                $agent = M('Agent')->where(['id'=>$user_agent['agent_id']])->find();
-//                if (!empty($agent) && $agent['expire_time'] > date('Y-m-d H:i:s')){
-                    $order_item['agent_id'] = $user_agent['agent_id'];
-                    $order_record['agent_id'] = $user_agent['agent_id'];
-//                }
-            }
-
+        switch ($flag) {
+            case '2': // 使用加油卷抵扣
+                $OrderAdd['coupon_money'] = $save;
+                break;
+            default: //使用油卡本身自带的折扣
+                $OrderAdd['discount_money'] = $save;
+                break;
         }
-
-        log::record("充值下单添加addmoney数据".json_encode($order_item));
-        $create_res = M('AddMoney')->add($order_item);
-
-        $order_record['user_id']         = $user['id'];
-        $order_record['card_no']         = $card_no;
-        $order_record['order_type']      = 3;
-        $order_record['serial_number']   = $order_item['order_no'];
-        $order_record['order_status']    = 1;
-        $order_record['money']           = $order_item['money'];
-        $order_record['real_pay']        = $order_item['real_pay'];
-        $order_record['discount_money']  = $order_item['discount_money'];
-
-        $record_res = M('OrderRecord')->add($order_record);
-
-
+        //生成订单
+        $record_res = M('OrderRecord')->add($OrderAdd);
+        if(!$record_res)$this->error('订单生成失败，请重试！');
+        $RechageCount = M('AddMoney')->where(['card_no'=>$card_no])->count();
+        $is_first =2;
+        if ($RechageCount==1) {
+            if ($money < $config['first_rechage']) $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
+            $is_first = 1;
+        }
+        $AddMoneySave = [
+            'user_id'        => $Member['id'],
+            'openid'         => $openid,
+            'card_no'        => $card_no,
+            'money'          => $money,
+            'discount_money' => $save,
+            'real_pay'       => $pay_money,
+            'pay_way'        => 1,
+            'note'           => $RechageCount ==1?'用户对此油卡的首次充值':'油卡额度充值',
+            'status'         => 2,
+            'createtime'     => $NowTime,
+            'order_no'       => $orderSn,
+            'agent_id'       => $Member['agentid'],
+            'is_first'       => $is_first,
+        ];
+        //添加充值记录
+        $create_res = M('add_money')->add($AddMoneySave);
         if ($create_res && $record_res){
 
             $wechat = new WechatController();
-            log::record('debug');
-            $data = $wechat->payOrder($create_res,$openid,$flag,$flage,$initial_money);
-            $data['order_no'] = $order_item['order_no'];
-            Log::record('创建订单返回:'.json_encode($data));
-            if (empty($data))
-            {
-                echo json_encode(['msg'=>'微信下单失败！','status'=>500]);
-                exit();
-            }
-            $order_no=$order_item['order_no'];
-            $order_status=M('OrderRecord')->where("order_status='2' and serial_number='$order_no'")->find();
-             log::record('充值返回是否成功:'.json_encode($order_status));
-            $a=M('')->getLastSql();
-            log::record('查询充值返回是否成功:'.$a);
-           
+            $data = $wechat->payOrder($AddMoneySave,$OrderAdd,$openid);
+            $data['order_no'] = $AddMoneySave['order_no'];
             
-            
-            echo json_encode(['msg'=>'success','status'=>1000,'data'=>$data]);
-            exit();
+            if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
+            exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
 
         }else {
-            echo json_encode(['msg'=>'创建订单失败！','status'=>500]);
-            exit();
+            exit(json_encode(['msg'=>'创建订单失败！','status'=>500]));
         }
 
 
