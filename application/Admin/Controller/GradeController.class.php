@@ -480,7 +480,7 @@ class GradeController extends AdminbaseController
             ];
             $AgentLibraryModel = M('agent_library');
             $result2 = $AgentLibraryModel -> add( $insert_agent_library_data );
-            //修改押金
+            //修改押金 库存
             $new_deposit = $card_no_num*$data['each_price'];
             $new_agent_oilcard_num = $card_no_num;
             $new_agent_oilcard_stock_num = $card_no_num;
@@ -496,6 +496,23 @@ class GradeController extends AdminbaseController
                 'agent_oilcard_stock_num'=>$agent_oilcard_stock_num
             );
             $result3 = $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
+            //修改订单send_card_no
+            $orderRecordModel=M('order_record');
+            $order = $orderRecordModel->where('send_card_no = "" AND agent_id="'.$agent['id'].'"')->select();
+            if(!empty($order)){
+                foreach ($order as $key=>$val){
+                    $cardCondition =[
+                        'agent_id'  =>$agent['id'],//此代理商名下
+                        'status'    =>1,//库存卡
+                        'chomd'     =>1,//未发放的卡
+                        'is_notmal' =>1,//可用的卡
+                        'activate'  =>1 //未激活的卡
+                    ];
+                    $SendCard = M('oil_card')->where($cardCondition)->getField('card_no');
+                    //写入订单
+                    $orderRecordModel->where('id="'.$val["id"].'"')->save(array('send_card_no'=>$SendCard));
+                }
+            }
             if($result2){
                 echo json_encode(['msg' => '发卡成功','status' => 200]);exit;
             }else{
