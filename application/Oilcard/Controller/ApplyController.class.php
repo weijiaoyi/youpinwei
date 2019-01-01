@@ -145,7 +145,6 @@ class ApplyController extends CommentoilcardController
         $Syscount = M('oil_card')->where($SysWhere)->count();
         switch ($checked) {
             case '1'://线上办卡-邮寄油卡
-
                 //查询代理名下油卡库存是否足够
                 if ($Agent && $Agent['agent_oilcard_stock_num']>=1) {
                     $OrderInfo['card_from'] =2; // 最终由代理发卡
