@@ -55,6 +55,8 @@ class DeliverController extends AdminbaseController{
         $order_info = $Order
             ->alias('o')
             ->join('user_apply a ON a.serial_number=o.serial_number',LEFT)
+            ->join('user u ON u.id=o.user_id',LEFT)
+            ->field('o.*,a.*,u.nickname,u.user_img')
             -> where($where)
             -> page($p,'10')
             ->select();
@@ -63,9 +65,9 @@ class DeliverController extends AdminbaseController{
 //        }
         foreach( $order_info as $k => $v ){
             if( $v['order_type'] == '1' ){
-                $order_info[$k]['order_type'] = '已申领';
+                $order_info[$k]['order_type_message'] = '已申领';
             }else {
-                $order_info[$k]['order_type'] = '已绑定';
+                $order_info[$k]['order_type_message'] = '已绑定';
             }
             if( $v['status'] == '1' ){
                 $order_info[$k]['send_status'] = '待发货';
@@ -82,15 +84,17 @@ class DeliverController extends AdminbaseController{
 //                $order_info[$k]['serial_number'] = '已绑定';
 //            }
             if( $v['send_card_no'] == '' ){
-                $order_info[$k]['send_card_no'] = '等待代理购买油卡';
+                $order_info[$k]['send_card_no_message'] = '等待代理购买油卡';
             }
             if( $v['card_no'] == '' ){
-                $order_info[$k]['card_no'] = '未绑定';
+                $order_info[$k]['card_no_message'] = '未绑定';
             }
         }
         $count = $Order
             ->alias('o')
             ->join('user_apply a ON a.serial_number=o.serial_number',LEFT)
+            ->join('user u ON u.id=o.user_id',LEFT)
+            ->field('o.*,a.*,u.nickname,u.user_img')
             -> where($where)
             -> count();
         $Page = new \Think\Page($count,10);

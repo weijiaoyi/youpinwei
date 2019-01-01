@@ -63,13 +63,36 @@ class OrderController extends AdminbaseController{
     public function orderListing(){
         $OrderRecordModel = M('order_record');
         $p = trim(I('get.p','1'));
-        $order_info = $OrderRecordModel -> where( 'order_type = 3 ' ) -> page($p,'10') ->select();
+        $keyword = trim(I('post.keyword'));
+        $where='o.order_type = 3 AND o.order_status=2';
+        if(!empty($keyword)){
+            $where.=' AND (a.card_no LIKE "%'.$keyword.'%" OR o.serial_number LIKE "%'.$keyword.'%")';
+        }
+        $order_info=$OrderRecordModel
+            ->alias('o')
+            ->join('add_money a ON a.user_id=o.user_id',LEFT)
+            ->join('user u ON u.id=o.user_id',LEFT)
+            ->field('o.id,o.user_id,o.serial_number,a.*,u.nickname,u.user_img')
+            ->where($where)
+            -> page($p,'10')
+            ->select();
+       /* $order_info = $OrderRecordModel
+            -> where( 'order_type = 3 ' )
+            -> page($p,'10')
+            ->select();
         if(empty($order_info)){
             echo '暂无数据';exit;
-        }
-        $count = $OrderRecordModel -> where('order_type = 3') -> count();
+        }*/
+        $count = $OrderRecordModel
+            ->alias('o')
+            ->join('add_money a ON a.user_id=o.user_id',LEFT)
+            ->join('user u ON u.id=o.user_id',LEFT)
+            ->field('o.id,o.user_id,o.serial_number,a.*,u.nickname,u.user_img')
+            ->where($where)
+            -> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
+        $this->assign('keyword',$keyword);
         $this -> assign('page',$show);
         $this -> assign('data',$order_info);
         $this -> display();
