@@ -208,9 +208,9 @@ class IntegralController extends CommentoilcardController
         //生成订单
         $record_res = M('OrderRecord')->add($OrderAdd);
         if(!$record_res)$this->error('订单生成失败，请重试！');
-        $RechageCount = M('AddMoney')->where(['card_no'=>$card_no])->count();
+        $RechageCount = M('add_money')->where(['card_no'=>$card_no,'openid'=>$openid])->count();
         $is_first =2;
-        if ($RechageCount==1) {
+        if ($RechageCount < 1) { // 是否是首充
             if ($money < $config['first_rechage']) $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
             $is_first = 1;
         }
