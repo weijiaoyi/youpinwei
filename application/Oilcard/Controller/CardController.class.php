@@ -49,7 +49,9 @@ class CardController extends CommentoilcardController
 //                return redirect(U('oilcard/wechat/getCode'));
 //            }
 
-            $card = M('OilCard')->where(['card_no'=>$card_no,'status'=>1])->find();
+
+        if (!empty($id)){
+            $card = M('OilCard')->where(['card_no'=>$card_no,'status'=>2])->find();
             //判断卡号是否已申领/已有人
             if(empty($card))
             {
@@ -60,38 +62,43 @@ class CardController extends CommentoilcardController
                 $this->error('该卡号已经被绑定！');
             }
             $card['user_id'] = $user['id'];
-            $res = M('OilCard')->where(['card_no'=>$card_no])->save($card);
+            $update_oilCard = array(
+                'user_id'=>$user['id'],
+                'updatetime'=>date('Y-m-d H:i:s',time()),
+            );
+            $res = M('OilCard')->where(['card_no'=>$card_no,'status'=>2])->save($update_oilCard);
             if ($res!==false){
                 //发送100元优惠券
-                $coupon = [];
+                /*$coupon = [];
                 $coupon['user_id'] = $user['id'];
                 $coupon['openid'] = $user['openid'];
                 $coupon['card_no'] = $card_no;
                 $coupon['type'] = '1';
                 $coupon['status'] = '1';
                 $coupon['replace_money'] = '100';
-                M('coupon')->add($coupon);
+                M('coupon')->add($coupon);*/
 
-                M('order_record')->add(['order_type'=>2,'user_id'=>$user['id'],'card_no'=>$card_no,'order_status'=>2]);
-                
-                if (!empty($id)){
-                    M('order_record')->where("id='$id'")->save(['preferential_type'=>2]);
+//                M('order_record')->add(['order_type'=>2,'user_id'=>$user['id'],'card_no'=>$card_no,'order_status'=>2]);
+                //修改订单状态
+                M('order_record')->where(['id'=>$id,'order_type'=>1,'user_id'=>$user['id'],'order_status'=>2])->save(['order_type'=>2,'updatetime'=>date('Y-m-d H:i:s',time())]);
+
+//                    M('order_record')->where("id='$id'")->save(['preferential_type'=>2]);
                     $preferential=M('order_record')->where("id='$id'")->getField('preferential');
-                    $card_arr=M('oil_card')->where("card_no='$card_no'")->find();
-                    $end_time=$card_arr['end_time'];
-                    if ($end_time<date('Y-m-d H:i:s')){
-                        M('oil_card')->where("card_no='$card_no'")->save(['preferential'=>$preferential,'end_time'=>date("Y-m-d H:i:s",strtotime("+1years"))]);
-                    }else{
-                        $end_preferential=$card_arr['preferential'];
-                        $send_preferential=$preferential+$preferential;
-                        M('oil_card')->where("card_no='$card_no'")->save(['preferential'=>$send_preferential]);
-                    }
+                    $card_arr=M('oil_card')->where("card_no='$card_no' AND user_id='".$user['id']."'")->find();
+//                    $end_time=$card_arr['end_time'];
+//                    if ($end_time<date('Y-m-d H:i:s')){
+//                        M('oil_card')->where("card_no='$card_no'")->save(['preferential'=>$preferential,'end_time'=>date("Y-m-d H:i:s",strtotime("+1years"))]);
+//                    }else{
+//                        $end_preferential=$card_arr['preferential'];
+//                        $send_preferential=$preferential+$end_preferential;
+                        M('oil_card')->where("card_no='$card_no'")->save(['end_time'=>date("Y-m-d H:i:s",strtotime("+1years"))]);
+//                    }
                 }
 
                 //微信通知
-                $notice = [];
-                $notice['card_no'] = $card_no;
-                $notice['careatetime'] = date('Y-m-d H:i:s',time());
+//                $notice = [];
+//                $notice['card_no'] = $card_no;
+//                $notice['careatetime'] = date('Y-m-d H:i:s',time());
 //                $Wechat = A('Wechat');
 //                $Wechat->templateMessage($openid,$notice,2);
 

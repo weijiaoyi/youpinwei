@@ -261,7 +261,6 @@ class GradeController extends AdminbaseController
                 'agent_create_time' => time(),
                 'agent_id' => $data['user_id'],
                 'agent_status' => 1,
-                'chomd' => 2
             ];
             # 将此区间的卡状态更改为启用
             $result1 = $OilCardModel -> where( $save_oilcard_where ) -> save( $save_oilcard_data );
@@ -283,10 +282,19 @@ class GradeController extends AdminbaseController
                 $result2 = $AgentLibraryModel->add($insert_agent_library_data);
                 //修改押金和角色 过期时间
                 $new_deposit = $card_no_num*$data['each_price'];
+                $new_agent_oilcard_num = $card_no_num;
+                $new_agent_oilcard_stock_num = $card_no_num;
                 $old_deposit = $agent['deposit'];
+                $old_agent_oilcard_num= $agent['agent_oilcard_num'];
+                $old_agent_oilcard_stock_num= $agent['agent_oilcard_stock_num'];
                 $deposit= $new_deposit+$old_deposit;
+                $agent_oilcard_num= $new_agent_oilcard_num+$old_agent_oilcard_num;
+                $agent_oilcard_stock_num= $new_agent_oilcard_stock_num+$old_agent_oilcard_stock_num;
+
                 $update_data=array(
                     'deposit'=>$deposit,
+                    'agent_oilcard_num' =>$agent_oilcard_num,
+                    'agent_oilcard_stock_num'=>$agent_oilcard_stock_num,
                     'role' =>3,
                     'vip_direct_scale' =>$data['vip_direct_scale'],
                     'user_direct_scale' =>$data['user_direct_scale'],
@@ -453,7 +461,6 @@ class GradeController extends AdminbaseController
             'agent_create_time' => time(),
             'agent_id' => $data['user_id'],
             'agent_status' => 1,
-            'chomd' => 2
         ];
         # 将此区间的卡状态更改为启用
         $result1 = $OilCardModel -> where( $save_oilcard_where ) -> save( $save_oilcard_data );
@@ -473,14 +480,39 @@ class GradeController extends AdminbaseController
             ];
             $AgentLibraryModel = M('agent_library');
             $result2 = $AgentLibraryModel -> add( $insert_agent_library_data );
-            //修改押金
+            //修改押金 库存
             $new_deposit = $card_no_num*$data['each_price'];
+            $new_agent_oilcard_num = $card_no_num;
+            $new_agent_oilcard_stock_num = $card_no_num;
             $old_deposit = $agent['deposit'];
+            $old_agent_oilcard_num= $agent['agent_oilcard_num'];
+            $old_agent_oilcard_stock_num= $agent['agent_oilcard_stock_num'];
             $deposit= $new_deposit+$old_deposit;
+            $agent_oilcard_num= $new_agent_oilcard_num+$old_agent_oilcard_num;
+            $agent_oilcard_stock_num= $new_agent_oilcard_stock_num+$old_agent_oilcard_stock_num;
             $update_data=array(
-              'deposit'=>$deposit
+                'deposit'=>$deposit,
+                'agent_oilcard_num' =>$agent_oilcard_num,
+                'agent_oilcard_stock_num'=>$agent_oilcard_stock_num
             );
             $result3 = $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
+            //修改订单send_card_no
+            $orderRecordModel=M('order_record');
+            $order = $orderRecordModel->where('send_card_no = "" AND agent_id="'.$agent['id'].'"')->select();
+            if(!empty($order)){
+                foreach ($order as $key=>$val){
+                    $cardCondition =[
+                        'agent_id'  =>$agent['id'],//此代理商名下
+                        'status'    =>1,//库存卡
+                        'chomd'     =>1,//未发放的卡
+                        'is_notmal' =>1,//可用的卡
+                        'activate'  =>1 //未激活的卡
+                    ];
+                    $SendCard = M('oil_card')->where($cardCondition)->getField('card_no');
+                    //写入订单
+                    $orderRecordModel->where('id="'.$val["id"].'"')->save(array('send_card_no'=>$SendCard));
+                }
+            }
             if($result2){
                 echo json_encode(['msg' => '发卡成功','status' => 200]);exit;
             }else{
