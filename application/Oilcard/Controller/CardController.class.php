@@ -79,8 +79,14 @@ class CardController extends CommentoilcardController
                 M('coupon')->add($coupon);*/
 
 //                M('order_record')->add(['order_type'=>2,'user_id'=>$user['id'],'card_no'=>$card_no,'order_status'=>2]);
+
+                $orderRecordModel = M('order_record');$userApplyModel=M('user_apply');
+                //查询订单号
+                $serial_number = $orderRecordModel->where(['id'=>$id,'order_type'=>1,'user_id'=>$user['id'],'order_status'=>2])->getField('serial_number');
                 //修改订单状态
-                M('order_record')->where(['id'=>$id,'order_type'=>1,'user_id'=>$user['id'],'order_status'=>2])->save(['order_type'=>2,'updatetime'=>date('Y-m-d H:i:s',time())]);
+                $orderRecordModel->where(['id'=>$id,'order_type'=>1,'user_id'=>$user['id'],'order_status'=>2])->save(['order_type'=>2,'updatetime'=>date('Y-m-d H:i:s',time())]);
+                //修改申请表
+                $userApplyModel->where('serial_number="'.$serial_number.'" AND status !=3')->save(['status'=>3,'updatetime'=>date('Y-m-d H:i:s',time())]);
 
 //                    M('order_record')->where("id='$id'")->save(['preferential_type'=>2]);
                     $preferential=M('order_record')->where("id='$id'")->getField('preferential');
