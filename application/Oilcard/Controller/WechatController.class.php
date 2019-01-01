@@ -805,6 +805,33 @@ class WechatController extends CommentoilcardController
                 $ApplySave['status'] =3;
                 //订单修改
                 $OrderSave['preferential_type'] =2;
+                $OrderSave['send_card_no'] =$OrderInfo['card_no'];
+            }else{
+                $cardCondition =[
+                                'status'    =>1,//库存卡
+                                'chomd'     =>1,//未发放的卡
+                                'is_notmal' =>1,//可用的卡
+                                'activate'  =>1 //未激活的卡
+                            ];
+                //线上申领油卡，先从库存里获取一张应发卡号，修改此油卡信息
+                switch ($OrderInfo['card_from']) {
+                    case '2':
+                        //从代理库存中取出一张卡号
+                        $Agent=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.id'=>$Member['agentid'],'b.role'=>3])->find();
+                        $cardCondition['agent_id'] =$Agent['id'];//代理商名下的卡
+                        break;
+                    default:
+                        //从总部库中取出一张卡号
+                        $cardCondition['agent_id'] =0;//总部名下的卡
+                        break;
+                }
+                //获取一张 应发卡
+                $SendCard = M('oil_card')->where($cardCondition)->getField('card_no');
+                $OrderSave['send_card_no'] =$SendCard;
+            }
+            if ($OrderInfo['card_from']) {
+                //如果是代理发卡 ，代理库存减少 1
+                $ReduceAgentCardStock = M('agent')->where(['id'=>$Member['agentid'],'role'=>3])->setDec('agent_oilcard_stock_num');
             }
             if ($obj_arr['result_code']=='SUCCESS') {
                 /* 
@@ -833,12 +860,13 @@ class WechatController extends CommentoilcardController
                                 'total_earnings'=>$Invite['total_earnings']+$CouponNum
                             ]);
                         }
-                        
                     }
                     //锁定上级代理，上级邀请人，上级拉新奖励已完成
                     if($Robate)M('user')->where(['id'=>$Member['id']])->save($Robate);
                 }
+                //修改订单状态
                 $OrderSaveResult = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
+                //修改申领记录状态
                 $ApplySaveResult = M('user_apply')->where(['id'=>$apply_status['id']])->save($ApplySave);
             }
             

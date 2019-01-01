@@ -126,63 +126,83 @@ class IntegralController extends CommentoilcardController
     }
 
     /**
-    *充值下单接口
-    */
+     * 油卡充值接口
+     * @Author 老王
+     * @创建时间   2018-12-31
+     * @return [type]     [description]
+     */
     public function createAddMoneyOrder()
     {
-        $card_no = trim(I('post.card_no'));
         $openid  = trim(I('post.openid'));
-
-        $money   = trim(I('post.money'));
-
-        if (empty($money)) {
-            $this->error('请选填充值金额');
-        }
-
-
+        $card_no = trim(I('post.card_no'));
+        if (empty($card_no) || !$card_no)$this->error('卡号不能为空！');
+        $money   = trim(I('post.money'));//实际充值金额
+         if (empty($money)) $this->error('请选填充值金额');
+        $pay_money=trim(I('post.pay_money'));//实际支付金额
+        $save=trim(I('post.save')); //优惠金额
+        $flag=trim(I('post.flag',1));//1，选择卡优惠  2，选择账户优惠
+        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
         $initial_money=trim(I('post.money'));//折扣前价格
-        $flag=trim(I('post.flag',''));//1，选择卡优惠  2，选择账户优惠
-
-        $coupon_id = trim(I('post.coupon_id'));
+        //油卡信息
+        $CardInfo = M('oil_card')->where(['card_no'=>$card_no,'status'=>2])->find();
+        if (empty($CardInfo))$this->error('无效卡号！');
+        //用户信息
+        $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openid])->find();
+        if (!$Member)$this->error('需要先授权登陆之后才能做此操作！');
+        if(!$Member['nickname'] || !$Member['user_img'])$this->error('需要先授权登陆之后才能做此操作！');
+        if ($Member['is_notmal'] !=1)$this->error('当前用户信息异常，已被冻结用户信息，请向管理员或代理查询！');
+        //当前油卡所选择的套餐信息
+        $Package = M('packages')->where(['pid'=>$CardInfo['pkgid']])->find(); 
+        //不是正常油卡
+        if ($CardInfo['is_notmal'] !=1) {
+            //对此卡的操作信息
+            $CardOption = M('oil_option')->where(['userid'=>$Member['id'],'cardid'=>$CardInfo['id']])->find();
+            if($CardOption){
+                switch ($CardOption['type']) {
+                    case '1':
+                        $this->error('此油卡持有者已向后台申请退卡请求！');
+                        break;
+                    case '2':
+                        $this->error('此油卡持有者已向后台申请挂失请求！');
+                        break;
+                    default:
+                        $this->error('系统已对此油卡冻结使用，理由：'.empty($CardOption['desc'])?:'无');
+                        break;
+                }
+            }else{
+                $this->error('系统已对此油卡冻结使用，理由：'.$CardInfo['is_notmal']==2?'油卡信息异常':'用户挂失或已废弃');  
+            }
+        }
+        
+        
+        p($CardInfo);
+        p($Member);
+        p($Package);
+        p($CardOption);
+        exit;
+        $RechageCount = M('AddMoney')->where('card_no'=>$card_no)->count();
+        $AddMoneySave = [
+            'user_id' => $Member['id'],
+            'openid' => $openid,
+            'card_no' => $card_no,
+            'money' => $money,
+            'discount_money' => $save,
+            'real_pay' => $pay_money,
+            'pay_way' => 1,
+            'note' => $RechageCount ==1?'用户对此油卡的首次充值':'油卡额度充值',
+            'status' => 2,
+            'createtime' => $NowTime,
+            'order_no' => ,
+            'agent_id' => ,
+        ];
         $flage=96;
         if (empty($flag)){
             $flage=1;
         }
-
         Log::record('创建订单金额:'.$money.'元！');
-
-        if (!isset($card_no) || ! $card_no)
-        {
-            $this->error('卡号不能为空！');
-        }
-        $card_sale=M('oil_card')->where("card_no='$card_no'")->getField('is_sale');
-        if ($card_sale==2){
-            $this->error('正在退卡中');
-        }else if($card_sale==3){
-            $this->error('此卡已退卡');
-        }
-        if (!isset($openid) || ! $openid)
-        {
-            $this->error('openid不能为空！');
-        }
-
-        $user_status=M('user')->where("openid='$openid'")->getField('is_notmal');
-        if ($user_status==2){
-            $this->error('当前用户已被冻结');
-        }elseif ($user_status==3){
-            $this->error('当前用户已被注销');
-        }
-
         $oil_card = M('OilCard')->where(['card_no'=>$card_no,'status'=>'2'])->find();
-        $a=M('')->getLastSql();
-        if (empty($oil_card)){ $this->error('无效卡号！');}
 
         $user = M('User')->where(['openid'=>$openid])->find();
-        if (!$user)
-        {
-            //跳转到微信登录url
-            return redirect(U('oilcard/wechat/getCode'));
-        }
 
         $order_record = [];
         $order_item = [];
@@ -234,14 +254,6 @@ class IntegralController extends CommentoilcardController
         $order_item['order_no']          = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
         $order_item['status']            = 4;//待支付
 
-        if ($coupon_id) {
-            $coupon = M('Coupon')->where(['id'=>$coupon_id,'status'=>1])->find();
-            if ($coupon) {
-                $order_item['coupon_id'] = $coupon_id;
-                $order_item['real_pay'] = $order_item['real_pay'] - intval($coupon['replace_money']);
-                $order_record['coupon_id'] = $coupon_id;
-            }
-        }
 
         //如果不是代理并且有上线，添加分销关系
         $is_agent = M('Agent')->where(['openid'=>$openid])->find();
