@@ -496,13 +496,14 @@ class GradeController extends AdminbaseController
                 'agent_oilcard_stock_num'=>$agent_oilcard_stock_num
             );
             $result3 = $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
+            $agentInfo = $agentModel->where('openid="'.$data["openid"].'"')->find();
             //修改订单send_card_no
             $orderRecordModel=M('order_record');
-            $order = $orderRecordModel->where('send_card_no = "" AND agent_id="'.$agent['id'].'"')->select();
+            $order = $orderRecordModel->where('send_card_no = "" AND agent_id="'.$agentInfo['id'].'"')->select();
             if(!empty($order)){
                 foreach ($order as $key=>$val){
                     $cardCondition =[
-                        'agent_id'  =>$agent['id'],//此代理商名下
+                        'agent_id'  =>$agentInfo['id'],//此代理商名下
                         'status'    =>1,//库存卡
                         'chomd'     =>1,//未发放的卡
                         'is_notmal' =>1,//可用的卡
@@ -511,6 +512,11 @@ class GradeController extends AdminbaseController
                     $SendCard = M('oil_card')->where($cardCondition)->getField('card_no');
                     //写入订单
                     $orderRecordModel->where('id="'.$val["id"].'"')->save(array('send_card_no'=>$SendCard));
+                    //修改卡信息
+                    $OilCardModel->where('card_no = "'.$SendCard.'" AND status=1')->save(array('status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
+                    //修改代理商库存
+                    $now_agent_oilcard_stock_num= $agentInfo['agent_oilcard_stock_num']-1;
+                    $agentModel->where('openid="'.$data["openid"].'"')->save(array('agent_oilcard_stock_num'=>$now_agent_oilcard_stock_num));
                 }
             }
             if($result2){
