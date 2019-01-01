@@ -177,17 +177,17 @@ class IntegralController extends CommentoilcardController
         //订单号
         $orderSn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
         $OrderAdd = [
-            'user_id' => $Member['id'],
-            'card_no' => $card_no,
-            'order_type' => 3,
-            'serial_number' => $orderSn,
-            'order_status' => 1,
-            'real_pay' => $pay_money,
+            'user_id'        => $Member['id'],
+            'card_no'        => $card_no,
+            'order_type'     => 3,
+            'serial_number'  => $orderSn,
+            'order_status'   => 1,
+            'real_pay'       => $pay_money,
             'recharge_money' => $money,
-            'createtime' => $NowTime,
-            'card_from' => $CardInfo['agent_id']==0?1:2,
-            'agent_id' => empty($CardInfo['agent_id'])?$CardInfo['agent_id']:0,
-            'parentid' => $Member['parentid'],
+            'createtime'     => $NowTime,
+            'card_from'      => $CardInfo['agent_id']==0?1:2,
+            'agent_id'       => empty($CardInfo['agent_id'])?$CardInfo['agent_id']:0,
+            'parentid'       => $Member['parentid'],
         ];
         //判断当前油卡额度
         $BeforRechage =$CardInfo['preferential'];
@@ -215,23 +215,22 @@ class IntegralController extends CommentoilcardController
             $is_first = 1;
         }
         $AddMoneySave = [
-            'user_id' => $Member['id'],
-            'openid' => $openid,
-            'card_no' => $card_no,
-            'money' => $money,
+            'user_id'        => $Member['id'],
+            'openid'         => $openid,
+            'card_no'        => $card_no,
+            'money'          => $money,
             'discount_money' => $save,
-            'real_pay' => $pay_money,
-            'pay_way' => 1,
-            'note' => $RechageCount ==1?'用户对此油卡的首次充值':'油卡额度充值',
-            'status' => 2,
-            'createtime' => $NowTime,
-            'order_no' => $orderSn,
-            'agent_id' => $Member['agentid'],
-            'is_first' => $is_first,
+            'real_pay'       => $pay_money,
+            'pay_way'        => 1,
+            'note'           => $RechageCount ==1?'用户对此油卡的首次充值':'油卡额度充值',
+            'status'         => 2,
+            'createtime'     => $NowTime,
+            'order_no'       => $orderSn,
+            'agent_id'       => $Member['agentid'],
+            'is_first'       => $is_first,
         ];
+        //添加充值记录
         $create_res = M('add_money')->add($AddMoneySave);
-
-
         if ($create_res && $record_res){
 
             $wechat = new WechatController();
