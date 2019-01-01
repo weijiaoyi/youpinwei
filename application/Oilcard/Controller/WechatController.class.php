@@ -577,7 +577,7 @@ class WechatController extends CommentoilcardController
 
                     $AgentSave = [
                         //总收益
-                        'total_earnings' => $Agent['total_earnings'] + $rewardMoney
+                        'total_earnings' => $Agent['total_earnings'] + $rewardMoney,
                         //当前收益
                         'currt_earnings' => $Agent['currt_earnings'] + $rewardMoney ,
                         //下线总充值
@@ -602,7 +602,7 @@ class WechatController extends CommentoilcardController
                     if($EarningsAdd)$EarningsAdd = M('agent_earnings')->add($EarningsAdd);
                     //代理信息修改
                     if($AgentSave)$AgentSave = M('Agent')->where(['id'=>$Agent['id']])->save($AgentSave);
-                    
+
                     if ($AddMoneySave && $OilCardSave && $OrderSave && $MemberSave && $IntegralAdd) {
                         $Things->commit();
                     }else{
