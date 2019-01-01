@@ -180,7 +180,7 @@ class IntegralController extends CommentoilcardController
         p($Package);
         p($CardOption);
         exit;
-        $RechageCount = M('AddMoney')->where('card_no'=>$card_no)->count();
+        $RechageCount = M('AddMoney')->count();
         $AddMoneySave = [
             'user_id' => $Member['id'],
             'openid' => $openid,
@@ -192,8 +192,8 @@ class IntegralController extends CommentoilcardController
             'note' => $RechageCount ==1?'用户对此油卡的首次充值':'油卡额度充值',
             'status' => 2,
             'createtime' => $NowTime,
-            'order_no' => ,
-            'agent_id' => ,
+            'order_no' => '',
+            'agent_id' => '',
         ];
         $flage=96;
         if (empty($flag)){
