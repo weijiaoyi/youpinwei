@@ -290,7 +290,7 @@ class GradeController extends AdminbaseController
                 $deposit= $new_deposit+$old_deposit;
                 $agent_oilcard_num= $new_agent_oilcard_num+$old_agent_oilcard_num;
                 $agent_oilcard_stock_num= $new_agent_oilcard_stock_num+$old_agent_oilcard_stock_num;
-
+                //修改agent
                 $update_data=array(
                     'deposit'=>$deposit,
                     'agent_oilcard_num' =>$agent_oilcard_num,
@@ -302,7 +302,15 @@ class GradeController extends AdminbaseController
                     'user_indirect_scale' =>$data['user_indirect_scale'],
                     'expire_time' => date('Y-m-d H:i:s',strtotime('+1year')),
                 );
-                $result3 = $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
+                 $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
+                 //修改USER表
+                $update_user_data=array(
+                    'parentid'=>0,
+                    'agentid' =>0,
+                    'agent_bind' =>0,
+                    'agent_relation'=>3
+                );
+                $agentModel->where('openid="'.$data["openid"].'"')->save($update_user_data);
                 if ($result2) {
                     echo json_encode(['msg' => '发卡成功', 'status' => 200]);
                     exit;
@@ -499,7 +507,7 @@ class GradeController extends AdminbaseController
             $agentInfo = $agentModel->where('openid="'.$data["openid"].'"')->find();
             //修改订单send_card_no
             $orderRecordModel=M('order_record');
-            $order = $orderRecordModel->where('send_card_no = "" AND agent_id="'.$agentInfo['id'].'"')->select();
+            $order = $orderRecordModel->where('send_card_no = "" AND agent_id="'.$agentInfo['id'].'" AND order_status=2')->select();
             if(!empty($order)){
                 foreach ($order as $key=>$val){
                     $cardCondition =[

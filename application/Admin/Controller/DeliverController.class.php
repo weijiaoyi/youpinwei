@@ -46,32 +46,56 @@ class DeliverController extends AdminbaseController{
 	public function C_deliverList(){
 
         $p = trim(I('get.p','1'));
+        $keyword = trim(I('post.keyword'));
         $Order = M('order_record');
-        $order_info = $Order -> where() -> page($p,'10') ->select();
-        if(empty($order_info)){
-            $this -> error( '暂无数据' );
+        $where='o.order_type != 3 AND o.order_status=2';
+        if(!empty($keyword)){
+            $where.=' AND (o.send_card_no LIKE "%'.$keyword.'%" OR o.serial_number LIKE "%'.$keyword.'%")';
         }
+        $order_info = $Order
+            ->alias('o')
+            ->join('user_apply a ON a.serial_number=o.serial_number',LEFT)
+            -> where($where)
+            -> page($p,'10')
+            ->select();
+//        if(empty($order_info)){
+//            $this -> error( '暂无数据' );
+//        }
         foreach( $order_info as $k => $v ){
             if( $v['order_type'] == '1' ){
-                $order_info[$k]['order_type'] = '申领';
-            }else if( $v['order_type'] == '2' ){
-                $order_info[$k]['order_type'] = '绑定';
-            }else{
-                $order_info[$k]['order_type'] = '充值';
+                $order_info[$k]['order_type'] = '已申领';
+            }else {
+                $order_info[$k]['order_type'] = '已绑定';
             }
-
-            if( $v['serial_number'] == '' ){
-                $order_info[$k]['serial_number'] = '已绑定';
+            if( $v['status'] == '1' ){
+                $order_info[$k]['send_status'] = '待发货';
+            }else if( $v['status'] == '2' ){
+                $order_info[$k]['send_status'] = '已发货';
+            }else {
+                $order_info[$k]['send_status'] = '已绑定';
             }
+//            else{
+//                $order_info[$k]['order_type'] = '充值';
+//            }
 
+//            if( $v['serial_number'] == '' ){
+//                $order_info[$k]['serial_number'] = '已绑定';
+//            }
+            if( $v['send_card_no'] == '' ){
+                $order_info[$k]['send_card_no'] = '等待代理购买油卡';
+            }
             if( $v['card_no'] == '' ){
-                $order_info[$k]['card_no'] = '已申领';
+                $order_info[$k]['card_no'] = '未绑定';
             }
         }
-        $count = $Order -> count();
+        $count = $Order
+            ->alias('o')
+            ->join('user_apply a ON a.serial_number=o.serial_number',LEFT)
+            -> where($where)
+            -> count();
         $Page = new \Think\Page($count,10);
         $show = $Page -> show();
-
+        $this->assign('keyword',$keyword);
         $this -> assign('page',$show);
         $this -> assign('data',$order_info);
         $this -> display();
@@ -170,16 +194,37 @@ class DeliverController extends AdminbaseController{
      * 油卡发货页面
      */
 	public function C_deliverDetail(){
-        $data['id'] = I('post.id');
+        /*$data['id'] = I('post.id');
         $data['uid'] = I('post.uid');
-        $data['card_no'] = I('post.card_no');
+        $data['card_no'] = I('post.card_no');*/
+        $order_id = I('post.order_id');
 
         # 查询卡信息（发货）
-        $ApplyModel = M('user_apply');
-        $where = ['user_id' => $data['uid']];
-        $card_find = $ApplyModel -> where( $where ) -> find();
-        if( $card_find['shop_name'] == 1 ){ $card_find['shop_name'] = '中石油加油卡'; }
-        # 查询该卡拥有几折优惠
+        $orderRecordModel = M('order_record');
+//        $where = ['user_id' => $data['uid']];
+//        $card_find = $ApplyModel -> where( $where ) -> find();
+//        if( $card_find['shop_name'] == 1 ){ $card_find['shop_name'] = '中石油加油卡'; }
+        $orderInfo = $orderRecordModel
+            ->alias('a')
+            ->join('user_apply u ON u.serial_number=a.serial_number',LEFT)
+            ->where('a.id="'.$order_id.'" AND a.order_status=2 AND u.status=1')
+            ->find();
+        if($orderInfo){
+            $data=[
+                'send_card_no' => $orderInfo['send_card_no'],
+                'user_name' => $orderInfo['receive_person'],
+                'mobile' => $orderInfo['phone'],
+                'address' => $orderInfo['address'],
+                'serial_number'=>$orderInfo['serial_number'],//订单编号
+                'order_id'=>$orderInfo['id'],//订单ID
+            ];
+            echo json_encode(array('status'=>200,'message'=>'订单已发货或不存在','data'=>$data));exit;
+        }else{
+            echo json_encode(array('status'=>100,'message'=>'订单已发货或不存在'));exit;
+        }
+
+
+       /* # 查询该卡拥有几折优惠
         $OilCardModel = M('oil_card');
         $discount_data = $OilCardModel -> where( $where ) -> find();
 
@@ -195,8 +240,8 @@ class DeliverController extends AdminbaseController{
             'consignee_address' => $card_find['address'],
             'which_express' => $card_find['courier_company'],
             'user_id' => $data['uid']
-        ];
-        $this -> ajaxReturn($data);
+        ];*/
+//        $this -> ajaxReturn($data);
 
     }
 
@@ -221,23 +266,46 @@ class DeliverController extends AdminbaseController{
      * 确认发货
      */
 	public function C_deliverEnterSend(){
-	    $data = I('post.');
-	    $data1['card_no'] = I('post.card_no');
-	    $data1['user_id'] = I('post.user_id');
-        # 查询卡信息（确认发货）
-        $ApplyModel = M('user_apply');
-        $where = ['user_id' => $data1['user_id']];
-        $card_find = $ApplyModel -> where( $where ) -> find();
-        if( $card_find['shop_name'] == '1' ){ $card_find['shop_name'] = '中石油加油卡'; }
+//	    $data = I('post.');
+//	    $data1['card_no'] = I('post.card_no');
+//	    $data1['user_id'] = I('post.user_id');
+        $order_id = I('post.order_id');
+        $express_number = I('post.express_number');
+        $serial_number = I('post.serial_number');
+        # 查询订单信息（确认发货）
+        $orderRecordModel=M('order_record');
+        $userApplyModel = M('user_apply');
+
+        $res = $orderRecordModel->where('id="'.$order_id.'" AND serial_number="'.$serial_number.'"')->find();
+        if($res){
+            $result = $userApplyModel->where('id="'.$order_id.'" AND serial_number="'.$serial_number.'" AND status=1')->find();
+            if($result){
+                    $update_apply = $userApplyModel->where('id="'.$order_id.'" AND serial_number="'.$serial_number.'"')->save(array('express_number'=>$express_number,'status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
+                    if($update_apply){
+                        echo json_encode(array('status'=>200,'message'=>'发货成功'));exit;
+                    }else{
+                        echo json_encode(array('status'=>100,'message'=>'发货失败'));exit;
+                    }
+            }else{
+                echo json_encode(array('status'=>100,'message'=>'订单已发货，重复操作'));exit;
+            }
+        }else{
+            echo json_encode(array('status'=>100,'message'=>'订单不存在'));exit;
+        }
+
+//        $ApplyModel = M('user_apply');
+//        $where = ['user_id' => $data1['user_id']];
+//        $card_find = $ApplyModel -> where( $where ) -> find();
+//        if( $card_find['shop_name'] == '1' ){ $card_find['shop_name'] = '中石油加油卡'; }
         # 查询该卡拥有几折优惠
-        $OilCardModel = M('oil_card');
-        $discount_data = $OilCardModel -> where( $where ) -> find();
+//        $OilCardModel = M('oil_card');
+//        $discount_data = $OilCardModel -> where( $where ) -> find();
 
         # 查询该卡充值金额、优惠金额、实付金额
-        $OrderRecordModel = M('order_record');
-        $OrderRecord_data = $OrderRecordModel -> where( $where ) -> find();
+//        $OrderRecordModel = M('order_record');
+//        $OrderRecord_data = $OrderRecordModel -> where( $where ) -> find();
 
-        $data = [
+        /*$data = [
             'card_names' => $card_find['shop_name'],
             'card_number' => $OrderRecord_data['card_no'],
             'recharge_money' => $OrderRecord_data['money'],
@@ -245,8 +313,8 @@ class DeliverController extends AdminbaseController{
             'consignee_phone' => $card_find['phone'],
             'consignee_address' => $card_find['address'],
             'which_express' => $card_find['courier_company']
-        ];
-        $this -> ajaxReturn($data);
+        ];*/
+//        $this -> ajaxReturn($data);
     }
 
     //推送消息
