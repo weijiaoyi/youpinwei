@@ -36,7 +36,11 @@ class OrderController extends CommentoilcardController
 //            $order_data=M('order_record')->where($where)->order('createtime desc')->limit($page,$offset)->select();    //展示数据
 //        }else{
 
-            $order_data=M('order_record')->where('user_id='.$user_data['id'])->order('createtime desc')->limit($page,$offset)->select();    //展示数据
+            $order_data=M('order_record')
+                ->where('user_id="'.$user_data["id"].'" AND order_type=3 AND order_status=2')
+                ->order('createtime desc')
+                ->limit($page,$offset)
+                ->select();    //展示数据
 //        }
         foreach ($order_data as $key => $v) {
            if ($v['order_type']=='1') {

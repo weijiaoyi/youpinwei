@@ -56,7 +56,7 @@ class DeliverController extends AdminbaseController{
             ->alias('o')
             ->join('user_apply a ON a.serial_number=o.serial_number',LEFT)
             ->join('user u ON u.id=o.user_id',LEFT)
-            ->field('o.*,a.*,u.nickname,u.user_img')
+            ->field('o.*,a.id as apply_id,a.status,u.nickname,u.user_img')
             -> where($where)
             -> page($p,'10')
             ->select();
@@ -210,8 +210,8 @@ class DeliverController extends AdminbaseController{
 //        if( $card_find['shop_name'] == 1 ){ $card_find['shop_name'] = '中石油加油卡'; }
         $orderInfo = $orderRecordModel
             ->alias('a')
-            ->join('user_apply u ON u.serial_number=a.serial_number',LEFT)
-            ->where('a.id="'.$order_id.'" AND a.order_status=2 AND u.status=1')
+            ->join('user_apply u ON u.serial_number=a.serial_number AND u.status=1',LEFT)
+            ->where('a.id="'.$order_id.'" AND a.order_status=2')
             ->find();
         if($orderInfo){
             $data=[
