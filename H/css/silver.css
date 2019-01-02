@@ -1,0 +1,357 @@
+*{
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+span{
+	display: block;
+	font-weight:600;
+}
+a{
+	text-decoration:none;
+	color:#000;
+}
+.homepage{
+	width:7.5rem;
+	height:100%;
+}
+.card{
+	position:relative;
+	float:left;
+	width:6.9rem;
+	height:3.4rem;
+	margin-top: 0.2rem;
+	margin-left: 0.3rem;
+	background: #FB4F3B;
+	border-radius:0.24rem;
+	box-shadow:0 0.05rem 0.11rem #ff8db785;
+}
+.card_con{
+	position:absolute;
+	top:0;
+	left:0;
+	width:6.9rem;
+	height:3.4rem;
+	background:url(../img/yin.png) no-repeat;
+	background-size:6.9rem 3.4rem;
+}
+.infomation{
+	float:left;
+	width:6.9rem;
+	height:5.72rem;	
+	margin-top: 0.2rem;
+	margin-left: 0.3rem;
+	background:#FFF4CF;
+	border-radius:0.24rem;
+	box-shadow:0 0.1rem 0.22rem #FFF4CF;
+}
+.infomation_title{
+	width:6.9rem;
+	height:0.4rem;
+	margin-top:0.4rem;
+	text-align:center;
+	font-size:0.4rem;
+	color:#FB4F3B;
+	font-weight:600;
+}
+ol li{
+	list-style-type: decimal;
+    list-style-position: inside;
+    font-family:'SourceHanSansCN-';
+}
+.ol_1{
+	margin-top:0.28rem;
+	margin-left:0.18rem;
+}
+.ol_1>li{
+	font-size:0.3rem;
+	color:#000;
+	font-weight:bold;
+	margin-top:0.24rem;
+}
+.ol_1>li b{
+	color:#FB4F3B;
+}
+.apply{
+	float:left;
+	width:6.9rem;
+	height:5.12rem;	
+	margin-top: 0.5rem;
+	margin-left: 0.3rem;
+	background:#FFF4CF;
+	border-radius:0.24rem;
+	box-shadow:0.06rem 0.06rem 0.11rem #FFF4CF;
+}
+.apply_title{
+	width:6.9rem;
+	height:0.4rem;
+	margin-top:0.4rem;
+	text-align:center;
+	font-size:0.4rem;
+	color:#FB4F3B;
+	font-weight:600;
+}
+.apply>p{
+	font-weight:bold;
+	float:left;
+	width:80%;
+	height:0.3rem;
+	font-size:0.3rem;
+	color:#000;
+	margin-left:0.52rem;
+	margin-top:0.2rem;
+}
+.input_type{
+	float:left;
+	width:5.5rem;
+	margin-left:0.52rem;
+	height:0.5rem;
+	border-radius:0.26rem;
+	border:none;
+	outline:none;
+	padding:0 0.2rem;
+	margin-top:0.2rem;
+}
+#province,#city,#town{
+	margin-top:0.15rem;
+	float:left;
+	width:1.83rem;
+	height:0.5rem;
+	border:none;
+	background:white;
+	border-radius:0.24rem;
+	outline:none;
+	padding-left:0.2rem;
+}
+#province{
+	margin-left:0.52rem;
+}
+#city,#town{
+	margin-left:0.15rem;
+}
+.go{
+	margin-top:0.4rem;
+	float:left;
+	width:100%;
+	text-align:center;
+	height:0.32rem;
+	font-size:0.3rem;
+	color: #000;
+	font-weight:800;
+}
+.infomation_btn{
+	float: left;
+    width: 5.9rem;
+    height: 0.7rem;
+    background: #fb4f3b;
+    margin-top: 0.38rem;
+    margin-left: 0.82rem;
+    color: white;
+    font-size: 0.3rem;
+    text-align: center;
+    line-height: 0.7rem;
+    border-radius: 1rem;
+    margin-bottom:0.46rem;
+}
+.zhezhao{
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	overflow:hidden;
+	z-index:2;
+	display:none;
+}
+.success{
+	position:fixed;
+	width:5.9rem;
+	height:7rem;
+	top:50%;
+	left:50%;
+	margin-top:-3.5rem;
+	margin-left:-2.95rem;
+	background:#FB4F3B;
+	border-radius:0.24rem;
+	display:none;
+	z-index:2;
+}
+.success_con{
+	width:5.9rem;
+	height:7rem;
+	background:url(../img/suc.png) no-repeat;
+	background-size:5.9rem 7rem;
+}
+.success_title{
+	padding-top:0.64rem;
+	width:5.1;
+	font-size:0.48rem;
+	color:#FFDE00;
+	text-align:center;
+}
+.ol_2{
+	width:4.94rem;
+	padding:0 0.5rem;
+}
+.ol_2 li{
+	margin-top:0.2rem;
+	font-size:0.3rem;
+	color:white;
+	font-weight:bold;
+	display:inline-block;
+}
+.share{
+	position:absolute;
+	left:1.6rem;
+	bottom:0.3rem;
+	width:2.7rem;
+	height:0.8rem;
+	background:#FFCC00;
+	color:white;
+	font-size:0.36rem;
+	text-align:center;
+	line-height:0.8rem;
+	border-radius:0.4rem;
+	font-weight:bold;
+}
+.close{
+	position: absolute;
+    bottom: -0.84rem;
+    left: 2.64rem;
+    width: 0.63rem;
+    height: 0.63rem;
+    background: url(../img/close.png) no-repeat;
+    background-size: 0.63rem 0.63rem;
+    z-index: 2;
+}
+.card_info{
+	float:left;
+	width:6.9rem;
+	height:100%;
+	background:#FFF4CF;
+	margin-top: 0.3rem;
+    margin-left: 0.3rem;
+    padding-bottom:0.2rem;
+    border-radius: 0.24rem;
+    box-shadow: 0.06rem 0.06rem 0.11rem #FFF4CF;
+}
+.card_info_title{
+	width:6.9rem;
+	height:0.4rem;
+	margin-top:0.4rem;
+	text-align:center;
+	font-size:0.4rem;
+	color:#FB4F3B;
+	font-weight:600;
+	margin-bottom: 0.3rem;
+}
+.dan{
+	width:100%;
+	font-size:0.3rem;
+	float:left;
+  	line-height:0.8rem;
+  	position: relative;
+  	display:flex;
+  	align-items:center;
+  	flex-direction:column;
+}
+
+input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  position:relative;
+}
+
+label {
+  position: absolute;
+  left:0.5rem;
+  top: 0.16rem;
+  width:0.44rem;
+  height:0.44rem;
+  border-radius:0.12rem;
+  border:0.02rem solid #000;
+}
+
+/*设置选中的input的样式*/
+/* + 是兄弟选择器,获取选中后的label元素*/
+input:checked+label {
+  background-color: #FB4F3B;
+}
+
+input:checked+label::after {
+  position: absolute;
+  content: "";
+  width: 5px;
+  height: 10px;
+  top: 0.08rem;
+  left: 0.14rem;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg)
+}
+#card{
+	float:left;
+	width:4.8rem;
+	height:0.6rem;
+	border-radius:0.3rem;
+	text-align:center;
+	background: white;
+}
+.pay_info{
+	float:left;
+	width:6.9rem;
+	height:100%;
+	background:#FFF4CF;
+	margin-top: 0.3rem;
+    margin-left: 0.3rem;
+    padding-bottom:0.2rem;
+    border-radius: 0.24rem;
+    box-shadow: 0.06rem 0.06rem 0.11rem #FFF4CF;
+}
+.pay_info_title{
+	width:6.9rem;
+	height:0.4rem;
+	margin-top:0.4rem;
+	text-align:center;
+	font-size:0.4rem;
+	color:#FB4F3B;
+	font-weight:600;
+	margin-bottom: 0.3rem;
+}
+.heji{
+	float:left;
+	width:6.9rem;
+	height:0.4rem;
+	margin-top:0.4rem;
+	text-align:center;
+	font-size:0.4rem;
+	color:#FB4F3B;
+	font-weight:600;
+	margin-bottom: 0.3rem;
+}
+.yinpai{
+	float:left;
+	width:5.9rem;
+	margin-left:0.5rem;
+	font-size:0.3rem;
+	color:#000000;
+	display:none;
+}
+.yinpai_left,.new_left{
+	float:left;
+}
+.yinpai_right,.new_right{
+	float:right;
+}
+.new{
+	float:left;
+	margin-top:0.3rem;
+	width:5.9rem;
+	margin-left:0.5rem;
+	font-size:0.3rem;
+	color:#000000;
+	display:none;
+}

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<title>申领</title>
+	<link rel="stylesheet" href="../css/tool_select_03.css">
+	<script>
+    	var eMeta=document.createElement('meta');
+	      eMeta.setAttribute("name","viewport");
+	      eMeta.setAttribute("content",'initial-scale='+1/window.devicePixelRatio+'')
+	      document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	      window.addEventListener("resize",function(){
+	        document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	    })
+	</script>
+</head>
+<body>
+	<div class="homepage">
+		<div class="zhezhao"></div>
+		<div class="success">
+			<p class="gongxi">恭喜您!</p>
+			<p class="suc">已经成功绑定新油卡</p>
+			<a href="homepage.html"><span class="back">返回首页</span></a>
+			<a href="tool_select_02.html"><span class="chong">去充值</span></a>
+		</div>
+		<div class="con">
+			<ol>
+				<li>选择您所在的区域时，请您选择自己经常加油的城市，以免为您日后加油带来不便；</li>
+				<li>我们仅支持绑定我们发行的中石油加油卡，无法绑定其它渠道来源的卡片，请您见谅；</li>
+				<li>绑定加油卡不会影响您的卡内余额；</li>
+				<li>每张加油卡仅支持绑定一个微信账号，如果绑定时提示“该加油卡已被绑定”，则说明该卡已经被其它用户绑定；</li>
+				<li>绑定加油卡功能是为了帮助您更便捷的充值以及管理自己的卡片，我们为卡片设置了备注功能，您可以为每张卡片备注一个名称，方便您的管理；</li>
+			</ol>
+			<div class="con_top">绑定规则说明</pdiv>
+		</div>	
+	</div>
+	<p class="bang">请输入待绑定的16位加油卡号</p>
+	<div class="kahao">
+	    <input type="text" class="box">
+	</div>
+	<div class="bangding">绑定提交</div>
+	<div class="footer">
+			<div class="footer_tab">
+				<a href="homepage.html">
+					<span class="footer_tab_img"></span>
+				<p>油卡服务</p>
+			</a>
+		</div>
+			
+		<div class="footer_tab">
+			<a href="homepage1.html">
+				<span class="footer_tab_img"></span>
+				<p>充值记录</p>
+			</a>
+		</div>
+		<div class="footer_tab">
+			<a href="homepage2.html">
+				<span class="footer_tab_img"></span>
+				<p>常见问题</p>
+			</a>
+			</div>
+		</div>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script>
+		var localStorage=window.localStorage;
+		localStorage.getItem('openid');
+		let openid=localStorage.openid;
+		$("#card").change(function(){
+		    var card_no1=$(this).val();
+		    localStorage.setItem('card_no',card_no1);
+		});
+		var card_num=localStorage.card_no;
+		
+		// var box=document.getElementsByClassName("box")[0];
+		// function createDIV(num){
+		//     for(var i=0;i<16;i++){
+		//         var pawDiv=document.createElement("div");
+		//         pawDiv.className="pawDiv";
+		//         box.appendChild(pawDiv);
+		//         var paw=document.createElement("input");
+		//         paw.type="text";
+		//         paw.className="paw";
+		//         paw.maxLength="1";
+		//         paw.readOnly="readonly";
+		//         pawDiv.appendChild(paw);
+		//     }
+		// }
+		// createDIV(16);
+		// var pawDiv=document.getElementsByClassName("pawDiv");
+		// var paw=document.getElementsByClassName("paw");
+		// var pawDivCount=pawDiv.length;
+		// paw[0].readOnly=false;
+		// paw[0].focus();
+		// var errorPoint=document.getElementsByClassName("errorPoint")[0];
+		// function func(){
+		//     for(var i=0;i<16;i++){
+		//         pawDiv[i].addEventListener("click",function(){
+		//             pawDivClick(this);
+		//         });
+		//         paw[i].onkeyup=function(event){
+		//             console.log(event.keyCode);
+		//             if(event.keyCode>=48&&event.keyCode<=57){
+		//                 changeDiv();
+		//             }else if(event.keyCode=="8") {
+		//                 firstDiv();
+		//             }else if(event.keyCode=="13"){
+		//                 getPassword();
+		//             }else{
+		//                 this.value="";
+		//             }
+
+		//         };
+		//     }
+
+		// }
+		// func();
+		// var pawDivClick=function(e){
+		//     for(var i=0;i<16;i++){
+		//         pawDiv[i].setAttribute("style","border:none");
+		//     }
+		//     e.setAttribute("style","border:0.01rempx solid deepskyblue;");
+		// };
+		// var changeDiv=function(){
+		//     for(var i=0;i<15;i++){
+		//         if(paw[i].value.length=="1"){
+		//             paw[i].blur();
+		//             paw[i+1].focus();
+		//             paw[i+1].readOnly=false;
+		//             pawDivClick(pawDiv[i+1]);
+		//         }
+		//     }
+		// };
+		// var firstDiv=function(){
+		//     for(var i=0;i<16;i++){
+		//         console.log(i);
+		//         if(paw[i].value.length=="0"){
+		//             console.log(i);
+		//             paw[i].blur();
+		//             paw[i-1].focus();
+		//             paw[i-1].readOnly=false;
+		//             paw[i-1].value="";
+		//             pawDivClick(pawDiv[i-1]);
+		//             break;
+		//         }
+		//     }
+		// };
+		// var getPasswordBtn=document.getElementsByClassName("getPasswordBtn")[0];
+		// document.onkeyup=function(event){
+		//     if(event.keyCode=="13") {
+		//         getPassword();
+		//     }
+		// };
+		// var n="";
+
+		$('.bangding').click(function(){
+				var n=$('.box').val();
+				if((/^\s*$/g.test(n))){ 
+				        alert("卡号不能为空");  
+				        return false; 
+				    }else{
+						if(!(/^\d{16}$/.test(n))){ 
+			        	alert("请输入正确待绑定的16位加油卡号");  
+				        return false; 
+						}else{
+							function haoma(){
+								var info={};
+								$.ajax({
+									type:'post',
+									url:'http://ysy.edshui.com/index.php?g=oilcard&m=card&a=bindCard',
+									dataType:'json',
+									data:{openid:openid,card_no:n},
+									async:false,
+									success:function(rel){
+										info=rel;
+									}
+								})
+								return info;
+								}
+								let info=haoma();
+								console.log(info);
+								if(info.status==500){
+									alert(info.msg);
+								}else if(info.status==1000){
+									$('.success').show();
+									$('.zhezhao').show();
+								}
+						    }   
+							 
+						}
+
+		})
+
+	</script>
+</body>
+</html>

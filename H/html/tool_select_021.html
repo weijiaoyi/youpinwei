@@ -1,0 +1,359 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"  />
+	<meta http-equiv="refresh" content="100">
+	<title>充值</title>
+	<link rel="stylesheet" href="../css/tool_select_02.css">
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script> 
+	<script>
+    	var eMeta=document.createElement('meta');
+	      eMeta.setAttribute("name","viewport");
+	      eMeta.setAttribute("content",'initial-scale='+1/window.devicePixelRatio+'')
+	      document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	      window.addEventListener("resize",function(){
+	        document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	    })
+	</script>
+	<script type="text/javascript" src="../load/dist/vconsole.min.js"></script>
+	<!-- <script type="text/javascript">
+	    var vConsole = new VConsole();
+	</script> -->
+</head>
+<body>
+	<div class="homepage">
+		<div class="zhezhao"></div>
+		<div class="success">
+			<span class="success_span">充值金额已经全部提交稍后返回结果！</span>
+			<a href="homepage.html"><span class="know">知道了</span></a>
+		</div>
+		<div class="code">
+			<div class="code_title">选择卡号</div>
+			<div class="number_box">
+				<div class="number">
+					<div class="card"></div>
+					<select class="selects" id="card">
+					</select>
+				</div>
+				
+				<div class="discount">
+					<label class="zhe"></label>折卡
+				</div>
+			</div>
+		</div>
+		<div class="line"></div>
+		<div class="code">
+			<div class="code_title">充值金额</div>
+			<div class="select">
+			</div>
+		</div>
+		<div class="line"></div>
+		<div class="code">
+			<div class="code_title">自定义金额</div>
+			<input type="number" id="price" placeholder="可手动输入充值金额">
+			<div class="coupon">
+				<!-- <input type="radio" name=""> -->
+				<label></label>
+				100元劵(您当前拥有100元加油劵)
+			</div>
+			<!-- <div class="hr"></div> -->
+			<div class="pay_info">
+				<span>支付： 195元</span>
+				<span>省油钱： 5元</span>
+			</div>
+		</div>
+
+	<button id="pay" OnClientClick="javascript:callpay();return false;">微信支付</button>
+<!-- 
+		<select name="card" id="card">
+			<option value="请选择油卡" disabled="">请选择油卡</option>
+		</select> -->
+		<!-- 
+		
+		<div class="youhui1">
+		</div>
+		<div class="sheng1">
+		</div> -->
+	
+		<div class="code">
+			<div class="code_title">充值规则说明</div>
+			<div class="shuoming">
+				<ol>
+					<li>充值时间为每日7：00-18：00</li>
+					<li>由于微信公众号的限制，目前我们仅支持微信付款，无法使用其它支付方式；</li>
+					<li>车主在平台办理的加油卡，可永久享受加油折扣优惠；</li>
+					<li>中石油要求加油卡首次油品味平台加油卡充值最低限额为100元，最高限额为微信支付单日限额，若因支付限额问题无法完成加油卡充值，建议拆分订单分几次充值中石油要求加油卡首次充值激活时必须保障卡内金额达到1000元，所以首次充值激活时，加油卡内金额不得低于1000元；</li>
+					<li>通常情况下，您充值付款后的金额会马上充入您的加油卡，但由于中国石油充值渠道的延迟等问题，到账时间可能延长至24小时。建议您24小时后在圈存机中圈存。</li>
+				</ol>
+			</div>
+		</div>
+		
+		<div class="footer">
+				<div class="footer_tab">
+					<a href="homepage.html">
+						<span class="footer_tab_img"></span>
+						<p>油卡服务</p>
+					</a>
+				</div>
+			
+			<div class="footer_tab">
+				<a href="#">
+					<span class="footer_tab_img"></span>
+					<p>充值记录</p>
+				</a>
+			</div>
+				<div class="footer_tab">
+					<a href="#">
+					<span class="footer_tab_img"></span>
+					<p>常见问题</p>
+					</a>
+			</div>
+
+		</div>
+	</div>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script>
+		var localStorage=window.localStorage;
+		localStorage.getItem('openid');
+		let openid=localStorage.openid;
+		let discount = null;	
+		var card_num=localStorage.card_no;
+		function ajaxFun(){
+			var list={};
+			$.ajax({
+				type:'post',
+				url:'http://ysy.edshui.com/index.php?g=oilcard&m=card&a=cardList',
+				dataType:'json',
+				data:{openid:openid},
+				async:false,
+				success:function(res){
+					list=res;
+				}
+			})
+			return list;
+		}
+		let infomation=ajaxFun();
+		console.log(infomation);
+		var card_no1=infomation.msg[0].card_no;
+		$('.card').html(card_no1)
+		$('.zhe').html(infomation.msg[0].discount)
+		zhekou(infomation.msg[0].discount)
+		localStorage.setItem('card_no',card_no1);
+		$("#card").change(function(e){
+		    var card_no1=$(this).val();
+		    localStorage.setItem('card_no',card_no1);
+		    console.log(e.target.selectedIndex)
+		    let index = e.target.selectedIndex 
+		    $('.card').html($(this).val())
+		    if(index > 0){
+		    	console.log(infomation.msg)
+		    	console.log(index)
+		    	console.log(infomation.msg[index])
+		    	discount = infomation.msg[index-1].discount
+		    	$('.zhe').html(infomation.msg[index-1].discount)
+		    }
+
+		});
+		let data=infomation.msg;
+		data.forEach(function(item,index){
+			$('#card').get(0).innerHTML+=`
+				<option value="${data[index].card_no}" data-index='${index + 1}'>${data[index].card_no}</option>
+			`
+		})
+
+		$(function(){  
+		  $('.select_tab').each((index,item)=>{
+		  	let a=index;
+		  	item.onclick=function(){
+		  		console.log(111)
+		  		$(this).addClass('show');
+		  		$(this).siblings().removeClass('show');	
+		  		$("#price").val("");
+		  		var card_num=localStorage.card_no;		  		
+				let a=($(this).text());
+				localStorage.setItem('money',a);
+		  		function ajaxfun(){
+				var info={};
+				$.ajax({
+					type:'post',
+					url:'http://ysy.edshui.com/index.php?g=oilcard&m=card&a=discountMoney',
+					dataType:'json',
+					data:{card_no:card_num,money:b},
+					async:false,
+					success:function(ret){
+						info=ret;
+					}
+					})
+					return info;
+				}
+			let b=localStorage.money;
+			let infomations=ajaxfun();
+			$('.youhui1').html(`
+				<span class="youhui">优惠后支付金额：</span>
+				<p class="youhui_p"><b>￥</b>${infomations.data.real_pay}</p>
+			`)
+			$('.sheng1').html(`
+					<span class="sheng">省油钱</span>
+					<p class="sheng_p"><b>￥</b>${infomations.data.discount_money}</p>
+				`)
+				
+			  	}
+			  })
+		})
+
+		var price=document.querySelector('#price');
+		price.oninput=function(){
+			localStorage.removeItem('money');
+			$('.select_tab').removeClass('show');
+			var b_price=price.value;
+			localStorage.setItem('money',b_price);
+			console.log(price.value);
+			function ajaxfun(){
+				var info={};
+				$.ajax({
+					type:'post',
+					url:'http://ysy.edshui.com/index.php?g=oilcard&m=card&a=discountMoney',
+					dataType:'json',
+					data:{card_no:card_num,money:b},
+					async:false,
+					success:function(ret){
+						info=ret;
+						console.log(ret)
+					}
+					})
+					return info;
+				}
+			let b=localStorage.money;
+			console.log(ajaxfun());
+			let p=ajaxfun();
+			console.log(p.data.discount_money);
+			$('.youhui1').html(`
+				<span class="youhui">优惠后支付金额：</span>
+				<p class="youhui_p"><b>￥</b>${p.data.real_pay}</p>
+			`)
+			$('.sheng1').html(`
+				<span class="sheng">省油钱</span>
+				<p class="sheng_p"><b>￥</b>${p.data.discount_money}</p>
+			`)
+		}
+		$('#pay').click(function(){
+			let b=localStorage.money;
+			var card_num=localStorage.card_no;
+			function zhifu(){
+				var reslist={};
+				$.ajax({
+					type:'post',
+					url:'http://ysy.edshui.com/index.php?g=oilcard&m=Integral&a=createAddMoneyOrder',
+					dataType:'json',
+					data:{openid:openid,card_no:card_num,money:b},
+					async:false,
+					success:function(real){
+						reslist=real;
+					}
+				})
+				return reslist;
+			}
+			let reslist=zhifu();
+			console.log(reslist);
+			if(reslist.status==500){
+				alert(reslist.msg);
+				return false;
+			}
+			let ret=reslist.data;
+			var ret0 = eval(ret);
+			console.log(ret0);
+			
+			function pay(){
+				var mon={};
+				$.ajax({
+					type:'post',
+					url:'http://ysy.edshui.com/index.php?g=oilcard&m=wechat&a=jsConfig',
+					dataType:'json',
+					data:{openid:openid},
+					async:false,
+					success:function(rel){
+						mon=rel;
+					}
+				})
+				return mon;
+			}
+			let mon=pay();
+			let xinxi=mon.data;
+			var sendParm = eval(xinxi);
+			wx.config({
+				debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId:xinxi.appId, // 必填，公众号的唯一标识
+				timestamp:xinxi.timestamp, // 必填，生成签名的时间戳
+				nonceStr:xinxi.nonceStr, // 必填，生成签名的随机串
+				signature:xinxi.signature,// 必填，签名，见附录1
+				jsApiList:['chooseWXPay']// 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+				});
+			wx.ready(function(){
+			    wx.chooseWXPay({
+					timestamp: ret0.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+					nonceStr:ret0.nonceStr, // 支付签名随机串，不长于 32 位
+					package:ret0.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+					signType:ret0.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+					paySign:ret0.paySign, // 支付签名
+					success: function (res) {
+						window.location.href='http://ysy.edshui.com/H/html/homepage1.html';
+					}		
+				});
+			});
+			wx.error(function(res){
+				console.log(res)
+			});
+
+		})
+
+		function zhekou(num){
+			$('.select').html(`
+					<div class="select_tab">
+					<div class="price_number">￥<span>200</span></div>
+					<div class="details">
+						<span>支付￥${200 * num}</span>
+						<span>节省￥${200 * (1-num)}</span>
+					</div>
+				</div>
+				<div class="select_tab">
+					<div class="price_number">￥<span>500</span></div>
+					<div class="details">
+						<span>支付￥${500 * num}</span>
+						<span>节省￥${500 * (1-num)}</span>
+					</div>
+				</div>
+				<div class="select_tab">
+					<div class="price_number">￥<span>1000</span></div>
+					<div class="details">
+						<span>支付￥${1000 * num}</span>
+						<span>节省￥${1000 * (1-num)}</span>
+					</div>
+				</div>
+				<div class="select_tab">
+					<div class="price_number">￥<span>2000</span></div>
+					<div class="details">
+						<span>支付￥${2000 * num}</span>
+						<span>节省￥${2000 * (1-num)}</span>
+					</div>
+				</div>
+				<div class="select_tab">
+					<div class="price_number">￥<span>5000</span></div>
+					<div class="details">
+						<span>支付￥${5000 * num}</span>
+						<span>节省￥${5000 * (1-num)}</span>
+					</div>
+				</div>
+				<div class="select_tab">
+					<div class="price_number">￥<span>10000</span></div>
+					<div class="details">
+						<span>支付￥${10000 * num}</span>
+						<span>节省￥${10000 * (1-num)}</span>
+					</div>
+				</div>
+				`)
+		}
+	</script>
+</body>
+</html>

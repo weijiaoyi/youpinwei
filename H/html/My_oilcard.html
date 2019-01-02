@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<title>充值</title>
+	<link rel="stylesheet" href="../css/My_oilcard.css">
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script> 
+
+	<script>
+    	var eMeta=document.createElement('meta');
+	      eMeta.setAttribute("name","viewport");
+	      eMeta.setAttribute("content",'initial-scale='+1/window.devicePixelRatio+'')
+	      document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	      window.addEventListener("resize",function(){
+	        document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	    })
+	</script>
+</head>
+<body>
+	<div class="homepage">
+		<div class="zhezhao"></div>
+		<div class="success">
+			<p class="gongxi">请输入待绑定的16位加油卡号</p>
+			<input type="text" class="haoma">
+			<span class="know">添加并且绑定</span>
+		</div>
+		<div class="card">
+			
+		</div>
+		<div class="add">添加新油卡</div>
+		<div class="footer">
+				<div class="footer_tab">
+					<a href="homepage.html">
+						<span class="footer_tab_img"></span>
+						<p>油卡服务</p>
+					</a>
+				</div>
+			
+			<div class="footer_tab">
+				<a href="#">
+					<span class="footer_tab_img"></span>
+					<p>充值记录</p>
+				</a>
+			</div>
+				<div class="footer_tab">
+					<a href="#">
+					<span class="footer_tab_img"></span>
+					<p>常见问题</p>
+					</a>
+			</div>
+
+		</div>
+	</div>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script>	
+		var localStorage=window.localStorage;
+		localStorage.getItem('openid');
+		let openid=localStorage.openid;
+		$('.add').click(function(){
+			$('.zhezhao').show();
+			$('.success').show()
+		})
+		function ajaxFun(){
+			var list={};
+			$.ajax({
+				type:'post',
+				url:'http://ysy.edshui.com/index.php?g=oilcard&m=card&a=cardList',
+				dataType:'json',
+				data:{openid:openid},
+				async:false,
+				success:function(res){
+					list=res;
+					console.log(res);
+				}
+			})
+			return list;
+		}
+		let infomation=ajaxFun();
+		var card_no1=infomation.msg[0].card_no;
+		localStorage.setItem('card_no',card_no1);
+		$("#card").change(function(){
+		    var card_no1=$(this).val();
+		    localStorage.setItem('card_no',card_no1);
+		});
+		infomation.msg.forEach(function(item,index){
+			console.log(item.discount);
+		})
+		infomation.msg.forEach(function(item,index){
+			if(item.discount==95){
+				$('.card').get(0).innerHTML+=`
+				<div class="card_add">
+					<div class="logo"></div>
+					<div class="name">
+								中国石油 <span class="zhe">95折</span>
+					</div>
+					<input type="text"  class="note" value="${item.card_note}">
+					<div class="kahao">
+						<span>${item.card_no.substring(0,4)}</span>
+						<span>${item.card_no.substring(4,8)}</span>
+						<span>${item.card_no.substring(8,12)}</span>
+						<span>${item.card_no.substring(12,16)}</span>
+					</div>
+					<div class="sheng">
+						<img src="../img/zhe.png">
+						升级为93折卡
+					</div>
+				</div>
+			`
+			}else if(item.discount==93){
+				$('.card').get(0).innerHTML+=`
+					<div class="card_add">
+						<div class="logo"></div>
+						<div class="name">
+									中国石油 <span class="zhe">93折</span>
+						</div>
+						<input type="text"  class="note" value="${item.card_note}">
+						<div class="kahao">
+							<span>${item.card_no.substring(0,4)}</span>
+							<span>${item.card_no.substring(4,8)}</span>
+							<span>${item.card_no.substring(8,12)}</span>
+							<span>${item.card_no.substring(12,16)}</span>
+						</div>
+					</div>
+				`
+			}	
+		})
+		
+		$(".note").change(function(){
+			var span1=$(this).parent().children().eq(3).children().eq(0).html();
+			var span2=$(this).parent().children().eq(3).children().eq(1).html();
+			var span3=$(this).parent().children().eq(3).children().eq(2).html();
+			var span4=$(this).parent().children().eq(3).children().eq(3).html();
+			let card_no=span1+span2+span3+span4;
+			var note=$(this).val();
+			console.log(note);
+			function beizhu(){
+				var info={};
+				$.ajax({
+					type:'post',
+					url:'http://ysy.edshui.com/index.php?g=oilcard&m=card&a=cardNote',
+					dataType:'json',
+					data:{openid:openid,note:note,card_no:card_no},
+					async:false,
+					success:function(rel){
+						info=rel;
+					}
+			})
+			return info;
+		}
+		let info=beizhu();
+		console.log(info);
+		alert(info.msg);
+		});
+		$('.know').click(function(){
+			var kahao=$('.haoma').val();
+			console.log(kahao);
+				if((/^\s*$/g.test(kahao))){ 
+				    alert("卡号不能为空");  
+				    return false; 
+				}else{
+					if(!(/^\d{16}$/.test(kahao))){ 
+			        	alert("请输入正确待绑定的16位加油卡号");  
+				        return false; 
+							}else{
+							function haoma(){
+								var info={};
+								$.ajax({
+									type:'post',
+									url:'http://ysy.edshui.com/index.php?g=oilcard&m=card&a=bindCard',
+									dataType:'json',
+									data:{openid:openid,card_no:kahao},
+									async:false,
+									success:function(rel){
+										info=rel;
+									}
+								})
+								return info;
+							}
+							let info=haoma();
+							console.log(info);
+							alert(info.msg);
+					    }   
+
+				    }
+				    
+		})
+
+		$('.sheng').click(function(){
+			var span01=$(this).parent().children().eq(3).children().eq(0).html();
+			var span02=$(this).parent().children().eq(3).children().eq(1).html();
+			var span03=$(this).parent().children().eq(3).children().eq(2).html();
+			var span04=$(this).parent().children().eq(3).children().eq(3).html();
+			var card_no1=span01+span02+span03+span04;
+			console.log(card_no1);
+			function ajaxFun01(){
+			var list01={};
+				$.ajax({
+					type:'post',
+					url:'http://ysy.edshui.com/index.php?g=oilcard&m=wechat&a=upgradePay',
+					dataType:'json',
+					data:{openid:openid,card_no:card_no1,money:30},
+					async:false,
+					success:function(res){
+						list01=res;
+					}
+				})
+				return list01;
+			}
+
+			let con=ajaxFun01().msg;
+			var ret0 = eval(con);
+			function pay(){
+				var mon={};
+				$.ajax({
+					type:'post',
+					url:'http://ysy.edshui.com/index.php?g=oilcard&m=wechat&a=jsConfig',
+					dataType:'json',
+					data:{openid:openid},
+					async:false,
+					success:function(rel){
+						mon=rel;
+					}
+				})
+				return mon;
+			}
+			let mon=pay();
+			let xinxi=mon.data;
+			var sendParm = eval(xinxi);
+			wx.config({
+				debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId:xinxi.appId, // 必填，公众号的唯一标识
+				timestamp:xinxi.timestamp, // 必填，生成签名的时间戳
+				nonceStr:xinxi.nonceStr, // 必填，生成签名的随机串
+				signature:xinxi.signature,// 必填，签名，见附录1
+				jsApiList:['chooseWXPay']// 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+				});
+			wx.config({
+				debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId:xinxi.appId, // 必填，公众号的唯一标识
+				timestamp:xinxi.timestamp, // 必填，生成签名的时间戳
+				nonceStr:xinxi.nonceStr, // 必填，生成签名的随机串
+				signature:xinxi.signature,// 必填，签名，见附录1
+				jsApiList:['chooseWXPay']// 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+				});
+			wx.ready(function(){
+			    wx.chooseWXPay({
+					timestamp: ret0.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+					nonceStr:ret0.nonceStr, // 支付签名随机串，不长于 32 位
+					package:ret0.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+					signType:ret0.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+					paySign:ret0.paySign, // 支付签名
+					success: function (res) {
+						window.location.href='http://ysy.edshui.com/H/html/homepage1.html';
+					}		
+				});
+			});
+			wx.error(function(res){
+				console.log(res)
+			});
+			
+		})
+		$('.zhezhao').click(function(){
+			$('.zhezhao').hide();
+			$('.success').hide()
+		})
+	</script>
+</body>
+</html>

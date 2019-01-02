@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<title>银牌代理中心</title>
+	<link rel="stylesheet" href="../css/agent.css">
+	<script>
+    	var eMeta=document.createElement('meta');
+	      eMeta.setAttribute("name","viewport");
+	      eMeta.setAttribute("content",'initial-scale='+1/window.devicePixelRatio+'')
+	      document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	      window.addEventListener("resize",function(){
+	        document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	    })
+	</script>
+</head>
+<body>
+	<div class="agent">
+		<div class="agent_top">
+			
+		</div>
+		<div class="line"></div>
+		<div class="reward_tab">
+			<div class="select_top">
+				<div class="select_top_tab select_top_tab_show">银牌拉新奖励</div>
+				<div class="select_top_tab">会员充值奖励</div>
+			</div>
+			<div class="select_show">
+				<div class="select_show_tab select_show_tab_show"></div>
+				<div class="select_show_tab"><span></span></div>
+			</div>
+			<!-- <div class="select_con"> -->
+			<!-- </div> -->
+			<div class="select_bottom">
+				<div class="select_bottom_tab select_bottom_tab_show">
+					<ul class="ul1">
+						<!-- <li>
+							<span class="time">2018-11-12</span>
+							<span class="name">皓月当空</span>
+							<span class="add">+40元</span>
+						</li> -->
+					</ul>
+				</div>
+				<div class="select_bottom_tab">
+					<ul class="ul2">
+						<!-- <li>
+							<span class="time">2018-11-12</span>
+							<span class="name">皓月当空</span>
+							<span class="add">+40元</span>
+							<span class="chong">充值5000元</span>
+						</li> -->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>	
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script>
+		var localStorage=window.localStorage;
+		let openid=localStorage.openid;
+		$(function(){ 
+		  //tab切换
+		  $('.select_top_tab').click(function(){
+		  	var index=$(this).index();
+		  	$(this).addClass('select_top_tab_show').siblings().removeClass('select_top_tab_show');
+		  	$('.select_con_tab').eq(index).show().siblings().hide();
+		  	$('.select_show_tab').eq(index).addClass('select_show_tab_show').siblings().removeClass('select_show_tab_show');
+		  	$('.select_circle_tab').eq(index).addClass('select_circle_tab_show').siblings().removeClass('select_circle_tab_show');
+		  	$('.select_bottom_tab').eq(index).show().siblings().hide();
+
+		  })
+		}) 
+		function ajaxFun(url,data){
+			var list={};
+				$.ajax({
+				type:'post',
+				url:url,
+				dataType:'json',
+				data:data,
+				async:false,
+				success:function(res){
+					list=res;
+				}
+			})
+			return list;
+		}		
+		let infomation=ajaxFun('http://ysy.edshui.com/index.php?g=oilcard&m=agent&a=agentEarnings',{openid:openid});
+		console.log(infomation);
+		if(infomation.status==500){
+			alert(infomation.msg);
+			
+		}
+	
+		$('.agent_top').html(`
+			<div class="agent_top_con">
+				<div class="agent_img"><img src="${infomation.data.user_img}"/></div>
+				<div class="agent_name">${infomation.data.nickname}</div>
+				<div class="agent_level">${infomation.data.agent_lv}</div>
+				<div class="agent_level_right">级别:${infomation.data.agent_lv}</div>
+				<div class="reward">当前奖励：￥<b>${infomation.data.currt_earnings}</b>元</div>
+			</div>
+		`)
+		// $('.select_con').html(`
+		// 	<div class="select_con_tab select_con_tab_show">累积拉新银牌代理人${infomation.data.new_count}位,奖励总计+${infomation.data.new_earnings}元</div>
+		// 	<div class="select_con_tab">会员充值累积${infomation.data.add_total}元，奖励总计<b>+${infomation.data.total_earnings}元</b></div>
+		// `)
+		let data=infomation.data.add_list;
+		console.log(data);
+		data.forEach(function(item,index){
+			$('.ul2').get(0).innerHTML+=`
+				<li>
+					<span class="time">${data[index].time}</span>
+					<span class="name">${data[index].nickname}</span>
+					<span class="chong">充值${data[index].add_money}元</span>
+					<span class="add">+${data[index].earn_money}元</span>
+				</li>
+			`
+		})
+		let data1=infomation.data.new_list[0];
+		console.log(data1);
+		data1.forEach(function(item,index){
+			$('.ul1').get(0).innerHTML+=`
+				<li>
+					<span class="time">${data1[index].time}</span>
+					<span class="name">${data1[index].nickname}</span>
+					<span class="add">+${data1[index].money}元</span>
+				</li>
+			`
+		})
+	</script>
+</body>
+</html>

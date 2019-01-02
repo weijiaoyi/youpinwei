@@ -1,0 +1,264 @@
+*{
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+span{
+	display: block;
+}
+a{
+	text-decoration:none;
+	color:#000;
+}
+b{
+	font-weight:normal;
+}
+.homepage{
+	width:7.5rem;
+	height:100%;
+}
+.footer{
+	position:fixed;
+	bottom:0;
+	left:0;
+	width: 7.5rem;
+	height: 0.98rem;
+	border-top: 0.02rem solid #E7E7E7;
+	display: flex;
+	justify-content: center;
+}
+.top{
+	width:7.5rem;
+	height:1.5rem;
+	float:left;
+}
+.footer_tab a{
+	width: 2.5rem;
+	height: 0.98rem;
+	background: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+.footer_tab:nth-child(1) .active.footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab01_icon.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(1) .footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab01.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(2) .active.footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab02_icon.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(2) .footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab02.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(3) .active.footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab03_icon.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(3) .footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab03.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab p{
+	margin-top:0.04rem;
+	font-size:0.24rem;
+}
+.top{
+	float:left;
+	width:7.5rem;
+	height:1.3rem;
+	background:black;
+}
+.shuoming{
+	position:fixed;
+	left:0.34rem;
+	bottom:1.9rem;
+	width:6.84rem;
+	height:2.6rem;
+	border:0.01rem solid #fb4f3b;
+	font-size:0.3rem;
+	color: #999999;
+	text-align:center;
+	line-height:2.6rem;
+}
+.zhezhao{
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	overflow:hidden;
+	display:none;
+	z-index:2;
+}
+.success{
+	position: fixed;
+    top: 3.94rem;
+    left: 0.98rem;
+    width: 5.56rem;
+    height: 3.34rem;
+    background: white;
+    display: none;
+    z-index: 3;
+}
+.success .gongxi{
+	float:left;
+	margin-top:0.56rem;
+	width:100%;
+	height:0.4rem;
+	font-size: 0.3rem;
+	text-align:center;
+}
+.haoma{
+	margin-top:0.3rem;
+	float:left;
+	width:4rem;
+	height:0.6rem;
+	font-size: 0.3rem;
+	color:#404040;
+	margin-left:0.8rem;
+	box-shadow:0.01rem 0.01rem 0.2rem rgba(253,192,3,0.32) inset;
+	border:none;
+	outline:none;
+	border-radius:0.05rem;
+	padding-left:0.2rem;
+}
+.know{
+	float:left;
+	margin-left:0.4rem;
+	margin-top:0.46rem;
+	width: 4.76rem;
+	height: 0.7rem;
+	background:#F2BC38;
+	box-shadow:0.01rem 0.01rem 0.2rem rgba(253,192,3,0.32);
+	background-size:4.76rem 0.94rem;
+	font-size:0.3rem;
+	color:#fff;
+	text-align:center;
+	line-height: 0.7rem;
+	border-radius:1rem;
+}
+.card{
+	float:left;
+	width:100%;
+	height:100%;
+	margin-bottom:2.2rem;
+}
+.card_add{
+	position:relative;
+	margin-left:0.38rem;
+	margin-top:0.22rem;
+	margin-bottom:0.6rem;
+	width:6.85rem;
+	height:2.73rem;
+	background:url(../img/oilcard.png);
+	background-size:6.85rem 2.73rem;
+}
+.logo{
+	width:0.72rem;
+	height:0.72rem;
+	position:absolute;
+	top:0.5rem;
+	left: 0.44rem;
+	background:url(../img/logo.png);
+	background-size:0.72rem 0.72rem;
+}
+.name{
+	/*width:1.6rem;*/
+	height:0.34rem;
+	position:absolute;
+	top: 0.52rem;
+	left:1.4rem;
+	font-size:0.36rem;
+	color:#fff;
+	display: flex;
+	align-items: center;
+}
+.note{
+	width:2.38rem;
+	font-size:0.24rem;
+	color:#fff;
+	position:absolute;
+	left:1.4rem;
+	top:1rem;
+	background: transparent;
+	outline: none;
+	border: none;
+	line-height: 1em;
+}
+.kahao{
+	width:4.6rem;
+	height:0.3rem;
+	font-size:0.36rem;
+	position:absolute;
+	top:1.7rem;
+	left:1.26rem;
+	color:white;
+	display:flex;
+	justify-content:space-between;
+}
+.add{
+	width:6.84rem;
+	height:0.8rem;
+	background:#fb4f3b;
+	color:white;
+	font-size:0.3rem;
+	position:fixed;
+	bottom:1.2rem;
+	left:0.34rem;
+	border-radius:1rem;
+	text-align:center;
+	line-height:0.8rem;
+}
+
+
+/* ÐÞ¸Ä*/
+.card_add .zhe{
+	font-size:0.3rem;
+font-family:PingFang-SC-Bold;
+font-weight:bold;
+color:rgba(255,222,0,1);
+margin-left: 0.3rem;
+}
+.sheng{
+position: absolute;
+width:2.06rem;
+height:0.46rem;
+background:rgba(255,255,255,1);
+opacity:0.8;
+border-radius:0.23rem 0px 0px 0.23rem;
+top: 0.44rem;
+right: 0;
+display: flex;
+align-items: center;
+font-size:0.24rem;
+font-family:PingFang-SC-Bold;
+font-weight:bold;
+color:rgba(251,79,59,1);
+}
+.sheng img{
+	height: 0.28rem;
+	width: 0.28rem;
+	align-items: center;
+	margin-left: 0.13rem;
+	margin-right: 0.1rem;
+}

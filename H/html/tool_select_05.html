@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport" />
+	<title>订单</title>
+	<link rel="stylesheet" href="../css/tool_select_05.css">
+	<script>
+    	var eMeta=document.createElement('meta');
+	      eMeta.setAttribute("name","viewport");
+	      eMeta.setAttribute("content",'initial-scale='+1/window.devicePixelRatio+'')
+	      document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	      window.addEventListener("resize",function(){
+	        document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	    })
+	</script>
+</head>
+<body>
+	<div class="homepage">
+		<div class="container" data_page="">
+			<ul>
+				
+			</ul>
+		</div>
+
+		<div class="footer">
+			<div class="footer_tab">
+				<a href="homepage.html">
+					<span class="footer_tab_img"></span>
+					<p>油卡服务</p>
+				</a>
+
+				</div>
+			<div class="footer_tab">
+				<a href="homepage1.html">
+					<span class="footer_tab_img"></span>
+					<p class="orange">充值记录</p>
+				</a>
+			</div>
+			<div class="footer_tab">
+				<a href="homepage2.html">
+					<span class="footer_tab_img"></span>
+					<p>常见问题</p>
+				</a>
+			</div>
+		</div>
+	</div>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	
+	<script>
+		var localStorage=window.localStorage;
+		localStorage.getItem('openid');
+		let openid=localStorage.openid;
+		function ajaxFun(){
+			var list={};
+			$.ajax({
+				type:'post',
+				url:'http://ysy.edshui.com/index.php?g=oilcard&m=order&a=orderList',
+				dataType:'json',
+				data:{openid:openid,flage:1,p:1},
+				async:false,
+				success:function(res){
+					list=res;
+				}
+			})
+			return list;
+		}		
+		let infomation=ajaxFun();
+		console.log(infomation);
+		let data=infomation.data.orderdata;
+		console.log(data);
+	</script>
+	<script>
+		data.forEach(function(item,index){
+			if(data[index].order_type==3){
+				$('.container ul').get(0).innerHTML+=`
+				<li class="con_content">
+					<div class="con_content_top">
+						<div class="con_content_top_1">
+							<span class="danhao">${data[index].serial_number}</span>
+							<span class="time">${data[index].createtime}</span>
+						</div>
+					</div>
+					<div class="con_content_con">
+						<span class="${data[index].order_flag}"></span>
+						<span class="chong">充值额:</span>
+						<span class="num">¥${data[index].money}</span></br>
+						<span class="pay">支付:</span>
+						<span class="number">￥${data[index].real_pay}</span>
+						<span class="sheng">节省:</span>
+						<span class="qian">￥${data[index].discount_money}</span>
+					</div>
+					<div class="con_content_bottom">
+						卡号：${data[index].card_no}
+					</div>
+				</li>
+			`
+			}else if(data[index].order_type==2){
+				$('.container ul').get(0).innerHTML+=`
+					<li class="con_content">
+						<div class="con_content_top">
+							<div class="con_content_top_1">
+								<span class="danhao">SN123456789</span>
+								<span class="time">${data[index].createtime}</span>
+							</div>
+						</div>
+						<div class="con_content_con">
+							<span class="${data[index].order_flag}"></span>
+							<span class="bangsuc">绑定成功</span>
+						</div>
+						<div class="con_content_bottom">
+							卡号：${data[index].card_no}
+						</div>
+					</li>
+				`
+			}else if(data[index].order_type==1){
+				$('.container ul').get(0).innerHTML+=`
+					<li class="con_content">
+						<a href="tool_select_01_details.html?card_no=${data[index].card_no}">
+							<div class="con_content_top">
+								<div class="con_content_top_1">
+									<span class="danhao">SN123456789</span>
+									<span class="time">${data[index].createtime}</span>
+								</div>
+							</div>
+							<div class="con_content_con">
+								<span class="${data[index].order_flag}"></span>
+								<span class="bangsuc">申领成功</span>
+							</div>
+							<div class="con_content_bottom">
+								卡号：${data[index].card_no}
+							</div>
+						</a>
+					</li>
+				`
+			}
+			
+		})
+		$('.container').attr('data_page',1);
+		window.onscroll = function () {
+            var scrollT = document.documentElement.scrollTop || document.body.scrollTop; //滚动条的垂直偏移
+            var scrollH = document.documentElement.scrollHeight || document.body.scrollHeight; //元素的整体高度
+            var clientH = document.documentElement.clientHeight || document.body.clientHeight; //元素的可见高度
+            if (scrollT == scrollH - clientH){
+				function page(){
+					var list={};
+					$.ajax({
+						type:'post',
+						url:'http://ysy.edshui.com/index.php?g=oilcard&m=order&a=orderList',
+						dataType:'json',
+						data:{openid:openid,p:page_index},
+						async:false,
+						success:function(res){
+							list=res;
+							$('.container').attr('data_page',page_index+1)
+						}
+					})
+					return list;
+				}
+				var page_index = parseInt($('.container').attr('data_page'));
+				var pages=page();
+                let page_num=page().order_data;
+				if(pages.count<page_index){
+					console.log('加载完成')
+					return false;        	
+	        	}
+	        	if(page_num){
+					$('.container ul').append(page_num.forEach(function(item,index){
+
+					if(page_num[index].order_type==3){
+						$('.container ul').get(0).innerHTML+=`
+							<li class="con_content">
+										<div class="con_content_top">
+											<div class="con_content_top_1">
+												<span class="danhao">${page_num[index].serial_number}</span>
+												<span class="time">${page_num[index].createtime}</span>
+											</div>
+										</div>
+										<div class="con_content_con">
+											<span class="${page_num[index].order_flag}"></span>
+											<span class="chong">充值额:</span>
+											<span class="num">¥${page_num[index].money}</span></br>
+											<span class="pay">支付:</span>
+											<span class="number">￥${page_num[index].real_pay}</span>
+											<span class="sheng">节省:</span>
+											<span class="qian">￥${page_num[index].discount_money}</span>
+										</div>
+										<div class="con_content_bottom">
+											卡号：${page_num[index].card_no}
+										</div>
+									</li>
+								`
+								}else if(page_num[index].order_type==2){
+									$('.container ul').get(0).innerHTML+=`
+										<li class="con_content">
+											<div class="con_content_top">
+												<div class="con_content_top_1">
+													<span class="danhao">SN123456789</span>
+													<span class="time">${page_num[index].createtime}</span>
+												</div>
+											</div>
+											<div class="con_content_con">
+												<span class="${page_num[index].order_flag}"></span>
+												<span class="bangsuc">绑定成功</span>
+											</div>
+											<div class="con_content_bottom">
+												卡号：${page_num[index].card_no}
+											</div>
+										</li>
+									`
+								}else if(page_num[index].order_type==1){
+									$('.container ul').get(0).innerHTML+=`
+										<li class="con_content">
+											<a href="tool_select_01_details.html?card_no=${data[index].card_no}">
+												<div class="con_content_top">
+													<div class="con_content_top_1">
+														<span class="danhao">SN123456789</span>
+														<span class="time">${page_num[index].createtime}</span>
+													</div>
+												</div>
+												<div class="con_content_con">
+													<span class="${page_num[index].order_flag}"></span>
+													<span class="bangsuc">申领成功</span>
+												</div>
+												<div class="con_content_bottom">
+													卡号：${page_num[index].card_no}
+												</div>
+											</a>
+										</li>
+									`
+						}
+				})
+				)
+	        	}
+
+        	}
+
+        }
+	</script>
+</body>
+</html>
