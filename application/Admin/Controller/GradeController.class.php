@@ -113,6 +113,8 @@ class GradeController extends AdminbaseController
             -> where($where)
             -> count();
 
+
+
         $Page = new \Think\Page($count,$pageNum);
         $show = $Page -> show();
         $this -> assign( 'status' , $status );
