@@ -340,92 +340,42 @@ class IntegralController extends CommentoilcardController
         $CardInfo = M('oil_card')->where(['card_no'=>$OrderAdd['card_no']])->find();
         $config = M('setting')->find();
         //更改充值记录信息状态  //更改支付状态
-         
+        $OrderAdd['updatetime'] = $NowTime ;
+        $OrderAdd['order_status']=2;
+        $OrderAdd['pay_sn']='折扣抵消,直接充值';
+        
+        
 
-        $OrderInsert = [
-            'user_id'        => $Member['id'],
-            'card_no'        => $card_no,
-            'order_type'     => 3,
-            'serial_number'  => $orderSn,
-            'order_status'   => 2,
-            'real_pay'       => $pay_money,
-            'recharge_money' => $money,
-            'createtime'     => $NowTime,
-            'updatetime'     => $NowTime,
-            'card_from'      => $CardInfo['agent_id']==0?1:2,
-            'agent_id'       => empty($CardInfo['agent_id'])?$CardInfo['agent_id']:0,
-            'parentid'       => $Member['parentid'],
-            'coupon_money'   => $jyj,
-            'discount_money' => $zk,
-        ];
-        //判断当前油卡额度
-        $BeforRechage =$CardInfo['preferential'];
-        $AfterRechage = $CardInfo['preferential'] - $money;
-        if ($BeforRechage < 1 || $AfterRechage <0) {
-            $OrderAdd['pid'] = 1;
-        }else{
-            $OrderAdd['pid'] = $CardInfo['pkgid'];
-        }
-        $RechageCount = M('add_money')->where(['card_no'=>$card_no,'openid'=>$openid])->count();
-        $is_first =2;
-        if ($RechageCount < 1) { // 是否是首充
-            if ($money < $config['first_rechage']) $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
-            $is_first = 1;
-        }
-        $AddMoneySave = [
-            'user_id'        => $Member['id'],
-            'openid'         => $openid,
-            'card_no'        => $card_no,
-            'money'          => $money,
-            'discount_money' => $save,
-            'real_pay'       => $pay_money,
-            'pay_way'        => 1,
-            'note'           => $RechageCount ==1?'用户对此油卡的首次充值':'油卡额度充值',
-            'status'         => 2,
-            'createtime'     => $NowTime,
-            'order_no'       => $orderSn,
-            'agent_id'       => $Member['agentid'],
-            'is_first'       => $is_first,
-        ];
+        $AddMoneySave['status'] = 1;
+        $AddMoneySave['updatetime'] = $NowTime;
 
+        
 
-        $AddMoneyAdd =[
-            'status' => 1,
-            'updatetime' => $NowTime
-        ];
-        $NOrderAdd = [
-            'order_status'=> 2,
-        ];
         //更改油卡信息状态
         $OilCardSave =[
-            'preferential' =>$CardInfo['preferential'] - $order_item['money'],
-            'card_total_add_money' => intval($CardInfo['card_total_add_money'] + $order_item['money'])
+            'preferential' =>$CardInfo['preferential'] - $AddMoneySave['money'],
+            'card_total_add_money' => intval($CardInfo['card_total_add_money'] + $AddMoneySave['money'])
         ];
-        if ($order_item['is_first']==1) {
+        if ($AddMoneySave['is_first']==1) {
             $OilCardSave['activate'] =2;
         }
-        //更改订单支付状态
-        $OrderSave = [
-            
-        ];
-        
         //用户信息变动记录
         $MemberSave =[
             //积分 1：1
-            'integral' => intval($Member['integral'] + $order_item['real_pay']),
+            'integral' => intval($Member['integral'] + $AddMoneySave['real_pay']),
             //总共给用户省下来的钱
-            'already_save_money' => intval($Member['already_save_money'] + $order_item['discount_money']),
+            'already_save_money' => intval($Member['already_save_money'] + $AddMoneySave['discount_money']),
             //总共充值的油卡额度 
-            'total_add_money' => intval($Member['total_add_money'] + $order_item['money']),
+            'total_add_money' => intval($Member['total_add_money'] + $AddMoneySave['money']),
             //用户真实充值的钱
-            'total_real_add_money' =>$Member['total_real_add_money'] + $order_item['real_pay'],
+            'total_real_add_money' =>$Member['total_real_add_money'] + $AddMoneySave['real_pay'],
         ];
         //积分变动记录
         $IntegralAdd = [
             'user_id' => $Member['id'],
             'change' => 1,
             'chang_way' => '充值',
-            'change_value' => $order_item['real_pay'],
+            'change_value' => $AddMoneySave['real_pay'],
             'createtime' => $NowTime,
             'updatetime' => $NowTime,
             'change_from'=> json_encode(['from'=>'OrderRechage','OrderSn'=>$OrderSn])
@@ -434,8 +384,8 @@ class IntegralController extends CommentoilcardController
         $AgentSave =[];
         $MemberAgentSave = [];
         //如果用户使用加油卷  --  则 减少加油卷数量 
-        if (!empty($OrderInfo['coupon_money']) && $OrderInfo['coupon_money'] >0) {
-            $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderInfo['coupon_money'];
+        if (!empty($OrderAdd['coupon_money']) && $OrderAdd['coupon_money'] >0) {
+            $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderAdd['coupon_money'];
         }
 
         //是否存在上级代理 
@@ -449,7 +399,7 @@ class IntegralController extends CommentoilcardController
             // vip_indirect_scale  VIP间接会员充值分成
             // user_indirect_scale 普通间接会员充值分成
             //用户充值的金额 ，使用真实面额
-            $RechageMoney = $order_item['money'];
+            $RechageMoney = $AddMoneySave['money'];
             //判断是直属下级还是间接下级身份
             switch ($Member['agent_relation']) {
                 case '1': //直接下级
@@ -488,14 +438,14 @@ class IntegralController extends CommentoilcardController
             }
 
             //代理返利记录
-            $EarningsAdd['openid']       = $openId;
+            $EarningsAdd['openid']       = $openid;
             $EarningsAdd['agent_id']     = $Member['agentid'];
             $EarningsAdd['createtime']   = $NowTime;
             $EarningsAdd['order_type']   = 1;
             $EarningsAdd['earning_body'] = $earning_body;
             $EarningsAdd['earnings']     = $rewardMoney;
             $EarningsAdd['updatetime']   = $NowTime;
-            $EarningsAdd['order_id']     = $OrderInfo['id'];
+            $EarningsAdd['order_id']     = $OrderAdd['id'];
             $EarningsAdd['sn']           = $OrderSn;
 
             //总收益
@@ -509,16 +459,16 @@ class IntegralController extends CommentoilcardController
         $Things = M();
         $Things->startTrans();
         try{
-            //用户充值记录信息状态修改
-            $AddMoneySave = M('add_money')->where(['id'=>$order_item['id']])->save($AddMoneySave);
+            //用户充值记录信息增加
+            $AddMoneySave = M('add_money')->add($AddMoneySave);
             //油卡信息状态修改
             $OilCardSave = M('oil_card')->where(['id'=>$CardInfo['id']])->save($OilCardSave);
-            //订单状态修改
-            $OrderSave = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
+            //订单增加
+            $OrderAdd = M('order_record')->add($OrderAdd);
             //用户信息修改
-            $MemberSave = M('user')->where(['openid'=>$openId])->save($MemberSave);
+            $MemberSave = M('user')->where(['openid'=>$openid])->save($MemberSave);
             //用户信息修改
-            if($MemberAgentSave)$MemberAgentSave = M('Agent')->where(['openid'=>$openId])->save($MemberAgentSave);
+            if($MemberAgentSave)$MemberAgentSave = M('Agent')->where(['openid'=>$openid])->save($MemberAgentSave);
             //用户积分变动修改                    
             $IntegralAdd = M('IntegralRecord')->add($IntegralAdd);
             //代理收益记录
@@ -526,22 +476,20 @@ class IntegralController extends CommentoilcardController
             //代理信息修改
             if($AgentSave)$AgentSave = M('Agent')->where(['id'=>$Agent['id']])->save($AgentSave);
 
-            if ($AddMoneySave && $OilCardSave && $OrderSave && $MemberSave && $IntegralAdd) {
+            if ($AddMoneySave && $OilCardSave && $OrderAdd && $MemberSave && $IntegralAdd) {
                 $Things->commit();
+                $IsOver = true;
             }else{
                 $Things->rollback();
+                $IsOver = false;
             }
         } catch (\Exception $e){
             $Things->rollback();
+            $IsOver = false;
             Log::write('['.$e->getCode().'] '.$e->getMessage(), 'ERR');
-            exit();
         }
-            //为用户减少加油卷  - 如果用户使用的话
-            ///
         
-        
-
-
+        return $IsOver;
     }
 
 }
