@@ -46,11 +46,20 @@ class UserController extends CommentoilcardController
                         'agent_relation'=>1//直接关系
                     );
                 }else{
-                    $parent_data=array(
-                        'parentid'=>$parent['id'],//邀请人ID
-                        'agentid'=>$parent['agentid'],//邀请人代理商ID
-                        'agent_relation'=>2//间接关系
-                    );
+                    if(empty($parent['agentid'])){
+                        $parent_data=array(
+                            'parentid'=>$parent['id'],//邀请人ID
+                            'agentid'=>$parent['agentid'],//邀请人代理商ID
+                            'agent_relation'=>3//关系
+                        );
+                    }else{
+                        $parent_data=array(
+                            'parentid'=>$parent['id'],//邀请人ID
+                            'agentid'=>$parent['agentid'],//邀请人代理商ID
+                            'agent_relation'=>2//间接关系
+                        );
+                    }
+
                 }
 
                 M('user')->where("openid='$openid'")->save($parent_data);
