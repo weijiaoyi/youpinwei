@@ -342,7 +342,6 @@ $(function(){
 //立即发货
 $(document).on('click','.delivers',function(){
     var order_id = $(this).attr('data-id');
-    alert(order_id);
     $.ajax({
         type:"post",//规定传输方式
         url:"{:U('Deliver/C_deliverdetail')}",//提交URL
