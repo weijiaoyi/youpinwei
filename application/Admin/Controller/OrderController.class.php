@@ -70,12 +70,13 @@ class OrderController extends AdminbaseController{
         }
         $order_info=$OrderRecordModel
             ->alias('o')
-            ->join('add_money a ON a.user_id=o.user_id',LEFT)
+            ->join('add_money a ON a.order_no=o.serial_number',LEFT)
             ->join('user u ON u.id=o.user_id',LEFT)
-            ->field('o.id,o.user_id,o.serial_number,a.*,u.nickname,u.user_img')
+            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,a.*,u.nickname,u.user_img')
             ->where($where)
             -> page($p,'10')
             ->select();
+//        echo '<pre>';var_dump($order_info);exit;
        /* $order_info = $OrderRecordModel
             -> where( 'order_type = 3 ' )
             -> page($p,'10')
