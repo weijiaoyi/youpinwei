@@ -693,8 +693,7 @@ class WechatController extends CommentoilcardController
         if($cur_sign === $sign) {                                                   
             //获取用户信息 根据微信openid查询对应的用户
             $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
-            //获取上级邀请人信息
-            $Invite=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.id'=>$Member['parentid']])->find();
+            
             //获取订单信息
             $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
             if ($OrderInfo['order_status']==2 && !empty($OrderInfo['pay_sn'])) {
@@ -777,25 +776,36 @@ class WechatController extends CommentoilcardController
                     2.1 如果为普通套餐 ，上级邀请人无加油卷返利，对上级代理不做任何操作
                     2.2 如果为VIP套餐，对上级邀请人 返利加油卷 config里获取百分比，对上级代理不做操作
                 */
-                $isFirst = M('user_apply')->where(['user_id'=>$Member['id']])->count();
-                if ($isFirst==1) { //如果为第一次购买
+                
+                $isFirst = M('order_record')->where(['order_status'=>2])->find();
+
+                if ($isFirst) { //如果为第一次购买
                     $Robate=[];
                     if ($Member['parent_bind'] ==0 && $Member['agent_bind']==0) {
                         $Robate['agent_bind']=1;//锁定上级代理
                         $Robate['parent_bind']=1;//锁定上级邀请人
                     }
                     //判断是否给上级邀请人拉新奖
-                    if ($OrderInfo['pid'] >1 && $Member['is_rebate']==1){//并且如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
+                    if ($OrderInfo['pid'] > 1 && $Member['is_rebate']==1){//并且如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
                         $Robate['is_rebate']=2; //已完成拉新奖励
+                        //获取上级邀请人信息
+                        $Invite=M('user')
+                                  ->alias('a')
+                                  ->join('__AGENT__ b ON a.id=b.id')
+                                  ->where(['a.id'=>$Member['parentid']])
+                                  ->find();
                         //发放拉新奖
                         if ($Invite) {
                             //保留两位小数
-                            $CouponNum = number_format(($Package['price'] * ($config['scroll']/100)), 2, ".", "");
+                            $a = $Package['price'];
+                            $b = ($config['scroll']/100);
+                            $price = $a*$b;
+                            $CouponNum = number_format($price, 2, ".", "");
                             //给上级邀请人增加 拉新奖励池和总收益 
-                            M('user')->where(['id'=>$Invite['id']])->save([
-                                'new_earnings'=>$Invite['new_earnings']+$CouponNum,
-                                'currt_earnings'=>$Invite['currt_earnings']+$CouponNum,
-                                'total_earnings'=>$Invite['total_earnings']+$CouponNum
+                            M('agent')->where(['id'=>$Invite['id']])->save([
+                                'new_earnings'=>$Invite['new_earnings'] + $CouponNum,
+                                'currt_earnings'=>$Invite['currt_earnings'] + $CouponNum,
+                                'total_earnings'=>$Invite['total_earnings'] + $CouponNum
                             ]);
                         }
                     }
