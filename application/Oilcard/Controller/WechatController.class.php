@@ -456,249 +456,201 @@ class WechatController extends CommentoilcardController
         );
         M('testt')->add($insert);
 
-        $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
         unset($obj_arr['sign']);
         ksort($obj_arr);
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
-
         if($cur_sign == $sign) {
-
-            $order_item = M('AddMoney')->where(['order_no'=>$obj_arr['out_trade_no']])->find();
-
+            $OrderSn = $obj_arr['out_trade_no'];
+            $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
+            $openId=$obj_arr['openid'];
+            $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
+            $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
+            $order_item = M('add_money')->where(['order_no'=>$obj_arr['out_trade_no']])->find();
+            $OrderInfo =  M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
+            $CardInfo = M('oil_card')->where(['card_no'=>$order_item['card_no']])->find();
+            $config = M('setting')->find();
             if($order_item) {
-                if ($order_item['status'] != 1){
+                //更改充值记录信息状态  //更改支付状态
+                $AddMoneySave =[
+                    'status' => 1,
+                    'updatetime' => $NowTime
+                ];
+                //更改油卡信息状态
+                $OilCardSave =[
+                    'preferential' =>$CardInfo['preferential'] - $order_item['money'],
+                    'card_total_add_money' => intval($CardInfo['card_total_add_money'] + $order_item['money'])
+                ];
+                if ($order_item['is_first']==1) {
+                    $OilCardSave['activate'] =2;
+                }
+                //更改订单支付状态
+                $OrderSave = [
+                    'order_status'=> 2,
+                    'updatetime'=>$NowTime
+                ];
 
-                    M('AddMoney')->startTrans();
-                    M('User')->startTrans();
-                    M('IntegralRecord')->startTrans();
-                    M('OilCard')->startTrans();
-                    M('OrderRecord')->startTrans();
-                    M('Coupon')->startTrans();
-                    M('AgentEarnings')->startTrans();
-
-                    try{
-
-                         $flag=file_get_contents(__DIR__.'/data/'.$openId.'flag.txt');
-                            $initial_money=file_get_contents(__DIR__.'/data/'.$openId.'initial_money.txt');
-                            $card_no=file_get_contents(__DIR__.'/data/'.$openId.'card_no.txt');
-                            // if (!empty($order_status)) {
-                               
-                                if ($flag==1){  
-                                    $card_preferential=M('oil_card')->where("card_no='$card_no'")->getField('preferential');
-                                    $a=M('')->getLastSql();
-                                   
-                                    if ($initial_money<=$card_preferential){
-                                        $last_preferential=$card_preferential-$initial_money;
-                                        $res=M('oil_card')->where("card_no='$card_no'")->save(['preferential'=>$last_preferential]);
-                                        log::record($res);
-                                    }
-                                }else{
-                                    $user_preferential=M('user')->where("openid='$openId'")->getField('preferential_quota');
-                                    if ($initial_money<=$user_preferential){
-                                        $last_preferential=$user_preferential-$initial_money;
-                                        M('user')->where("openid='$openId'")->save(['preferential_quota'=>$last_preferential]);
-                                    }
-                                }
-                            // }
-
-                        //更改支付状态
-                        $order_item['status'] = 1; //支付成功
-                        $order_item['pay_at'] = date('Y-m-d H:i:s');
-                        $order_status = M('AddMoney')->where(['order_no'=>$obj_arr['out_trade_no']])->save($order_item);
-
-                        $order_record = M('OrderRecord')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
-                        $order_record['order_status'] = 2;//成功
-                        $order_record_status = M('OrderRecord')->where(['serial_number'=>$obj_arr['out_trade_no']])->save($order_record);
-
-                        if (!$order_status || !$order_record_status){
-                            M('AddMoney')->rollback();
-                            M('OrderRecord')->rollback();
-                        }
-
-                        //增加用户累计数据
-                        $user = M('User')->where(['openid'=>$order_item['openid']])->find();
-                        $user['integral']           += intval($order_item['real_pay']);
-                        $user['already_save_money'] += intval($order_item['discount_money']);
-                        $user['total_add_money']    += intval($order_item['money']);
-                        $user_status = M('User')->where(['openid'=>$order_item['openid']])->save($user);
-
-                        $card = M('OilCard')->where(['card_no'=>$order_item['card_no']])->find();
-                        $card['card_total_add_money'] += intval($order_item['money']);
-                        $card_status = M('OilCard')->where(['card_no'=>$order_item['card_no']])->save($card);
-
-                        //记录积分变动
-                        $integral = [];
-                        $integral['user_id'] = $user['id'];
-                        $integral['change']  = 1;//增加;
-                        $integral['chang_way'] = '充值';
-                        $integral['change_value'] = $order_item['real_pay'];
-
-                        $integral_status = M('IntegralRecord')->add($integral);
-
-                        //处理分销收益
-                        $agent_status = true;
-                        $agent_inc = true;
-                        log::record("agent_id".$order_item['agent_id']);
-
-                        if (isset($order_item['agent_id']) && !empty($order_item['agent_id'])) {
-                            $flage=file_get_contents(__DIR__.'/data/'.$openId.'flage.txt');
-                            log::record($flage);
-
-                            $agent_earnings = [];
-
-                            $discount=M('setting')->find();
-
-                            $card_no=$order_item['card_no'];
-                            $agent_library_data=M('agent_library')->where("start_card_no<='$card_no' && end_card_no>='$card_no'")->find();
-                            if (!empty($agent_library_data)) {
-                                $a=M('agent')->where(['openid'=>$agent_library_data['openid']])->getField('id');
-                            }else{
-                                $a='0';
+                //用户信息变动记录
+                $MemberSave =[
+                    //积分 1：1
+                    'integral' => intval($Member['integral'] + $order_item['real_pay']),
+                    //总共给用户省下来的钱
+                    'already_save_money' => intval($Member['already_save_money'] + $order_item['discount_money']),
+                    //总共充值的油卡额度 
+                    'total_add_money' => intval($Member['total_add_money'] + $order_item['money']),
+                    //用户真实充值的钱
+                    'total_real_add_money' =>$Member['total_real_add_money'] + $order_item['real_pay'],
+                ];
+                //积分变动记录
+                $IntegralAdd = [
+                    'user_id' => $Member['id'],
+                    'change' => 1,
+                    'chang_way' => '充值',
+                    'change_value' => $order_item['real_pay'],
+                    'createtime' => $NowTime,
+                    'updatetime' => $NowTime,
+                    'change_from'=> json_encode(['from'=>'OrderRechage','OrderSn'=>$OrderSn])
+                ];
+                $EarningsAdd =[];
+                $AgentSave =[];
+                //是否存在上级代理 
+                //当用户身份为代理时不做操作
+                //当上级代理未绑定时不做操作
+                //当上级代理为空 或者上级 代理身份是总部时 不做操作
+                if ($Member['role'] !=3 && $Member['agent_bind'] == 1 && $Member['agentid'] !=0 && !empty($Member['agentid'])) {
+                    $Agent=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.id'=>$Member['agentid'],'b.role'=>3])->find();
+                    // vip_direct_scale  VIP直属会员充值分成
+                    // user_direct_scale  普通直属会员充值分成
+                    // vip_indirect_scale  VIP间接会员充值分成
+                    // user_indirect_scale 普通间接会员充值分成
+                    //用户充值的金额 ，使用真实交的钱
+                    $RechageMoney = $order_item['real_pay'];
+                    //判断是直属下级还是间接下级身份
+                    switch ($Member['agent_relation']) {
+                        case '1': //直接下级
+                            //按照当前会员不同的身份为上级代理分润
+                            switch ($Member['role']) {
+                                case '2': //按照VIP会员充值分成给代理分润
+                                    $Calculation = $RechageMoney* ($Agent['vip_direct_scale']/100);
+                                    $rewardMoney  = number_format($Calculation, 4, ".", "");
+                                    $earning_body = 1; //1直属vip
+                                    break;
+                                
+                                default: //按照普通会员充值分成给代理分润
+                                    $Calculation = $RechageMoney* ($Agent['user_direct_scale']/100);
+                                    $rewardMoney  = number_format($Calculation, 4, ".", "");
+                                    $earning_body = 2; //2直属普通
+                                    break;
                             }
-
-            // if ($flag==1){
-            // $card_preferential=M('oil_card')->where("card_no='$card_no'")->getField('preferential');
-            // if ($initial_money<=$card_preferential){
-            // $last_preferential=$card_preferential-$initial_money;
-            // M('oil_card')->where("card_no='$card_no'")->save(['preferential'=>$last_preferential]);
-            // }
-            // }else{
-            // $user_preferential=M('user')->where("openid='$openid'")->getField('preferential_quota');
-            // if ($initial_money<=$user_preferential){
-            // $last_preferential=$user_preferential-$initial_money;
-            // M('user')->where("openid='$openid'")->save(['preferential_quota'=>$last_preferential]);
-            // }
-            // }
-
-                            if ($flage==96){
-            log::record('是否95'.$flage);
-                                $res=M('agent')->where(['id'=>$order_item['agent_id']])->find();
-                                $ress=M('agent_earnings')->where(['openid'=>$res['openid']])->find();
-                               $a= isset($ress)?$ress['agent_id']:$order_item['agent_id'];
-
-                                 $agent_arr=M('agent_relation')->where("openid='$openId'")->find();
-                                // $a=$agent_arr['agent_id'];
-                                $agent_earnings['agent_id'] =$a;//上线的agent_id
-
-                                $agent_earnings['order_type'] = 1; //充值订单
-                                $agent_earnings['order_id'] = $order_item['id']; //充值订单
-                                $agent_earnings['openid'] = $obj_arr['openid']; //充值订单
-                                $agent_earnings['earnings'] = round(($order_item['money'] /100*$discount['plainprofit']),2); //充值订单
-                                $agent_status = M('agent_earnings')->add($agent_earnings);
-                            }else{
-
-
-                                $res=M('agent')->where(['id'=>$order_item['agent_id']])->find();
-                                $ress=M('agent_earnings')->where(['openid'=>$res['openid']])->find();
-                               $a= isset($ress)?$ress['agent_id']:$order_item['agent_id'];
-
-                                 $agent_arr=M('agent_relation')->where("openid='$openId'")->find();
-                                // $a=$agent_arr['agent_id'];
-                                $agent_earnings['agent_id'] =$a;//上线的agent_id
-
-                                $agent_earnings['order_type'] = 1; //充值订单
-                                $agent_earnings['order_id'] = $order_item['id']; //充值订单
-                                $agent_earnings['openid'] = $obj_arr['openid']; //充值订单
-                                $agent_earnings['earnings'] = round(($order_item['money'] /100*$discount['vipprofit']),2); //充值订单
-                                $agent_status = M('agent_earnings')->add($agent_earnings);
+                            break;
+                        default: //间接下级
+                            //按照当前会员不同的身份为上级代理分润
+                            switch ($Member['role']) {
+                                case '2': //按照VIP会员充值分成给代理分润
+                                    $Calculation = $RechageMoney* ($Agent['vip_indirect_scale']/100);
+                                    $rewardMoney  = number_format($Calculation, 4, ".", "");
+                                    $earning_body = 3; //3间接VIP 
+                                    break;
+                                
+                                default: //按照普通会员充值分成给代理分润
+                                    $Calculation = $RechageMoney* ($Agent['user_indirect_scale']/100);
+                                    $rewardMoney  = number_format($Calculation, 4, ".", "");
+                                    $earning_body = 4; //4 间接普通
+                                    break;
                             }
-
-
-                            $agent = M('Agent')->where(['id'=>$order_item['agent_id']])->find();
-                            $agent['total_earnings'] += $agent_earnings['earnings'];
-                            $agent['currt_earnings'] += $agent_earnings['earnings'];
-                            $agent['add_total'] += $order_item['real_pay'];
-                            $agent_id= $order_item['agent_id'];
-                            $agent_inc = M('Agent')->where("id='$agent_id'")->save($agent);
-
-                        }
-                        if(!$order_status || !$user_status || !$integral_status || !$card_status || !$agent_status || !$agent_inc) {
-                            M('AddMoney')->rollback();
-                            M('User')->rollback();
-                            M('IntegralRecord')->rollback();
-                            M('OilCard')->rollback();
-                            M('OrderRecord')->rollback();
-                        
-                            M('Coupon')->rollback();
-                            M('AgentEarnings')->rollback();
-
-                            Log::record('回调修改数据状态失败!');
-                        } else {
-                            M('AddMoney')->commit();
-                            M('User')->commit();
-                            M('IntegralRecord')->commit();
-                            M('OilCard')->commit();
-
-                           
-
-
-
-                            M('OrderRecord')->commit();
-                            M('Coupon')->commit();
-                            M('AgentEarnings')->commit();
-
-
-                            //发送微信通知
-                            //1.充值成功通知
-                            $notice = [];
-                            $notice['card_no'] = $order_item['card_no'];
-                            $notice['money'] = $order_item['money'];
-                            $notice['careatetime'] = date('Y-m-d H:i:s',time());
-                            $Wechat = A('Wechat');
-                            $Wechat->templateMessage($order_item['openid'],$notice,3);
-
-                            //2.积分变动通知
-                            $notice = [];
-                            $notice['change'] = 1;
-                            $notice['change_value'] = intval($order_item['real_pay']);
-                            $Wechat->templateMessage($order_item['openid'],$notice,4);
-                        }
-                    } catch (\Exception $e){
-                        M('AddMoney')->rollback();
-                        M('User')->rollback();
-                        M('IntegralRecord')->rollback();
-                        M('OilCard')->rollback();
-                        M('OrderRecord')->rollback();
-                        M('Coupon')->rollback();
-                        M('AgentEarnings')->rollback();
-                        Log::write('['.$e->getCode().'] '.$e->getMessage(), 'ERR');
-                        exit();
+                            break;
                     }
+
+                    //代理返利记录
+                    $EarningsAdd = [
+                        'openid' => $openId,
+                        'agent_id' => $Member['agentid'],
+                        'createtime' => $NowTime,
+                        'order_type' => 1,
+                        'earning_body'=>$earning_body,
+                        'earnings' => $rewardMoney,
+                        'updatetime' => $NowTime,
+                        'order_id' => $OrderInfo['id'],
+                        'sn' => $OrderSn,
+                    ];
+
+                    $AgentSave = [
+                        //总收益
+                        'total_earnings' => $Agent['total_earnings'] + $rewardMoney,
+                        //当前收益
+                        'currt_earnings' => $Agent['currt_earnings'] + $rewardMoney ,
+                        //下线总充值
+                        'add_total' => $Agent['add_total'] + $RechageMoney,
+                    ];
+                    
                 }
-                $openId=$obj_arr['openid'];
+                $Things = M();
+                $Things->startTrans();
+                try{
+                    //用户充值记录信息状态修改
+                    $AddMoneySave = M('add_money')->where(['id'=>$order_item['id']])->save($AddMoneySave);
+                    //油卡信息状态修改
+                    $OilCardSave = M('oil_card')->where(['id'=>$CardInfo['id']])->save($OilCardSave);
+                    //订单状态修改
+                    $OrderSave = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
+                    //用户信息修改
+                    $MemberSave = M('user')->where(['openid'=>$openId])->save($MemberSave);
+                    //用户积分变动修改                    
+                    $IntegralAdd = M('IntegralRecord')->add($IntegralAdd);
+                    //代理收益记录
+                    if($EarningsAdd)$EarningsAdd = M('agent_earnings')->add($EarningsAdd);
+                    //代理信息修改
+                    if($AgentSave)$AgentSave = M('Agent')->where(['id'=>$Agent['id']])->save($AgentSave);
 
-                $card_no=$order_record['card_no'];
-                $money=$order_record['money'];
-
-
-
-                if ($flag==1){
-                    $card_arr=M('oil_card')->where("card_no='$card_no'")->find();
-
-                    if ($card_arr['end_time']>=date('Y-m-d H:i:s') && $card_arr['preferential']>=$money) {
-                        $last_money = (string)$card_arr['preferential'] - (string)$money;
-                        M('oil_card')->where("card_no='$card_no'")->save(['end_time' => date("Y-m-d H:i:s", strtotime("+1years")), 'preferential' => $last_money]);
+                    if ($AddMoneySave && $OilCardSave && $OrderSave && $MemberSave && $IntegralAdd) {
+                        $Things->commit();
+                    }else{
+                        $Things->rollback();
                     }
-                }else{
-                    $agent_arr=M('agent')->where("openid='$openId'")->find();
-                    if (empty($agent_arr['currt_earnings']) && $agent_arr['currt_earnings']>=$money){
-                        $last_money = (string)$agent_arr['currt_earnings'] - (string)$money;
-                        M('agent')->where("openid='$openId'")->save([ 'currt_earnings' => $last_money]);
-                    }
+                } catch (\Exception $e){
+                    $Things->rollback();
+                    Log::write('['.$e->getCode().'] '.$e->getMessage(), 'ERR');
+                    exit();
                 }
 
-                //首次充值必须充值1000元
-                $first_add = M('AddMoney')->where(['openid'=>$openId,'status'=>1])->count();
-                if ( $first_add<=1  && $money >= 1000) {
-                    $deposit=M('agent')->where("openid='$openId'")->getField('deposit');
-                    $preferential_quota=M('user')->where("openid='$openId'")->getField('preferential_quota');
-                    if (empty($deposit) ){
-                        M('agent')->where("openid='$openId'")->save(['deposit'=>$deposit-20]);
-                        M('user')->where("openid='$openId'")->save(['preferential_quota'=>$preferential_quota+20]);
-                    }
-                }
+                //1在第一次充值油卡并激活时 把油卡过期时间  加一年 ，是在绑卡时还是在充值时 
+                //
+                //2 油卡押金处理
+                //
+                //3，加油卷 和折扣 是否能同时  使用，如果使用，前端需传过来 准确数值
+                
+                // $openId=$obj_arr['openid'];
+
+                // $card_no=$order_record['card_no'];
+                // $money=$order_record['money'];
+                // if ($flag==1){
+                // 1在第一次充值油卡并激活时 把油卡过期时间  加一年 ，是在绑卡时还是在充值时 
+                //     $card_arr=M('oil_card')->where("card_no='$card_no'")->find();
+
+                //     if ($card_arr['end_time']>=date('Y-m-d H:i:s') && $card_arr['preferential']>=$money) {
+                //         $last_money = (string)$card_arr['preferential'] - (string)$money;
+                //         M('oil_card')->where("card_no='$card_no'")->save(['end_time' => date("Y-m-d H:i:s", strtotime("+1years")), 'preferential' => $last_money]);
+                //     }
+                // }else{
+                //  //3，加油卷 和折扣 是否能同时  使用，如果使用，前端需传过来 准确数值
+                //     $agent_arr=M('agent')->where("openid='$openId'")->find();
+                //     if (empty($agent_arr['currt_earnings']) && $agent_arr['currt_earnings']>=$money){
+                //         $last_money = (string)$agent_arr['currt_earnings'] - (string)$money;
+                //         M('agent')->where("openid='$openId'")->save([ 'currt_earnings' => $last_money]);
+                //     }
+                // }
+
+                //首次充值必须充值1000元  // 关于用户押金问题  --暂未决定
+                // $first_add = M('AddMoney')->where(['openid'=>$openId,'status'=>1])->count();
+                // if ( $first_add<=1  && $money >= 1000) {
+                //     $deposit=M('agent')->where("openid='$openId'")->getField('deposit');
+                //     $preferential_quota=M('user')->where("openid='$openId'")->getField('preferential_quota');
+                //     if (empty($deposit) ){
+                //         M('agent')->where("openid='$openId'")->save(['deposit'=>$deposit-20]);
+                //         M('user')->where("openid='$openId'")->save(['preferential_quota'=>$preferential_quota+20]);
+                //     }
+                // }
 
             } else {
                 Log::record('微信回调无此订单:'.$obj_arr['out_trade_no']);
@@ -706,12 +658,12 @@ class WechatController extends CommentoilcardController
         } else {
             Log::record('签名错误，订单号:'.$obj_arr['out_trade_no']);
         }
-
         // 返回代码
         $data = [];
         $data['return_code'] = 'SUCCESS';
         $data['return_msg'] = 'OK';
-        ob_end_clean();return XML::build($data);
+        ob_end_clean();
+        return XML::build($data);
     }
 
 
