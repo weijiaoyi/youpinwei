@@ -64,7 +64,7 @@ class OrderController extends AdminbaseController{
         $OrderRecordModel = M('order_record');
         $p = trim(I('get.p','1'));
         $keyword = trim(I('post.keyword'));
-        $where='o.order_type = 3 AND o.order_status=2';
+        $where='o.order_type = 3 AND o.order_status = 2 ';
         if(!empty($keyword)){
             $where.=' AND (a.card_no LIKE "%'.$keyword.'%" OR o.serial_number LIKE "%'.$keyword.'%")';
         }
