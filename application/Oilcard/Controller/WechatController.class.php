@@ -438,11 +438,15 @@ class WechatController extends CommentoilcardController
 
 
     /**
-     *充值回调
+     * 油卡充值异步回调
+     * @Author 老王
+     * @创建时间   2019-01-02
+     * @return [type]     [description]
      */
     public function wxNoticePay()
     {
-
+        $IsOver = false;
+        $ReturnMsg ='';
         $data = file_get_contents('php://input');
         $obj_arr = XML::parse($data);
         Log::record('微信回调data:'.json_encode($obj_arr));
@@ -469,6 +473,9 @@ class WechatController extends CommentoilcardController
             $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
             $order_item = M('add_money')->where(['order_no'=>$obj_arr['out_trade_no']])->find();
             $OrderInfo =  M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
+            if ($OrderInfo['order_status']==2 && !empty($OrderInfo['pay_sn'])) {
+                return $this->arrayToXml(['return_code'=>'SUCCESS','return_msg'=>'OK']);
+            }
             $CardInfo = M('oil_card')->where(['card_no'=>$order_item['card_no']])->find();
             $config = M('setting')->find();
             if($order_item) {
@@ -610,11 +617,16 @@ class WechatController extends CommentoilcardController
 
                     if ($AddMoneySave && $OilCardSave && $OrderSave && $MemberSave && $IntegralAdd) {
                         $Things->commit();
+                        $IsOver = true;
+                        $ReturnMsg = '支付成功';
                     }else{
+                        $ReturnMsg = '支付失败';
+
                         $Things->rollback();
                     }
                 } catch (\Exception $e){
                     $Things->rollback();
+                    $ReturnMsg = '支付失败';
                     Log::write('['.$e->getCode().'] '.$e->getMessage(), 'ERR');
                     exit();
                 }
@@ -629,6 +641,12 @@ class WechatController extends CommentoilcardController
         $data['return_code'] = 'SUCCESS';
         $data['return_msg'] = 'OK';
         ob_end_clean();
+        if($IsOver){
+            return $this->arrayToXml($data);
+        }else{
+            return $this->arrayToXml(['return_code'=>'FAIL','return_msg'=>'支付失败']);
+        }
+        
         return XML::build($data);
     }
 
@@ -676,13 +694,15 @@ class WechatController extends CommentoilcardController
             $Invite=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.id'=>$Member['parentid']])->find();
             //获取订单信息
             $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
+            if ($OrderInfo['order_status']==2 && !empty($OrderInfo['pay_sn'])) {
+                return $this->arrayToXml(['return_code'=>'SUCCESS','return_msg'=>'OK']);
+            }
             //获取申领记录
             $apply_status=M('user_apply')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
             //套餐信息
             $Package =M('packages')->where(['pid'=>$OrderInfo['pid']])->find();
             //获取config  押金 邮费
             $config = M('setting')->find();
-            
             $OrderSave =[
                 'order_status' => 2,
                 'updatetime' => $NowTime,
@@ -737,7 +757,10 @@ class WechatController extends CommentoilcardController
                 }
                 //获取一张 应发卡
                 $SendCard = M('oil_card')->where($cardCondition)->getField('card_no');
+
                 $OrderSave['send_card_no'] =$SendCard;
+                //把应发卡号状态改为 已申领状态
+                $OrderSaveResult = M('oil_card')->where([['card_no'=>$SendCard])->save(['status'=>2]);
             }
             if ($OrderInfo['card_from']) {
                 //如果是代理发卡 ，代理库存减少 1
@@ -767,6 +790,7 @@ class WechatController extends CommentoilcardController
                             //给上级邀请人增加 拉新奖励池和总收益 
                             M('user')->where(['id'=>$Invite['id']])->save([
                                 'new_earnings'=>$Invite['new_earnings']+$CouponNum,
+                                'currt_earnings'=>$Invite['currt_earnings']+$CouponNum,
                                 'total_earnings'=>$Invite['total_earnings']+$CouponNum
                             ]);
                         }
@@ -776,6 +800,7 @@ class WechatController extends CommentoilcardController
                 }
                 //修改订单状态
                 $OrderSaveResult = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
+                
                 //修改申领记录状态
                 $ApplySaveResult = M('user_apply')->where(['id'=>$apply_status['id']])->save($ApplySave);
             }
@@ -783,11 +808,27 @@ class WechatController extends CommentoilcardController
             $result = [];
             $data['requestPayment'] = 'success';
             $data['return_msg'] = 'OK';
-            return log::record(XML::build($data));
+            return $this->arrayToXml(['return_code'=>'SUCCESS','return_msg'=>'OK']);
+            // return log::record(XML::build($data));
+
         } else {
            Log::record('签名错误，订单号:'.$obj_arr['out_trade_no']);
         }
         
+    }
+
+    public function arrayToXml(array $data)
+    {
+        $xml = "<xml>";
+        foreach ($data as $k => $v) {
+            if (is_numeric($v)) {
+                $xml .= "<{$k}>{$v}</{$k}>";
+            } else {
+                $xml .= "<{$k}><![CDATA[{$v}]]></{$k}>";
+            }
+        }
+        $xml .= "</xml>";
+        return $xml;
     }
 
     /**
