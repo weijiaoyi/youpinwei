@@ -474,6 +474,7 @@ class WechatController extends CommentoilcardController
             $order_item = M('add_money')->where(['order_no'=>$obj_arr['out_trade_no']])->find();
             $OrderInfo =  M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
             if ($OrderInfo['order_status']==2 && !empty($OrderInfo['pay_sn'])) {
+                echo 'SUCCESS';exit;
                 return $this->arrayToXml(['return_code'=>'SUCCESS','return_msg'=>'OK']);
             }
             $CardInfo = M('oil_card')->where(['card_no'=>$order_item['card_no']])->find();
@@ -640,10 +641,12 @@ class WechatController extends CommentoilcardController
         $data = [];
         $data['return_code'] = 'SUCCESS';
         $data['return_msg'] = 'OK';
-        ob_end_clean();
+        // ob_end_clean();
         if($IsOver){
+            echo 'SUCCESS';exit;
             return $this->arrayToXml($data);
         }else{
+            echo 'FAIL';exit;
             return $this->arrayToXml(['return_code'=>'FAIL','return_msg'=>'支付失败']);
         }
         
@@ -695,6 +698,7 @@ class WechatController extends CommentoilcardController
             //获取订单信息
             $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
             if ($OrderInfo['order_status']==2 && !empty($OrderInfo['pay_sn'])) {
+                echo 'SUCCESS';exit;
                 return $this->arrayToXml(['return_code'=>'SUCCESS','return_msg'=>'OK']);
             }
             //获取申领记录
@@ -808,6 +812,7 @@ class WechatController extends CommentoilcardController
             $result = [];
             $data['requestPayment'] = 'success';
             $data['return_msg'] = 'OK';
+            echo 'SUCCESS';exit;
             return $this->arrayToXml(['return_code'=>'SUCCESS','return_msg'=>'OK']);
             // return log::record(XML::build($data));
 
