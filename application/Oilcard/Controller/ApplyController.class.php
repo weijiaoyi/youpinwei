@@ -127,7 +127,7 @@ class ApplyController extends CommentoilcardController
             //本次购卡时 最近的邀请人id--暂不锁定邀请人
             'parentid'      => isset($ParentMember['id'])?$ParentMember['id']:0 ,
             // 0总部发放，代理id  --暂不锁定代理id
-            'agent_id'      =>$card['agent_id']?:0, 
+            'agent_id'      =>$card['agent_id']?$card['agent_id']:0, 
             'real_pay'      => $money,
             'user_deposit'  => $user_deposit,
             'postage'       => $postage,

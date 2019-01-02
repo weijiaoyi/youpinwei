@@ -163,19 +163,24 @@ class OrderController extends AdminbaseController{
      */
     public function addCard(){
         $data = I('post.');
+        $start_card_no = I('post.start_card_no');
+        $end_card_no = I('post.end_card_no');
+        $card_note = I('post.card_note');
         $flag=true;
         $arr=[];
         $install = [];
-        for ($i=$data['start_card_no']; $i <= $data['end_card_no']; $i++) {
-            $arr['card_no']=$i;
-            $arr['card_note']=$data['card_note'];
-            // $arr['discount']='96';updatetime
-            $arr['createtime'] = date('Y-m-d H:i:s');
-            $arr['updatetime'] = date('Y-m-d H:i:s');
+        $end = ($end_card_no - $start_card_no) +1 ;
+        $time = date('Y-m-d H:i:s');
+        for ($i=0; $i < $end; $i++) { 
+            $No = bigDataAdd($start_card_no,(string)$i);
+            $arr['card_no'] =$No;
+            $arr['card_note'] =$card_note;
+            $arr['createtime'] =$time;
+            $arr['updatetime'] =$time;
             $install[] =$arr;
         }
         $res=M('oil_card')->addAll($install);
-        if($flag===true){
+        if($res){
             echo json_encode([
                 'msg'=>1000,
                 'status'=>'油卡导入成功'

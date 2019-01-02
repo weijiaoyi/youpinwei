@@ -17,31 +17,7 @@
 <link rel="stylesheet" href="__PUBLIC__/js/bootstrap.min.css">
 <body>
 <div id="wrapper">
-	<div class="box">
-		<div id="dialogBg"></div>
-		<div id="dialog" class="animated" style="width: 500px">
-			<img class="dialogIco" width="50" height="50" src="__PUBLIC__/assets/style/images/ico.png" alt="" />
-			<div class="dialogTop">
-				<a href="javascript:;" class="claseDialogBtn">关闭</a>
-			</div>
-			<!-- //http://ysy.edshui.com/index.php?g=admin&m=order&a=add_card -->
-			<form action="" method="post" id="editForm">
-				<ul class="editInfos">
-					<li style="width: 100%">起始卡号：<input id="start_card_no" placeholder="起始卡号：" type="text" style="padding: 1px 0px;  width:300px" name="start_card_no" required  class="ipt" /></li>
-					<li style="width: 100%">结尾卡号：<input id="end_card_no" placeholder="结尾卡号：" type="text" style="padding: 1px 0px;  width:300px" name="end_card_no" required  class="ipt" /></li>
-					<li>折扣：
-						<select name='discount' class="discount">
-							<option selected="selected">请选择</option>
-							<option value="95" >95</option>
-							<option value="93" >93</option>
-						</select>
-					</li>
-					<li>备注：<input type="text" placeholder="备注：" style="padding: 1px 0px;  width:180px" id='card_note' name="card_note" required class="ipt" /></li>
-					<li><input type="button" value="确认提交" class="submitBtn" /></li>
-				</ul>
-			</form>
-		</div>
-	</div>
+	
 </div>
 
 <div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
@@ -201,10 +177,10 @@
 			<div class="modal-body">
 				<table>
 					<tr>
-						<th>起始卡号&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" placeholder="请输入起始卡号" value="" style="height:30px; width: 200px;" class="start_card_no"></th>
+						<th>起始卡号&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" placeholder="请输入起始卡号" value="" style="height:30px; width: 200px;" maxlength="16" class="start_card_no"></th>
 					</tr>
 					<tr>
-						<th>结尾卡号&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" placeholder="请输入结尾卡号" value="" style="height:30px; width: 200px;" class="end_card_no"></th>
+						<th>结尾卡号&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" placeholder="请输入结尾卡号" value="" style="height:30px; width: 200px;" maxlength="16" class="end_card_no"></th>
 					</tr>
 					<tr>
 						<th>备注&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="text" value="" placeholder="填写备注吧" style="height:60px; width: 200px;" class="card_note"></th>
