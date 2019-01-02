@@ -333,6 +333,11 @@ class OrderController extends AdminbaseController{
         $count = $Card ->where($condition)-> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
+        //查询总部可发油卡数量
+        $card_id=$Card -> where('agent_id != 0')->order('id desc') -> getField('id');
+        $card_id = $card_id+1;
+        $send_count = $Card -> where('id>"'.$card_id.'" AND status=1') -> count();
+        $this -> assign('send_count',$send_count);
         $this -> assign('page',$show);
         $this -> assign('data',$card_info);
         $this -> display();

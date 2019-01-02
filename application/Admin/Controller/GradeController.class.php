@@ -413,8 +413,15 @@ class GradeController extends AdminbaseController
             $user = M('user')->where('id="'.$user_id.'" AND openid="'.$openid.'"')->find();
 
             $OilCardModel = M('oil_card');
-            $start_card = $OilCardModel -> where(['status' => 1,'chomd'=>1]) -> getField('card_no');
-
+            //查询
+            $card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
+            $card_id = $card_id+1;
+            $start_card = $OilCardModel -> where(['status' => 1,'id'=>$card_id]) -> getField('card_no');
+            if(!empty($start_card)){
+                $start_card = $start_card;
+            }else{
+                $start_card = '总部已无卡发布，请及时补充';
+            }
             $this -> assign( 'start_card' , $start_card );
             $this -> assign( 'user' , $user );
             $this -> assign( 'user_id' , $user_id );
@@ -430,13 +437,20 @@ class GradeController extends AdminbaseController
         $id = trim( I('get.id','') );
         //查询为库存的第一张卡 准备发卡
         $OilCardModel = M('oil_card');
-        $frist_card = $OilCardModel -> where(['status' => 1,'chomd'=>1]) -> find();
+        $card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
+        $card_id = $card_id+1;
+        $start_card = $OilCardModel -> where(['status' => 1,'id'=>$card_id]) -> getField('card_no');
 
         $AgentModel = M('agent');
         $agent_info = $AgentModel -> where( ['id' => $id,'role'=>3] ) -> find();
         $user = M('user')->where('id="'.$id.'" AND openid="'.$agent_info['openid'].'"')->find();
+        if(!empty($start_card)){
+            $sendCardData['card_no'] = $start_card;
+        }else{
+            $sendCardData['card_no'] = '总部已无卡发布，请及时补充';
+        }
 
-        $sendCardData['card_no'] = $frist_card['card_no'];
+
         $sendCardData['uid'] = $agent_info['id'];
         $sendCardData['openid'] = $agent_info['openid'];
 
