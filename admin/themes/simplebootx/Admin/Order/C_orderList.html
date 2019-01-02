@@ -54,12 +54,19 @@
 			<li><a href="<?php echo U('Admin/Order/CardBack'); ?>">退卡申请</a></li>
 			<li><a href="<?php echo U('Admin/Order/CardLoss'); ?>">挂失申请</a></li>
 		</ul>
+		<thead>
+
+		<p style="text-align:center;font-size: 20px;font-weight: bold;margin-top: 20px;">
+			总部可发油卡：<span style="color: red;font-weight: bold;font-size: 28px;"><?php echo $send_count;?></span>张
+		</p>
+		</thead>
 		<form class="well form-search" method="post" action="{:U('order/C_orderList')}">
-			
+
 			关键字： 
 			<input type="text" name="card_no" style="width: 190px; height:34px;" value="" placeholder="请输入要查询的油卡...">
 			<input type="submit" class="btn btn-primary CardKeyword " value="搜索">
 			<a href="javascript:;" class="import-many btn">批量导入</a>
+
 			<!-- <a href="javascript:;" class="discount-many btn">批量折扣</a> -->
 		</form>
 
@@ -82,6 +89,7 @@
 				</tr>
 			</thead>
 			<tbody id="show">
+
 				<?php foreach ($data as $k => $v) { ?>
 					<tr>
 						<td style="width:40px;text-align:center;">
