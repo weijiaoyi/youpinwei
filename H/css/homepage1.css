@@ -1,0 +1,248 @@
+*{
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+span{
+	display: block;
+}
+a{
+	text-decoration:none;
+	color:#000;
+}
+.homepage{
+	width:7.5rem;
+	height:100%;
+}
+.footer{
+	position:fixed;
+	bottom:0;
+	left:0;
+	width: 7.5rem;
+	height: 0.98rem;
+	border-top: 0.02rem solid #E7E7E7;
+	display: flex;
+	justify-content: center;
+}
+.footer_tab a{
+	width: 2.5rem;
+	height: 0.98rem;
+	background: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+.footer_tab:nth-child(1) .active.footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab02_icon.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(1) .footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab01.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(2) .active.footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab02_icon.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(2) .footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab02.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(3) .active.footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab03_icon.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(3) .footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab03.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab p{
+	margin-top:0.04rem;
+	font-size:0.24rem;
+}
+.top{
+	float:left;
+	width:7.5rem;
+	height:1.28rem;
+	background:black;
+}
+.container{
+	float:left;
+	width:100%;
+	height:100%;
+	background:#f5f6f7;
+	padding-bottom:1rem;
+}
+.con_content{
+	width: 6.9rem;
+	height:3.7rem;
+	margin-left:0.3rem;
+	margin-top:0.3rem;
+	background:white;
+	border-radius:0.2rem;
+	overflow:hidden;
+}
+.con_content:last-child{
+	margin-bottom:0.3rem;
+}
+.con_content_top{
+	float:left;
+	width:6.9rem;
+	height:1rem;
+	background:#FB503B;
+	overflow:hidden;
+}
+.con_content_top_1{
+	width:6.9rem;
+	height:1rem;
+	background:url(../img/chong.png) no-repeat;
+	background-size:6.9rem 1rem;
+	line-height:1rem;
+	font-size: 0.24rem;
+    color: white;
+    display: flex;
+    justify-content: space-around;
+}
+.con_content_con{
+	float:left;
+	width:6.9rem;
+	height:1.76rem;
+	position: relative;
+}
+.chong{
+	position:absolute;
+	top:0.3rem;
+	left:0.2rem;
+	font-size:0.36rem;
+	color:#333333;
+	font-weight:bold;
+}
+.num{
+	position: absolute;
+    left: 1.4rem;
+    top: 0.15rem;
+    font-size: 0.6rem;
+    font-weight: bold;
+}
+.suc{
+	float:left;
+	width:1.6rem;
+	height:0.66rem;
+	border-radius:0.34rem;
+	color:white;
+	text-align:center;
+	line-height:0.66rem;
+	font-size:0.3rem;
+	margin-top:0.2rem;
+	margin-left:0.6rem;
+	margin-right:0.2rem;
+	margin-bottom:0.2rem;
+	background: linear-gradient(to right,#fb523c,#ff6633);
+	position:absolute;
+	right:0.2rem;
+}
+.fail{
+	float:left;
+	width:1.6rem;
+	height:0.66rem;
+	border-radius:0.34rem;
+	color:white;
+	text-align:center;
+	line-height:0.66rem;
+	font-size:0.3rem;
+	margin-top:0.2rem;
+	margin-left:0.7rem;
+	margin-right:0.2rem;
+	margin-bottom:0.2rem;
+	background: linear-gradient(to right,#999999,#666666);
+	position:absolute;
+	right:0.2rem;
+}
+.wait{
+	float:left;
+	width:1.6rem;
+	height:0.66rem;
+	border-radius:0.34rem;
+	color:white;
+	text-align:center;
+	line-height:0.66rem;
+	font-size:0.3rem;
+	margin-top:0.2rem;
+	margin-left:0.6rem;
+	margin-right:0.2rem;
+	margin-bottom:0.2rem;
+	background: linear-gradient(to right,#666666,#999999);
+	position:absolute;
+	right:0.2rem;
+}
+.continue{
+	float:left;
+	width:1.6rem;
+	height:0.66rem;
+	border-radius:0.34rem;
+	color:white;
+	text-align:center;
+	line-height:0.66rem;
+	font-size:0.3rem;
+	margin-top:0.2rem;
+	margin-left:2.04rem;
+	margin-right:0.2rem;
+	margin-bottom:0.2rem;
+	background: linear-gradient(to right,#f5c10d,#ff9900);
+	position:absolute;
+	right:0.2rem;
+}
+.pay{
+	position:absolute;
+	top:1rem;
+	float:left;
+	left:0.2rem;
+	font-size:0.3rem;
+	color:#333333;
+}
+.number{
+	margin-top:1rem;
+	float:left;
+	margin-left:1rem;
+	font-size:0.3rem;
+	color:#333333;
+}
+.sheng{
+	position:absolute;
+	top:1rem;
+	float:left;
+	left:4.6rem;
+	font-size:0.3rem;
+	color:#333333;
+}
+.qian{
+	position:absolute;
+	top:1rem;
+	left:5.4rem;
+	font-size:0.3rem;
+	color:#E94F3D;
+	font-weight:bold;
+}
+.con_content_bottom{
+	float:left;
+	border-top:0.04rem dashed #999999;
+	width:6.9rem;
+	height:0.9rem;
+	text-align:center;
+	line-height:0.9rem;
+	font-size:0.36rem;
+	color:#333333;
+}

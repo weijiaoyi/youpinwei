@@ -1,0 +1,317 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<title>申请成为银牌代理</title>
+	<link rel="stylesheet" href="../css/silver.css">
+	<script>
+    	var eMeta=document.createElement('meta');
+	      eMeta.setAttribute("name","viewport");
+	      eMeta.setAttribute("content",'initial-scale='+1/window.devicePixelRatio+'')
+	      document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	      window.addEventListener("resize",function(){
+	        document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	    })
+	</script>
+</head>
+<body>
+	<div class="homepage">
+		<div class="zhezhao"></div>
+		<div class="success">
+			<div class="success_con">
+				<div class="success_title">恭喜您！成为银牌代理人</div>		
+				<ol class="ol_2">
+					<li>1.请收到油卡之后,前往微信公众号中</br>"油卡服务"频道进行绑定和充值;</li>
+					<li>2.如您之前已经是“易省油”会员,成为银牌代理人后,您账户下所有油卡均可享受93折充值优惠;</li>
+					<li>3.点击“代理服务”频道,分享“易省油”公众号给更多好友,你即可获得银牌代理人相关推广奖励!</li>
+				</ol>
+				<div class="share">马上去分享</div>
+				<div class="close"></div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card_con"></div>
+		</div>
+		<div class="infomation">
+			<div class="infomation_title">银牌代理权益</div>
+			<ol class="ol_1">
+				<li>支付200元年费即可成为银牌代理,立享93折加油优惠;</li>
+				<li>每推荐一名金牌代理,获得该名金牌代理代理费用的50%作为现金奖励</li>
+				<li>每推荐一名银牌代理,获得40元现金奖励
+				</li>
+				<li>
+					每次推荐一名购95折购卡用户,获得该用户充值金额的2%奖励<b>(永久)</b>
+				</li>
+				<li>拓展关系一旦绑定,终身有效;</li>
+			</ol>
+		</div>
+		<div class="apply">
+			<div class="apply_title">申请信息</div>
+			<p>收货人</p>
+			<input type="text" class="input_type" id="consignee">
+			<p>联系电话</p>
+			<input type="text" class="input_type" id="telephone">
+			<p>收货地址</p>
+			<select name="province" id="province">
+				<option value="请选择">请选择</option>
+			</select>
+			<select name="city" id="city">
+				<option value="请选择">请选择</option>
+			</select>
+			<select name="town" id="town">
+				<option value="请选择">请选择</option>
+			</select>
+			<input type="text" class="input_type" id="specific">
+		</div>
+		<div class="card_info">
+			<div class="card_info_title">油卡信息</div>
+				<div class="dan">
+		        	<input id="item1" type="radio" name="gander" value="item1">
+		        	<label for="item1"></label>
+		        	<span style="margin-left:1.2rem;margin-top:-0.4rem">选择已有油卡设置为银牌专享93折卡</span>
+		        	<select name="" id="card" style="text-align: center; text-align-last: center;outline:none;">
+		        	</select>
+		        </div>
+		        <div class="dan">
+			        <input id="item2" type="radio" name="gander" value="item2">
+			        <label for="item2"></label>
+			        <span style="margin-left:1.2rem;margin-top:-0.4rem">申领一张新油卡，并充值100元预充值费</span>
+		      	</div>
+		</div>
+		<div class="pay_info">
+			<div class="pay_info_title">支付信息</div>
+			<div class="yinpai">
+				<span class="yinpai_left">银牌代理人申请年费</span>
+				<span class="yinpai_right">200元/年</span>
+			</div>
+			<div class="new">
+				<span class="new_left">申领新油卡1张预充值费</span>
+				<span class="new_right">100元/张</span>
+			</div>
+			<div class="heji">合计300元</div>
+		</div>
+		<div class="infomation_btn">去支付</div>
+	</div>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script src="../js/area.js"></script>
+	<script>
+		var localStorage=window.localStorage;
+		localStorage.getItem('openid');
+		let openid=localStorage.openid;	
+		_init_area("province", "city", "town");
+    $(function(){
+             var a = $("#province") .val();//省
+             var b = $("#city").val(); //市
+             var c = $("#town").val(); //县
+    // 可以添加一个按钮，触发打印省市区的值
+            $("#btn").click(function(){
+                    console.log(a,b,c);       
+           });    
+    // 当然也可以给select添加change事件
+           $("#province").bind("change", function(){
+                     console.log($(this).val());
+          })
+            $("#city").bind("change", function(){
+                     console.log($(this).val());
+          })
+             $("#town").bind("change", function(){
+                     console.log($(this).val());
+          })
+    });
+
+    
+
+
+		localStorage.setItem('money',0);
+		window.onload=function(){
+        var ganders=document.getElementsByName("gander"),length=ganders.length,i=0;
+            for(;i<length;i++){
+                   ganders[i].onclick=function(){
+                       if(this.checked&&this.value=='item1'){
+                       		$('.yinpai').show();
+                       		$('.new').hide();
+                       		localStorage.setItem('money',200);
+   							var money=localStorage.money;
+   							console.log(money);
+   							$('.heji').html(`
+							合计${money}元	
+							`)						
+                       }else if(this.checked&&this.value=='item2'){
+                       		$('.yinpai').show();
+                       		$('.new').show();
+                       		localStorage.setItem('money',300);
+							var money=localStorage.money;
+   							console.log(money);
+   							$('.heji').html(`
+							合计${money}元	
+							`)
+							localStorage.removeItem('card_no');
+                       }
+                   };
+            }
+   		}	
+   		var card_num=localStorage.card_no;
+							function ajaxFun(){
+								var list={};
+								$.ajax({
+									type:'post',
+									url:'http://ysy.edshui.com/index.php?g=oilcard&m=card&a=cardList',
+									dataType:'json',
+									data:{openid:openid,flag:95},
+									async:false,
+									success:function(res){
+										list=res;
+									}
+								})
+								return list;
+							}
+							let infomation=ajaxFun();
+							console.log(infomation);
+							var card_no1=infomation.msg[0].card_no;
+							localStorage.setItem('card_no',card_no1);
+							let data=infomation.msg;
+							if(infomation.status == 1000){
+								data.forEach(function(item,index){
+								$('#card').get(0).innerHTML+=`
+									<option value="${data[index].card_no}">${data[index].card_no}</option>
+								`
+								})
+							}else{
+								$('#item1').attr('disabled','disabled')
+								$('#card').attr('disabled','disabled')
+							}
+							
+   		var money=localStorage.money;
+		console.log(money);
+		$('.heji').html(`
+			合计${money}元	
+			`)
+		$("#card").change(function(){
+		    var card_no1=$(this).val();
+		    localStorage.setItem('card_no',card_no1);
+		});
+		$("#province").change(function(){
+			var province=$(this).val();
+			localStorage.setItem('province',province);
+		});
+		$("#city").change(function(){
+			let city=$(this).val();
+			localStorage.setItem('city',city);
+		});
+		$("#town").change(function(){
+			let town=$(this).val();
+			localStorage.setItem('town',town);
+		});
+		$("#specific").blur(function(){
+		    let addres=$("#specific").val();
+			localStorage.setItem('addres',addres);
+		});
+		$('.infomation_btn').click(function(){
+			var card_no=localStorage.card_no;
+			var phone = $('#telephone').val();
+			var name = $('#consignee').val(); 
+			var address =localStorage.province+'省'+localStorage.city+localStorage.town+localStorage.addres;
+			 if(!( /^[\u4E00-\u9FA5A-Za-z]+$/.test(name))){ 
+		        alert("收货人只能输入中文和英文");  
+		        return false; 
+		    }else{
+				if(!(/^1[34578]\d{9}$/.test(phone))){ 
+			        alert("手机号码有误，请重填");  
+			        return false; 
+			    }else{
+					if((/^\s*$/g.test(address))){ 
+				        alert("收货地址不能为空");  
+				        return false; 
+				    }else{
+				        function ajaxFun(){
+							var list={};
+							$.ajax({
+								type:'post',
+								url:'https://ysy.edshui.com/index.php?g=oilcard&m=apply&a=agentapply',
+								dataType:'json',
+								data:{
+									data:{
+										receive_person:name,phone:phone,address:address
+									},
+									card_no:card_no,
+									openid:openid
+								},
+								async:false,
+								success:function(res){
+								    console.log(res);
+									list=res;
+								}
+							})
+							return list;
+						}
+						let reslist=ajaxFun();
+						console.log(reslist);
+						let ret=reslist.data;
+						console.log(ret);
+						var ret0 = eval(ret);
+						console.log(ret0);
+						if(reslist.status==500){
+							console.log('213');
+							localStorage.removeItem('province');
+							localStorage.removeItem('city');
+							localStorage.removeItem('town');
+							localStorage.removeItem('addres');
+						}
+						$('.infomation_btn').click(function(){
+	
+			
+			function pay(){
+				var mon={};
+				$.ajax({
+					type:'post',
+					url:'http://ysy.edshui.com/index.php?g=oilcard&m=wechat&a=jsConfig',
+					dataType:'json',
+					data:{openid:openid},
+					async:false,
+					success:function(rel){
+						mon=rel;
+					}
+				})
+				return mon;
+			}
+			let mon=pay();
+			let xinxi=mon.data;
+			var sendParm = eval(xinxi);
+				wx.config({
+					debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+					appId:xinxi.appId, // 必填，公众号的唯一标识
+					timestamp:xinxi.timestamp, // 必填，生成签名的时间戳
+					nonceStr:xinxi.nonceStr, // 必填，生成签名的随机串
+					signature:xinxi.signature,// 必填，签名，见附录1
+					jsApiList:['chooseWXPay']// 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+					});
+				wx.ready(function(){
+				    wx.chooseWXPay({
+						timestamp: ret0.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+						nonceStr:ret0.nonceStr, // 支付签名随机串，不长于 32 位
+						package:ret0.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+						signType:ret0.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+						paySign:ret0.paySign, // 支付签名
+						success: function (res) {
+							window.location.href='http://ysy.edshui.com/H/html/agent.html';
+						}		
+					});
+				});
+				wx.error(function(res){
+					console.log(res)
+				});
+
+		})		
+					}
+				}
+		    }	
+		})
+
+	</script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script>
+		
+	</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<title>充值记录</title>
+	<link rel="stylesheet" href="../css/homepage1.css">
+	<script>
+    	var eMeta=document.createElement('meta');
+	      eMeta.setAttribute("name","viewport");
+	      eMeta.setAttribute("content",'initial-scale='+1/window.devicePixelRatio+'')
+	      document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	      window.addEventListener("resize",function(){
+	        document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	    })
+	</script>
+</head>
+<body>
+	<div class="homepage">
+		<div class="container" data_page="">
+			<ul></ul>
+		</div>
+		<div class="footer">
+			<div class="footer_tab">
+				<a href="homepage.html">
+					<span class="footer_tab_img"></span>
+					<p>油卡服务</p>
+				</a>
+
+				</div>
+			<div class="footer_tab">
+				<a href="homepage1.html">
+					<span class="footer_tab_img active"></span>
+					<p class="orange">充值记录</p>
+				</a>
+			</div>
+			<div class="footer_tab">
+				<a href="homepage2.html">
+					<span class="footer_tab_img"></span>
+					<p>常见问题</p>
+				</a>
+			</div>
+		</div>
+	</div>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script>
+		var localStorage=window.localStorage;
+		localStorage.getItem('openid');
+		let openid=localStorage.openid;
+		function ajaxFun(){
+			var list={};
+			$.ajax({
+				type:'post',
+				url:'http://ysy.edshui.com/index.php?g=oilcard&m=Integral&a=addMoneyRecord',
+				dataType:'json',
+				data:{openid:openid},
+				async:false,
+				success:function(res){
+					list=res;
+				}
+			})
+			return list;
+		}
+		let data=ajaxFun().data;
+	</script>
+	<script>
+		(function($){
+		var pageHeight;
+		var scrollHeight;
+		var scrollTop;
+		var refresh; //距离底部多高刷新
+		var $ulEle; //ul 增加 dom 的容器
+
+
+		var Pagging = function(obj){
+		if(!(this instanceof Pagging)){
+		
+		return new Pagging(obj);
+		}
+
+		//初始化
+		this._init(obj);
+		}
+		Pagging.prototype = {
+		_init: function(obj){
+		this.extend(obj)
+		//初始化数据
+		this.initData(obj);
+		//绑定事件
+		this.bindEvent(this.dataObj);
+		},
+		initData: function(obj){
+		refresh = obj.refreshLength;
+		},
+		extend: function(obj){
+		var dataObj = {};
+		for(key in obj){
+		dataObj[key] = obj[key]
+		}
+		this.dataObj = dataObj;
+		},
+		bindEvent: function(obj){
+		var that = this;
+		$('.container').on('touchstart',function(){
+		});
+
+		$('.container').on('touchmove',function(){
+		if(scrollHeight > pageHeight){
+		if(scrollHeight - scrollTop - pageHeight < refresh){
+		//加载数据
+		that.drawPage(obj)
+		}
+		}
+		});
+		},
+		drawPage: function(obj){
+		console.log(JSON.stringify(obj))
+		var $dom = $(obj.el);
+		$dom.append(obj.template);
+		}
+		}
+		//暴露全局变量
+		window.Pagging = Pagging
+
+		})($)
+	</script>
+	<script>
+		data.forEach(function(item,index){
+			$('.container').get(0).innerHTML+=`
+				<li class="con_content">
+						<div class="con_content_top">
+							<div class="con_content_top_1">
+								<span class="danhao">${data[index].order_no}</span>
+								<span class="time">${data[index].createtime}</span>
+							</div>
+						</div>
+						<div class="con_content_con">
+							<span class="chong">充值额:</span>
+							<span class="num">¥${data[index].money}</span>
+							<span class="${data[index].flag}">${data[index].status}</span>
+							<span class="pay">支付:</span>
+							<span class="number">￥${data[index].real_pay}</span>
+							<span class="sheng">节省:</span>
+							<span class="qian">￥${data[index].discount_money}</span>
+						</div>
+						<div class="con_content_bottom">
+							卡号：${data[index].card_no}
+						</div>
+					</li>
+			`
+		})
+		$('.container').attr('data_page',2);
+		window.onscroll = function () {
+            var scrollT = document.documentElement.scrollTop || document.body.scrollTop; //滚动条的垂直偏移
+            var scrollH = document.documentElement.scrollHeight || document.body.scrollHeight; //元素的整体高度
+            var clientH = document.documentElement.clientHeight || document.body.clientHeight; //元素的可见高度
+            if (scrollT == scrollH - clientH) {
+                var page_index = parseInt($('.container').attr('data_page'));
+				function page(){
+					var list={};
+					$.ajax({
+						type:'post',
+						url:'http://ysy.edshui.com/index.php?g=oilcard&m=Integral&a=addMoneyRecord',
+						dataType:'json',
+						data:{openid:openid,page:page_index},
+						async:false,
+						success:function(res){
+							list=res;
+							$('.container').attr('data_page',page_index+1)
+						}
+					})
+					return list;
+				}
+				let page_num=page().data;
+				console.log(page_num);
+				if(page_num.page_count>=page_index){
+	        		return false;	        	
+	        	}
+				$('.container ul').append(page_num.forEach(function(item,index){
+					$('.container').get(0).innerHTML+=`
+						<li class="con_content">
+								<div class="con_content_top">
+									<div class="con_content_top_1">
+										<span class="danhao">${page_num[index].order_no}</span>
+										<span class="time">${page_num[index].createtime}</span>
+									</div>
+								</div>
+								<div class="con_content_con">
+									<span class="chong">充值额:</span>
+									<span class="num">¥${page_num[index].money}</span>
+									<span class="${page_num[index].flag}">${page_num[index].status}</span>
+									<span class="pay">支付:</span>
+									<span class="number">￥${page_num[index].real_pay}</span>
+									<span class="sheng">节省:</span>
+									<span class="qian">￥${page_num[index].discount_money}</span>
+								</div>
+								<div class="con_content_bottom">
+									卡号：${page_num[index].card_no}
+								</div>
+							</li>
+					`
+				}))
+        	}
+
+        }
+	</script>
+</body>
+</html>

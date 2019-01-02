@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<title>充值记录</title>
+	<link rel="stylesheet" href="../css/tool_select_01_details.css">
+	<script>
+    	var eMeta=document.createElement('meta');
+	      eMeta.setAttribute("name","viewport");
+	      eMeta.setAttribute("content",'initial-scale='+1/window.devicePixelRatio+'')
+	      document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	      window.addEventListener("resize",function(){
+	        document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	    })
+	</script>
+</head>
+<body>
+	<div class="homepage">
+		<div class="con">
+		</div>
+		<div class="footer">
+			<div class="footer_tab">
+				<a href="homepage.html">
+					<span class="footer_tab_img"></span>
+					<p>油卡服务</p>
+				</a>
+
+				</div>
+			<div class="footer_tab">
+				<a href="homepage1.html">
+					<span class="footer_tab_img active"></span>
+					<p>充值记录</p>
+				</a>
+			</div>
+			<div class="footer_tab">
+				<a href="homepage2.html">
+					<span class="footer_tab_img"></span>
+					<p>常见问题</p>
+				</a>
+			</div>
+		</div>
+	</div>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script>
+		var localStorage=window.localStorage;
+		localStorage.getItem('openid');
+		function getQueryString(name){
+	    	var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		    var r = window.location.search.substr(1).match(reg);
+		    if (r!=null) return r[2]; return '';
+		}
+
+		let card_no = getQueryString('card_no');
+		console.log(card_no);
+		let openid=localStorage.openid;
+		$('.add').click(function(){
+			$('.zhezhao').show();
+			$('.success').show()
+		})
+			function page(){
+					var list={};
+					$.ajax({
+						type:'post',
+						url:'http://ysy.edshui.com/index.php?g=oilcard&m=order&a=orderDetails',
+						dataType:'json',
+						data:{card_no:card_no},
+						async:false,
+						success:function(res){
+							list=res;
+						}
+					})
+					return list;
+				}
+				let info=page();
+				console.log(info);
+			$('.con').html(`
+				<div class="con_content">
+					<div class="con_content_top">
+						<div class="con_content_top_1">
+							<span class="danhao">SN123456789</span>
+							<span class="time">${info.createtime}</span>
+						</div>
+					</div>
+					<div class="con_content_con1">
+						<span class="shenling"></span>
+						<span class="bangsuc">申领成功</span>
+					</div>
+					<div class="con_content_bottom">
+						卡号：${info.card_no}
+					</div>
+				</div>
+				<div class="details">
+					<div class="details_con">
+						<p class="xinxi">商品：<b>${info.shop_name}</b></p>
+						<p class="xinxi">卡号：${info.card_no}</p>
+						<p class="xinxi">充值：500.00元</p>
+						<p class="xinxi">收货人：${info.receive_person}</p>
+						<p class="xinxi">联系方式：${info.phone}</p>
+						<p class="xinxi">收货地址：${info.address}</p>
+						<p class="xinxi">选择快递：${info.courier_company}（985525884566）</p>
+						<p class="guanzhu">请关注物流信息,如有问题请联系客服微信号</p>
+					</div>
+				</div>
+
+
+			`)
+	</script>
+</body>
+</html>

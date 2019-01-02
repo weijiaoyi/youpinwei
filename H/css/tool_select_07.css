@@ -1,0 +1,261 @@
+*{
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+span{
+	display: block;
+}
+a{
+	text-decoration:none;
+	color:#000;
+}
+b{
+	font-weight:normal;
+}
+.homepage{
+	width:7.5rem;
+	height:100%;
+}
+.footer{
+	position:fixed;
+	bottom:0;
+	left:0;
+	width: 7.5rem;
+	height: 0.98rem;
+	border-top: 0.02rem solid #E7E7E7;
+	display: flex;
+	justify-content: center;
+}
+.footer_tab a{
+	width: 2.5rem;
+	height: 0.98rem;
+	background: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+.footer_tab:nth-child(1) .active.footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab02_icon.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(1) .footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab01.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(2) .active.footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab02_icon.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(2) .footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab02.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(3) .active.footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab03_icon.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab:nth-child(3) .footer_tab_img{
+	width: 0.4rem;
+	height: 0.4rem;
+	background:url("../img/tab03.png");
+	background-size: 0.4rem 0.4rem;
+}
+.footer_tab p{
+	margin-top:0.04rem;
+	font-size:0.24rem;
+}
+.top{
+	float:left;
+	width:7.5rem;
+	height:1.28rem;
+	background:black;
+}
+.con{
+	float:left;
+	width:100%;
+	height:10rem;
+	background:white;
+	padding-bottom:1rem;
+	line-height:10rem;
+	font-size:0.5rem;
+	font-weight:bold;
+	text-align:center;
+}
+.con_content{
+	width: 6.9rem;
+	/*height:3.7rem;*/
+	margin-left:0.3rem;
+	margin-top:0.3rem;
+	background:white;
+	border-radius:0.2rem;
+	overflow:hidden;
+}
+.con_content:last-child{
+	margin-bottom:0.3rem;
+}
+.con_content_top{
+	float:left;
+	width:6.9rem;
+	height:1rem;
+	background:#FB503B;
+	overflow:hidden;
+}
+.con_content_top_1{
+	width:6.9rem;
+	height:1rem;
+	background:url(../img/chong.png) no-repeat;
+	background-size:6.9rem 1rem;
+	line-height:1rem;
+	font-size:0.3rem;
+	color:white;
+}
+.danhao{
+	float:left;
+	margin-left:0.2rem;
+}
+.time{
+	float:right;
+	margin-right:0.2rem;
+}
+.con_content_con{
+	float:left;
+	width:6.9rem;
+	height:1.76rem;
+}
+.con_content_con1{
+	float:left;
+	width:6.9rem;
+	height:1.1rem;
+}
+.chongzhi{
+	float:left;
+	width:0.8rem;
+	height:0.8rem;
+	margin-top:0.14rem;
+	margin-left:0.2rem;
+	background:url(../img/select02.png);
+	background-size:0.8rem 0.8rem;
+}
+.bangding{
+	float:left;
+	width:0.8rem;
+	height:0.8rem;
+	margin-top:0.14rem;
+	margin-left:0.2rem;
+	background:url(../img/select03.png);
+	background-size:0.8rem 0.8rem;
+}
+.shenling{
+	float:left;
+	width:0.8rem;
+	height:0.8rem;
+	margin-top:0.14rem;
+	margin-left:0.2rem;
+	background:url(../img/select01.png);
+	background-size:0.8rem 0.8rem;
+}
+.chong{
+	float:left;
+	margin-top:0.4rem;
+	margin-left:0.2rem;
+	font-size:0.36rem;
+	color:#333333;
+}
+.num{
+	float:left;
+	margin-left:0.16rem;
+	margin-top:0.15rem;
+	font-size:0.6rem;
+	font-weight:bold;
+	margin-right:2.04rem;
+}
+.pay{
+	float:left;
+	margin-top:0.1rem;
+	float:left;
+	margin-left:0.2rem;
+	font-size:0.3rem;
+	color:#333333;
+}
+.number{
+	margin-top:0.1rem;
+	float:left;
+	margin-left:0.2rem;
+	font-size:0.3rem;
+	color:#333333;
+}
+.sheng{
+	float:left;
+	margin-top:0.1rem;
+	float:left;
+	margin-left:2.56rem;
+	font-size:0.3rem;
+	color:#333333;
+}
+.qian{
+	margin-top:0.1rem;
+	float:left;
+	margin-left:0.2rem;
+	font-size:0.3rem;
+	color:#E94F3D;
+	font-weight:bold;
+}
+.con_content_bottom{
+	float:left;
+	border-top:0.04rem dashed #999999;
+	width:6.9rem;
+	height:0.9rem;
+	text-align:center;
+	line-height:0.9rem;
+	font-size:0.36rem;
+	color:#333333;
+}
+.bangsuc{
+	float:left;
+	margin-left:0.28rem;
+	margin-top:0.42rem;
+	font-size:0.36rem;
+	color:#333333;
+}
+.details{
+	width:6.9rem;
+	height:6.6rem;
+	margin-top:0.3rem;
+	margin-left:0.3rem;
+	background:white;
+	float:left;
+	border-radius: 0.24rem;
+}
+.details_con{
+	width:6.6rem;
+	height:6.6rem;
+	margin-left:0.2rem;
+	float:left;
+}
+.details_con p{
+	float:left;
+	width:100%;
+	height:0.32rem;
+	font-size:0.32rem;
+}
+.xinxi{
+	margin-top:0.4rem;
+	color:#333333;
+}
+.guanzhu{
+	margin-top:0.62rem;
+	text-align:center;
+	color:#E94F3D;
+}

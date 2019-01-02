@@ -490,7 +490,7 @@ class WechatController extends CommentoilcardController
                     'order_status'=> 2,
                     'updatetime'=>$NowTime
                 ];
-
+                
                 //用户信息变动记录
                 $MemberSave =[
                     //积分 1：1
@@ -514,6 +514,12 @@ class WechatController extends CommentoilcardController
                 ];
                 $EarningsAdd =[];
                 $AgentSave =[];
+                $MemberAgentSave = [];
+                //如果用户使用加油卷  --  则 减少加油卷数量 
+                if (!empty($OrderInfo['coupon_money']) && $OrderInfo['coupon_money'] >0) {
+                    $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderInfo['coupon_money'];
+                }
+
                 //是否存在上级代理 
                 //当用户身份为代理时不做操作
                 //当上级代理未绑定时不做操作
@@ -524,8 +530,8 @@ class WechatController extends CommentoilcardController
                     // user_direct_scale  普通直属会员充值分成
                     // vip_indirect_scale  VIP间接会员充值分成
                     // user_indirect_scale 普通间接会员充值分成
-                    //用户充值的金额 ，使用真实交的钱
-                    $RechageMoney = $order_item['real_pay'];
+                    //用户充值的金额 ，使用真实面额
+                    $RechageMoney = $order_item['money'];
                     //判断是直属下级还是间接下级身份
                     switch ($Member['agent_relation']) {
                         case '1': //直接下级
@@ -544,7 +550,8 @@ class WechatController extends CommentoilcardController
                                     break;
                             }
                             break;
-                        default: //间接下级
+
+                        case '2': //间接下级
                             //按照当前会员不同的身份为上级代理分润
                             switch ($Member['role']) {
                                 case '2': //按照VIP会员充值分成给代理分润
@@ -563,26 +570,22 @@ class WechatController extends CommentoilcardController
                     }
 
                     //代理返利记录
-                    $EarningsAdd = [
-                        'openid' => $openId,
-                        'agent_id' => $Member['agentid'],
-                        'createtime' => $NowTime,
-                        'order_type' => 1,
-                        'earning_body'=>$earning_body,
-                        'earnings' => $rewardMoney,
-                        'updatetime' => $NowTime,
-                        'order_id' => $OrderInfo['id'],
-                        'sn' => $OrderSn,
-                    ];
+                    $EarningsAdd['openid']       = $openId;
+                    $EarningsAdd['agent_id']     = $Member['agentid'];
+                    $EarningsAdd['createtime']   = $NowTime;
+                    $EarningsAdd['order_type']   = 1;
+                    $EarningsAdd['earning_body'] = $earning_body;
+                    $EarningsAdd['earnings']     = $rewardMoney;
+                    $EarningsAdd['updatetime']   = $NowTime;
+                    $EarningsAdd['order_id']     = $OrderInfo['id'];
+                    $EarningsAdd['sn']           = $OrderSn;
 
-                    $AgentSave = [
-                        //总收益
-                        'total_earnings' => $Agent['total_earnings'] + $rewardMoney,
-                        //当前收益
-                        'currt_earnings' => $Agent['currt_earnings'] + $rewardMoney ,
-                        //下线总充值
-                        'add_total' => $Agent['add_total'] + $RechageMoney,
-                    ];
+                    //总收益
+                    $AgentSave['total_earnings'] = $Agent['total_earnings'] + $rewardMoney;
+                    //当前收益
+                    $AgentSave['currt_earnings'] = $Agent['currt_earnings'] + $rewardMoney ;
+                    //下线总充值
+                    $AgentSave['add_total'] = $Agent['add_total'] + $RechageMoney;
                     
                 }
                 $Things = M();
@@ -596,6 +599,8 @@ class WechatController extends CommentoilcardController
                     $OrderSave = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
                     //用户信息修改
                     $MemberSave = M('user')->where(['openid'=>$openId])->save($MemberSave);
+                    //用户信息修改
+                    if($MemberAgentSave)$MemberAgentSave = M('Agent')->where(['openid'=>$openId])->save($MemberAgentSave);
                     //用户积分变动修改                    
                     $IntegralAdd = M('IntegralRecord')->add($IntegralAdd);
                     //代理收益记录
@@ -613,45 +618,6 @@ class WechatController extends CommentoilcardController
                     Log::write('['.$e->getCode().'] '.$e->getMessage(), 'ERR');
                     exit();
                 }
-
-                //1在第一次充值油卡并激活时 把油卡过期时间  加一年 ，是在绑卡时还是在充值时 
-                //
-                //2 油卡押金处理
-                //
-                //3，加油卷 和折扣 是否能同时  使用，如果使用，前端需传过来 准确数值
-                
-                // $openId=$obj_arr['openid'];
-
-                // $card_no=$order_record['card_no'];
-                // $money=$order_record['money'];
-                // if ($flag==1){
-                // 1在第一次充值油卡并激活时 把油卡过期时间  加一年 ，是在绑卡时还是在充值时 
-                //     $card_arr=M('oil_card')->where("card_no='$card_no'")->find();
-
-                //     if ($card_arr['end_time']>=date('Y-m-d H:i:s') && $card_arr['preferential']>=$money) {
-                //         $last_money = (string)$card_arr['preferential'] - (string)$money;
-                //         M('oil_card')->where("card_no='$card_no'")->save(['end_time' => date("Y-m-d H:i:s", strtotime("+1years")), 'preferential' => $last_money]);
-                //     }
-                // }else{
-                //  //3，加油卷 和折扣 是否能同时  使用，如果使用，前端需传过来 准确数值
-                //     $agent_arr=M('agent')->where("openid='$openId'")->find();
-                //     if (empty($agent_arr['currt_earnings']) && $agent_arr['currt_earnings']>=$money){
-                //         $last_money = (string)$agent_arr['currt_earnings'] - (string)$money;
-                //         M('agent')->where("openid='$openId'")->save([ 'currt_earnings' => $last_money]);
-                //     }
-                // }
-
-                //首次充值必须充值1000元  // 关于用户押金问题  --暂未决定
-                // $first_add = M('AddMoney')->where(['openid'=>$openId,'status'=>1])->count();
-                // if ( $first_add<=1  && $money >= 1000) {
-                //     $deposit=M('agent')->where("openid='$openId'")->getField('deposit');
-                //     $preferential_quota=M('user')->where("openid='$openId'")->getField('preferential_quota');
-                //     if (empty($deposit) ){
-                //         M('agent')->where("openid='$openId'")->save(['deposit'=>$deposit-20]);
-                //         M('user')->where("openid='$openId'")->save(['preferential_quota'=>$preferential_quota+20]);
-                //     }
-                // }
-
             } else {
                 Log::record('微信回调无此订单:'.$obj_arr['out_trade_no']);
             }

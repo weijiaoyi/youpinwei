@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<title>客服</title>
+	<link rel="stylesheet" href="../css/tool_select_08.css">
+	<script>
+    	var eMeta=document.createElement('meta');
+	      eMeta.setAttribute("name","viewport");
+	      eMeta.setAttribute("content",'initial-scale='+1/window.devicePixelRatio+'')
+	      document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	      window.addEventListener("resize",function(){
+	        document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	    })
+	</script>
+</head>
+<body>
+	<div class="homepage">
+		<div class="con">
+			<!-- <div class="con_con"> -->
+			<!-- <p class="p1">请扫码加客服微信沟通</p>
+			<div class="ewm"></div> -->
+				<div class="ewm">
+
+				</div>
+			<!-- </div> -->
+		</div>
+		<div class="footer">
+			<div class="footer_tab">
+				<a href="homepage.html">
+					<span class="footer_tab_img"></span>
+					<p>油卡服务</p>
+				</a>
+
+				</div>
+			<div class="footer_tab">
+				<a href="homepage1.html">
+					<span class="footer_tab_img"></span>
+					<p>充值记录</p>
+				</a>
+			</div>
+			<div class="footer_tab">
+				<a href="homepage2.html">
+					<span class="footer_tab_img"></span>
+					<p>常见问题</p>
+				</a>
+			</div>
+		</div>
+	</div>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script>
+		var localStorage=window.localStorage;
+		localStorage.getItem('openid');
+		let openid=localStorage.openid;
+		function pay(){
+			var mon={};
+			$.ajax({
+				type:'post',
+				url:'http://ysy.edshui.com/index.php?g=oilcard&m=wechat&a=qrcode',
+				dataType:'json',
+				data:{openid:openid},
+				async:false,
+				success:function(rel){
+					mon=rel;
+					console.log(rel);
+				}
+			})
+			return mon;
+		}
+		let mon=pay();
+		console.log(mon.data);
+		$('.ewm').html(`
+			<img src="${mon.data}" alt="">
+			`
+		)
+	</script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<title>油卡服务</title>
+	<link rel="stylesheet" href="../css/homepage.css">
+	<script>
+    	var eMeta=document.createElement('meta');
+	      eMeta.setAttribute("name","viewport");
+	      eMeta.setAttribute("content",'initial-scale='+1/window.devicePixelRatio+'')
+	      document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	      window.addEventListener("resize",function(){
+	        document.documentElement.style.fontSize=document.documentElement.clientWidth/7.5+"px";
+	    })
+	</script>
+</head>
+<body>
+	<div class="homepage">
+		<div class="content">
+			<div class="content_tab show">
+				<div class="con">
+					
+				</div>
+				<div class="line"></div>
+				<div class="tool">
+					<a href="tool_select_01.html">
+						<div class="tool_select">
+							<img src="../img/select01.png" alt="">
+							<p class="tool_select_p">申领</p>
+						</div>
+					</a>
+					<a href="tool_select_03.html">
+						<div class="tool_select">
+							<img src="../img/select03.png" alt="">
+							<p class="tool_select_p">绑定</p>
+						</div>
+					</a>
+					<a href="tool_select_02.html">
+						<div class="tool_select">
+							<img src="../img/select02.png" alt="">
+							<p class="tool_select_p">充值</p>
+						</div>
+					</a>
+					<a href="tool_select_04.html">
+						<div class="tool_select">
+							<img src="../img/select04.png" alt="">
+							<p class="tool_select_p">积分</p>
+						</div>
+					</a>
+					<a href="tool_select_05.html">
+						<div class="tool_select">
+							<img src="../img/select05.png" alt="">
+							<p class="tool_select_p">订单</p>
+						</div>
+					</a>
+					<a href="My_oilcard.html">
+					<div class="tool_select">
+						<img src="../img/select06.png" alt="">
+						<p class="tool_select_p">油卡</p>
+					</div>
+					</a>
+					<a href="silver.html">
+						<div class="tool_select">
+							<img src="../img/select07.png" alt="">
+							<p class="tool_select_p">申请代理</p>
+						</div>
+					</a>
+					<a href="tool_select_08.html">
+						<div class="tool_select">
+							<img src="../img/select08.png" alt="">
+							<p class="tool_select_p">分销</p>
+						</div>
+					</a>
+					<a href="agent.html">
+						<div class="tool_select">
+							<img src="../img/select09.png" alt="">
+							<p class="tool_select_p">代理商</p>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="footer_tab">
+				<a href="homepage.html">
+					<span class="footer_tab_img active"></span>
+					<p class="orange">首页</p>
+				</a>
+
+				</div>
+			<div class="footer_tab">
+				<a href="homepage1.html">
+					<span class="footer_tab_img"></span>
+					<p>操作演示</p>
+				</a>
+			</div>
+			<div class="footer_tab">
+				<a href="homepage2.html">
+					<span class="footer_tab_img"></span>
+					<p>客户服务</p>
+				</a>
+			</div>
+			<div class="footer_tab">
+				<a href="homepage2.html">
+					<span class="footer_tab_img"></span>
+					<p>我的</p>
+				</a>
+			</div>
+		</div>
+	</div>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script>
+		
+	</script>
+	<script>
+		function getQueryString(name){
+	    	var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		    var r = window.location.search.substr(1).match(reg);
+		    if (r!=null) return r[2]; return '';
+		}
+		var type = getQueryString('op');
+		console.log(type);
+		var agent=getQueryString('agent_op');
+		console.log(agent);
+		var test=getQueryString('');
+		console.log(test);
+		if(getQueryString('agent_op')){
+			var agent=getQueryString('agent_op');
+			if(agent){
+				function b64DecodeUnicode(str) {
+				    return decodeURIComponent(atob(str).split('').map(function(c) {
+				        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+				    }).join(''));	
+				}
+				var agent_op=b64DecodeUnicode(agent);
+				console.log(agent_op);
+				var localStorage=window.localStorage;
+				localStorage.setItem('agent_op',agent_op);
+				$.ajax({
+					type:'post',
+					url:'http://ysy.edshui.com/index.php?g=oilcard&m=wechat&a=getCodeUrl',
+					dataType:'json',
+					data:{},
+					async:false,
+					success:function(res){
+						console.log(res);
+						window.location.href=res.url;
+					}
+				})
+			}
+			
+		}
+		if(type){
+			function b64DecodeUnicode(str) {
+			    return decodeURIComponent(atob(str).split('').map(function(c) {
+			        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+			    }).join(''));	
+			}
+			var ID=b64DecodeUnicode(type);
+			console.log(ID);
+			var localStorage=window.localStorage;
+			localStorage.setItem('openid',ID);
+		}else if(agent){
+			function b64DecodeUnicode(str) {
+			    return decodeURIComponent(atob(str).split('').map(function(c) {
+			        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+			    }).join(''));	
+			}
+			var agent_op=b64DecodeUnicode(agent);
+			console.log(agent_op);
+			var localStorage=window.localStorage;
+			localStorage.setItem('agent_op',agent_op);
+		}
+		var openid=localStorage.openid;
+		var agent_op=localStorage.agent_op;
+
+		
+		if(localStorage.openid&&localStorage.agent_op){
+			$.ajax({
+				type:'post',
+				url:'http://ysy.edshui.com/index.php?g=oilcard&m=agent&a=agentRelation',
+				dataType:'json',
+				data:{openid:openid,agent_op:agent_op},
+				async:false,
+				success:function(res){
+					list=res;
+					console.log(res);
+				}
+			})
+		}
+		function ajaxFun(){
+			var list={};
+			$.ajax({
+				type:'post',
+				url:'http://ysy.edshui.com/index.php?g=oilcard&m=user&a=userinfo',
+				dataType:'json',
+				data:{openid:openid},
+				async:false,
+				success:function(res){
+					list=res;
+					console.log(res);
+				}
+			})
+			return list;
+		}
+		// console.log(ajaxFun())
+		let infomation=ajaxFun();
+		console.log(infomation.data);
+		$('.con').html(`
+			<div class="con_header">
+				<div class="con_header_headimg">
+					<img src="${infomation.data.user_img}">
+				</div>
+				<div class="con_header_name">
+					<p>${infomation.data.nickname}</p>
+					<p>已省油钱：${infomation.data.already_save_money}元</p>	
+				</div>
+			</div>
+			<div class="con_data">
+				<div class="con_data_all">
+					<p>${infomation.data.card_count}张</p>
+					<p>我的油卡</p>
+				</div>
+				<div class="con_data_all">
+					<p>${infomation.data.total_add_money}元</p>
+					<p>累计充值</p>
+				</div>
+				<div class="con_data_all">
+					<p>${infomation.data.integral}</p>
+					<p>积分</p>
+				</div>
+			</div>
+			<div class="con_banner">
+				<img src="../img/banner1.png">
+			</div>
+			<div class="con_banner">
+				<img src="../img/banner2.png">
+			</div>
+			<div class="con_banner">
+				<img src="../img/banner3.png">
+			</div>
+		`)
+	</script>
+</body>
+</html>
