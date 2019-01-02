@@ -415,7 +415,12 @@ class GradeController extends AdminbaseController
             $OilCardModel = M('oil_card');
             //查询
             $card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
-            $card_id = $card_id+1;
+
+            if(!empty($card_id)){
+                $card_id = $card_id+1;
+            }else{
+                $card_id = 1;
+            }
             $start_card = $OilCardModel -> where(['status' => 1,'id'=>$card_id]) -> getField('card_no');
             if(!empty($start_card)){
                 $start_card = $start_card;
