@@ -62,13 +62,6 @@ class UserController extends CommentoilcardController
                 );
                 M('user')->where("openid='$openid'")->save($parent_data);
             }
-        }else{
-            $parent_data=array(
-                'parentid'=>0,//邀请人ID
-                'agentid'=>0,//邀请人代理商ID
-                'agent_relation'=>3//关系
-            );
-            M('user')->where("openid='$openid'")->save($parent_data);
         }
 
         $output = [];
