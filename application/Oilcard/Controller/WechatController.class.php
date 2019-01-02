@@ -1928,7 +1928,7 @@ class WechatController extends CommentoilcardController
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
             //判断是否申领过
-            $user_apply = M('user_apply')->where("openid='$openid'")->find();
+/*            $user_apply = M('user_apply')->where("openid='$openid'")->find();
             if(empty($user_apply)){
                 if (!empty($agent_openid)){
                     //查询邀请人ID及邀请人代理商ID
@@ -1952,26 +1952,23 @@ class WechatController extends CommentoilcardController
                     }
 
                     M('user')->where("openid='$openid'")->save($parent_data);
-                    /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
-                    if (!empty($agent_openid)){
-                        $a_id= M('agent')->where("openid='$agent_openid'")->getField('id');
 
-                        $ad= M('agent_relation')->where("openid='$openid'")->find();
-                        if (empty($ad)) {
-
-                            $res= M('agent_relation')->add(['agent_id'=>$a_id,'openid'=>$openid]);
-                        }else{
-                            $earnings_data=M('agent_earnings')->where("openid='$openid' and agent_id='$ad'")->find();
-                            if (empty($earnings_data)) {
-                                M('agent_relation')->save(['agent_id'=>$a_id]);
-                            }
-                            $res= M('agent_relation')->save(['agent_id'=>$aid]);
-                        }
-
-                        log::record($res);
-                    }*/
+                }else{
+                    $parent_data=array(
+                        'parentid'=>0,//邀请人ID
+                        'agentid'=>0,//邀请人代理商ID
+                        'agent_relation'=>3//关系
+                    );
+                    M('user')->where("openid='$openid'")->save($parent_data);
                 }
-            }
+            }else{
+                $parent_data=array(
+                    'parentid'=>0,//邀请人ID
+                    'agentid'=>0,//邀请人代理商ID
+                    'agent_relation'=>3//关系
+                );
+                M('user')->where("openid='$openid'")->save($parent_data);
+            }*/
             $this->success($arr);
             log::record('小程序登录返回数据'.$arr);
 
@@ -1987,7 +1984,7 @@ class WechatController extends CommentoilcardController
             $arr= M('user')->where("openid='$openid'")->find();
             log::record($agent_openid);
             //判断是否申领过
-            $user_apply = M('user_apply')->where("openid='$openid'")->find();
+   /*         $user_apply = M('user_apply')->where("openid='$openid'")->find();
             if(empty($user_apply)){
                 if (!empty($agent_openid)){
                     //查询邀请人ID及邀请人代理商ID
@@ -2010,31 +2007,62 @@ class WechatController extends CommentoilcardController
                         );
                     }
                     M('user')->where("openid='$openid'")->save($parent_data);
-                    /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
-                    if (!empty($agent_openid)){
-                        $a_id= M('agent')->where("openid='$agent_openid'")->getField('id');
 
-                        $ad= M('agent_relation')->where("openid='$openid'")->find();
-                        if (empty($ad)) {
-
-                            $res= M('agent_relation')->add(['agent_id'=>$a_id,'openid'=>$openid]);
-                        }else{
-                            $earnings_data=M('agent_earnings')->where("openid='$openid' and agent_id='$ad'")->find();
-                            if (empty($earnings_data)) {
-                                M('agent_relation')->save(['agent_id'=>$a_id]);
-                            }
-                            $res= M('agent_relation')->save(['agent_id'=>$aid]);
-                        }
-
-                        log::record($res);
-                    }*/
+                }else{
+                    $parent_data=array(
+                        'parentid'=>0,//邀请人ID
+                        'agentid'=>0,//邀请人代理商ID
+                        'agent_relation'=>3//关系
+                    );
+                    M('user')->where("openid='$openid'")->save($parent_data);
                 }
-            }
+            }else{
+                $parent_data=array(
+                    'parentid'=>0,//邀请人ID
+                    'agentid'=>0,//邀请人代理商ID
+                    'agent_relation'=>3//关系
+                );
+                M('user')->where("openid='$openid'")->save($parent_data);
+            }*/
             $this->success($arr);
             exit;
         }
+        /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
+                            if (!empty($agent_openid)){
+                                $a_id= M('agent')->where("openid='$agent_openid'")->getField('id');
 
+                                $ad= M('agent_relation')->where("openid='$openid'")->find();
+                                if (empty($ad)) {
 
+                                    $res= M('agent_relation')->add(['agent_id'=>$a_id,'openid'=>$openid]);
+                                }else{
+                                    $earnings_data=M('agent_earnings')->where("openid='$openid' and agent_id='$ad'")->find();
+                                    if (empty($earnings_data)) {
+                                        M('agent_relation')->save(['agent_id'=>$a_id]);
+                                    }
+                                    $res= M('agent_relation')->save(['agent_id'=>$aid]);
+                                }
+
+                                log::record($res);
+                            }*/
+        /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
+                            if (!empty($agent_openid)){
+                                $a_id= M('agent')->where("openid='$agent_openid'")->getField('id');
+
+                                $ad= M('agent_relation')->where("openid='$openid'")->find();
+                                if (empty($ad)) {
+
+                                    $res= M('agent_relation')->add(['agent_id'=>$a_id,'openid'=>$openid]);
+                                }else{
+                                    $earnings_data=M('agent_earnings')->where("openid='$openid' and agent_id='$ad'")->find();
+                                    if (empty($earnings_data)) {
+                                        M('agent_relation')->save(['agent_id'=>$a_id]);
+                                    }
+                                    $res= M('agent_relation')->save(['agent_id'=>$aid]);
+                                }
+
+                                log::record($res);
+                            }*/
 // 数据签名校验
         //        $signature = I('get.signature');
         //        $signature2 = sha1($_GET['rawData'].$session_key);  //记住不应该用TP中的I方法，会过滤掉必要的数据
