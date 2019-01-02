@@ -64,18 +64,19 @@ class OrderController extends AdminbaseController{
         $OrderRecordModel = M('order_record');
         $p = trim(I('get.p','1'));
         $keyword = trim(I('post.keyword'));
-        $where='o.order_type = 3 AND o.order_status=2';
+        $where='o.order_type = 3 AND o.order_status = 2 ';
         if(!empty($keyword)){
             $where.=' AND (a.card_no LIKE "%'.$keyword.'%" OR o.serial_number LIKE "%'.$keyword.'%")';
         }
         $order_info=$OrderRecordModel
             ->alias('o')
-            ->join('add_money a ON a.user_id=o.user_id',LEFT)
+            ->join('add_money a ON a.order_no=o.serial_number',LEFT)
             ->join('user u ON u.id=o.user_id',LEFT)
-            ->field('o.id,o.user_id,o.serial_number,a.*,u.nickname,u.user_img')
+            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,a.*,u.nickname,u.user_img')
             ->where($where)
             -> page($p,'10')
             ->select();
+//        echo '<pre>';var_dump($order_info);exit;
        /* $order_info = $OrderRecordModel
             -> where( 'order_type = 3 ' )
             -> page($p,'10')

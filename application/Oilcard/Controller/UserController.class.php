@@ -16,6 +16,7 @@ class UserController extends CommentoilcardController
     public function userInfo()
     {
         $openid  = trim(I('post.openid'));
+        $scene  = trim(I('post.scene'));
         if (!isset($openid) || ! $openid)
         {
             $this->openidError('openid不能为空！');
@@ -28,6 +29,49 @@ class UserController extends CommentoilcardController
 //            //跳转到微信登录url
 //            redirect(U('oilcard/wechat/getCode'));
 //        }
+        //判断是否申领过
+        $user_apply = M('user_apply')->where("openid='$openid'")->find();
+        if(empty($user_apply)){
+            if (!empty($scene)){
+                //查询邀请人ID及邀请人代理商ID
+                $parent=M('user')
+                    ->alias('u')
+                    ->join('__AGENT__ a ON a.openid=u.openid',LEFT)
+                    ->where('u.openid="'.$scene.'"')
+                    ->find();
+                if($parent['role'] == 3){
+                    $parent_data=array(
+                        'parentid'=>$parent['id'],//邀请人ID
+                        'agentid'=>$parent['id'],//邀请人代理商ID
+                        'agent_relation'=>1//直接关系
+                    );
+                }else{
+                    if(empty($parent['agentid'])){
+                        $parent_data=array(
+                            'parentid'=>$parent['id'],//邀请人ID
+                            'agentid'=>$parent['agentid'],//邀请人代理商ID
+                            'agent_relation'=>3//关系
+                        );
+                    }else{
+                        $parent_data=array(
+                            'parentid'=>$parent['id'],//邀请人ID
+                            'agentid'=>$parent['agentid'],//邀请人代理商ID
+                            'agent_relation'=>2//间接关系
+                        );
+                    }
+
+                }
+
+                M('user')->where("openid='$openid'")->save($parent_data);
+            }else{
+                $parent_data=array(
+                    'parentid'=>0,//邀请人ID
+                    'agentid'=>0,//邀请人代理商ID
+                    'agent_relation'=>3//关系
+                );
+                M('user')->where("openid='$openid'")->save($parent_data);
+            }
+        }
 
         $output = [];
         $output['nickname'] = $userInfo['nickname'];
