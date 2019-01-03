@@ -189,7 +189,7 @@ class IntegralController extends CommentoilcardController
             'recharge_money' => $money,
             'createtime'     => $NowTime,
             'card_from'      => $CardInfo['agent_id']==0?1:2,
-            'agent_id'       => empty($CardInfo['agent_id'])?$CardInfo['agent_id']:0,
+            'agent_id'       => !empty($CardInfo['agent_id'])?$CardInfo['agent_id']:0,
             'parentid'       => $Member['parentid'],
             'coupon_money'   => $jyj,
             'discount_money' => $zk,

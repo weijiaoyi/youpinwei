@@ -614,7 +614,7 @@ class WechatController extends CommentoilcardController
                     //代理收益记录
                     if($EarningsAdd)$EarningsAdd = M('agent_earnings')->add($EarningsAdd);
                     //代理信息修改
-                    if($AgentSave)$AgentSave = M('Agent')->where(['id'=>$Agent['id']])->save($AgentSave);
+                    if($AgentSave)$AgentSave = M('agent')->where(['id'=>$Agent['id']])->save($AgentSave);
 
                     if ($AddMoneySave && $OilCardSave && $OrderSave && $MemberSave && $IntegralAdd) {
                         $Things->commit();
@@ -797,8 +797,8 @@ class WechatController extends CommentoilcardController
                                   ->join('__AGENT__ b ON a.id=b.id')
                                   ->where(['a.id'=>$Member['parentid']])
                                   ->find();
-                        //发放拉新奖
-                        if ($Invite) {
+                        //发放拉新奖--代理不享受此权益
+                        if ($Invite && $Invite['role'] !=3) {
                             //保留两位小数 
                             $a = $Package['price'];
                             $b = ($config['scroll']/100);
