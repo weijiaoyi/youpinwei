@@ -49,9 +49,9 @@ class AgentController extends CommentoilcardController
                         ->where($where)
                         ->count();
         foreach ($Earnings as $key => $v) {
-            if (isset($Earnings['earn_money']))$Earnings['earn_money'] =ncPriceFormatb($Earnings['earn_money']);
-            if (isset($Earnings['money']))$Earnings['money'] =ncPriceFormatb($Earnings['money']);
-            if (isset($Earnings['earnings']))$Earnings['earnings'] =ncPriceFormatb($Earnings['earnings']);
+            if (isset($v['earn_money']))$Earnings[$key]['earn_money'] =ncPriceFormatb($v['earn_money']);
+            if (isset($v['money']))$Earnings[$key]['money'] =ncPriceFormatb($v['money']);
+            if (isset($v['earnings']))$Earnings[$key]['earnings'] =ncPriceFormatb($v['earnings']);
         }
         $output = [];
         $output['user_img'] = $Agent['user_img'];
@@ -122,7 +122,7 @@ class AgentController extends CommentoilcardController
         $card_count=M('oil_card')->where("agent_id='$user_id'")->count();
         $agent_id=$agent_arr['id'];
         $user_count=M('user')->where(['agentid'=>$agent_id,'agent_bind'=>1])->count();
-        $data['total_earnings']=$agent_arr['total_earnings']; //总收益
+        $data['total_earnings']=ncPriceFormatb($agent_arr['total_earnings']); //总收益
         $data['card_count']=$card_count;   //卡数量
         $data['customer_count']=$user_count;   //客户数量
         $this->success($data);

@@ -81,7 +81,11 @@ function ncPriceFormatb($price ,$m='price')
 			return '无限额';
 		}
 	}
-    return number_format($price, 2, ".", "");
+	if (!empty($price) && $price > 0  && $price != null) {
+    	return number_format($price, 2, ".", "");
+	}else{
+		return '0.00';
+	}
 }
 
 function AxisFomat($str){
