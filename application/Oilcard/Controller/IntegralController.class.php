@@ -20,6 +20,13 @@ class IntegralController extends CommentoilcardController
     public function integralRecord()
     {
         $openid = trim(I('post.openid'));
+        $p=I('post.p','');
+        $offset=I('post.offset','20');
+        if (empty($p)){
+            $page=0;
+        }else{
+            $page=($p-1)*$offset;
+        }
         if (!isset($openid) || ! $openid)
         {
             $this->error('openid不能为空！');
@@ -33,32 +40,27 @@ class IntegralController extends CommentoilcardController
             return redirect(U('oilcard/wechat/getCode'));
         }
 
-        $integral_record = M('integralRecord')->where(['user_id'=>$user['id']])->order("createtime desc")->select();
-        $record = [];
-        foreach ($integral_record as $k=>$v)
-        {
-            $record[$k]['time'] = $v['createtime'];
-            $record[$k]['change'] = $v['change'];
-            $record[$k]['chang_way'] = $v['chang_way'];
-            $record[$k]['change_value'] = $v['change_value'];
-            if ($v['change'] == 1){
-                $record[$k]['change_value'] = '+'.$v['change_value'];
-            }elseif ($v['change'] == 2){
-                $record[$k]['change_value'] = '-'.$v['change_value'];
-            }
+        $integral_record = M('integralRecord')
+            ->alias('i')
+            ->join('user u ON u.id=i.user_id',LEFT)
+            ->where('i.user_id="'.$user["id"].'"')
+            ->order("createtime desc")
+            ->limit($page,$offset)
+            ->select();
+        $count=M('integralRecord')
+            ->alias('i')
+            ->join('user u ON u.id=i.user_id',LEFT)
+            ->where('i.user_id="'.$user["id"].'"')
+            ->count();   //数据总条数
+        $count=ceil($count/$offset);     //数据总页数
 
+        $data=[
+            'jf_data'=>$integral_record,
+            'p'=>$p,
+            'count'=>$count
+        ];
 
-
-        }
-        $integral = [];
-        $integral['time'] = date('Y年m月d日 H:i:s',time());
-        $integral['integral'] = $user['integral'] ?: 0;
-
-        $output = [];
-        $output['integral'] = $integral;
-        $output['record']= $record;
-
-        echo json_encode(['msg'=>'success','status'=>1000,'data'=>$output]);
+        echo json_encode(['msg'=>'success','status'=>1000,'data'=>$data]);
         exit();
     }
 
