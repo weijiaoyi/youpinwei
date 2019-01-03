@@ -119,6 +119,11 @@ class ApplyController extends CommentoilcardController
         $packages = M('packages')->where(['pid'=>$pid])->find();
         //线下绑定油卡时
         $card= M('oil_card')->where(['card_no'=>$checked_card])->find();
+        $aid  = isset($card['agent_id'])?$card['agent_id']:0;
+        if ($aid ==0) {
+            if ($Member['agentid'] !=0 && !empty($Member['agentid']))$aid =  $Member['agentid'];
+            
+        }
         //生成订单信息
         $OrderInfo = [
             'user_id'       =>$Member['id'],//购买人id
@@ -129,7 +134,7 @@ class ApplyController extends CommentoilcardController
             //本次购卡时 最近的邀请人id--暂不锁定邀请人
             'parentid'      => isset($ParentMember['id'])?$ParentMember['id']:0 ,
             // 0总部发放，代理id  --暂不锁定代理id
-            'agent_id'      =>$card['agent_id']?$card['agent_id']:0, 
+            'agent_id'      =>$aid, 
             'real_pay'      => $money,
             'user_deposit'  => $user_deposit,
             'postage'       => $postage,
@@ -178,7 +183,7 @@ class ApplyController extends CommentoilcardController
                         $this->error('此油卡已被系统废弃！');
                         break;
                 }
-                $OrderInfo['card_from'] =$card['agent_id']==0?1:2; // 1总部卡，2代理卡
+                $OrderInfo['card_from'] =$aid==0?1:2; // 1总部卡，2代理卡
                 $OrderInfo['card_no'] =$checked_card; // 线下绑定的卡号
                 break;
         }
@@ -209,7 +214,7 @@ class ApplyController extends CommentoilcardController
         $user_applu_data['phone']          =$data['phone'];
         $user_applu_data['address']        =$data['address'];
         $user_applu_data['serial_number']  =$OrderInfo['serial_number'];
-        $user_applu_data['agentid']        =$Member['agentid'];
+        $user_applu_data['agentid']        =$aid;
         $user_applu_data['money']          =$packages['price'];
         $user_applu_data['name']           =$checked==1?'线上申领油卡':'线下绑定油卡';
         $user_applu_data['discount']       =$packages['scale'];

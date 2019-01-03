@@ -824,11 +824,24 @@ class WechatController extends CommentoilcardController
                             $price = $a*$b;
                             $CouponNum = number_format($price, 2, ".", "");
                             //给上级邀请人增加 拉新奖励池和总收益 
-                            M('agent')->where(['id'=>$Invite['id']])->save([
+                            $addEarnings = M('agent')->where(['id'=>$Invite['id']])->save([
                                 'new_earnings'=>$Invite['new_earnings'] + $CouponNum,
                                 'currt_earnings'=>$Invite['currt_earnings'] + $CouponNum,
                                 'total_earnings'=>$Invite['total_earnings'] + $CouponNum
                             ]);
+                            if ($addEarnings) {
+                                //拉新奖励记录
+                                $EarningsAdd['openid']       = $openId;
+                                $EarningsAdd['agent_id']     = $Invite['openid'];
+                                $EarningsAdd['createtime']   = $NowTime;
+                                $EarningsAdd['order_type']   = 2;
+                                $EarningsAdd['earning_body'] = 7;
+                                $EarningsAdd['earnings']     = $CouponNum;
+                                $EarningsAdd['updatetime']   = $NowTime;
+                                $EarningsAdd['order_id']     = $OrderInfo['id'];
+                                $EarningsAdd['sn']           = $obj_arr['out_trade_no'];
+                                $EarningsAdd = M('agent_earnings')->add($EarningsAdd);
+                            }
                         }
                     }
                     //锁定上级代理，上级邀请人，上级拉新奖励已完成
