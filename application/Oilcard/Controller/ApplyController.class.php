@@ -117,6 +117,8 @@ class ApplyController extends CommentoilcardController
         $sn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
         //获取套餐信息
         $packages = M('packages')->where(['pid'=>$pid])->find();
+        //线下绑定油卡时
+        $card= M('oil_card')->where(['card_no'=>$checked_card])->find();
         //生成订单信息
         $OrderInfo = [
             'user_id'       =>$Member['id'],//购买人id
@@ -155,7 +157,6 @@ class ApplyController extends CommentoilcardController
                 }
                 break;
             case '2'://现场办卡
-                $card= M('OilCard')->where(['card_no'=>$checked_card])->find();
                 if(!$card) $this->error('油卡号不正确，请输入我平台发放的正确油卡号！');
                 if (!empty($card['user_id'])) $this->error('该卡号已经被绑定！');
                 switch ($card['is_notmal']) {

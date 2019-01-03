@@ -189,7 +189,7 @@ class IntegralController extends CommentoilcardController
             'recharge_money' => $money,
             'createtime'     => $NowTime,
             'card_from'      => $CardInfo['agent_id']==0?1:2,
-            'agent_id'       => empty($CardInfo['agent_id'])?$CardInfo['agent_id']:0,
+            'agent_id'       => !empty($CardInfo['agent_id'])?$CardInfo['agent_id']:0,
             'parentid'       => $Member['parentid'],
             'coupon_money'   => $jyj,
             'discount_money' => $zk,
@@ -224,7 +224,6 @@ class IntegralController extends CommentoilcardController
             'is_first'       => $is_first,
         ];
         //如果 折扣加 加油卷 把充值金额全部抵消  则直接完成订单  并直接 给上级邀请人分润 
-
         $IsOver  = $this->FinishThisOrder($OrderAdd,$AddMoneySave,$Member,$Package,$config);
         if ($IsOver) {
             $data['order_no'] = $orderSn;
