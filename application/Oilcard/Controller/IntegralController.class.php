@@ -20,6 +20,14 @@ class IntegralController extends CommentoilcardController
     public function integralRecord()
     {
         $openid = trim(I('post.openid'));
+        $p=I('post.p','');
+        $offset=I('post.offset','20');
+
+        if (empty($p)){
+            $page=0;
+        }else{
+            $page=($p-1)*$offset;
+        }
         if (!isset($openid) || ! $openid)
         {
             $this->error('openid不能为空！');
@@ -36,6 +44,7 @@ class IntegralController extends CommentoilcardController
         $integral_record = M('integralRecord')
             ->where(['user_id'=>$user['id']])
             ->order("createtime desc")
+            ->limit($page,$offset)
             ->select();
         $record = [];
         foreach ($integral_record as $k=>$v)
