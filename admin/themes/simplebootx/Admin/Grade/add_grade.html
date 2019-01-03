@@ -38,7 +38,7 @@
                     <tr>
                         <th>结尾卡号<span class="true">*</span>：</th>
                         <td>
-                            <input type="text" name="end_card" id="end_card"  placeholder="请输入结束卡号">
+                            <input type="text" maxlength="16" name="end_card" id="end_card"  placeholder="请输入结束卡号">
                         </td>
                     </tr>
                     <tr>
@@ -75,7 +75,7 @@
                             <input type="text" name="tel" id="peopel"   placeholder="联系电话">
                         </td>
                     </tr>
-                    <tr>
+                  <!--  <tr>
                         <th>VIP直属会员充值分成<span class="true">*</span>：</th>
                         <td>
                             <input type="text" name="vip_direct_scale" id="vip_direct_scale"   placeholder="VIP直属会员充值分成"><span style="font-size: 24px;color: red;font-weight: normal">%</span>
@@ -98,7 +98,7 @@
                         <td>
                             <input type="text" name="user_indirect_scale" id="user_indirect_scale"   placeholder="普通间接会员充值分成"><span style="font-size: 24px;color: red;font-weight: normal">%</span>
                         </td>
-                    </tr>
+                    </tr>-->
                 </table>
             </div>
         </div>
@@ -146,23 +146,23 @@
         var address = $('#address').val();
         var name = $('#detail').val();
         var phone = $('#peopel').val();
-        var vip_direct_scale = $('#vip_direct_scale').val();
+       /* var vip_direct_scale = $('#vip_direct_scale').val();
         var user_direct_scale = $('#user_direct_scale').val();
         var vip_indirect_scale = $('#vip_indirect_scale').val();
-        var user_indirect_scale = $('#user_indirect_scale').val();
+        var user_indirect_scale = $('#user_indirect_scale').val();*/
 
-        if(end_card == '' || mode == '' || each_price == '' || address == '' || name == '' || phone == '' || vip_direct_scale == '' || user_direct_scale == '' || vip_indirect_scale == '' || user_indirect_scale == ''){
+        if(end_card == '' || mode == '' || each_price == '' || address == '' || name == '' || phone == '' ){
             $('#addagent').removeAttr('disabled');
             layer.msg('请补全完整的信息内容！！！',{icon:2});return false;
         }
-
+    /*,
+        vip_direct_scale:vip_direct_scale,user_direct_scale:user_direct_scale,
+            vip_indirect_scale:vip_indirect_scale,user_indirect_scale:user_indirect_scale*/
         $.ajax({
             url:"{:U('grade/addAgent')}",
             type:'post',
             data:{start:start_card,end:end_card,each_price:each_price,mode:mode,
-                address:address,name:name,phone:phone,openid:openid,user_id:user_id,
-                vip_direct_scale:vip_direct_scale,user_direct_scale:user_direct_scale,
-                vip_indirect_scale:vip_indirect_scale,user_indirect_scale:user_indirect_scale},
+                address:address,name:name,phone:phone,openid:openid,user_id:user_id},
             success:function (res) {
                 res = $.parseJSON(res);
                 if(res.status == 200){

@@ -34,8 +34,9 @@
             <th style="text-align:center;">用户名称</th>
             <th style="text-align:center;">头像</th>
             <th style="text-align:center;">代理称号</th>
-            <th style="text-align:center;">押金</th>
-            <th style="text-align:center;">发展来源</th>
+            <th style="text-align:center;">总押金</th>
+            <th style="text-align:center;">上级用户</th>
+            <!--<th style="text-align:center;">发展来源</th>-->
             <th style="text-align:center;">状态</th>
             <th style="text-align:center;">创建时间</th>
             <!--<th style="text-align:center;">过期时间</th>-->
@@ -67,6 +68,14 @@
                     <span style="font-size: 20px;color: red;font-weight: bold;">{$val['deposit']}</span>元
                 </td>
                 <td style="text-align:center;">
+                    <if condition="$val['parentid'] neq ''">
+                        {$val['parent_nickname']}
+                        <img src="{$val['parent_img']}" alt="{$val['parent_img']}" style="width: 40px;height: 40px;" />
+                        <else/>
+                        <span style="font-size: 14px;color: #999999;font-weight: bold;">无上级</span>
+                    </if>
+                </td>
+                <!--<td style="text-align:center;">
                     <if condition="$val['development'] eq '1'">
                         总部发展
                         <elseif condition="$val['development'] eq '2'"/>
@@ -74,7 +83,7 @@
                         <else/>
                         业务员发展
                     </if>
-                </td>
+                </td>-->
                 <td style="text-align:center;">
                     <if condition="$val['is_notmal'] eq '1'">
                             <span style="font-size: 14px;color: #1dccaa;font-weight: bold;">正常</span>

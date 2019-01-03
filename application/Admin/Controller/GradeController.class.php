@@ -22,18 +22,30 @@ class GradeController extends AdminbaseController
         $pageNum = 10;
         $status = trim(I('post.status'));
         $keywords = trim(I('post.keywords'));
-        $where =' agent.openid = user.openid AND agent.role = 1';
+        $where =' agent.openid = user.openid AND agent.role = 1 AND user.user_img != ""';
         if(!empty($status)){
-            $where .= ' AND is_notmal = "'.$status.'"';
+            $where .= ' AND user.is_notmal = "'.$status.'"';
         }
         if(!empty($keywords)){
-            $where .= ' AND nickname LIKE "%'.$keywords.'%"';
+            $where .= ' AND user.nickname LIKE "%'.$keywords.'%"';
         }
         $ordinary_info = $AgentModel
             -> join('user')
             -> where($where)
             -> page($p,$pageNum)
             ->select();
+        if(!empty($ordinary_info)){
+            foreach ($ordinary_info as $key=>$value){
+                if(!empty($value['parentid'])){
+                    $parentInfo = M('user')->where('parentid="'.$value["parentid"].'"')->field('nickname,user_img')->find();
+                    $ordinary_info[$key]['parent_nickname']=$parentInfo['nickname'];
+                    $ordinary_info[$key]['parent_img']=$parentInfo['user_img'];
+                }else{
+                    $ordinary_info[$key]['parent_nickname']='';
+                    $ordinary_info[$key]['parent_img']='';
+                }
+            }
+        }
         $count = $AgentModel
             -> join('user')
             -> where($where)
@@ -56,18 +68,30 @@ class GradeController extends AdminbaseController
         $status = trim(I('post.status'));
         $keywords = trim(I('post.keywords'));
         $pageNum = 10;
-        $where =' agent.openid = user.openid AND agent.role = 2';
+        $where =' agent.openid = user.openid AND agent.role = 2 AND user.user_img != ""';
         if(!empty($status)){
-            $where .= ' AND is_notmal = "'.$status.'"';
+            $where .= ' AND user.is_notmal = "'.$status.'"';
         }
         if(!empty($keywords)){
-            $where .= ' AND nickname LIKE "%'.$keywords.'%"';
+            $where .= ' AND user.nickname LIKE "%'.$keywords.'%"';
         }
         $vip_info = $AgentModel
             -> join('user')
             -> where($where)
             -> page($p,$pageNum)
             -> select();
+        if(!empty($vip_info)){
+            foreach ($vip_info as $key=>$value){
+                if(!empty($value['parentid'])){
+                    $parentInfo = M('user')->where('parentid="'.$value["parentid"].'"')->field('nickname,user_img')->find();
+                    $vip_info[$key]['parent_nickname']=$parentInfo['nickname'];
+                    $vip_info[$key]['parent_img']=$parentInfo['user_img'];
+                }else{
+                    $vip_info[$key]['parent_nickname']='';
+                    $vip_info[$key]['parent_img']='';
+                }
+            }
+        }
         $count = $AgentModel
             -> join('user')
             -> where($where)
@@ -298,10 +322,10 @@ class GradeController extends AdminbaseController
                     'agent_oilcard_num' =>$agent_oilcard_num,
                     'agent_oilcard_stock_num'=>$agent_oilcard_stock_num,
                     'role' =>3,
-                    'vip_direct_scale' =>$data['vip_direct_scale'],
+                    /*'vip_direct_scale' =>$data['vip_direct_scale'],
                     'user_direct_scale' =>$data['user_direct_scale'],
                     'vip_indirect_scale' =>$data['vip_indirect_scale'],
-                    'user_indirect_scale' =>$data['user_indirect_scale'],
+                    'user_indirect_scale' =>$data['user_indirect_scale'],*/
                     'expire_time' => date('Y-m-d H:i:s',strtotime('+1year')),
                 );
                  $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
@@ -648,6 +672,8 @@ class GradeController extends AdminbaseController
         }
         $agent_library_data = $oilCardModel
             ->join('user ON user.id=oil_card.user_id',LEFT)
+            ->join('agent ON agent.id=oil_card.user_id',LEFT)
+            ->field('oil_card.*,user.nickname,user.user_img,agent.role')
             ->where($where)
             ->page( $p , $pageNum )
             ->order('oil_card.id desc')
