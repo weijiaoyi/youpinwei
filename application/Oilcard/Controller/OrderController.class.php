@@ -28,41 +28,13 @@ class OrderController extends CommentoilcardController
         $this->_empty($openId,'数据传输失败');
         $user_data=M('user')->where("openid='".$openId."'")->find();
 
-//        if ($flage=='1') {
-//            $where=[
-//                'user_id'=>$user_data['id'],
-//                'order_type'=>'3'1
-//            ];
-//            $order_data=M('order_record')->where($where)->order('createtime desc')->limit($page,$offset)->select();    //展示数据
-//        }else{
-
             $order_data=M('order_record')
-                ->where('user_id="'.$user_data["id"].'" AND order_type=3 AND order_status=2')
+                ->where('user_id="'.$user_data["id"].'" AND order_status=2')
                 ->order('createtime desc')
                 ->limit($page,$offset)
-                ->select();    //展示数据
-//        }
-        foreach ($order_data as $key => $v) {
-           if ($v['order_type']=='1') {
-               $order_data[$key]['flag']='suc';
-               $order_data[$key]['order_flag']='shenling';
+                ->select();  
 
-           }else if($v['order_type']=='2'){
-
-                $order_data[$key]['flag']='fail';
-                $order_data[$key]['order_flag']='bangdin';
-
-           }else if($v['order_type']=='3'){
-
-                $order_data[$key]['flag']='continue';
-                $order_data[$key]['order_flag']='chongzhi';
-
-           }else{
-                $order_data[$key]['flage']='wait';
-                $order_data[$key]['order_flag']='jifen';
-           }
-        }
-        $count=M('order_record')->where('user_id='.$user_data['id'])->count();   //数据总条数
+        $count=M('order_record')->where('user_id="'.$user_data["id"].'" AND order_status=2')->count();   //数据总条数
         $count=ceil($count/$offset);     //数据总页数
         
         $data=[
@@ -82,24 +54,15 @@ class OrderController extends CommentoilcardController
     public function orderDetails(){
         $id = I('post.order_id','');
         $this->_empty($id,'参数错误');
-        $order_data=M('order_record')->where('id='.$id)->find();
+        $order_data=M('order_record')
+            ->alias('o')
+            ->join('user_apply u ON u.serial_number=o.serial_number',LEFT)
+            ->where('o.id='.$id)
+            ->find();
         if (empty($order_data)) {
             $this->error('订单详情数据为空');
         }
-        $user_id=$order_data['user_id'];
-        $serial_number=$order_data['serial_number'];
-        $data=M('user_apply')->where("user_id='$user_id' and serial_number='$serial_number'")->find();
-        switch ($data['shop_name']) {
-            case '1':
-                $shop_name='中国石油加油卡';
-                break;
-        }
 
-        $data['name']=$shop_name;
-        $data['money']=$order_data['money']-20;
-
-        $data['discount']=$order_data['preferential'];
-        $order_data=array_filter($data);
         echo json_encode($order_data);exit;
     }
 
