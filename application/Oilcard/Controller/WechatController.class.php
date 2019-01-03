@@ -778,7 +778,10 @@ class WechatController extends CommentoilcardController
                 */
                 
                 $isFirst = M('order_record')->where(['order_status'=>2])->find();
-
+                if ($OrderInfo['pid'] > 1 && $Member['role']==1) {
+                    //如果买的套餐是VIP套餐 就把会员身份改为VIP   -- 只做身份标识 --并没有什么用
+                    M('agent')->where(['openid'=>$openId])->save(['role'=>2]);
+                }
                 if ($isFirst) { //如果为第一次购买
                     $Robate=[];
                     if ($Member['parent_bind'] ==0 && $Member['agent_bind']==0) {
@@ -786,7 +789,7 @@ class WechatController extends CommentoilcardController
                         $Robate['parent_bind']=1;//锁定上级邀请人
                     }
                     //判断是否给上级邀请人拉新奖
-                    if ($OrderInfo['pid'] > 1 && $Member['is_rebate']==1){//并且如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
+                    if ($OrderInfo['pid'] > 1 && $Member['is_rebate']==1){//如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
                         $Robate['is_rebate']=2; //已完成拉新奖励
                         //获取上级邀请人信息
                         $Invite=M('user')
@@ -796,7 +799,7 @@ class WechatController extends CommentoilcardController
                                   ->find();
                         //发放拉新奖
                         if ($Invite) {
-                            //保留两位小数
+                            //保留两位小数 
                             $a = $Package['price'];
                             $b = ($config['scroll']/100);
                             $price = $a*$b;

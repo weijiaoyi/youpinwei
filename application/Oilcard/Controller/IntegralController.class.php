@@ -224,7 +224,6 @@ class IntegralController extends CommentoilcardController
             'is_first'       => $is_first,
         ];
         //如果 折扣加 加油卷 把充值金额全部抵消  则直接完成订单  并直接 给上级邀请人分润 
-
         $IsOver  = $this->FinishThisOrder($OrderAdd,$AddMoneySave,$Member,$Package,$config);
         if ($IsOver) {
             $data['order_no'] = $orderSn;

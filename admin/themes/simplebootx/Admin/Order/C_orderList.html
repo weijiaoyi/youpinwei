@@ -233,6 +233,13 @@
 				data:{start_card_no:start_card_no,end_card_no:end_card_no,discount:discount,card_note:card_note},
 				async:false,
 				success:function(res){
+					layer.msg(res.status);
+					var url = "{:U('order/C_orderList')}";
+					setTimeout(function(){
+
+						location.href=url;
+					}, 2000);
+
 					console.log(res);
 					// if (res.status==500) {
 					// 	$('.alert').text('导入失败啦');
