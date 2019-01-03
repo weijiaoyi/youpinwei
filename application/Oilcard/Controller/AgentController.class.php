@@ -142,17 +142,17 @@ class AgentController extends CommentoilcardController
         if (empty($openid)){
             $this->openidError('数据传输缺少');
         }
-        $agent_arr=M('agent')->where("openid='$openid'") ->find();
+        $agent_arr=M('agent')->where(['openid'=>$openid]) ->find();
         if(empty($agent_arr) || $agent_arr['role']!=3){
             $this->error('不是代理商');
         }
         $data=[];
-        $data['total_earnings']=$agent_arr['total_earnings']; //总收益
         $user_id=M('user')->where("openid='$openid'")->getField('id');
         $card_count=M('oil_card')->where("agent_id='$user_id'")->count();
-        $data['card_count']=$card_count;   //卡数量
         $agent_id=$agent_arr['id'];
-        $user_count=M('agent_relation')->where("agent_id='$agent_id'")->count();
+        $user_count=M('user')->where(['agentid'=>$agent_id,'agent_bind'=>1])->count();
+        $data['total_earnings']=$agent_arr['total_earnings']; //总收益
+        $data['card_count']=$card_count;   //卡数量
         $data['customer_count']=$user_count;   //客户数量
         $this->success($data);
 
