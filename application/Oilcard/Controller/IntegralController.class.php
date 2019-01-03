@@ -40,14 +40,15 @@ class IntegralController extends CommentoilcardController
             return redirect(U('oilcard/wechat/getCode'));
         }
 
-        $integral_record = M('integralRecord')
+        $integral_record = M('integral_record')
             ->alias('i')
             ->join('user u ON u.id=i.user_id',LEFT)
             ->where('i.user_id="'.$user["id"].'"')
-            ->order("createtime desc")
+            ->order("i.createtime desc")
             ->limit($page,$offset)
             ->select();
-        $count=M('integralRecord')
+
+        $count=M('integral_record')
             ->alias('i')
             ->join('user u ON u.id=i.user_id',LEFT)
             ->where('i.user_id="'.$user["id"].'"')
