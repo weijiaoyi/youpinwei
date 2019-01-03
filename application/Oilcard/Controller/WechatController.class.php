@@ -496,7 +496,8 @@ class WechatController extends CommentoilcardController
                 //更改订单支付状态
                 $OrderSave = [
                     'order_status'=> 2,
-                    'updatetime'=>$NowTime
+                    'updatetime'=>$NowTime,
+                    'pay_sn' => $obj_arr['transaction_id'],
                 ];
                 
                 //用户信息变动记录
@@ -538,10 +539,27 @@ class WechatController extends CommentoilcardController
                     // user_direct_scale  普通直属会员充值分成
                     // vip_indirect_scale  VIP间接会员充值分成
                     // user_indirect_scale 普通间接会员充值分成
+                    // user_profit  普通卡充值-对代理返利比例
+                    // vip_profit  VIP卡充值，对代理返利比例
+
                     //用户充值的金额 ，使用真实面额
                     $RechageMoney = $order_item['money'];
-                    //判断是直属下级还是间接下级身份
-                    switch ($Member['agent_relation']) {
+                    //判断是直属下级还是间接下级身份 /// 此流程不适用
+                    switch ($CardInfo['pid']) {
+                        case '1':
+                            $Calculation = $RechageMoney* ($config['user_profit']/100);
+                            $rewardMoney  = number_format($Calculation, 4, ".", "");
+                            $earning_body = 5; //普通卡充值
+                                    break;
+                            break;
+                        
+                        default:
+                            $Calculation = $RechageMoney* ($config['vip_profit']/100);
+                            $rewardMoney  = number_format($Calculation, 4, ".", "");
+                            $earning_body = 6; //VIP卡充值
+                            break;
+                    }
+                    /*switch ($Member['agent_relation']) {
                         case '1': //直接下级
                             //按照当前会员不同的身份为上级代理分润
                             switch ($Member['role']) {
@@ -559,7 +577,7 @@ class WechatController extends CommentoilcardController
                             }
                             break;
 
-                        case '2': //间接下级
+                        default: //间接下级
                             //按照当前会员不同的身份为上级代理分润
                             switch ($Member['role']) {
                                 case '2': //按照VIP会员充值分成给代理分润
@@ -575,7 +593,8 @@ class WechatController extends CommentoilcardController
                                     break;
                             }
                             break;
-                    }
+                    }*/
+
 
                     //代理返利记录
                     $EarningsAdd['openid']       = $openId;
