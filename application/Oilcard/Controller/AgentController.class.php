@@ -48,14 +48,19 @@ class AgentController extends CommentoilcardController
                         ->join('__USER__ u ON e.openid=u.openid')
                         ->where($where)
                         ->count();
+        foreach ($Earnings as $key => $v) {
+            if (isset($Earnings['earn_money']))$Earnings['earn_money'] =ncPriceFormatb($Earnings['earn_money']);
+            if (isset($Earnings['money']))$Earnings['money'] =ncPriceFormatb($Earnings['money']);
+            if (isset($Earnings['earnings']))$Earnings['earnings'] =ncPriceFormatb($Earnings['earnings']);
+        }
         $output = [];
         $output['user_img'] = $Agent['user_img'];
         $output['nickname'] = $Agent['nickname'];
         $output['agent_lv'] = CardConfig::$agent_ame[$Agent['role']] ?: '普通用户';
-        $output['currt_earnings'] = $Agent['currt_earnings']; //当前奖励
-        $output['new_earnings'] = $Agent['new_earnings'];//拉新奖励
-        $output['total_earnings'] = $Agent['total_earnings'];//充值总奖励
-        $output['add_total'] = $Agent['add_total'];//下线总充值
+        $output['currt_earnings'] = ncPriceFormatb($Agent['currt_earnings']); //当前奖励
+        $output['new_earnings'] = ncPriceFormatb($Agent['new_earnings']);//拉新奖励
+        $output['total_earnings'] = ncPriceFormatb($Agent['total_earnings']);//充值总奖励
+        $output['add_total'] = ncPriceFormatb($Agent['add_total']);//下线总充值
         $output['new_count'] = $count;
         $output['add_list'] = $Agent['role']==3?$Earnings:[];
         $output['new_list'] = $Agent['role']!=3?$Earnings:[];
