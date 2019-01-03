@@ -496,7 +496,8 @@ class WechatController extends CommentoilcardController
                 //更改订单支付状态
                 $OrderSave = [
                     'order_status'=> 2,
-                    'updatetime'=>$NowTime
+                    'updatetime'=>$NowTime,
+                    'pay_sn' => $obj_arr['transaction_id'],
                 ];
                 
                 //用户信息变动记录
