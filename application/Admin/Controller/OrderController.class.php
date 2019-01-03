@@ -334,7 +334,9 @@ class OrderController extends AdminbaseController{
               ->join('__USER__ u ON o.user_id = u.id','LEFT')
               ->field('o.*,p.pid,p.price,p.limits,p.scale,u.nickname,u.user_img')
               ->where($where)
-              ->order('o.id desc')-> page($p,'10') ->select();
+              ->order('o.id desc')
+            -> page($p,'10')
+            ->select();
         $count = $Card ->where($condition)-> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
@@ -342,7 +344,7 @@ class OrderController extends AdminbaseController{
         $card_id=$Card -> where('agent_id != 0')->order('id desc') -> getField('id');
         $send_count = $Card -> where('id>"'.$card_id.'" AND status=1') -> count();
         $this -> assign('send_count',$send_count);
-        $this -> assign('page',$show);  
+        $this -> assign('page',$show);
         $this -> assign('data',$card_info);
         $this -> display();
     }

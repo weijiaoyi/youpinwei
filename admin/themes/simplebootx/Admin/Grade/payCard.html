@@ -31,8 +31,7 @@
         <thead>
         <tr>
             <th style="text-align:center;">卡号</th>
-            <th style="text-align:center;">用户</th>
-            <th style="text-align:center;">头像</th>
+            <th style="text-align:center;">绑定人</th>
             <th style="text-align:center;">代理称号</th>
             <th style="text-align:center;">状态</th>
             <th style="text-align:center;">入库时间</th>
@@ -46,34 +45,27 @@
                     {$val['card_no']}
                 </td>
                 <td style="text-align:center;">
-                    {$val['nickname']}
-                </td>
-                <td style="width:40px;text-align:center;">
-                    <img src="{$val['user_img']}" alt="{$val['user_img']}" />
+                    {$val['nickname']} <img src="{$val['user_img']}" alt="{$val['user_img']}" style="width:40px;height: 40px;" />
                 </td>
                 <td style="text-align:center;">
                     <if condition="$val['role'] eq '1'">
-                        普通用户
+                        <span style="font-size: 14px;color: #1dccaa;font-weight: bold;">普通用户</span>
                         <elseif condition="$val['role'] eq '2'"/>
-                        VIP用户
+                        <span style="font-size: 14px;color: #9a161a;font-weight: bold;">VIP用户</span>
                         <elseif condition="$val['role'] eq '3'"/>
-                        代理商用户
+                            <span style="font-size: 14px;color: #985f0d;font-weight: bold;">代理商用户</span>
                         <else/>
-                        暂无角色
+                        <span style="font-size: 14px;color: #999999;font-weight: bold;">暂无角色</span>
                     </if>
                 </td>
                 <td style="text-align:center;">
-                    <if condition="$val['status'] eq '1'">
-                        未申领
-                        <elseif condition="$val['is_notmal'] eq '1'"/>
-                        正常
-                        <elseif condition="$val['is_notmal'] eq '2'"/>
-                        冻结
-                        <elseif condition="$val['is_notmal'] eq '3'"/>
-                        注销
-                        <else/>
-                        待绑定
-                    </if>
+                    <?php if($val['status'] ==1){?>
+                        <span style="font-size: 14px;color: #9a161a;font-weight: bold;">未申领</span>
+                    <?php }else if($val['status'] == 2 && $val['user_id'] ==''){?>
+                        <span style="font-size: 14px;color: #1dccaa;font-weight: bold;">已申领,待绑定</span>
+                    <?php }else if($val['status'] == 2 && $val['user_id'] !=''){ ?>
+                        <span style="font-size: 14px;color: #999999;font-weight: bold;">已绑定</span>
+                    <?php }?>
                 </td>
                 <td style="text-align:center;">
                     {:dateFomatH($val['agent_create_time'])}

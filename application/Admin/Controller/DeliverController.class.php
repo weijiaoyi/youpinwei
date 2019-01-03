@@ -58,6 +58,7 @@ class DeliverController extends AdminbaseController{
             ->join('user u ON u.id=o.user_id',LEFT)
             ->field('o.*,a.id as apply_id,a.status,u.nickname,u.user_img')
             -> where($where)
+            ->order('o.id DESC')
             -> page($p,'10')
             ->select();
 //        if(empty($order_info)){
@@ -89,6 +90,15 @@ class DeliverController extends AdminbaseController{
             if( $v['card_no'] == '' ){
                 $order_info[$k]['card_no_message'] = '未绑定';
             }
+            if($v['agent_id'] != 0){
+                $agentInfo=M('user')->where('id="'.$v["agent_id"].'"')->field('nickname,user_img')->find();
+                $order_info[$k]['agent_id_message'] = $agentInfo['nickname'];
+                $order_info[$k]['agent_img'] = $agentInfo['user_img'];
+            }else{
+                $order_info[$k]['agent_id_message'] = '总部';
+            }
+
+
         }
         $count = $Order
             ->alias('o')

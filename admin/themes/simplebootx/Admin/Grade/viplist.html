@@ -33,11 +33,12 @@
             <th style="text-align:center;">VIP名称</th>
             <th style="text-align:center;">头像</th>
             <th style="text-align:center;">代理称号</th>
-            <th style="text-align:center;">押金</th>
-            <th style="text-align:center;">发展来源</th>
+            <th style="text-align:center;">总押金</th>
+            <!--<th style="text-align:center;">发展来源</th>-->
+            <th style="text-align:center;">上级用户</th>
             <th style="text-align:center;">状态</th>
             <th style="text-align:center;">创建时间</th>
-            <th style="text-align:center;">过期时间</th>
+            <!--<th style="text-align:center;">过期时间</th>-->
             <th style="text-align:center;">操作</th>
         </tr>
         </thead>
@@ -67,6 +68,14 @@
                 <span style="font-size: 20px;color: red;font-weight: bold;">{$val['deposit']}</span>元
             </td>
             <td style="text-align:center;">
+                <if condition="$val['parentid'] neq ''">
+                    {$val['parent_nickname']}
+                    <img src="{$val['parent_img']}" alt="{$val['parent_img']}" style="width: 40px;height: 40px;" />
+                    <else/>
+                    <span style="font-size: 14px;color: #999999;font-weight: bold;">无上级</span>
+                </if>
+            </td>
+            <!--<td style="text-align:center;">
             	<if condition="$val['development'] eq '1'">
                 	总部发展
                 <elseif condition="$val['development'] eq '2'"/>
@@ -74,7 +83,7 @@
                 <else/>
                 	业务员发展
             	</if>
-            </td>
+            </td>-->
             <td style="text-align:center;">
                 <if condition="$val['is_notmal'] eq '1'">
                     <span style="font-size: 14px;color: #1dccaa;font-weight: bold;">正常</span>
@@ -87,9 +96,9 @@
             <td style="text-align:center;">
                 {$val['createtime']}
             </td>
-            <td style="text-align:center;">
+            <!--<td style="text-align:center;">
                 {$val['expire_time']}
-            </td>
+            </td>-->
             <td style="text-align:center;">
                 <button style="background: #2c3e50;border:0px; width: 70px; height: 40px;" ><a href="{:U('getOffline',['id'=>$val['id']])}"><span style="color: white; font-size: 8px;">查看下线</span></a></button>
                 <button style="background: #2c3e50;border:2px; width: 110px; height: 40px;" ><a href="{:U('getMyCard',['user_id'=>$val['id']])}"><span style="color: white; font-size: 8px;">查看我的油卡</span></a></button>
