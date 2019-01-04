@@ -36,7 +36,7 @@ class AgentController extends CommentoilcardController
         }else{
             //拉新奖励列表
             $Earnings = $M->alias('e')
-                        ->field('u.nickname,e.earnings,a.money as add_money,e.createtime as time')
+                        ->field('u.nickname,e.earnings as earn_money,a.money,e.createtime as time')
                         ->join('__USER_APPLY__ a ON e.sn=a.serial_number')
                         ->join('__USER__ u ON e.openid=u.openid')
                         ->where($where)
