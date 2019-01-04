@@ -21,10 +21,12 @@ class CardController extends CommentoilcardController
     public function bindCard()
     {
 //        try{
-            $card_no = trim(I('post.card_no',''));
+            $card_no = (string)trim(I('post.card_no',''));
             $openid  = trim(I('post.openid',''));
             $id  = trim(I('post.id',''));
-            
+            $card_no = str_replace(" ",'',$card_no);
+            $leng = intval(strlen($card_no));
+            if($leng != 16 )$this->error('卡号错误！');
             $issetLoginRes=$this->issetLogin($openid);
 
 
