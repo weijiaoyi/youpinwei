@@ -445,7 +445,13 @@ class GradeController extends AdminbaseController
             }else{
                 $card_id = 1;
             }
-            $start_card = $OilCardModel -> where(['status' => 1,'id'=>$card_id]) -> getField('card_no');
+            $start_card = $OilCardModel -> where(' id>"'.$card_id.'" AND user_id !=""')->getField('id');
+            if(!empty($card_id)){
+                $card_id = $card_id+1;
+            }else{
+                $card_id = 1;
+            }
+            var_dump($start_card);
             if(!empty($start_card)){
                 $start_card = $start_card;
             }else{

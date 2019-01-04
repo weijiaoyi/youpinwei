@@ -49,7 +49,7 @@ class IntegralController extends CommentoilcardController
         $record = [];
         foreach ($integral_record as $k=>$v)
         {
-            $record[$k]['time'] = $v['createtime'];
+            $record[$k]['time'] =date('Y-m-d H:i',strtotime($v['createtime']));
             $record[$k]['change'] = $v['change'];
             $record[$k]['chang_way'] = $v['chang_way'];
             $record[$k]['change_value'] = $v['change_value'];
