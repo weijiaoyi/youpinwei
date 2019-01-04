@@ -27,8 +27,6 @@ class CardController extends CommentoilcardController
             if (empty($openid)){
                 $this->openidError('数据传输错误');
             }
-
-            
             $issetLoginRes=$this->issetLogin($openid);
 
 

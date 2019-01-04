@@ -545,7 +545,7 @@ class WechatController extends CommentoilcardController
                     //用户充值的金额 ，使用真实面额
                     $RechageMoney = $order_item['money'];
                     //判断是直属下级还是间接下级身份 /// 此流程不适用
-                    switch ($CardInfo['pid']) {
+                    switch ($CardInfo['pkgid']) {
                         case '1':
                             $Calculation = $RechageMoney* ($config['user_profit']/100);
                             $rewardMoney  = number_format($Calculation, 4, ".", "");
@@ -736,6 +736,9 @@ class WechatController extends CommentoilcardController
                 'updatetime' => $NowTime,
                 'apply_status' => 2,
             ];
+            if ($OrderInfo['pid'] ==1) {
+                $EndTime = '';
+            }
             //线下绑卡设置 -- 直接成功发放油卡，并绑定到用户名下
             if ($OrderInfo['online']==2) {
                 //修改油卡信息
@@ -796,7 +799,7 @@ class WechatController extends CommentoilcardController
                     2.2 如果为VIP套餐，对上级邀请人 返利加油卷 config里获取百分比，对上级代理不做操作
                 */
                 
-                $isFirst = M('order_record')->where(['order_status'=>2])->find();
+                $isFirst = M('order_record')->where(['user_id'=>$Member['id']])->find();
                 if ($OrderInfo['pid'] > 1 && $Member['role']==1) {
                     //如果买的套餐是VIP套餐 就把会员身份改为VIP   -- 只做身份标识 --并没有什么用
                     M('agent')->where(['openid'=>$openId])->save(['role'=>2]);
@@ -832,7 +835,7 @@ class WechatController extends CommentoilcardController
                             if ($addEarnings) {
                                 //拉新奖励记录
                                 $EarningsAdd['openid']       = $openId;
-                                $EarningsAdd['agent_id']     = $Invite['openid'];
+                                $EarningsAdd['agent_id']     = $Invite['id'];
                                 $EarningsAdd['createtime']   = $NowTime;
                                 $EarningsAdd['order_type']   = 2;
                                 $EarningsAdd['earning_body'] = 7;
