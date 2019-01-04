@@ -24,23 +24,106 @@ class CardController extends CommentoilcardController
             $card_no = trim(I('post.card_no',''));
             $openid  = trim(I('post.openid',''));
             $id  = trim(I('post.id',''));
-            if (empty($openid)){
-                $this->openidError('数据传输错误');
-            }
+            
             $issetLoginRes=$this->issetLogin($openid);
 
 
-            if (!isset($card_no) || ! $card_no)
-            {
-                $this->error('卡号不能为空！');
-            }
-            if (!isset($openid) || ! $openid)
-            {
-                $this->error('openid不能为空！');
-            }
+            if (!isset($card_no) || !$card_no)$this->error('卡号不能为空！');
+            if (!isset($openid) || !$openid)$this->error('openid不能为空！');
 
             $user = M('User')->where(['openid'=>$openid])->find();
 
+            $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
+            $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
+
+            $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openid])->find();
+            $where = [
+                'R.user_id'=>$user['id'],
+                'R.order_type'=>1,
+                'R.order_status'=>2,
+                'R.online' =>1,
+                'R.preferential_type'=>1,
+                'R.send_card_no' => $card_no,
+            ];
+            $field = 'R.*,A.id as apply_id';
+            $Order = M('order_record')
+                        ->alias('R')
+                        ->field($field)
+                        ->join('__USER_APPLY__ A ON A.serial_number=R.serial_number')
+                        ->where($where)
+                        ->find();
+
+            if (!$Order) {
+                unset($where['R.send_card_no']);
+                $Order = M('order_record')
+                        ->alias('R')
+                        ->field($field)
+                        ->join('__USER_APPLY__ A ON A.serial_number=R.serial_number')
+                        ->where($where)
+                        ->find();
+            }
+            if (!$Order)$this->error('您当前并没有申领过油卡!');
+            $Package = M('packages')->where(['pid'=>$Order['pid']])->find();
+            $card = M('OilCard')->where(['card_no'=>$card_no])->find();
+            if(empty($card))$this->error('无效的卡号！');
+            if($card['user_id'] && !empty($card['user_id']) && intval($card['user_id'])>0){
+                $this->error('该卡号已经被绑定！');
+            }
+            $Things = M();
+            $Things->startTrans();
+            //修改订单状态
+            $OrderSave = [
+                'card_no' => $card['card_no'],
+                'updatetime' => $NowTime,
+                'preferential' => $Package['limits'],
+                'preferential_type' => 2,
+                'applyfinish' =>2
+            ];
+            //修改订单申领状态
+            $ApplySave = [
+                'status' =>3 ,
+                'note' => '油卡绑定成功',
+                'updatetime' => $NowTime
+            ];
+            //修改之前油卡信息状态
+            if ($card['card_no'] != $Order['send_card_no']) {
+                $BeforCard = [
+                    'status' =>1,
+                ];
+                $BeforCard = M('oil_card')->where(['card_no'=>$Order['send_card_no'] ])->save($BeforCard);
+            }
+
+            //修改当前油卡信息为当前绑定人
+            if ($Order['pid'] ==1)$EndTime = '';
+            $CardSave =[
+                'user_id'       =>$Member['id'],
+                'apply_fo_time' =>$Order['createtime'],
+                'status'        =>2,
+                'updatetime'    => $NowTime,
+                'chomd'         => 2 ,
+                'agent_status'  =>2,
+                'end_time'      =>$EndTime,
+                'preferential'  => $Package['limits'],
+                'pkgid'         =>$Order['pid'],
+                'desc'          => '油卡绑定成功',
+            ];
+
+
+            $OrderSave = M('order_record')->where(['id'=>$Order['id'] ])->save($OrderSave);
+
+            $ApplySave = M('user_apply')->where(['id'=>$Order['apply_id'] ])->save($ApplySave);
+
+            $CardSave = M('oil_card')->where(['id'=>$card['id'] ])->save($CardSave);
+            if ($OrderSave && $ApplySave && $CardSave) {
+                $Things->commit();
+                $this->success('绑定成功！');
+            }else{
+                $Things->rollback();
+                $this->error('绑定失败！');
+            }
+
+            //下面的用不上
+            //
 //            if (!$user)
 //            {
 //                //跳转到微信登录url，待完善
@@ -51,14 +134,8 @@ class CardController extends CommentoilcardController
         if (!empty($id)){
             $card = M('OilCard')->where(['card_no'=>$card_no,'status'=>2])->find();
             //判断卡号是否已申领/已有人
-            if(empty($card))
-            {
-                $this->error('无效的卡号！');
-            }
 
-            if (isset($card['user_id']) && $card['user_id']){
-                $this->error('该卡号已经被绑定！');
-            }
+            
             $card['user_id'] = $user['id'];
             $update_oilCard = array(
                 'user_id'=>$user['id'],
