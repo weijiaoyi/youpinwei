@@ -242,7 +242,7 @@ class CardController extends CommentoilcardController
             }else{
                 $role=1;
             }
-            if (strtotime($v['end_time'])>0) {
+            if ($v['pkgid']>1) {
                 $end_time=$v['end_time'];
             }else{
                 $end_time='';
