@@ -37,6 +37,7 @@ class CardController extends CommentoilcardController
             $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
 
             $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openid])->find();
+            $field = 'R.*,A.id as apply_id';
             $where = [
                 'R.user_id'=>$user['id'],
                 'R.order_type'=>1,
@@ -45,16 +46,16 @@ class CardController extends CommentoilcardController
                 'R.preferential_type'=>1,
                 'R.send_card_no' => $card_no,
             ];
-            $field = 'R.*,A.id as apply_id';
+
             $Order = M('order_record')
                         ->alias('R')
                         ->field($field)
                         ->join('__USER_APPLY__ A ON A.serial_number=R.serial_number')
                         ->where($where)
                         ->find();
-
+            unset($where['R.send_card_no']);
+            if ($id) $where['R.id'] =$id;            
             if (!$Order) {
-                unset($where['R.send_card_no']);
                 $Order = M('order_record')
                         ->alias('R')
                         ->field($field)
