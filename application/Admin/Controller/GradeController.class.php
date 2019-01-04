@@ -37,7 +37,7 @@ class GradeController extends AdminbaseController
         if(!empty($ordinary_info)){
             foreach ($ordinary_info as $key=>$value){
                 if(!empty($value['parentid'])){
-                    $parentInfo = M('user')->where('parentid="'.$value["parentid"].'"')->field('nickname,user_img')->find();
+                    $parentInfo = M('user')->where('id="'.$value["parentid"].'"')->field('nickname,user_img')->find();
                     $ordinary_info[$key]['parent_nickname']=$parentInfo['nickname'];
                     $ordinary_info[$key]['parent_img']=$parentInfo['user_img'];
                 }else{
@@ -83,7 +83,7 @@ class GradeController extends AdminbaseController
         if(!empty($vip_info)){
             foreach ($vip_info as $key=>$value){
                 if(!empty($value['parentid'])){
-                    $parentInfo = M('user')->where('parentid="'.$value["parentid"].'"')->field('nickname,user_img')->find();
+                    $parentInfo = M('user')->where('id="'.$value["parentid"].'"')->field('nickname,user_img')->find();
                     $vip_info[$key]['parent_nickname']=$parentInfo['nickname'];
                     $vip_info[$key]['parent_img']=$parentInfo['user_img'];
                 }else{
