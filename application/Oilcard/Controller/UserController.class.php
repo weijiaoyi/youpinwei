@@ -82,9 +82,6 @@ class UserController extends CommentoilcardController
         $output['integral'] = $userInfo['integral'] ?: 0;
         $output['already_save_money'] = $userInfo['already_save_money'] ?: 0;
         $output['total_add_money'] = $userInfo['total_add_money']?: 0;
-        if (empty($agent_role)){
-            $agent_role='1';
-        }
         $output['agent'] = $agent_role;
 
         echo json_encode(['msg'=>'success','status'=>1000,'data'=>$output]);
