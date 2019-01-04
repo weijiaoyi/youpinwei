@@ -327,7 +327,7 @@ class CardController extends CommentoilcardController
        }
        $this->error('退卡失败');
 
-        M('order_record')->add([
+        /*M('order_record')->add([
                 'card_no'=>$card_no,
                 'user_id'=>$user_arr['id'],
                 'order_type'=>4,
@@ -339,7 +339,7 @@ class CardController extends CommentoilcardController
             $this->success('退卡成功');
         }else{
             $this->error('退卡失败');
-        }
+        }*/
 
     }
 
