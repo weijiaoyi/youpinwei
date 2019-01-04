@@ -14,28 +14,35 @@ class OrderController extends CommentoilcardController
     *订单展示
     */
     public function orderList(){
+
         $openId=I('post.openid','');
-        $flage=I('post.flage','');
-        $p=I('post.p','');
-        $offset=I('post.offset','20');
-
-        if (empty($p)){
-            $page=0;
-        }else{
-            $page=($p-1)*$offset;
-        }
-
+        $p=I('post.p','1');
+        $l=I('post.l',10);
+        $flag=I('post.flag','1');
         $this->_empty($openId,'数据传输失败');
-        $user_data=M('user')->where("openid='".$openId."'")->find();
+        $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
+        $where = [
+            'R.user_id' =>$Member['id'],
+            'R.order_status' =>2
+        ];
 
-            $order_data=M('order_record')
-                ->where('user_id="'.$user_data["id"].'" AND order_status=2')
-                ->order('createtime desc')
-                ->limit($page,$offset)
-                ->select();  
+        $field = 'R.*,M.id as rechageid,A.id as applyid,R.real_pay,M.money as recharge_money,M.discount_money';
+        $order_data=M('order_record')
+            ->alias('R')
+            ->field($field)
+            ->join('__ADD_MONEY__ as M ON M.order_no = R.serial_number','LEFT')
+            ->join('__USER_APPLY__ as A ON A.serial_number = R.serial_number','LEFT')
+            ->where($where)
+            ->order('R.createtime desc')
+            ->page($p,$l)
+            ->select();
 
-        $count=M('order_record')->where('user_id="'.$user_data["id"].'" AND order_status=2')->count();   //数据总条数
-        $count=ceil($count/$offset);     //数据总页数
+        $count=M('order_record')
+            ->alias('R')
+            ->join('__ADD_MONEY__ as M ON M.order_no = R.serial_number')
+            ->join('__USER_APPLY__ as A ON A.serial_number = R.serial_number')
+            ->where($where)
+            ->count(); //数据总条数
         
         $data=[
             'orderdata'=>$order_data,

@@ -52,6 +52,10 @@ class AgentController extends CommentoilcardController
             if (isset($v['earn_money']))$Earnings[$key]['earn_money'] =ncPriceFormatb($v['earn_money']);
             if (isset($v['money']))$Earnings[$key]['money'] =ncPriceFormatb($v['money']);
             if (isset($v['earnings']))$Earnings[$key]['earnings'] =ncPriceFormatb($v['earnings']);
+            if (isset($v['time'])) {
+                $time = strtotime($v['time']);
+                $Earnings[$key]['time'] = date('Y-m-d',$time);
+            }
         }
         $output = [];
         $output['user_img'] = $Agent['user_img'];
