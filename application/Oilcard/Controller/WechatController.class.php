@@ -736,6 +736,9 @@ class WechatController extends CommentoilcardController
                 'updatetime' => $NowTime,
                 'apply_status' => 2,
             ];
+            if ($OrderInfo['pid'] ==1) {
+                $EndTime = '';
+            }
             //线下绑卡设置 -- 直接成功发放油卡，并绑定到用户名下
             if ($OrderInfo['online']==2) {
                 //修改油卡信息
