@@ -21,10 +21,12 @@ class CardController extends CommentoilcardController
     public function bindCard()
     {
 //        try{
-            $card_no = trim(I('post.card_no',''));
+            $card_no = (string)trim(I('post.card_no',''));
             $openid  = trim(I('post.openid',''));
             $id  = trim(I('post.id',''));
-            
+            $card_no = str_replace(" ",'',$card_no);
+            $leng = intval(strlen($card_no));
+            if($leng != 16 )$this->error('卡号错误！');
             $issetLoginRes=$this->issetLogin($openid);
 
 
@@ -37,6 +39,7 @@ class CardController extends CommentoilcardController
             $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
 
             $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openid])->find();
+            $field = 'R.*,A.id as apply_id';
             $where = [
                 'R.user_id'=>$user['id'],
                 'R.order_type'=>1,
@@ -45,16 +48,16 @@ class CardController extends CommentoilcardController
                 'R.preferential_type'=>1,
                 'R.send_card_no' => $card_no,
             ];
-            $field = 'R.*,A.id as apply_id';
+
             $Order = M('order_record')
                         ->alias('R')
                         ->field($field)
                         ->join('__USER_APPLY__ A ON A.serial_number=R.serial_number')
                         ->where($where)
                         ->find();
-
+            unset($where['R.send_card_no']);
+            if ($id) $where['R.id'] =$id;            
             if (!$Order) {
-                unset($where['R.send_card_no']);
                 $Order = M('order_record')
                         ->alias('R')
                         ->field($field)
@@ -369,7 +372,7 @@ class CardController extends CommentoilcardController
      * @return [type]     [description]
      */
     public function withdrawCard(){
-        $card_no=I('post.card_no','');
+        $card_no=trim(I('post.card_no',''));
         $desc = trim( I('post.desc','') );
 
         $openid=I('post.openid','');
@@ -380,7 +383,7 @@ class CardController extends CommentoilcardController
         if (empty($cardInfo)){
             $this->error('非法请求!');
         }
-        $res= M('oil_card')->where(['card_no'=>$card_no])->save([
+        $res= M('oil_card')->where(['id'=>$cardInfo['id']])->save([
             'is_notmal'=>2,
             'desc' => '用户于【'.date('Y-m-d H:i:s',TIMESTAMP).'】申请退卡，冻结油卡！'
         ]);
@@ -394,7 +397,8 @@ class CardController extends CommentoilcardController
             'updatetime' => TIMESTAMP,
             'desc'       => !empty($desc)?$desc:'申请退卡',
             'type'       => 1,
-            'status'     => 1,
+            'hand'       => 1,
+            'status'     => 2,
             'adminid'    => 0,
           ];
           $result = M('oil_option')->add($addLog);

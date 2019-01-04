@@ -300,19 +300,32 @@ class IntegralController extends CommentoilcardController
         $openid=I('post.openid','');
         $this->_empty($openid);
         $user_id=M('user')->where("openid='$openid'")->getField('id');
-        $order_arr=M('order_record')->where("user_id='$user_id' and order_status='2' and order_type='1' and preferential>0 and preferential_type='1'")->select();
-        if (empty($order_arr)){
+        $where = [
+                'R.user_id'=>$user_id,
+                'R.order_type'=>1,
+                'R.order_status'=>2,
+                'R.online' =>1,
+                'R.preferential_type'=>1,
+            ];
+        $field = 'R.*,A.id as apply_id';
+        $Order = M('order_record')
+                    ->alias('R')
+                    ->field($field)
+                    ->join('__USER_APPLY__ A ON A.serial_number=R.serial_number')
+                    ->where($where)
+                    ->select();
+        if (empty($Order)){
             echo  json_encode([
-                'data'=>json_encode($order_arr),
+                'data'=>json_encode($Order),
                 'status'=>1000
-            ])  ;exit;
+            ]);
         }else{
             echo  json_encode([
-                'data'=>json_encode($order_arr),
+                'data'=>json_encode($Order),
                 'status'=>1000
-            ])  ;exit;
-//            $this->success($data);
+            ]);
         }
+        exit;
     }
 
     /**
