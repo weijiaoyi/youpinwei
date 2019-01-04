@@ -370,7 +370,7 @@ class CardController extends CommentoilcardController
      * @return [type]     [description]
      */
     public function withdrawCard(){
-        $card_no=I('post.card_no','');
+        $card_no=trim(I('post.card_no',''));
         $desc = trim( I('post.desc','') );
 
         $openid=I('post.openid','');
@@ -381,7 +381,7 @@ class CardController extends CommentoilcardController
         if (empty($cardInfo)){
             $this->error('非法请求!');
         }
-        $res= M('oil_card')->where(['card_no'=>$card_no])->save([
+        $res= M('oil_card')->where(['id'=>$cardInfo['id']])->save([
             'is_notmal'=>2,
             'desc' => '用户于【'.date('Y-m-d H:i:s',TIMESTAMP).'】申请退卡，冻结油卡！'
         ]);
@@ -395,7 +395,8 @@ class CardController extends CommentoilcardController
             'updatetime' => TIMESTAMP,
             'desc'       => !empty($desc)?$desc:'申请退卡',
             'type'       => 1,
-            'status'     => 1,
+            'hand'       => 1,
+            'status'     => 2,
             'adminid'    => 0,
           ];
           $result = M('oil_option')->add($addLog);
