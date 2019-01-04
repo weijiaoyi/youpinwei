@@ -221,6 +221,7 @@ class DeliverController extends AdminbaseController{
         $orderInfo = $orderRecordModel
             ->alias('a')
             ->join('user_apply u ON u.serial_number=a.serial_number AND u.status=1',LEFT)
+            ->field('a.*,u.id as apply_id,u.phone,u.receive_person,u.address')
             ->where('a.id="'.$order_id.'" AND a.order_status=2')
             ->find();
         if($orderInfo){
@@ -232,7 +233,7 @@ class DeliverController extends AdminbaseController{
                 'serial_number'=>$orderInfo['serial_number'],//订单编号
                 'order_id'=>$orderInfo['id'],//订单ID
             ];
-            echo json_encode(array('status'=>200,'message'=>'订单已发货或不存在','data'=>$data));exit;
+            echo json_encode(array('status'=>200,'message'=>'准备发货发货','data'=>$data));exit;
         }else{
             echo json_encode(array('status'=>100,'message'=>'订单已发货或不存在'));exit;
         }
@@ -292,7 +293,8 @@ class DeliverController extends AdminbaseController{
 
         $res = $orderRecordModel->where('id="'.$order_id.'" AND serial_number="'.$serial_number.'"')->find();
         if($res){
-            $result = $userApplyModel->where('id="'.$order_id.'" AND serial_number="'.$serial_number.'" AND status=1')->find();
+            $result = $userApplyModel->where('serial_number="'.$serial_number.'" AND status=1')->find();
+            p($result);exit;
             if($result){
                     $update_apply = $userApplyModel->where('id="'.$order_id.'" AND serial_number="'.$serial_number.'"')->save(array('express_number'=>$express_number,'status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
                     if($update_apply){
