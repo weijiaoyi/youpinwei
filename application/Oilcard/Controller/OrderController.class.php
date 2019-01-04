@@ -39,8 +39,8 @@ class OrderController extends CommentoilcardController
 
         $count=M('order_record')
             ->alias('R')
-            ->join('__ADD_MONEY__ as M ON M.order_no = R.serial_number')
-            ->join('__USER_APPLY__ as A ON A.serial_number = R.serial_number')
+            ->join('__ADD_MONEY__ as M ON M.order_no = R.serial_number','LEFT')
+            ->join('__USER_APPLY__ as A ON A.serial_number = R.serial_number','LEFT')
             ->where($where)
             ->count(); //数据总条数
         
