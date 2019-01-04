@@ -167,7 +167,7 @@ class CardController extends CommentoilcardController
             }else{
                 $role=1;
             }
-            if ($v['end_time']>date("Y-m-d H:i:s")) {
+            if (strtotime($v['end_time'])>0) {
                 $end_time=$v['end_time'];
             }else{
                 $end_time='';
