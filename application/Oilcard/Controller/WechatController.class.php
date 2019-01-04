@@ -835,7 +835,7 @@ class WechatController extends CommentoilcardController
                             if ($addEarnings) {
                                 //拉新奖励记录
                                 $EarningsAdd['openid']       = $openId;
-                                $EarningsAdd['agent_id']     = $Invite['openid'];
+                                $EarningsAdd['agent_id']     = $Invite['id'];
                                 $EarningsAdd['createtime']   = $NowTime;
                                 $EarningsAdd['order_type']   = 2;
                                 $EarningsAdd['earning_body'] = 7;
