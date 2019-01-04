@@ -545,7 +545,7 @@ class WechatController extends CommentoilcardController
                     //用户充值的金额 ，使用真实面额
                     $RechageMoney = $order_item['money'];
                     //判断是直属下级还是间接下级身份 /// 此流程不适用
-                    switch ($CardInfo['pid']) {
+                    switch ($CardInfo['pkgid']) {
                         case '1':
                             $Calculation = $RechageMoney* ($config['user_profit']/100);
                             $rewardMoney  = number_format($Calculation, 4, ".", "");
