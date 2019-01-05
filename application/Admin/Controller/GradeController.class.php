@@ -346,92 +346,9 @@ class GradeController extends AdminbaseController
                 }
             }
 
-            //修改代理的过期时间
-           /* $save_expire_time = [
-                'expire_time' => date('Y-m-d H:i:s',strtotime('+1year')),
-            ];
-            $result4 = $AgentModel -> where( $where ) -> save( $save_expire_time );
-            $AgentModel = M('agent');
-            $insert_agent_where =[
-                'openid'=>$data['openid']
-            ];
-            $result5 = $AgentModel -> where( $insert_agent_where )->save(['role'=>3]);
 
-            if( $result1 && $result2 && $result3 && $result4 && $result5 ){
-                echo json_encode([
-                    'msg' => 1000,
-                    'status' => '添加成功'
-                ]);exit;
-            }else{
-                echo json_encode([
-                    'msg' => 500,
-                    'status' => '添加失败'
-                ]);exit;
-            }*/
         }else{
-            //添加代理
-//            $AgentModel = M('agent');
-//            $insert_agent_data = [
-//                'openid' => $data['openid'],
-//                'role' => 3,
-//                'expire_time' => date('Y-m-d H:i:s',strtotime('+1year')),
-//                'status' => 1,
-//                'deposit' => '100',
-//                'createtime' => date('Y-m-d H:i:s'),
-//                'development' => 1
-//            ];
-//            $result1 = $AgentModel -> add( $insert_agent_data );
-//
-//            //记录该代理拿卡信息
-//            $AgentLibraryModel = M('agent_library');
-//            $insert_agent_library_data = [
-//                'user_id' => $data['user_id'],
-//                'start_card_no' => $data['start'],
-//                'end_card_no' => $data['end'],
-//                'openid' => $data['openid'],
-//                'each_price' => $data['each_price'],
-//                'card_mode' => $data['mode'],
-//                'createtime' => date('Y-m-d H:i:s')
-//            ];
-//
-//            $AgentLibraryModel = M('agent_library');
-//            $result2 = $AgentLibraryModel -> add( $insert_agent_library_data );
-//            //代理拿到卡后修改卡状态
-//            for( $i = $data['start'] ; $i <= $data['end'] ; $i++ ){
-//                //拿卡的数量
-//                $arr[] = $i;
-//                //修改卡状态和入手时间
-//                $save_data = [
-//                    //'status' => 2,
-//                    'agent_create_time' => date('Y-m-d H:i:s')
-//                ];
-//                $OilCardModel = M('oil_card');
-//                $result3 = $OilCardModel -> where( ['card_no' => $i ] ) -> save( $save_data );
-//            }
-//            //记录代理申领的信息
-//            $UserApplyModel = M('user_apply');
-//            $insert_user_apply_data = [
-//                'user_id' => $data['user_id'],
-//                'card_number' => count($arr),
-//                'shop_name' => '中石油加油卡',
-//                'receive_person' => $data['name'],
-//                'phone' => $data['phone'],
-//                'address' => $data['address'],
-//                'deliver_number' => count($arr),
-//                'serial_number' => '20181130'.rand(100000,999999),
-//                'status' => 1,
-//                'createtime' => date('Y-m-d H:i:s')
-//            ];
-//            $result4 = $UserApplyModel -> add( $insert_user_apply_data );
-//
-//            if( $result1 && $result2 && $result3 && $result4 ){
-//                echo json_encode([
-//                    'msg' => 1000,
-//                    'status' => '添加成功'
-//                ]);
-//            }else{
-//                echo json_encode(['msg' => 500,'status' => '添加失败']);
-//            }
+
             $user_id = I('get.user_id');
             $openid = I('get.openid');
             $user = M('user')->where('id="'.$user_id.'" AND openid="'.$openid.'"')->find();
@@ -439,13 +356,25 @@ class GradeController extends AdminbaseController
             $OilCardModel = M('oil_card');
             //查询
             $card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
-
             if(!empty($card_id)){
-                $card_id = $card_id+1;
+                $start_card_id = $OilCardModel -> where(' id>"'.$card_id.'" AND status=2')->order('id desc')->getField('id');
+                if(!empty($start_card_id)){
+                    $start_card_id = $start_card_id+1;
+                    $start_card = $OilCardModel -> where(' id="'.$start_card_id.'" ') ->getField('card_no');
+                }else{
+                    $card_id = $card_id+1;
+                    $start_card = $OilCardModel -> where(' id="'.$card_id.'" ') ->getField('card_no');
+                }
             }else{
-                $card_id = 1;
+                //未分配代理商
+                $start_card_id = $OilCardModel -> where(' id>0 AND status=2')->order('id desc') ->getField('id');
+                if(!empty($start_card_id)){
+                    $start_card_id = $start_card_id+1;
+                    $start_card = $OilCardModel -> where(' id="'.$start_card_id.'" ') ->getField('card_no');
+                }else{
+                    $start_card = $OilCardModel -> where(' id=1 ') ->getField('card_no');
+                }
             }
-            $start_card = $OilCardModel -> where(['status' => 1,'id'=>$card_id]) -> getField('card_no');
             if(!empty($start_card)){
                 $start_card = $start_card;
             }else{
@@ -466,13 +395,36 @@ class GradeController extends AdminbaseController
         $id = trim( I('get.id','') );
         //查询为库存的第一张卡 准备发卡
         $OilCardModel = M('oil_card');
-        $card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
+        /*$card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
         $card_id = $card_id+1;
-        $start_card = $OilCardModel -> where(['status' => 1,'id'=>$card_id]) -> getField('card_no');
-
+        $start_card = $OilCardModel -> where(['status' => 1,'id'=>$card_id]) -> getField('card_no');*/
+        //
+        $card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
+        if(!empty($card_id)){
+            $start_card_id = $OilCardModel -> where(' id>"'.$card_id.'" AND status=2')->order('id desc')->getField('id');
+            if(!empty($start_card_id)){
+                $start_card_id = $start_card_id+1;
+                $start_card = $OilCardModel -> where(' id="'.$start_card_id.'" ') ->getField('card_no');
+            }else{
+                $card_id = $card_id+1;
+                $start_card = $OilCardModel -> where(' id="'.$card_id.'" ') ->getField('card_no');
+            }
+        }else{
+            //未分配代理商
+            $start_card_id = $OilCardModel -> where(' id>0 AND AND status=2')->order('id desc') ->getField('id');
+            if(!empty($start_card_id)){
+                $start_card_id = $start_card_id+1;
+                $start_card = $OilCardModel -> where(' id="'.$start_card_id.'" ') ->getField('card_no');
+            }else{
+                $start_card = $OilCardModel -> where(' id=1 ') ->getField('card_no');
+            }
+        }
         $AgentModel = M('agent');
         $agent_info = $AgentModel -> where( ['id' => $id,'role'=>3] ) -> find();
         $user = M('user')->where('id="'.$id.'" AND openid="'.$agent_info['openid'].'"')->find();
+
+
+
         if(!empty($start_card)){
             $sendCardData['card_no'] = $start_card;
         }else{

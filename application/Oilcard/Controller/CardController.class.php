@@ -245,10 +245,10 @@ class CardController extends CommentoilcardController
             }else{
                 $role=1;
             }
-            if ($v['pkgid']>1) {
-                $end_time=$v['end_time'];
-            }else{
+            if ($role==1) {
                 $end_time='';
+            }else{
+                $end_time=$v['end_time'];
             }
             $normal[$k]['role'] =$role;
             $normal[$k]['card_no'] = $v['card_no'];
