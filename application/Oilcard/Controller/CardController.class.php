@@ -374,6 +374,7 @@ class CardController extends CommentoilcardController
     public function withdrawCard(){
         $card_no=trim(I('post.card_no',''));
         $desc = trim( I('post.desc','') );
+        $type = trim( I('post.type','') );
 
         $openid=I('post.openid','');
         $this->_empty($card_no,'数据传输错误');
@@ -383,28 +384,56 @@ class CardController extends CommentoilcardController
         if (empty($cardInfo)){
             $this->error('非法请求!');
         }
-        $res= M('oil_card')->where(['id'=>$cardInfo['id']])->save([
-            'is_notmal'=>2,
-            'desc' => '用户于【'.date('Y-m-d H:i:s',TIMESTAMP).'】申请退卡，冻结油卡！'
-        ]);
+        if($type == 1){
+            $res= M('oil_card')->where(['id'=>$cardInfo['id']])->save([
+                'is_notmal'=>2,
+                'desc' => '用户于【'.date('Y-m-d H:i:s',TIMESTAMP).'】申请退卡，冻结油卡！'
+            ]);
 
-        if ($res) {
-           //添加到禁用日志
-          $addLog = [
-            'userid'     => $user_arr['id'],
-            'cardid'     => $cardInfo['id'],
-            'addtime'    => TIMESTAMP,
-            'updatetime' => TIMESTAMP,
-            'desc'       => !empty($desc)?$desc:'申请退卡',
-            'type'       => 1,
-            'hand'       => 1,
-            'status'     => 2,
-            'adminid'    => 0,
-          ];
-          $result = M('oil_option')->add($addLog);
-          if($result)$this->success('退卡成功');
-       }
-       $this->error('退卡失败');
+            if ($res) {
+                //添加到禁用日志
+                $addLog = [
+                    'userid'     => $user_arr['id'],
+                    'cardid'     => $cardInfo['id'],
+                    'addtime'    => TIMESTAMP,
+                    'updatetime' => TIMESTAMP,
+                    'desc'       => !empty($desc)?$desc:'申请退卡',
+                    'type'       => 1,
+                    'hand'       => 1,
+                    'status'     => 2,
+                    'adminid'    => 0,
+                ];
+                $result = M('oil_option')->add($addLog);
+                if($result)$this->success('退卡成功');
+            }
+            $this->error('退卡失败');
+        }else{
+            $res= M('oil_card')->where(['id'=>$cardInfo['id']])->save([
+                'is_notmal'=>2,
+                'desc' => '用户于【'.date('Y-m-d H:i:s',TIMESTAMP).'】申请挂失，冻结油卡！'
+            ]);
+            if ($res) {
+                //添加到禁用日志
+                $addLog = [
+                    'userid'     => $user_arr['id'],
+                    'cardid'     => $cardInfo['id'],
+                    'addtime'    => TIMESTAMP,
+                    'updatetime' => TIMESTAMP,
+                    'desc'       => !empty($desc)?$desc:'申请挂失',
+                    'type'       => 2,
+                    'hand'       => 1,
+                    'status'     => 2,
+                    'adminid'    => 0,
+                ];
+                $result = M('oil_option')->add($addLog);
+                if($result)$this->success('申请挂失成功');
+            }
+            $this->error('申请挂失失败');
+
+        }
+
+
+
 
         /*M('order_record')->add([
                 'card_no'=>$card_no,

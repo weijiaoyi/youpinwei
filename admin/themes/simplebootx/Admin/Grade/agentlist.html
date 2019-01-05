@@ -35,6 +35,9 @@
             <th style="text-align:center;">头像</th>
             <th style="text-align:center;">代理称号</th>
             <th style="text-align:center;">押金</th>
+            <th style="text-align:center;">当前收益</th>
+            <!--<th style="text-align:center;">消费收益</th>-->
+            <th style="text-align:center;">总收益</th>
             <!--<th style="text-align:center;">发展来源</th>-->
             <th style="text-align:center;">未绑定油卡</th>
             <th style="text-align:center;">状态</th>
@@ -62,6 +65,12 @@
             </td>
             <td style="text-align:center;">
                 <span style="font-size: 20px;color: red;font-weight: bold;">{$val['deposit']}</span>元
+            </td>
+            <td style="text-align:center;">
+                <span style="font-size: 20px;color: red;font-weight: bold;">{$val['currt_earnings']}</span>元
+            </td>
+            <td style="text-align:center;">
+                <span style="font-size: 20px;color: red;font-weight: bold;">{$val['total_earnings']}</span>元
             </td>
             <!--<td style="text-align:center;">
             	<if condition="$val['development'] eq '1'">

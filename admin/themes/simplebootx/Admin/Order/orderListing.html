@@ -29,6 +29,10 @@
             <th style="text-align:center;">充值卡号</th>
             <th style="text-align:center;">充值金额</th>
             <th style="text-align:center;">支付金额</th>
+            <th style="text-align:center;">使用加油券</th>
+            <th style="text-align:center;">折扣金额</th>
+            <th style="text-align:center;">上级代理商</th>
+            <th style="text-align:center;">分成分润</th>
             <th style="text-align:center;">充值时间</th>
         </tr>
         </thead>
@@ -56,13 +60,36 @@
                     <span style="font-size: 20px;color: red;font-weight: bold;">{$val['real_pay']}</span>元
                 </td>
                 <td style="text-align:center;">
+                    <span style="font-size: 20px;color: red;font-weight: bold;">{$val['coupon_money']}</span>元
+                </td>
+                <td style="text-align:center;">
+                    <span style="font-size: 20px;color: red;font-weight: bold;">{$val['zk_money']}</span>元
+                </td>
+                <td style="text-align:center;">
+                    <if condition="$val['agent_name'] eq ''">
+                        <span style="font-size: 20px;color: red;font-weight: bold;">总部</span>
+                        <else/>
+                        {$val['agent_name']}<img src="{$val['agent_img']}" alt="{$val['agent_img']}" style="width: 40px;height: 40px;" />
+                    </if>
+
+                </td>
+                <td style="text-align:center;">
+                    <if condition="$val['earnings'] eq ''">
+                        <span style="font-size: 20px;color: red;font-weight: bold;">0.00</span>元
+                        <else/>
+                        <span style="font-size: 20px;color: red;font-weight: bold;">{$val['earnings']}</span>元
+                    </if>
+                </td>
+                <td style="text-align:center;">
                     {$val['createtime']}
                 </td>
             </tr>
         </volist>
         </tbody>
     </table>
-    <div id="page" class="pagination"><?php echo $page; ?></div>
+    <if condition="$page neq ''">
+        <div id="page" class="pagination"><span class="page"><?php echo $page; ?></span></div>
+    </if>
 </div>
 <script src="__PUBLIC__/js/common.js"></script>
 </body>

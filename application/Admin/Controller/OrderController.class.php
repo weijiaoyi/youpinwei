@@ -72,7 +72,9 @@ class OrderController extends AdminbaseController{
             ->alias('o')
             ->join('add_money a ON a.order_no=o.serial_number',LEFT)
             ->join('user u ON u.id=o.user_id',LEFT)
-            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,a.*,u.nickname,u.user_img')
+            ->join('agent_earnings e ON e.sn=o.serial_number',LEFT)
+            ->join('user us ON us.id=o.agent_id',LEFT)
+            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,o.coupon_money,o.discount_money as zk_money,a.*,u.nickname,u.user_img,us.nickname as agent_name,us.user_img as agent_img')
             ->where($where)
             -> page($p,'10')
             ->select();
@@ -86,9 +88,11 @@ class OrderController extends AdminbaseController{
         }*/
         $count = $OrderRecordModel
             ->alias('o')
-            ->join('add_money a ON a.user_id=o.user_id',LEFT)
+            ->join('add_money a ON a.order_no=o.serial_number',LEFT)
             ->join('user u ON u.id=o.user_id',LEFT)
-            ->field('o.id,o.user_id,o.serial_number,a.*,u.nickname,u.user_img')
+            ->join('agent_earnings e ON e.sn=o.serial_number',LEFT)
+            ->join('user us ON us.id=o.agent_id',LEFT)
+            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,o.coupon_money,o.discount_money as zk_money,a.*,u.nickname,u.user_img,us.nickname as agent_name,us.user_img as agent_img')
             ->where($where)
             -> count();
         $page = new \Think\Page($count,10);
