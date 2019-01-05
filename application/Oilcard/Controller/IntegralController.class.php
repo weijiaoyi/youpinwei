@@ -239,7 +239,7 @@ class IntegralController extends CommentoilcardController
         $IsOver  = $this->FinishThisOrder($OrderAdd,$AddMoneySave,$Member,$Package,$config);
         if ($IsOver) {
             $data['order_no'] = $orderSn;
-            exit(json_encode(['msg'=>'success','status'=>2000,'data'=>$data],));
+            exit(json_encode(['msg'=>'success','status'=>2000,'data'=>$data]));
         }
 
         //生成订单
