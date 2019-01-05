@@ -472,4 +472,30 @@ class DeliverController extends AdminbaseController{
 			$this->error('删除水工失败！');
 		}
 	}
+
+
+    public function inportExcel(){
+
+        $title = ['订单号','申请人微信昵称','姓名','手机号','联系地址','应发卡号','应发货人','支付金额','邮费','押金'];
+        $field ="R.serial_number,U.nickname,A.receive_person,A.phone,A.address,R.send_card_no,G.nickname,R.real_pay,R.postage,R.user_deposit";
+        $where = [
+            'R.order_type' =>1,
+            'R.order_status' =>2,
+            'R.applyfinish' =>1,
+            'R.pay_sn' =>['neq'=>'']
+        ];
+
+        $data = M('order_record')
+                ->alias('R')
+                ->join('__USER_APPLY__ as A ON A.serial_number=R.serial_number','LEFT')
+                ->join('__USER__ as U ON U.id=R.user_id','LEFT')
+                ->join('__USER__ as G ON G.id=R.agent_id','LEFT')
+                ->where($where)
+                ->field($field)
+                ->order('R.id desc')
+                ->select();
+        createExcel($title,$data,'订单Excel');
+        exit;
+        echo 111;exit;
+    }
 }

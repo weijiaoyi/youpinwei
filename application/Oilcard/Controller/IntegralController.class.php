@@ -208,18 +208,21 @@ class IntegralController extends CommentoilcardController
         ];
         //判断当前油卡额度
         $BeforRechage =$CardInfo['preferential'];
+        //判断充值后的额度
         $AfterRechage = $CardInfo['preferential'] - $money;
-        if ($BeforRechage < 1 || $AfterRechage <0) {
-            $OrderAdd['pid'] = 1;
-        }else{
-            $OrderAdd['pid'] = $CardInfo['pkgid'];
+        if (intval($BeforRechage) < 1 || intval($AfterRechage) < 0) {
+            $this->error('此油卡可用充值额度不足!');
         }
+        $OrderAdd['pid'] = $CardInfo['pkgid'];
         $RechageCount = M('add_money')->where(['card_no'=>$card_no,'openid'=>$openid])->count();
         $is_first =2;
         if ($RechageCount < 1) { // 是否是首充
-            if ($money < $config['first_rechage']) $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
+            if (intval($money) < intval( $config['first_rechage']) ){
+                $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
+            } 
             $is_first = 1;
         }
+
         $AddMoneySave = [
             'user_id'        => $Member['id'],
             'openid'         => $openid,
