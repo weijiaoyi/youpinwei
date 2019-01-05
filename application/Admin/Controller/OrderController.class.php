@@ -74,8 +74,9 @@ class OrderController extends AdminbaseController{
             ->join('user u ON u.id=o.user_id',LEFT)
             ->join('agent_earnings e ON e.sn=o.serial_number',LEFT)
             ->join('user us ON us.id=o.agent_id',LEFT)
-            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,o.coupon_money,o.discount_money as zk_money,a.*,u.nickname,u.user_img,us.nickname as agent_name,us.user_img as agent_img')
+            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,o.coupon_money,o.discount_money as zk_money,a.*,e.earnings,u.nickname,u.user_img,us.nickname as agent_name,us.user_img as agent_img')
             ->where($where)
+            ->order('o.id DESC')
             -> page($p,'10')
             ->select();
 //        echo '<pre>';var_dump($order_info);exit;
