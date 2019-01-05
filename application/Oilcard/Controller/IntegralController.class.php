@@ -239,7 +239,7 @@ class IntegralController extends CommentoilcardController
         $IsOver  = $this->FinishThisOrder($OrderAdd,$AddMoneySave,$Member,$Package,$config);
         if ($IsOver) {
             $data['order_no'] = $orderSn;
-            exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
+            exit(json_encode(['msg'=>'success','status'=>2000,'data'=>$data],));
         }
 
         //生成订单
@@ -423,9 +423,24 @@ class IntegralController extends CommentoilcardController
             // vip_indirect_scale  VIP间接会员充值分成
             // user_indirect_scale 普通间接会员充值分成
             //用户充值的金额 ，使用真实面额
-            $RechageMoney = $AddMoneySave['money'];
+            $RechageMoney = $order_item['money'];
+            //判断是直属下级还是间接下级身份 /// 此流程不适用
+            switch ($CardInfo['pkgid']) {
+                case '1':
+                    $Calculation = $RechageMoney* ($config['user_profit']/100);
+                    $rewardMoney  = number_format($Calculation, 4, ".", "");
+                    $earning_body = 5; //普通卡充值
+                            break;
+                    break;
+                
+                default:
+                    $Calculation = $RechageMoney* ($config['vip_profit']/100);
+                    $rewardMoney  = number_format($Calculation, 4, ".", "");
+                    $earning_body = 6; //VIP卡充值
+                    break;
+            }
             //判断是直属下级还是间接下级身份
-            switch ($Member['agent_relation']) {
+            /*switch ($Member['agent_relation']) {
                 case '1': //直接下级
                     //按照当前会员不同的身份为上级代理分润
                     switch ($Member['role']) {
@@ -459,7 +474,7 @@ class IntegralController extends CommentoilcardController
                             break;
                     }
                     break;
-            }
+            }*/
 
             //代理返利记录
             $EarningsAdd['openid']       = $openid;
