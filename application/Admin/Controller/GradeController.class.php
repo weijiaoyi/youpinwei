@@ -477,13 +477,37 @@ class GradeController extends AdminbaseController
         $id = trim( I('get.id','') );
         //查询为库存的第一张卡 准备发卡
         $OilCardModel = M('oil_card');
-        $card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
+        /*$card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
         $card_id = $card_id+1;
-        $start_card = $OilCardModel -> where(['status' => 1,'id'=>$card_id]) -> getField('card_no');
+        $start_card = $OilCardModel -> where(['status' => 1,'id'=>$card_id]) -> getField('card_no');*/
+        //
+        $card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
+        if(!empty($card_id)){
+            $start_card_id = $OilCardModel -> where(' id>"'.$card_id.'" AND user_id !=""')->order('id desc')->getField('id');
+            $card_id = $start_card_id+1;
+            if(!empty($start_card_id)){
+                $start_card = $OilCardModel -> where(' id="'.$card_id.'" ') ->getField('card_no');
+            }else{
+                $start_card = $OilCardModel -> where(' id="'.$card_id.'" ') ->getField('card_no');
+            }
+        }else{
+            //未分配代理商
+            $start_card_id = $OilCardModel -> where(' id>0 AND user_id !=""')->order('id desc') ->getField('id');
+            if(!empty($start_card_id)){
+                $card_id = $start_card_id+1;
+                $start_card = $OilCardModel -> where(' id="'.$card_id.'" ') ->getField('card_no');
+            }else{
+                $start_card = $OilCardModel -> where(' id=1 ') ->getField('card_no');
+            }
+        }
+
 
         $AgentModel = M('agent');
         $agent_info = $AgentModel -> where( ['id' => $id,'role'=>3] ) -> find();
         $user = M('user')->where('id="'.$id.'" AND openid="'.$agent_info['openid'].'"')->find();
+
+
+
         if(!empty($start_card)){
             $sendCardData['card_no'] = $start_card;
         }else{
