@@ -133,9 +133,10 @@ class SettingController extends AdminbaseController{
 			if(empty($_POST['password'])){
 				$this->error("新密码不能为空！");
 			}
-			$user_obj = D("Common/Users");
+			$user_obj = D("Common/admin_user");
 			$uid=sp_get_current_admin_id();
 			$admin=$user_obj->where(array("id"=>$uid))->find();
+			
 			$old_password=I('post.old_password');
 			$password=I('post.password');
 			if(sp_compare_password($old_password,$admin['user_pass'])){

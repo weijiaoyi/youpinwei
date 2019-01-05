@@ -479,7 +479,7 @@ class WechatController extends CommentoilcardController
             }
             $CardInfo = M('oil_card')->where(['card_no'=>$order_item['card_no']])->find();
             $config = M('setting')->find();
-            if($order_item) {
+            if($order_item && $obj_arr['result_code']=='SUCCESS') {
                 //更改充值记录信息状态  //更改支付状态
                 $AddMoneySave =[
                     'status' => 1,
@@ -785,7 +785,7 @@ class WechatController extends CommentoilcardController
 
                 $OrderSave['send_card_no'] =$SendCard;
                 //把应发卡号状态改为 已申领状态
-                $OrderSaveResult = M('oil_card')->where(['card_no'=>$SendCard])->save(['status'=>2]);
+                $OrderSaveResult = M('oil_card')->where(['card_no'=>$SendCard])->save(['status'=>2,'apply_fo_time'=>$NowTime]);
             }
             if ($OrderInfo['card_from']) {
                 //如果是代理发卡 ，代理库存减少 1
