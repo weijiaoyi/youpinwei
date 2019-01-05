@@ -80,7 +80,8 @@ class CardController extends CommentoilcardController
                 'updatetime' => $NowTime,
                 'preferential' => $Package['limits'],
                 'preferential_type' => 2,
-                'applyfinish' =>2
+                'applyfinish' =>2,
+                'order_type' =>2
             ];
             //修改订单申领状态
             $ApplySave = [
