@@ -339,7 +339,7 @@ class OrderController extends AdminbaseController{
               ->field('o.*,p.pid,p.price,p.limits,p.scale,u.nickname,u.user_img')
               ->where($where)
               ->order('o.id desc')
-            -> page($p,'10')
+            ->page($p,'10')
             ->select();
         $count = $Card ->where($condition)-> count();
         $page = new \Think\Page($count,10);
@@ -349,6 +349,7 @@ class OrderController extends AdminbaseController{
         $send_count = $Card -> where('id>"'.$card_id.'" AND status=1') -> count();
         $this -> assign('send_count',$send_count);
         $this -> assign('page',$show);
+        // p($card_info);
         $this -> assign('data',$card_info);
         $this -> display();
     }

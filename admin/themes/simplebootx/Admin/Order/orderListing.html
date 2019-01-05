@@ -46,7 +46,7 @@
                     {$val['serial_number']}
                 </td>
                 <td style="text-align:center;">
-                    {$val['nickname']}<img src="{$val['user_img']}" alt="{$val['user_img']}" style="width: 40px;height: 40px;" />
+                    <img src="{$val['user_img']}" alt="{$val['user_img']}" style="width: 40px;height: 40px;" />{$val['nickname']}
                 </td>
 
                 <td style="text-align:center;">
@@ -69,7 +69,7 @@
                     <if condition="$val['agent_name'] eq ''">
                         <span style="font-size: 20px;color: red;font-weight: bold;">总部</span>
                         <else/>
-                        {$val['agent_name']}<img src="{$val['agent_img']}" alt="{$val['agent_img']}" style="width: 40px;height: 40px;" />
+                        <img src="{$val['agent_img']}" alt="{$val['agent_img']}" style="width: 40px;height: 40px;" />{$val['agent_name']}
                     </if>
 
                 </td>
