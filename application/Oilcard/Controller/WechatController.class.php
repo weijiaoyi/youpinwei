@@ -480,11 +480,19 @@ class WechatController extends CommentoilcardController
             $CardInfo = M('oil_card')->where(['card_no'=>$order_item['card_no']])->find();
             $config = M('setting')->find();
             if($order_item && $obj_arr['result_code']=='SUCCESS') {
+                $Things = M();
+                $Things->startTrans();
                 //更改充值记录信息状态  //更改支付状态
                 $AddMoneySave =[
                     'status' => 1,
                     'updatetime' => $NowTime
                 ];
+                //用户充值记录信息状态修改
+                $AddMoneySave = M('add_money')->where(['id'=>$order_item['id']])->save($AddMoneySave);
+                if(!$AddMoneySave){
+                    echo 'FAIL';
+                    $Things->rollback();
+                }
                 //更改油卡信息状态
                 $OilCardSave =[
                     'preferential' =>$CardInfo['preferential'] - $order_item['money'],
@@ -493,13 +501,24 @@ class WechatController extends CommentoilcardController
                 if ($order_item['is_first']==1) {
                     $OilCardSave['activate'] =2;
                 }
+                //油卡信息状态修改
+                $OilCardSave = M('oil_card')->where(['id'=>$CardInfo['id']])->save($OilCardSave);
+                if(!$OilCardSave){
+                    echo 'FAIL';
+                    $Things->rollback();
+                }
                 //更改订单支付状态
                 $OrderSave = [
                     'order_status'=> 2,
                     'updatetime'=>$NowTime,
                     'pay_sn' => $obj_arr['transaction_id'],
                 ];
-                
+                //订单状态修改
+                $OrderSave = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
+                if(!$OrderSave){
+                    echo 'FAIL';
+                    $Things->rollback();
+                }
                 //用户信息变动记录
                 $MemberSave =[
                     //积分 1：1
@@ -511,6 +530,12 @@ class WechatController extends CommentoilcardController
                     //用户真实充值的钱
                     'total_real_add_money' =>$Member['total_real_add_money'] + $order_item['real_pay'],
                 ];
+                //用户信息修改
+                $MemberSave = M('user')->where(['openid'=>$openId])->save($MemberSave);
+                if(!$MemberSave){
+                    echo 'FAIL';
+                    $Things->rollback();
+                }
                 //积分变动记录
                 $IntegralAdd = [
                     'user_id' => $Member['id'],
@@ -521,12 +546,39 @@ class WechatController extends CommentoilcardController
                     'updatetime' => $NowTime,
                     'change_from'=> json_encode(['from'=>'OrderRechage','OrderSn'=>$OrderSn])
                 ];
+                //用户积分变动修改                    
+                $IntegralAdd = M('IntegralRecord')->add($IntegralAdd);
+                if(!$IntegralAdd){
+                    echo 'FAIL';
+                    $Things->rollback();
+                }
                 $EarningsAdd =[];
+                $EarningsReduce =[];
                 $AgentSave =[];
                 $MemberAgentSave = [];
                 //如果用户使用加油卷  --  则 减少加油卷数量 
                 if (!empty($OrderInfo['coupon_money']) && $OrderInfo['coupon_money'] >0) {
                     $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderInfo['coupon_money'];
+                    //用户信息修改
+                    $MemberAgentSave = M('Agent')->where(['openid'=>$openId])->save($MemberAgentSave);
+                    //减少当前收益记录
+                    $EarningsReduce['openid']       = $openId;
+                    $EarningsReduce['agent_id']     = $Member['id'];
+                    $EarningsReduce['createtime']   = $NowTime;
+                    $EarningsReduce['order_type']   = 1;
+                    $EarningsReduce['earning_body'] = 0;
+                    $EarningsReduce['earnings']     = $OrderInfo['coupon_money'];
+                    $EarningsReduce['updatetime']   = $NowTime;
+                    $EarningsReduce['order_id']     = $OrderInfo['id'];
+                    $EarningsReduce['sn']           = $OrderSn;
+                    $EarningsReduce['log_type']     = 2;
+                    //减少当前收益记录
+                    $EarningsReduce = M('agent_earnings')->add($EarningsReduce);
+
+                    if(!$MemberAgentSave && !$EarningsReduce){
+                        echo 'FAIL';
+                        $Things->rollback();
+                    }
                 }
 
                 //是否存在上级代理 
@@ -606,18 +658,37 @@ class WechatController extends CommentoilcardController
                     $EarningsAdd['updatetime']   = $NowTime;
                     $EarningsAdd['order_id']     = $OrderInfo['id'];
                     $EarningsAdd['sn']           = $OrderSn;
-
+                    $EarningsAdd['log_type']     = 1;
+                    //代理收益记录
+                    $EarningsAdd = M('agent_earnings')->add($EarningsAdd);
+                    if(!$EarningsAdd){
+                        echo 'FAIL';
+                        $Things->rollback();
+                    }
                     //总收益
                     $AgentSave['total_earnings'] = $Agent['total_earnings'] + $rewardMoney;
                     //当前收益
                     $AgentSave['currt_earnings'] = $Agent['currt_earnings'] + $rewardMoney ;
                     //下线总充值
                     $AgentSave['add_total'] = $Agent['add_total'] + $RechageMoney;
+                    //代理信息修改
+                    $AgentSave = M('agent')->where(['id'=>$Agent['id']])->save($AgentSave);
+                    if(!$AgentSave){
+                        echo 'FAIL';
+                        $Things->rollback();
+                    }
                     
                 }
-                $Things = M();
-                $Things->startTrans();
-                try{
+                if ($AddMoneySave && $OilCardSave && $OrderSave && $MemberSave && $IntegralAdd) {
+                    $Things->commit();
+                    $IsOver = true;
+                    $ReturnMsg = '支付成功';
+                }else{
+                    $ReturnMsg = '支付失败';
+
+                    $Things->rollback();
+                }
+                /*try{
                     //用户充值记录信息状态修改
                     $AddMoneySave = M('add_money')->where(['id'=>$order_item['id']])->save($AddMoneySave);
                     //油卡信息状态修改
@@ -649,7 +720,7 @@ class WechatController extends CommentoilcardController
                     $ReturnMsg = '支付失败';
                     Log::write('['.$e->getCode().'] '.$e->getMessage(), 'ERR');
                     exit();
-                }
+                }*/
             } else {
                 Log::record('微信回调无此订单:'.$obj_arr['out_trade_no']);
             }
