@@ -479,7 +479,7 @@ class WechatController extends CommentoilcardController
             }
             $CardInfo = M('oil_card')->where(['card_no'=>$order_item['card_no']])->find();
             $config = M('setting')->find();
-            if($order_item) {
+            if($order_item && $obj_arr['result_code']=='SUCCESS') {
                 //更改充值记录信息状态  //更改支付状态
                 $AddMoneySave =[
                     'status' => 1,
