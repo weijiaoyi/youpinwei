@@ -558,27 +558,30 @@ class WechatController extends CommentoilcardController
                 $MemberAgentSave = [];
                 //如果用户使用加油卷  --  则 减少加油卷数量 
                 if (!empty($OrderInfo['coupon_money']) && $OrderInfo['coupon_money'] >0) {
-                    $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderInfo['coupon_money'];
-                    //用户信息修改
-                    $MemberAgentSave = M('Agent')->where(['openid'=>$openId])->save($MemberAgentSave);
-                    //减少当前收益记录
-                    $EarningsReduce['openid']       = $openId;
-                    $EarningsReduce['agent_id']     = $Member['id'];
-                    $EarningsReduce['createtime']   = $NowTime;
-                    $EarningsReduce['order_type']   = 1;
-                    $EarningsReduce['earning_body'] = 0;
-                    $EarningsReduce['earnings']     = $OrderInfo['coupon_money'];
-                    $EarningsReduce['updatetime']   = $NowTime;
-                    $EarningsReduce['order_id']     = $OrderInfo['id'];
-                    $EarningsReduce['sn']           = $OrderSn;
-                    $EarningsReduce['log_type']     = 2;
-                    //减少当前收益记录
-                    $EarningsReduce = M('agent_earnings')->add($EarningsReduce);
+                    if (intval($Member['currt_earnings']) >= intval($OrderInfo['coupon_money'])) {
+                        $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderInfo['coupon_money'];
+                        //用户信息修改
+                        $MemberAgentSave = M('Agent')->where(['openid'=>$openId])->save($MemberAgentSave);
+                        //减少当前收益记录
+                        $EarningsReduce['openid']       = $openId;
+                        $EarningsReduce['agent_id']     = $Member['id'];
+                        $EarningsReduce['createtime']   = $NowTime;
+                        $EarningsReduce['order_type']   = 1;
+                        $EarningsReduce['earning_body'] = 0;
+                        $EarningsReduce['earnings']     = $OrderInfo['coupon_money'];
+                        $EarningsReduce['updatetime']   = $NowTime;
+                        $EarningsReduce['order_id']     = $OrderInfo['id'];
+                        $EarningsReduce['sn']           = $OrderSn;
+                        $EarningsReduce['log_type']     = 2;
+                        //减少当前收益记录
+                        $EarningsReduce = M('agent_earnings')->add($EarningsReduce);
 
-                    if(!$MemberAgentSave && !$EarningsReduce){
-                        echo 'FAIL';
-                        $Things->rollback();
+                        if(!$MemberAgentSave && !$EarningsReduce){
+                            echo 'FAIL';
+                            $Things->rollback();
+                        }
                     }
+                    
                 }
 
                 //是否存在上级代理 

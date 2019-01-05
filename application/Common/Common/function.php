@@ -1,6 +1,31 @@
 <?php
 
 
+function createExcel($title,$data,$filename='订单列表'){
+	header("content-type:text/html;charset=UTF-8");
+	$excel_obj = new Common\Controller\ExcelController();
+	$excel_data = array();
+	//设置样式
+	$excel_obj->setStyle(array('id' => 's_title', 'Font' => array('FontName' => '宋体', 'Size' => '12', 'Bold' => '1')));
+	//header
+	foreach ($title as $k => $v) {
+		$excel_data[0][] = array('styleid' => 's_title', 'data' => $v);
+	}
+	foreach ($data as $k => $v) {
+		$tmp = array();
+		foreach ($v as $vv) {
+			$tmp[] = array('data' => ($vv));
+		}
+		$excel_data[] = $tmp;
+	}
+	define('CHARSET','UTF-8');
+	$excel_data = $excel_obj->charset($excel_data, CHARSET);
+	$excel_obj->addArray($excel_data);
+	$excel_obj->addWorksheet($excel_obj->charset($filename, CHARSET));
+	$excel_obj->generateXML($excel_obj->charset($filename, CHARSET) . '-' . date('Y-m-d-H', time()));
+}
+
+
 /**
  * 超大正整数相加
  * @Author 老王

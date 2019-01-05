@@ -32,11 +32,28 @@
 										<input type="text" name="scroll" id="scroll" value="{$scroll}"> % <span>加油卷</span>
 									</div>
 								</div>
-								<div class="well"><label>油卡申领押金：针对所有油卡<br/><br/>1,0代表不收取押金</label></div>
+
+								<div class="well"><label>代理获取下级充值收益<br/></label></div>
 								<div class="control-group">
-									<label class="control-label">押金</label>
+									<label class="control-label">普通卡充值</label>
 									<div class="controls">
-										<input type="text" name="deposit" id="deposit" value="{$deposit}">  <span>元</span>
+										<input type="text" name="user_profit" id="user_profit" value="{$user_profit}"> % <span>充值额收益</span>
+									</div>
+									<label class="control-label">VIP卡充值</label>
+									<div class="controls">
+										<input type="text" name="vip_profit" id="vip_profit" value="{$vip_profit}"> % <span>充值额收益</span>
+									</div>
+								</div>
+
+								<div class="well"><label>油卡申领押金：针对所有油卡<br/><br/>0代表不收取押金</label></div>
+								<div class="control-group">
+									<label class="control-label">用户默认押金</label>
+									<div class="controls">
+										<input type="text" name="user_deposit" id="user_deposit" value="{$user_deposit}">  <span>元</span>
+									</div>
+									<label class="control-label">代理默认押金</label>
+									<div class="controls">
+										<input type="text" name="agent_deposit" id="agent_deposit" value="{$agent_deposit}">  <span>元</span>
 									</div>
 								</div>
 								<div class="well"><label>邮费：只针对普通油卡设置<br/>1,油卡由代理发货时，将会把此邮费退还到代理余额内<br/>2,0代表不收取邮费</label></div>
@@ -257,18 +274,26 @@
 			});
 		})
 		$('#saveProfit').click(function(event) {
-			var scroll =$('#scroll').val();
-			 if(!scroll){$('#scroll').focus();alert('加油卷不能为空！');return false;}
-			var	deposit =$('#deposit').val();
-			 if(!deposit){$('#deposit').focus();alert('押金不能为空！');return false;}
-			var	postage =$('#postage').val();
-			 if(!postage){$('#postage').focus();alert('邮费不能为空！');return false;}
+			var scroll        =$('#scroll').val();
+			var	postage       =$('#postage').val();
+			var	user_profit   =$('#user_profit').val();
+			var	vip_profit    =$('#vip_profit').val();
+			var	user_deposit  =$('#user_deposit').val();
+			var	agent_deposit =$('#agent_deposit').val();
+			 if(!scroll || !postage || !user_profit || !vip_profit || !user_deposit || !agent_deposit){alert('所有数据不能为空');return false;}
 			if (confirm('是否重新设置分润标准？')) {
 				$.ajax({
 					url: "{:U('Setting/ProfitSetting')}",
 					type: 'POST',
 					dataType: 'json',
-					data: {'scroll': scroll,'postage':postage,'deposit':deposit},
+					data: {
+						'scroll':scroll,
+						'postage':postage,
+						'user_profit':user_profit,
+						'vip_profit':vip_profit,
+						'user_deposit':user_deposit,
+						'agent_deposit':agent_deposit
+					},
 				})
 				.done(function(sb) {
 					alert('设置成功!');
