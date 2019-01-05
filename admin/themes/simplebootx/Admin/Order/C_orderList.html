@@ -72,7 +72,7 @@
 							<?php echo $v['id']; ?>
 						</td>
 						<td style="text-align:center;">
-							<?php echo empty($v['nickname'])?'未绑定':$v['nickname'].'&nbsp;&nbsp;'.'<img src="'.$v['user_img'].'" width="35" hight="35">'; ?>
+							<?php echo empty($v['nickname'])?'未绑定':'<img src="'.$v['user_img'].'" width="35" hight="35">'.'&nbsp;&nbsp;'.$v['nickname']; ?>
 						</td>
 						<td style="text-align:center;">
 							<?php echo $v['card_no']; ?>
