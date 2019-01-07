@@ -253,7 +253,7 @@ class CardController extends CommentoilcardController
             }
             $normal[$k]['role'] =$role;
             $normal[$k]['card_no'] = $v['card_no'];
-            $normal[$k]['status'] = $v['status'];
+            $normal[$k]['status'] = $v['is_notmal'];//卡状态
             $normal[$k]['now_scale'] = $v['scale'];
             $normal[$k]['end_time'] = $end_time;
             $normal[$k]['discount'] = $v['discount'];
