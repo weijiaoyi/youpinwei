@@ -23,10 +23,10 @@
         <thead>
         <p style="text-align:center;font-size: 20px;font-weight: bold;margin-top: 20px;">
             代理商：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;">{$user['nickname']}</span>&nbsp;&nbsp;&nbsp;&nbsp;
-            已付押金总额：<span style="color: red;font-weight: bold;font-size: 28px;">0.00</span>元&nbsp;&nbsp;&nbsp;&nbsp;
-            赊销押金总额：<span style="color: red;font-weight: bold;font-size: 28px;">0.00</span>元&nbsp;&nbsp;&nbsp;&nbsp;
-            购买油卡总张数：<span style="color: red;font-weight: bold;font-size: 28px;">0</span>元&nbsp;&nbsp;&nbsp;&nbsp;
-            未激活油卡总张数：<span style="color: red;font-weight: bold;font-size: 28px;">0</span>元&nbsp;&nbsp;&nbsp;&nbsp;
+            已付押金总额：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($already_pay)){echo $already_pay;}else{echo 0.00;};?></span>元&nbsp;&nbsp;&nbsp;&nbsp;
+            赊销押金总额：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($no_already_pay)){echo $no_already_pay;}else{echo 0.00;};?></span>元&nbsp;&nbsp;&nbsp;&nbsp;
+            购买油卡总张数：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($number)){echo $number;}else{echo 0.00;};?></span>张&nbsp;&nbsp;&nbsp;&nbsp;
+            未激活油卡总张数：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($no_number)){echo $no_number;}else{echo 0.00;};?></span>张&nbsp;&nbsp;&nbsp;&nbsp;
         </p>
         </thead>
         <thead>
@@ -37,6 +37,7 @@
             <th style="text-align:center;">结束卡号</th>
             <th style="text-align:center;">拿卡价格/张</th>
             <th style="text-align:center;">总数</th>
+            <th style="text-align:center;">总金额</th>
             <th style="text-align:center;">拿卡类型</th>
             <th style="text-align:center;">发卡时间</th>
             <th style="text-align:center;">当前状态</th>
@@ -61,6 +62,9 @@
                 </td>
                 <td style="text-align:center;">
                     <span style="font-size: 20px;color: red;font-weight: bold;">{$val['card_no_num']}</span>张
+                </td>
+                <td style="text-align:center;">
+                    <span style="font-size: 20px;color: red;font-weight: bold;">{$val['count_price']}</span>元
                 </td>
                 <td style="text-align:center;">
                     <if condition="$val['card_mode'] eq '1'">

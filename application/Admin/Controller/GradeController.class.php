@@ -138,11 +138,18 @@ class GradeController extends AdminbaseController
             -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
             -> count();
-
-
+        //已付押金总额   赊销押金总额   购买油卡总张数    未激活油卡总张数
+        $already_pay = M('agent_library')->where('card_mode=1')->field('sum(count_price) as count_price')->find();
+        $no_already_pay = M('agent_library')->where('card_mode=2')->field('sum(count_price) as no_count_price')->find();
+        $number = M('oil_card')->where('agent_id != 0')->field('count(id) as number')->find();
+        $no_number = M('oil_card')->where('activate=1 AND agent_id="'.$id.'"')->field('count(id) as no_number')->find();
 
         $Page = new \Think\Page($count,$pageNum);
         $show = $Page -> show();
+        $this -> assign( 'already_pay' , $already_pay['count_price'] );
+        $this -> assign( 'no_already_pay' , $no_already_pay['no_count_price'] );
+        $this -> assign( 'number' , $number['number'] );
+        $this -> assign( 'no_number' , $no_number['no_number'] );
         $this -> assign( 'count' , $count );
         $this -> assign( 'status' , $status );
         $this -> assign( 'keywords' , $keywords );
@@ -304,6 +311,7 @@ class GradeController extends AdminbaseController
                     'end_card_no' => $data['end'],
                     'card_no_num' => $card_no_num,
                     'each_price' => $data['each_price'],
+                    'count_price' => $data['each_price']*$card_no_num,
                     'card_mode' => $data['mode'],
                     'createtime' => date('Y-m-d H:i:s'),
                     'status' => 2,
@@ -314,15 +322,15 @@ class GradeController extends AdminbaseController
                 $new_deposit = $card_no_num*$data['each_price'];
                 $new_agent_oilcard_num = $card_no_num;
                 $new_agent_oilcard_stock_num = $card_no_num;
-                $old_deposit = $agent['deposit'];
+                $old_deposit = $agent['agent_deposit'];
                 $old_agent_oilcard_num= $agent['agent_oilcard_num'];
                 $old_agent_oilcard_stock_num= $agent['agent_oilcard_stock_num'];
-                $deposit= $new_deposit+$old_deposit;
+                $agent_deposit= $new_deposit+$old_deposit;
                 $agent_oilcard_num= $new_agent_oilcard_num+$old_agent_oilcard_num;
                 $agent_oilcard_stock_num= $new_agent_oilcard_stock_num+$old_agent_oilcard_stock_num;
                 //修改agent
                 $update_data=array(
-                    'deposit'=>$deposit,
+                    'agent_deposit'=>$agent_deposit,
                     'agent_oilcard_num' =>$agent_oilcard_num,
                     'agent_oilcard_stock_num'=>$agent_oilcard_stock_num,
                     'role' =>3,
@@ -342,10 +350,10 @@ class GradeController extends AdminbaseController
                 );
                 $agentModel->where('openid="'.$data["openid"].'"')->save($update_user_data);
                 if ($result2) {
-                    echo json_encode(['msg' => '发卡成功', 'status' => 200]);
+                    echo json_encode(['msg' => '升级成功', 'status' => 200]);
                     exit;
                 } else {
-                    echo json_encode(['msg' => '发卡失败', 'status' => 100]);
+                    echo json_encode(['msg' => '升级失败', 'status' => 100]);
                     exit;
                 }
             }
@@ -483,6 +491,7 @@ class GradeController extends AdminbaseController
                 'end_card_no' => $data['end'],
                 'card_no_num' => $card_no_num,
                 'each_price' => $data['each_price'],
+                'count_price' => $data['each_price']*$card_no_num,
                 'card_mode' => $data['mode'],
                 'createtime' => date('Y-m-d H:i:s'),
                 'status' => 2,
@@ -493,14 +502,14 @@ class GradeController extends AdminbaseController
             $new_deposit = $card_no_num*$data['each_price'];
             $new_agent_oilcard_num = $card_no_num;
             $new_agent_oilcard_stock_num = $card_no_num;
-            $old_deposit = $agent['deposit'];
+            $old_deposit = $agent['agent_deposit'];
             $old_agent_oilcard_num= $agent['agent_oilcard_num'];
             $old_agent_oilcard_stock_num= $agent['agent_oilcard_stock_num'];
-            $deposit= $new_deposit+$old_deposit;
+            $agent_deposit= $new_deposit+$old_deposit;
             $agent_oilcard_num= $new_agent_oilcard_num+$old_agent_oilcard_num;
             $agent_oilcard_stock_num= $new_agent_oilcard_stock_num+$old_agent_oilcard_stock_num;
             $update_data=array(
-                'deposit'=>$deposit,
+                'agent_deposit'=>$agent_deposit,
                 'agent_oilcard_num' =>$agent_oilcard_num,
                 'agent_oilcard_stock_num'=>$agent_oilcard_stock_num
             );
@@ -536,27 +545,6 @@ class GradeController extends AdminbaseController
         }else{
             echo json_encode(['msg' => '修改卡状态失败','status' => 100]);
         }
-
-
-        //记录代理的附属信息
-       /* $insert_user_apply_data = [
-            'user_id' => $data['user_id'],
-            'receive_person' => $data['name'],
-            'phone' => $data['phone'],
-            'address' => $data['address'],
-            'card_number' => count($arr),
-            'shop_name' => '中石油加油卡',
-            'deliver_number' => count($arr),
-            'serial_number' => '20180313'.rand(100000,999999)
-        ];
-        $UserApplyModel = M('user_apply');
-        $result3 = $UserApplyModel -> add($insert_user_apply_data);*/
-
-       /* if( $result1 && $result2  ){
-            echo json_encode(['msg' => 'success','status' => 1000]);
-        }else{
-            echo json_encode(['msg' => 'error','status' => 500]);
-        }*/
     }
 
     /**
@@ -586,9 +574,18 @@ class GradeController extends AdminbaseController
         $count = $AgentLibraryModel
             -> where( $select_where )
             -> count();
+        //已付押金总额   赊销押金总额   购买油卡总张数    未激活油卡总张数
+        $already_pay = M('agent_library')->where('card_mode=1 AND user_id="'.$id.'"')->field('sum(count_price) as count_price')->find();
+        $no_already_pay = M('agent_library')->where('card_mode=2 AND user_id="'.$id.'"')->field('sum(count_price) as no_count_price')->find();
+        $number = M('oil_card')->where('agent_id="'.$id.'"')->field('count(id) as number')->find();
+        $no_number = M('oil_card')->where('activate=1 AND agent_id="'.$id.'"')->field('count(id) as no_number')->find();
 
         $Page = new \Think\Page($count,$pageNum);
         $show = $Page -> show();
+        $this -> assign( 'already_pay' , $already_pay['count_price'] );
+        $this -> assign( 'no_already_pay' , $no_already_pay['no_count_price'] );
+        $this -> assign( 'number' , $number['number'] );
+        $this -> assign( 'no_number' , $no_number['no_number'] );
         $this -> assign('data' , $agent_library_data);
         $this -> assign('page' , $show);
         $this -> assign('user' , $user);
