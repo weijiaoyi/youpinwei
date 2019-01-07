@@ -296,38 +296,93 @@ class WechatController extends CommentoilcardController
         $this->success('ok');
     }
 
+    /**
+     * 生成升级订单
+     * @Author 老王
+     * @创建时间   2019-01-07
+     * @param  [arr]     $Member  [用户信息]
+     * @param  [arr]     $Card    [油卡信息]
+     * @param  [int]     $money   [交费]
+     * @param  [arr]     $package [套餐]
+     * @param  [string]     $OrderSn [订单编号]
+     */
+    public function CreatUpgradeOrder($Member,$Card,$money,$package,$OrderSn){
+
+    }
 
     /**
-     * 95卡升级为93卡下单接口
+     * 生成续费订单
+     * @Author 老王
+     * @创建时间   2019-01-07
+     * @param  [arr]     $Member  [用户信息]
+     * @param  [arr]     $Card    [油卡信息]
+     * @param  [int]     $money   [交费]
+     * @param  [arr]     $package [套餐]
+     * @param  [string]     $OrderSn [订单编号]
+     */
+    public function CreatRenewalsOrder($Member,$Card,$money,$package,$OrderSn){
+
+    }
+
+    /**
+     * 油卡升级续费
+     * @Author 老王
+     * @创建时间   2019-01-07
+     * @return [type]     [description]
      */
     public function upgradePay(){
-        $openid=I('post.openid','');
-        $card_no=I('post.card_no','');
-        $money=I('post.money','');
+        $openid  =I('post.openid','');
+        $card_no =I('post.card_no','');
+        $card_id  =I('post.card_id','');//油卡id
+        $money   =I('post.money',0);//交的费用
+        $pid     =I('post.pid',0);//套餐id
+        $type    =I('post.type',1);//操作类型 ,升级 1 ,续费2
+        $Member  = M('user')->where(['openid'=>$openid])->find();
+        if(!$Member)$this->error('参数错误:缺少用户信息!');
+        $Card    = M('oil_card')->where(['id'=>$card_id])->find();
+        if(!$Card)$this->error('参数错误:缺少油卡信息!');
+        $package = M('packages')->where(['pid'=>$pid])->find();
+        if(!$package)$this->error('参数错误:缺少套餐信息!');
+        $Order = [];
+        $OrderSn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
+        switch ($type) {
+            case '1':
+                //生成升级订单
+                $Order = $this->CreatUpgradeOrder($Member,$Card,$money,$package,$OrderSn);
+                break;
+            
+            case '2':
+                //生成续费订单
+                $Order = $this->CreatRenewalsOrder($Member,$Card,$money,$package,$OrderSn);
+                break;
+        }
+        if (empty($Order))$this->error('订单生成失败!');
+
+        
         file_put_contents(__DIR__.'/data/'.$openid.'money.txt',print_r($money,true));
         file_put_contents(__DIR__.'/data/'.$openid.'card_no.txt',print_r($card_no,true));
         //微信统一下单
         $data = [];
-        $data['appid'] = CardConfig::$wxconf['appid'];
-        $data['mch_id'] = CardConfig::$wxconf['mch_id'];
-        $data['device_info'] = 'WEB';
-        $data['nonce_str'] = Tool::randomStr(20);
-        $data['sign_type'] = 'MD5';
-        $data['body'] = '升级93卡年费费';
-        $data['detail'] = '升级油卡为93折费';
-        $data['attach'] = '油卡升级费';
-        $data['out_trade_no'] = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
-        $data['fee_type'] = 'CNY';
-        $data['total_fee'] = 1;//正确的是20000
-        $data['spbill_create_ip'] = Tool::getClientIp();
-        $data['time_start'] = date('YmdHis');
-        $data['time_expire'] = date('YmdHis',time()+7200);
-//        $data['notify_url'] = $this->my_uri.'/index.php?g=oilcard&m=wechat&a=wxNoticePay';
-        $data['notify_url'] = $this->my_uri.'/upgradeNotify.php';
+        $data['appid']                = CardConfig::$wxconf['appid'];
+        $data['mch_id']               = CardConfig::$wxconf['mch_id'];
+        $data['device_info']          = 'WEB';
+        $data['nonce_str']            = Tool::randomStr(20);
+        $data['sign_type']            = 'MD5';
+        $data['body']                 = '升级93卡年费费';
+        $data['detail']               = '升级油卡为93折费';
+        $data['attach']               = '油卡升级费';
+        $data['out_trade_no']         = $OrderSn;
+        $data['fee_type']             = 'CNY';
+        $data['total_fee']            = 1;//正确的是20000
+        $data['spbill_create_ip']     = Tool::getClientIp();
+        $data['time_start']           = date('YmdHis');
+        $data['time_expire']          = date('YmdHis',time()+7200);
+        //        $data['notify_url'] = $this->my_uri.'/index.php?g=oilcard&m=wechat&a=wxNoticePay';
+        $data['notify_url']           = $this->my_uri.'/upgradeNotify.php';
         Log::record('notify_url:'.$data['notify_url']);
-
-        $data['trade_type'] = 'JSAPI';
-        $data['openid'] = $openid;
+        
+        $data['trade_type']           = 'JSAPI';
+        $data['openid']               = $openid;
         ksort($data);
         $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
         $data['sign'] = md5($string1);
@@ -490,12 +545,12 @@ class WechatController extends CommentoilcardController
                 //用户充值记录信息状态修改
                 $AddMoneySave = M('add_money')->where(['id'=>$order_item['id']])->save($AddMoneySave);
                 if(!$AddMoneySave){
-                    echo 'FAIL';
                     $Things->rollback();
+                    echo 'FAIL';exit;
                 }
                 //更改油卡信息状态
                 $OilCardSave =[
-                    'preferential' =>$CardInfo['preferential'] - $order_item['money'],
+                    'preferential' =>$CardInfo['pkgid']>1? ($CardInfo['preferential'] - $order_item['money']):0,
                     'card_total_add_money' => intval($CardInfo['card_total_add_money'] + $order_item['money'])
                 ];
                 if ($order_item['is_first']==1) {
@@ -504,8 +559,8 @@ class WechatController extends CommentoilcardController
                 //油卡信息状态修改
                 $OilCardSave = M('oil_card')->where(['id'=>$CardInfo['id']])->save($OilCardSave);
                 if(!$OilCardSave){
-                    echo 'FAIL';
                     $Things->rollback();
+                    echo 'FAIL';exit;
                 }
                 //更改订单支付状态
                 $OrderSave = [
@@ -516,8 +571,8 @@ class WechatController extends CommentoilcardController
                 //订单状态修改
                 $OrderSave = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
                 if(!$OrderSave){
-                    echo 'FAIL';
                     $Things->rollback();
+                    echo 'FAIL';exit;
                 }
                 //用户信息变动记录
                 $MemberSave =[
@@ -533,8 +588,8 @@ class WechatController extends CommentoilcardController
                 //用户信息修改
                 $MemberSave = M('user')->where(['openid'=>$openId])->save($MemberSave);
                 if(!$MemberSave){
-                    echo 'FAIL';
                     $Things->rollback();
+                    echo 'FAIL';exit;
                 }
                 //积分变动记录
                 $IntegralAdd = [
@@ -549,8 +604,8 @@ class WechatController extends CommentoilcardController
                 //用户积分变动修改                    
                 $IntegralAdd = M('IntegralRecord')->add($IntegralAdd);
                 if(!$IntegralAdd){
-                    echo 'FAIL';
                     $Things->rollback();
+                    echo 'FAIL';exit;
                 }
                 $EarningsAdd =[];
                 $EarningsReduce =[];
@@ -577,8 +632,8 @@ class WechatController extends CommentoilcardController
                         $EarningsReduce = M('agent_earnings')->add($EarningsReduce);
 
                         if(!$MemberAgentSave && !$EarningsReduce){
-                            echo 'FAIL';
                             $Things->rollback();
+                            echo 'FAIL';exit;
                         }
                     }
                     
@@ -665,8 +720,8 @@ class WechatController extends CommentoilcardController
                     //代理收益记录
                     $EarningsAdd = M('agent_earnings')->add($EarningsAdd);
                     if(!$EarningsAdd){
-                        echo 'FAIL';
                         $Things->rollback();
+                        echo 'FAIL';exit;
                     }
                     //总收益
                     $AgentSave['total_earnings'] = $Agent['total_earnings'] + $rewardMoney;
@@ -677,8 +732,8 @@ class WechatController extends CommentoilcardController
                     //代理信息修改
                     $AgentSave = M('agent')->where(['id'=>$Agent['id']])->save($AgentSave);
                     if(!$AgentSave){
-                        echo 'FAIL';
                         $Things->rollback();
+                        echo 'FAIL';exit;
                     }
                     
                 }

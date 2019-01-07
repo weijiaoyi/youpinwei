@@ -41,7 +41,7 @@ class CardController extends CommentoilcardController
             $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openid])->find();
             $field = 'R.*,A.id as apply_id';
             $where = [
-                'R.user_id'=>$user['id'],
+                'R.user_id'=>$Member['id'],
                 'R.order_type'=>1,
                 'R.order_status'=>2,
                 'R.online' =>1,
@@ -68,6 +68,11 @@ class CardController extends CommentoilcardController
             if (!$Order)$this->error('您当前并没有申领过油卡!');
             $Package = M('packages')->where(['pid'=>$Order['pid']])->find();
             $card = M('OilCard')->where(['card_no'=>$card_no])->find();
+            if($card['agent_id'] != $Member['agentid']){
+                if ($card['agent_id'] != 0) {
+                    $this->error('无效卡号!');
+                }
+            }
             if(empty($card))$this->error('无效的卡号！');
             if($card['user_id'] && !empty($card['user_id']) && intval($card['user_id'])>0){
                 $this->error('该卡号已经被绑定！');
@@ -252,6 +257,7 @@ class CardController extends CommentoilcardController
                 $end_time=$v['end_time'];
             }
             $normal[$k]['role'] =$role;
+            $normal[$k]['card_id'] =$v['id'];
             $normal[$k]['card_no'] = $v['card_no'];
             $normal[$k]['status'] = $v['status'];
             $normal[$k]['now_scale'] = $v['scale'];

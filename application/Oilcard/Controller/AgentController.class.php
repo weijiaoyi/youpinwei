@@ -28,7 +28,7 @@ class AgentController extends CommentoilcardController
         if ($Agent['role']==3) {
             //充值奖励列表
             $Earnings = $M->alias('e')
-                        ->field('u.nickname,e.earnings as earn_money,m.money,e.createtime as time')
+                        ->field('u.nickname,e.earnings as earn_money,m.money,e.createtime as time,e.log_type')
                         ->join('__ADD_MONEY__ m ON e.sn=m.order_no')
                         ->join('__USER__ u ON e.openid=u.openid')
                         ->where($where)
@@ -36,7 +36,7 @@ class AgentController extends CommentoilcardController
         }else{
             //拉新奖励列表
             $Earnings = $M->alias('e')
-                        ->field('u.nickname,e.earnings as earn_money,a.money,e.createtime as time')
+                        ->field('u.nickname,e.earnings as earn_money,a.money,e.createtime as time,e.log_type')
                         ->join('__USER_APPLY__ a ON e.sn=a.serial_number')
                         ->join('__USER__ u ON e.openid=u.openid')
                         ->where($where)
@@ -151,10 +151,11 @@ class AgentController extends CommentoilcardController
             'a.status' =>$flag,
         ];
         $Order = $M->alias('a')
-                   ->field('a.card_number,a.receive_person,a.phone,a.address,a.createtime,a.serial_number,a.id as user_apply_id,a.note,u.openid,u.nickname,u.user_img,o.send_card_no,o.card_no,o.online,o.pid,a.status')
+                   ->field('a.card_number,a.receive_person,a.phone,a.address,a.createtime,a.serial_number,a.id as user_apply_id,a.note,u.openid,u.nickname,u.user_img,o.send_card_no,o.card_no,o.online,o.pid,a.status,o.user_deposit')
                    ->join('__USER__ u ON a.user_id=u.id')
                    ->join('__ORDER_RECORD__ o ON o.serial_number=a.serial_number')
                    ->where($where)
+                   ->order('a.id desc')
                    ->page($p,$l)
                    ->select();
         $count = $M->alias('a')
@@ -246,18 +247,20 @@ class AgentController extends CommentoilcardController
         $openid=I('post.openid','');
         $id=I('post.user_apply_id','');
         $from_id=I('post.from_id','');
-        $data=M('user_apply')->where("id='$id'")->find();
-        if (empty($openid)){
-            $this->openidError('数据传输缺失');
-        }
+        $data = M('user_apply')
+                ->alias('A')
+                ->join('order_record R ON R.serial_number = A.serial_number')
+                ->field('A.*,A.id as apply_id,R.id as order_id ,R.*')
+                ->where(['A.id'=>$id])
+                ->find();
+        if (empty($openid))$this->openidError('数据传输缺失');
         $this->_empty($id);
         M('')->startTrans();
-        $user_res=M('user_apply')->where("id='$id'")->save(['status'=>2,'updatetime'=>date('Y-m-d H:i:s')]);
-
-
-        $agent_id=M('agent')->where("openid='$openid'")->getField('id');
-        $card_id=M('oil_card')->where("agent_id='$agent_id' and agent_status=1 and chomd=2")->getField('id');
-        $card_res=M('oil_card')->where("id='$card_id'")->save(['agent_status'=>2,'date'=>date('Y-m-d H:i:s')]);
+        $ApplySave = [
+            'status' =>2,
+            'updatetime' =>date('Y-m-d H:i:s')
+        ];
+        $user_res=M('user_apply')->where(['id'=>$id])->save($ApplySave);
         if ($user_res!==false && $card_res!==false){
             M('')->commit();
             $Wechat = A('Wechat');
