@@ -181,11 +181,12 @@ class IntegralController extends CommentoilcardController
                         $this->error('此油卡持有者已向后台申请挂失请求！');
                         break;
                     default:
-                        $this->error('系统已对此油卡冻结使用，理由：'.empty($CardOption['desc'])?:'无');
+                        $this->error('系统已对此油卡冻结使用，请向管理员或代理查询！');
                         break;
                 }
             }else{
-                $this->error('系统已对此油卡冻结使用，理由：'.$CardInfo['is_notmal']==2?'油卡信息异常':'用户挂失或已废弃');  
+                $this->error('系统已对此油卡冻结使用，请向管理员或代理查询！');
+//                $this->error('系统已对此油卡冻结使用，理由：'.$CardInfo['is_notmal']==2?'油卡信息异常':'用户挂失或已废弃');
             }
         }
         //订单号

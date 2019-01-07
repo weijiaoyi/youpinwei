@@ -14,7 +14,7 @@
 
     <!-- 搜索 start by LEE  -->
     <form class="well form-search" method="post" action="<?php echo U('payCard',['id'=>$user['id']]); ?>">
-        <p style="float: right;">操作用户名称：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;">{$user['nickname']}</span></p>
+        <p style="float: right;">代理商：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;">{$user['nickname']}</span></p>
         当前用户状态：
         <select class="select_1" name="status">
             <option value="" >所有</option>
@@ -32,7 +32,7 @@
         <tr>
             <th style="text-align:center;">卡号</th>
             <th style="text-align:center;">绑定人</th>
-            <th style="text-align:center;">代理称号</th>
+            <!--<th style="text-align:center;">代理称号</th>-->
             <th style="text-align:center;">状态</th>
             <th style="text-align:center;">入库时间</th>
             <th style="text-align:center;">申领时间</th>
@@ -47,7 +47,7 @@
                 <td style="text-align:center;">
                     {$val['nickname']} <img src="{$val['user_img']}" alt="{$val['user_img']}" style="width:40px;height: 40px;" />
                 </td>
-                <td style="text-align:center;">
+                <!--<td style="text-align:center;">
                     <if condition="$val['role'] eq '1'">
                         <span style="font-size: 14px;color: #1dccaa;font-weight: bold;">普通用户</span>
                         <elseif condition="$val['role'] eq '2'"/>
@@ -57,7 +57,7 @@
                         <else/>
                         <span style="font-size: 14px;color: #999999;font-weight: bold;">暂无角色</span>
                     </if>
-                </td>
+                </td>-->
                 <td style="text-align:center;">
                     <?php if($val['status'] ==1){?>
                         <span style="font-size: 14px;color: #9a161a;font-weight: bold;">未申领</span>

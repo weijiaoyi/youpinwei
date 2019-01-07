@@ -214,7 +214,11 @@ class AgentController extends CommentoilcardController
             'agent_id' => $Agent['id'],
             'status' => $flag,
         ];
-        $card_data=$Card->where($where)->page($p,$l)->select();
+        $card_data=$Card
+            ->where($where)
+            ->order('updatetime desc')
+            ->page($p,$l)
+            ->select();
         $count = $Card->where($where)->count();
         $this->success(['card'=>$card_data,'count'=>$count]);    
     }

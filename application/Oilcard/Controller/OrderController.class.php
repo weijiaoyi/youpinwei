@@ -64,6 +64,7 @@ class OrderController extends CommentoilcardController
         $order_data=M('order_record')
             ->alias('o')
             ->join('user_apply u ON u.serial_number=o.serial_number',LEFT)
+            ->join('packages p ON p.pid=o.pid',LEFT)
             ->where('o.id='.$id)
             ->find();
         if (empty($order_data)) {

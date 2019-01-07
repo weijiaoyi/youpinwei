@@ -13,16 +13,22 @@
     </ul>
 
     <!-- 搜索 start by LEE  -->
-    <form class="well form-search" method="post" action="<?php echo U('Admin/Grade/sendCardRecord',['id'=>$user['id']]); ?>">
-        <p style="float: right;">操作用户名称：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;">{$user['nickname']}</span></p>
-        发卡日期：
-        <input type="text" name="keyword" style="width: 200px;" value="" placeholder="暂无处理" disabled="disabled">
-        <!--<input type="submit" id="selectUser" class="btn btn-primary" value="搜索">-->
-    </form>
-
-
+    <!--<form class="well form-search" method="post" action="<?php echo U('Admin/Grade/sendCardRecord',['id'=>$user['id']]); ?>">-->
+        <!--发卡日期：-->
+        <!--<input type="text" name="keyword" style="width: 200px;" value="" placeholder="暂无处理" disabled="disabled">-->
+        <!--&lt;!&ndash;<input type="submit" id="selectUser" class="btn btn-primary" value="搜索">&ndash;&gt;-->
+    <!--</form>-->
 
     <table class="table table-hover table-bordered">
+        <thead>
+        <p style="text-align:center;font-size: 20px;font-weight: bold;margin-top: 20px;">
+            代理商：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;">{$user['nickname']}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            已付押金总额：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($already_pay)){echo $already_pay;}else{echo 0.00;};?></span>元&nbsp;&nbsp;&nbsp;&nbsp;
+            赊销押金总额：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($no_already_pay)){echo $no_already_pay;}else{echo 0.00;};?></span>元&nbsp;&nbsp;&nbsp;&nbsp;
+            购买油卡总张数：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($number)){echo $number;}else{echo 0.00;};?></span>张&nbsp;&nbsp;&nbsp;&nbsp;
+            未激活油卡总张数：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($no_number)){echo $no_number;}else{echo 0.00;};?></span>张&nbsp;&nbsp;&nbsp;&nbsp;
+        </p>
+        </thead>
         <thead>
         <tr>
             <th>ID</th>
@@ -31,6 +37,7 @@
             <th style="text-align:center;">结束卡号</th>
             <th style="text-align:center;">拿卡价格/张</th>
             <th style="text-align:center;">总数</th>
+            <th style="text-align:center;">总金额</th>
             <th style="text-align:center;">拿卡类型</th>
             <th style="text-align:center;">发卡时间</th>
             <th style="text-align:center;">当前状态</th>
@@ -41,7 +48,7 @@
         <volist name="data" id="val">
             <tr>
                 <td style="width:40px;text-align:center;">
-                    {$val['id']}
+                    {$key+1}
                 </td>
 
                 <td style="text-align:center;">
@@ -55,6 +62,9 @@
                 </td>
                 <td style="text-align:center;">
                     <span style="font-size: 20px;color: red;font-weight: bold;">{$val['card_no_num']}</span>张
+                </td>
+                <td style="text-align:center;">
+                    <span style="font-size: 20px;color: red;font-weight: bold;">{$val['count_price']}</span>元
                 </td>
                 <td style="text-align:center;">
                     <if condition="$val['card_mode'] eq '1'">

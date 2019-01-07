@@ -30,6 +30,10 @@ class UserController extends CommentoilcardController
 //            redirect(U('oilcard/wechat/getCode'));
 //        }
         //判断是否申领过
+        $test_data= array(
+            'content'=>$scene
+        );
+        m('testt')->add($test_data);
         $user_apply = M('user_apply')->where("openid='$openid'")->find();
         if(empty($user_apply)){
             if (!empty($scene)){

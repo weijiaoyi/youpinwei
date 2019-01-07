@@ -44,6 +44,8 @@
 						<th>订单类型</th>
 						<!--<th>充值金额</th>-->
 						<th>支付金额</th>
+						<th>油卡押金</th>
+						<th>邮寄费用</th>
 						<!--<th>优惠金额</th>-->
 						<th>订单状态</th>
 						<th style="width:170px;">操作</th>
@@ -87,12 +89,15 @@
 								<span style="font-size: 14px;color: #999999;font-weight: bold;"><?php echo $v['order_type_message']; ?></span>
 								<?php }?>
 							</td>
-							<!--<td style="text-align:center;"><?php echo '<font style="color:red">￥</font>'.$v['money']; ?></td>-->
 							<td style="text-align:center;">
 								<span style="font-size: 20px;color: red;font-weight: bold;">{$v['real_pay']}</span>元
-								<!--<?php echo '<font style="color:red">￥</font>'.$v['real_pay']; ?>-->
 							</td>
-							<!--<td style="text-align:center;"><?php echo '<font style="color:red">￥</font>'.$v['discount_money']; ?></td>-->
+							<td style="text-align:center;">
+								<span style="font-size: 20px;color: red;font-weight: bold;">{$v['user_deposit']}</span>元
+							</td>
+							<td style="text-align:center;">
+								<span style="font-size: 20px;color: red;font-weight: bold;">{$v['postage']}</span>元
+							</td>
 							<td style="text-align:center;">
 								<?php if($v['status'] == 1){?>
 									<span style="font-size: 14px;color: #9a161a;font-weight: bold;"><?php echo $v['send_status']; ?></span>

@@ -259,7 +259,7 @@ class CardController extends CommentoilcardController
             $normal[$k]['role'] =$role;
             $normal[$k]['card_id'] =$v['id'];
             $normal[$k]['card_no'] = $v['card_no'];
-            $normal[$k]['status'] = $v['status'];
+            $normal[$k]['status'] = $v['is_notmal'];//卡状态
             $normal[$k]['now_scale'] = $v['scale'];
             $normal[$k]['end_time'] = $end_time;
             $normal[$k]['discount'] = $v['discount'];
@@ -383,7 +383,7 @@ class CardController extends CommentoilcardController
         $desc = trim( I('post.desc','') );
         $type = trim( I('post.type','') );
 
-        $openid=I('post.openid','');
+        $openid  = trim(I('post.openid'));
         $this->_empty($card_no,'数据传输错误');
         $user_arr=M('user')->where(['openid'=>$openid])->find();
 
