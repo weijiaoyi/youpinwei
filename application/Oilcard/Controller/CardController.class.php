@@ -377,7 +377,7 @@ class CardController extends CommentoilcardController
         $desc = trim( I('post.desc','') );
         $type = trim( I('post.type','') );
 
-        $openid=I('post.openid','');
+        $openid  = trim(I('post.openid'));
         $this->_empty($card_no,'数据传输错误');
         $user_arr=M('user')->where(['openid'=>$openid])->find();
 

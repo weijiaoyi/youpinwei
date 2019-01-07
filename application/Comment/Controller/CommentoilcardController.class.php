@@ -163,7 +163,7 @@ class CommentoilcardController extends Controller
         if (empty($user_data['nickname']) && empty($user_data['user_img']) ) {
             $this->error('请先授权登录');
         }else{
-            $this->success('');
+            $this->success($user_data);
         }
     }
 
