@@ -94,6 +94,7 @@
 <script>
     /** 给代理商发卡(确认发卡) */
     $(document).on('click','#sendCard',function(){
+
         $('#sendCard').attr('disabled','disabled');
         var start_card = "<?php echo $data['card_no'] ?>";
         var openid = "<?php echo $data['openid'] ?>";
@@ -116,7 +117,7 @@
                 res = $.parseJSON(res);
                 if(res.status == 200){
                     layer.msg(res.msg,{icon:1,time:3000},function(){
-                        window.location.href="{:U('Grade/sendCardRecord',['id'=>'"+user_id+"'])}";
+                        window.location.href="{:U('Grade/agentlist')}";
                     });
                 }else{
                     layer.msg(res.msg,{icon:2,time:3000},function(){

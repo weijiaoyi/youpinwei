@@ -30,7 +30,7 @@ class GradeController extends AdminbaseController
             $where .= ' AND user.nickname LIKE "%'.$keywords.'%"';
         }
         $ordinary_info = $AgentModel
-            -> join('user')
+            -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
             -> page($p,$pageNum)
             ->select();
@@ -47,11 +47,12 @@ class GradeController extends AdminbaseController
             }
         }
         $count = $AgentModel
-            -> join('user')
+            -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
             -> count();
         $Page = new \Think\Page($count,$pageNum);
         $show = $Page -> show();
+        $this -> assign( 'count' , $count );
         $this -> assign( 'data' , $ordinary_info );
         $this -> assign( 'page' , $show );
         $this -> assign( 'status' , $status );
@@ -76,7 +77,7 @@ class GradeController extends AdminbaseController
             $where .= ' AND user.nickname LIKE "%'.$keywords.'%"';
         }
         $vip_info = $AgentModel
-            -> join('user')
+            -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
             -> page($p,$pageNum)
             -> select();
@@ -93,12 +94,13 @@ class GradeController extends AdminbaseController
             }
         }
         $count = $AgentModel
-            -> join('user')
+            -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
             -> count();
 
         $Page = new \Think\Page($count,$pageNum);
         $show = $Page -> show();
+        $this -> assign( 'count' , $count );
         $this -> assign( 'data' , $vip_info );
         $this -> assign( 'page' , $show );
         $this -> assign( 'status' , $status );
@@ -128,12 +130,12 @@ class GradeController extends AdminbaseController
             $where .= ' AND nickname LIKE "%'.$keywords.'%"';
         }
         $agent_info = $AgentModel
-            -> join('user')
+            -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
             -> page($p,$pageNum)
             -> select();
         $count = $AgentModel
-            -> join('user')
+            -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
             -> count();
 
@@ -141,6 +143,7 @@ class GradeController extends AdminbaseController
 
         $Page = new \Think\Page($count,$pageNum);
         $show = $Page -> show();
+        $this -> assign( 'count' , $count );
         $this -> assign( 'status' , $status );
         $this -> assign( 'keywords' , $keywords );
         $this -> assign( 'data' , $agent_info );
@@ -251,6 +254,7 @@ class GradeController extends AdminbaseController
         $Page = new \Think\Page($count,$pageNum);
 
         $show = $Page -> show();
+        $this -> assign( 'count' , $count );
         $this -> assign( 'user' , $user );
         $this -> assign('data' , $agent_earnings_data);
         $this -> assign('page' , $show);

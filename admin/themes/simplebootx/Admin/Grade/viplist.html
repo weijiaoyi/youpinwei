@@ -28,6 +28,11 @@
 
     <table class="table table-hover table-bordered">
         <thead>
+        <p style="text-align:center;font-size: 20px;font-weight: bold;margin-top: 20px;">
+            VIP会员：<span style="color: red;font-weight: bold;font-size: 28px;"><?php echo $count;?></span>人
+        </p>
+        </thead>
+        <thead>
         <tr>
             <th>ID</th>
             <th style="text-align:center;">VIP名称</th>
@@ -46,7 +51,7 @@
         <volist name="data" id="val">
         <tr>
             <td style="width:40px;text-align:center;">
-                {$val['id']}
+                {$key+1}
             </td>
             <td style="text-align:center;">
                 <if condition="$val['nickname'] eq ''">
