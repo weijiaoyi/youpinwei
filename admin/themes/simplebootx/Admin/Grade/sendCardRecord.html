@@ -38,6 +38,7 @@
             <th style="text-align:center;">拿卡价格/张</th>
             <th style="text-align:center;">总数</th>
             <th style="text-align:center;">总金额</th>
+            <th style="text-align:center;">返回押金</th>
             <th style="text-align:center;">拿卡类型</th>
             <th style="text-align:center;">发卡时间</th>
             <th style="text-align:center;">当前状态</th>
@@ -67,6 +68,9 @@
                     <span style="font-size: 20px;color: red;font-weight: bold;">{$val['count_price']}</span>元
                 </td>
                 <td style="text-align:center;">
+                    <span style="font-size: 20px;color: red;font-weight: bold;">{$val['return_deposit']}</span>元
+                </td>
+                <td style="text-align:center;">
                     <if condition="$val['card_mode'] eq '1'">
                         <span style="font-size: 14px;color: #00FF00;font-weight: bold;">正常</span>
                         <else/>
@@ -85,23 +89,23 @@
                 </td>
                 <th style="text-align:center;">
                     <if condition="$val['card_mode'] eq '1'">
-                        <button style="border:0; width: 70px; height: 40px;" disabled="disabled"><span style="color: white; font-size: 8px;">操作完成</span></button>
+                        <button style="background: #9a161a;border:0; width: 70px; height: 40px;" class="Return" data-id="{$val['id']}" ><span style="color: white; font-size: 8px;">返回押金</span></button>
                         <else/>
-                        <button style="background: #1dccaa;border:0; width: 70px; height: 40px;" id="Repayment" data-id="{$val['id']}"><span style="color: white; font-size: 8px;">清账</span></button>
+                        <button style="background: #1dccaa;border:0; width: 70px; height: 40px;" class="Repayment" data-id="{$val['id']}"><span style="color: white; font-size: 8px;">清账</span></button>
                     </if>
                 </th>
             </tr>
         </volist>
         </tbody>
     </table>
-    <if condition="$page neq ''">
+        <if condition="$page neq ''">
         <div id="page" class="pagination"><span class="page"><?php echo $page; ?></span></div>
     </if>
 </div>
 <script src="__PUBLIC__/js/common.js"></script>
 <script>
     $(function(){
-        $("#Repayment").click(function(){
+        $(".Repayment").click(function(){
             $(this).attr('disabled','disabled');
             var user_id="<?php echo $user['id'];?>";
             var openid = "<?php echo $user['openid'];?>";
@@ -127,11 +131,85 @@
                     }
                 });
             }, function(){
-                $('#Repayment').removeAttr('disabled');
-                layer.msg('操作取消',{icon:1});
+                $('.Repayment').removeAttr('disabled');
+                layer.msg('操作取消',{icon:2});
             });
 
-        })
+        });
+
+        $(".Return").click(function(){
+            var count_price = $(this).parents('tr').find('td').eq(5).find('span').html();
+            var return_deposit = $(this).parents('tr').find('td').eq(6).find('span').html();
+            var returnID = $(this).attr('data-id');
+            //页面层
+            layer.open({
+                type: 1,
+                title:'返回押金金额',
+                skin: 'layui-layer-rim', //加上边框
+                area: ['600px', '400px'], //宽高
+                content: '<div class="modal-body">\n' +
+                    '<table class="table table-hover table-bordered">\n' +
+                        '<thead><p style="color: red;font-size: 20px;">注意：退还押金后该操作不可逆转，请谨慎操作！！！</p></thead>'+
+                        '<thead><tr><th>总金额</th><th>已还金额</th></tr></thead><tbody><tr><th>'+count_price+'</th><th>'+return_deposit+'</th></tr></tbody>'+
+                    '<tr>\n' +
+                    '<th>返回金额：</th>\n' +
+                    '<th><input name="return_money" id="return_money" type="text"><input type="hidden" id="returnID"  value="'+returnID+'"/></th>\n' +
+                    '</tr>\n' +
+                    '</table>\n' +
+                    '</div>\n' +
+                    '<div class="modal-footer" style="text-align:center">\n' +
+                    '<button type="button" style="width:100px;" class="btn btn-default" >取消\n' +
+                    '</button>\n' +
+                    '<button type="button" style="width:100px;" class="btn true btn-primary" >\n' +
+                    '确认\n' +
+                    '</button>\n' +
+                    '</div>'
+            });
+            //取消
+            $('.btn-default').click(function(){
+                layer.close(layer.index);
+            });
+            //确认
+            $('.true').click(function(){
+                $(this).attr('disabled','disabled');
+                var user_id="<?php echo $user['id'];?>";
+                var openid = "<?php echo $user['openid'];?>";
+                var id=$('#returnID').val();
+                var money = $('#return_money').val();
+                if(id == ''){
+                    $('.true').removeAttr('disabled');
+                    layer.msg('记录ID不能为空',{icon:2,time:2000});return false;
+                }
+                if(money == ''){
+                    $('.true').removeAttr('disabled');
+                    layer.msg('请输入退还金额',{icon:2,time:2000});return false;
+                }
+                layer.confirm('确定退还押金吗？该操作不可逆转，请谨慎操作', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    $.ajax({
+                        type:'POST',
+                        url:"{:U('Grade/ReturnDeposit')}",
+                        data:{id:id,user_id:user_id,openid:openid,money:money},
+                        success:function(response){
+                            response=$.parseJSON(response);
+                            if(response.status == 200){
+                                layer.msg(response.msg,{icon:1,time:3000},function(){
+                                    window.location.reload();
+                                })
+                            }else{
+                                $('.true').removeAttr('disabled');
+                                layer.msg(response.msg,{icon:2,time:300});return false;
+                            }
+                        }
+                    });
+                }, function(){
+                    $('.true').removeAttr('disabled');
+                    // layer.msg('操作取消',{icon:2});
+                });
+            })
+        });
+
     })
 </script>
 </body>

@@ -676,6 +676,44 @@ class GradeController extends AdminbaseController
     }
 
     /**
+     * @desc 退还押金
+     * @author langzhiyao
+     *
+     */
+    public function ReturnDeposit(){
+        $id = trim( I('post.id') );
+        $user_id = trim( I('post.user_id') );
+        $openid = trim( I('post.openid') );
+        $money = trim( I('post.money') );
+
+        //查看记录是否存在
+        $agentLibraryModel=M('agent_library');
+        $where = 'id="'.$id.'" AND user_id="'.$user_id.'" AND openid="'.$openid.'"';
+        $result = $agentLibraryModel->where($where)->find();
+
+        if($result && $result['card_mode'] ==2){
+            echo json_encode(array('status'=>100,'msg'=>'该记录处于赊账，无法进行退还操作'));exit;
+        }else{
+            $count_Money = $result['count_price'];
+            $return_deposit = $result['return_deposit'];
+            $sy_return_deposit = $count_Money-$return_deposit;
+            if($money > $sy_return_deposit){
+                echo json_encode(array('status'=>100,'msg'=>'还款金额大于剩余还款金额，无法进行退还操作'));exit;
+            }else{
+                $agentLibrary_data=array(
+                    'return_deposit'=>$return_deposit+$money,
+                );
+                $res=$agentLibraryModel->where($where)->save($agentLibrary_data);
+                if($res){
+                    echo json_encode(array('status'=>200,'msg'=>'退还成功'));exit;
+                }else{
+                    echo json_encode(array('status'=>100,'msg'=>'操作失败，请重新操作'));exit;
+                }
+            }
+        }
+    }
+
+    /**
      * 根据关键字查询相关数据
      */
     public function userKeyword(){
