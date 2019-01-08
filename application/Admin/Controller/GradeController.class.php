@@ -313,6 +313,7 @@ class GradeController extends AdminbaseController
                     'each_price' => $data['each_price'],
                     'count_price' => $data['each_price']*$card_no_num,
                     'card_mode' => $data['mode'],
+                    'address' => $data['address'],
                     'createtime' => date('Y-m-d H:i:s'),
                     'status' => 2,
                 ];
@@ -493,6 +494,7 @@ class GradeController extends AdminbaseController
                 'each_price' => $data['each_price'],
                 'count_price' => $data['each_price']*$card_no_num,
                 'card_mode' => $data['mode'],
+                'address' => $data['address'],
                 'createtime' => date('Y-m-d H:i:s'),
                 'status' => 2,
             ];
