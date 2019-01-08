@@ -147,9 +147,14 @@ class AgentController extends CommentoilcardController
         $where =[
             'o.agent_id'=> $agentid,
             'o.card_from' => 2,
-            'o.order_status'=>2,
-            'a.status' =>$flag,
+            'o.order_status'=>2
         ];
+        if($flag == 1){
+            $where['a.status']=$flag;
+        }else{
+            $where['a.status']=array('egt',$flag);
+        }
+
         $Order = $M->alias('a')
                    ->field('a.card_number,a.receive_person,a.phone,a.address,a.createtime,a.serial_number,a.id as user_apply_id,a.note,u.openid,u.nickname,u.user_img,o.send_card_no,o.card_no,o.online,o.pid,a.status,o.user_deposit')
                    ->join('__USER__ u ON a.user_id=u.id')

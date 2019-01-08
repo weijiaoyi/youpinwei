@@ -20,8 +20,9 @@
         <!-- 搜索 start by LEE  -->
         <form class="well form-search" method="post" action="<?php echo U('Admin/Order/orderListing'); ?>">
             关键字： 
-            <input type="text" name="keyword" style="width: 200px;" value="{$keyword}" placeholder="请输入查询订单的订单ID或卡号">
+            <input type="text" name="keyword" style="width: 300px;height: 40px;" value="{$keyword}" placeholder="请输入查询订单的订单ID或卡号">
             <input type="submit" id="selectUser" class="btn btn-primary order-number-pay-keyword" value="搜索">
+            <a class="btn btn-primary " href="{:U('Deliver/inportExcel')}">导出充值记录</a>
         </form>
     <table class="table table-hover table-bordered">
         <thead>
