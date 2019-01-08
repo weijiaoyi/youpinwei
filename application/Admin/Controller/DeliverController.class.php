@@ -114,52 +114,6 @@ class DeliverController extends AdminbaseController{
         $this -> assign('data',$order_info);
         $this -> display();
 
-//		if($this->_isAdmin){
-//			$wechatConfigModel = M('wechat_config');
-//			$wechatConfig = $wechatConfigModel -> where(array('status' => 1)) -> select();
-//			$this->assign('wechatconfig', $wechatConfig);
-//		}
-//		$where = '1=1 and status <> 2';
-//		if(IS_POST){
-//
-//			if(intval(I('post.status')) != -1){
-//				$where .= ' and status='.intval(I('post.status'));
-//			}
-//			$keyword = trim(I('post.keyword'));
-//			if(0 != strlen($keyword)) $where .= ' and (name like "%'.$keyword.'%" or tel like "%'.$keyword.'%")';
-//			if(!$this->_isAdmin){
-// 				$where .= ' and config_id = '.intval($_SESSION['CONFIG_ID']);
-//			}else{
-//				if(intval(I('post.config')) != -1) $where .= ' and config_id = '.intval(I('post.config'));
-//			}
-//			$this -> assign('where', $where);
-// 		}else{
-//            if($_SESSION['CONFIG_ID'] != 0){
-//                $where .= ' and config_id = '.intval($_SESSION['CONFIG_ID']);
-//            }
-//        }
-//
-// 		$deliverModel = M('station_deliver');
-//		$count = $deliverModel
-//			->where($where)
-//			->count();
-//
-//		$page = $this->page($count, $this->perpage);
-//		$data['show'] = $page->show('Admin');
-//		$data['data'] = $deliverModel
-//			->where($where)
-//			->limit($page->firstRow, $page->listRows)
-//			->order('id desc')
-//			->select();
-//		// 加入微信服务号名称
-//		if($this->_isAdmin){
-//			foreach ($data['data'] as $key => &$value) {
-//				$value['wechat_name'] = M('wechat_config') -> where(array('id' => $value['config_id'])) -> getField('wechat_name');
-//			}
-//			unset($value);
-//		}
-//		$this->assign('data', $data);
-//		$this->display();
 	}
 
 	public function createExcel() {
@@ -239,25 +193,6 @@ class DeliverController extends AdminbaseController{
         }
 
 
-       /* # 查询该卡拥有几折优惠
-        $OilCardModel = M('oil_card');
-        $discount_data = $OilCardModel -> where( $where ) -> find();
-
-        # 查询该卡充值金额、优惠金额、实付金额
-        $OrderRecordModel = M('order_record');
-        $OrderRecord_data = $OrderRecordModel -> where( $where ) -> find();
-        $data = [
-            'card_name' => $card_find['shop_name'],
-            'card_number' => $OrderRecord_data['card_no'],
-            'recharge_money' => $OrderRecord_data['money'],
-            'consignee_name' => $card_find['receive_person'],
-            'consignee_phone' => $card_find['phone'],
-            'consignee_address' => $card_find['address'],
-            'which_express' => $card_find['courier_company'],
-            'user_id' => $data['uid']
-        ];*/
-//        $this -> ajaxReturn($data);
-
     }
 
     public function C_deliverSendGoods(){
@@ -309,28 +244,6 @@ class DeliverController extends AdminbaseController{
             echo json_encode(array('status'=>100,'message'=>'订单不存在'));exit;
         }
 
-//        $ApplyModel = M('user_apply');
-//        $where = ['user_id' => $data1['user_id']];
-//        $card_find = $ApplyModel -> where( $where ) -> find();
-//        if( $card_find['shop_name'] == '1' ){ $card_find['shop_name'] = '中石油加油卡'; }
-        # 查询该卡拥有几折优惠
-//        $OilCardModel = M('oil_card');
-//        $discount_data = $OilCardModel -> where( $where ) -> find();
-
-        # 查询该卡充值金额、优惠金额、实付金额
-//        $OrderRecordModel = M('order_record');
-//        $OrderRecord_data = $OrderRecordModel -> where( $where ) -> find();
-
-        /*$data = [
-            'card_names' => $card_find['shop_name'],
-            'card_number' => $OrderRecord_data['card_no'],
-            'recharge_money' => $OrderRecord_data['money'],
-            'consignee_name' => $card_find['receive_person'],
-            'consignee_phone' => $card_find['phone'],
-            'consignee_address' => $card_find['address'],
-            'which_express' => $card_find['courier_company']
-        ];*/
-//        $this -> ajaxReturn($data);
     }
 
     //推送消息
@@ -473,6 +386,18 @@ class DeliverController extends AdminbaseController{
 		}
 	}
 
+
+    public function CardBindList(){
+        $this->display();
+    }
+
+    public function UpGradeList(){
+        $this->display();
+    }
+
+    public function RenewalsList(){
+        $this->display();
+    }
 
     public function inportExcel(){
 
