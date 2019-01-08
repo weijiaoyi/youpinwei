@@ -39,6 +39,7 @@
             <th style="text-align:center;">头像</th>
             <th style="text-align:center;">代理称号</th>
             <th style="text-align:center;">创建时间</th>
+            <th style="text-align:center;">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -62,6 +63,9 @@
             </td>
             <td style="text-align:center;">
                 {$val['createtime']}
+            </td>
+            <td style="width:500px; height: 53px; text-align:center;">
+                <button style="background: #2c3e50;border:2px; width: 110px; height: 40px;" ><a href="{:U('getMyCard',['user_id'=>$val['id']])}"><span style="color: white; font-size: 8px;">查看我的油卡</span></a></button>
             </td>
         </tr>
         </volist>
