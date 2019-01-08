@@ -388,17 +388,14 @@ class DeliverController extends AdminbaseController{
 
 
     public function CardBindList(){
-        echo 11111;
         $this->display();
     }
 
     public function UpGradeList(){
-        echo 11111;
         $this->display();
     }
 
     public function RenewalsList(){
-        echo 11111;
         $this->display();
     }
 
