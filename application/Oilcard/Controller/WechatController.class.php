@@ -296,33 +296,6 @@ class WechatController extends CommentoilcardController
         $this->success('ok');
     }
 
-    /**
-     * 生成升级订单
-     * @Author 老王
-     * @创建时间   2019-01-07
-     * @param  [arr]     $Member  [用户信息]
-     * @param  [arr]     $Card    [油卡信息]
-     * @param  [int]     $money   [交费]
-     * @param  [arr]     $package [套餐]
-     * @param  [string]     $OrderSn [订单编号]
-     */
-    public function CreatUpgradeOrder($Member,$Card,$money,$package,$OrderSn){
-
-    }
-
-    /**
-     * 生成续费订单
-     * @Author 老王
-     * @创建时间   2019-01-07
-     * @param  [arr]     $Member  [用户信息]
-     * @param  [arr]     $Card    [油卡信息]
-     * @param  [int]     $money   [交费]
-     * @param  [arr]     $package [套餐]
-     * @param  [string]     $OrderSn [订单编号]
-     */
-    public function CreatRenewalsOrder($Member,$Card,$money,$package,$OrderSn){
-
-    }
 
     /**
      * 油卡升级续费
@@ -339,28 +312,49 @@ class WechatController extends CommentoilcardController
         $type    =I('post.type',1);//操作类型 ,升级 1 ,续费2
         $Member  = M('user')->where(['openid'=>$openid])->find();
         if(!$Member)$this->error('参数错误:缺少用户信息!');
-        $Card    = M('oil_card')->where(['id'=>$card_id])->find();
+        $CWhere= [
+            'id'      =>$card_id,
+            'card_no' =>$card_no,
+            '_logic'  => 'OR'
+        ];
+        $Card    = M('oil_card')->where($CWhere)->find();
         if(!$Card)$this->error('参数错误:缺少油卡信息!');
         $package = M('packages')->where(['pid'=>$pid])->find();
         if(!$package)$this->error('参数错误:缺少套餐信息!');
-        $Order = [];
         $OrderSn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
+        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
+
+        $Order = [
+            'user_id'        => $Member['id'],
+            'card_no'        => $Card['card_no'],
+            'serial_number'  => $OrderSn,
+            'order_status'   => 1,
+            'real_pay'       => $money,
+            'recharge_money' => $money,
+            'createtime'     => $NowTime,
+            'preferential'   => $package['limits'],
+            'card_from'      => $Card['agent_id'] ==0?1:2,
+            'agent_id'       => $Card['agent_id'] ==0?0:$Card['agent_id'],
+            'pid'            => $package['pid'],
+            'applyfinish'    =>2
+        ];
         switch ($type) {
             case '1':
                 //生成升级订单
-                $Order = $this->CreatUpgradeOrder($Member,$Card,$money,$package,$OrderSn);
+                $Order['order_type'] =4;
+                $body = '油卡升级订单';
                 break;
             
             case '2':
                 //生成续费订单
-                $Order = $this->CreatRenewalsOrder($Member,$Card,$money,$package,$OrderSn);
+                $Order['order_type'] =5;
+                $body = '油卡续费订单';
                 break;
         }
-        if (empty($Order))$this->error('订单生成失败!');
+        if(!$type) $this->error('参数错误:缺少类型!');
+        if ($type ==1 &&$Order['order_type'] !=4) $this->error('订单生成失败!');
+        if ($type ==2 &&$Order['order_type'] !=5) $this->error('订单生成失败!');
 
-        
-        file_put_contents(__DIR__.'/data/'.$openid.'money.txt',print_r($money,true));
-        file_put_contents(__DIR__.'/data/'.$openid.'card_no.txt',print_r($card_no,true));
         //微信统一下单
         $data = [];
         $data['appid']                = CardConfig::$wxconf['appid'];
@@ -368,9 +362,9 @@ class WechatController extends CommentoilcardController
         $data['device_info']          = 'WEB';
         $data['nonce_str']            = Tool::randomStr(20);
         $data['sign_type']            = 'MD5';
-        $data['body']                 = '升级93卡年费费';
-        $data['detail']               = '升级油卡为93折费';
-        $data['attach']               = '油卡升级费';
+        $data['body']                 = $body;
+        $data['detail']               = $body;
+        $data['attach']               = $body;
         $data['out_trade_no']         = $OrderSn;
         $data['fee_type']             = 'CNY';
         $data['total_fee']            = 1;//正确的是20000
@@ -379,7 +373,6 @@ class WechatController extends CommentoilcardController
         $data['time_expire']          = date('YmdHis',time()+7200);
         //        $data['notify_url'] = $this->my_uri.'/index.php?g=oilcard&m=wechat&a=wxNoticePay';
         $data['notify_url']           = $this->my_uri.'/upgradeNotify.php';
-        Log::record('notify_url:'.$data['notify_url']);
         
         $data['trade_type']           = 'JSAPI';
         $data['openid']               = $openid;
@@ -420,6 +413,8 @@ class WechatController extends CommentoilcardController
             ksort($data);
             $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
             $data['paySign'] = md5($string1);
+            $OrderAdd = M('order_record')->add($Order);
+            if(!$OrderAdd)$this->error('订单生成失败!');
         }
         $this->success($data);
     }
@@ -817,6 +812,7 @@ class WechatController extends CommentoilcardController
         $insert = array(
             'content'=>json_encode(array(
                 'InsertTime'=>date('Y-m-d H:i:s',time()),
+                'InsertNote'=>'油卡申领',
                 'input' =>$obj_arr,
                 'data' =>$data,
             ))
@@ -1098,87 +1094,80 @@ class WechatController extends CommentoilcardController
     }
 
     /**
-     *95卡升级为93折回调
+     * 油卡升级续费异步回调
+     * @Author 老王
+     * @创建时间   2019-01-08
+     * @return [type]     [description]
      */
     public function upgradeNoticePay(){
 
         $data = file_get_contents('php://input');
         $obj_arr = XML::parse($data);
-        $openId=$obj_arr['openid'];
 
+        $insert = array(
+            'content'=>json_encode(array(
+                'InsertTime'=>date('Y-m-d H:i:s',time()),
+                'InsertNote'=>'油卡升级或续费',
+                'input' =>$obj_arr,
+                'data' =>$data,
+            ))
+        );
+        M('testt')->add($insert);
+
+        $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
         unset($obj_arr['sign']);
         ksort($obj_arr);
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
-        //以下为$obj_arr的值
-        //        Array
-        //        (
-        //            [appid] => wx2fdc78cdc9c7d7b4
-        //            [attach] => 附加数据
-        //            [bank_type] => CFT
-        //            [cash_fee] => 1
-        //            [device_info] => WEB
-        //            [fee_type] => CNY
-        //            [is_subscribe] => Y
-        //            [mch_id] => 1518293011
-        //            [nonce_str] => 3idykdhwwc9z9p2k6a70q8ggi0e2toe8
-        //            [openid] => o5DGTwUNmjGj4ivjAU0iEL_j2zZ8
-        //            [out_trade_no] => 201804272157055212
-        //            [result_code] => SUCCESS
-        //            [return_code] => SUCCESS
-        //            [time_end] => 20180427215710
-        //            [total_fee] => 1
-        //            [trade_type] => JSAPI
-        //            [transaction_id] => 4200000157201804277557396086
-        //        )
-
         if($cur_sign==$sign) {
-            //将指定的95卡改为93.5卡
-
-            $card_no=file_get_contents(__DIR__.'/data/'.$openId.'card_no.txt');
-            $money=file_get_contents(__DIR__.'/data/'.$openId.'money.txt');
-
-            $card_arr=M('oil_card')->where("card_no='$card_no'")->find();
-            $a=M('')->getLastSql();
-            $preferential=$card_arr['preferential'];
-            $lmoney=$money*120;
-            log::record('充值金额'.$money);
-            log::record('充值金额后'.$lmoney);
-
-            $arr=M('agent')->where("openid='$openId'")->find();
-            if (empty($card_arr['end_time']) || $card_arr['end_time']<date('Y-m-d H:i:s')){
-                $res= M('oil_card')->where("card_no='$card_no'")->save(['end_time'=>date("Y-m-d H:i:s",strtotime("+1years")),'preferential'=>$lmoney]);
-                $a=M('')->getLastSql();
-                log::record($a);
-                if ($arr['role']=='3'){
-                    $agent_data=[
-                        'openid'=>$openId,
-                        'expire_time'=>date('Y-m-d H:i:s', strtotime("+1 year")),
-                        'status'=>'1',
-                        'role'=>'3',
-                    ];
-                }else{
-                    $agent_data=[
-                        'openid'=>$openId,
-                        'expire_time'=>date('Y-m-d H:i:s', strtotime("+1 year")),
-                        'status'=>'1',
-                        'role'=>'2',
-                    ];
+            if($obj_arr['result_code']=='SUCCESS'){
+                $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
+                $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
+                $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
+                if (!$OrderInfo) echo 'FAIL';exit;
+                $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
+                $Card = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->find();
+                $package = M('packages')->where(['pid'=>$OrderInfo['pid']])->find();
+                //订单修改
+                $OrderSave =[
+                    'order_status'      => 2,
+                    'updatetime'        => $NowTime,
+                    'pay_sn'            => $obj_arr['transaction_id'],
+                    'preferential_type' =>2
+                ];
+                $CardSave = [
+                    'pkgid'      =>$package['pid'],
+                    'updatetime' =>$NowTime,
+                    'end_time'   => $EndTime 
+                ];
+                switch ($OrderInfo['order_type']) {
+                    //升级 ->交会员费 ->把卡变成所购买的登记的油卡
+                    case '4':
+                        $CardSave['preferential'] = $package['limits'];
+                        M('agent')->where(['openid'=>$openId])->save(['role'=>2]);
+                        break;
+                    //续费->交会员费 ->如果在期限内,把油卡剩余额度叠加到此次购买的额度内->如果已过期,则油卡剩余额度清0,重新加入额度
+                    case '5':
+                        if ($Card['end_time']<$NowTime) {
+                            $CardSave['preferential'] = $package['limits'];
+                        }else{
+                            $CardSave['preferential'] = ($CardSave['preferential']+$package['limits']);
+                        }
+                        break;
                 }
-                $agent_res=M('agent')->where("openid='$openId'")->save($agent_data);
+                $OrderSave=M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
+                $CardSave=M('oil_card')->where(['id'=>$Card['id']])->save($CardSave);
+                if ($OrderSave && $CardSave) {
+                    echo 'SUCCESS';exit;
+                }else{
+                    echo 'FAIL';exit;    
+                }
             }else{
-
-                $last_money=$preferential+$lmoney;
-                 log::record($preferential);
-                  log::record($lmoney);
-                $res= M('oil_card')->where("card_no='$card_no'")->save(['end_time'=>date("Y-m-d H:i:s",strtotime("+1years")),'preferential'=>$last_money]);
-                $a=M('')->getLastSql();
-                log::record($a);
+                echo 'FAIL';exit;
             }
-            $this->offlinIncome($openId,$money);
-
         } else {
+            echo 'FAIL';exit;
             Log::record('签名错误，订单号:'.$obj_arr['out_trade_no']);
         }
         // 返回代码

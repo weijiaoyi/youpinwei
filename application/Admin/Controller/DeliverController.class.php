@@ -481,9 +481,9 @@ class DeliverController extends AdminbaseController{
         $where = [
             'R.order_type' =>1,
             'R.order_status' =>2,
-            'R.applyfinish' =>1
+            'R.applyfinish' =>1,
+            'A.status' =>1
         ];
-
         $data = M('order_record')
                 ->alias('R')
                 ->join('__USER_APPLY__ as A ON A.serial_number=R.serial_number','LEFT')
