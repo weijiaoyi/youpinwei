@@ -34,8 +34,8 @@
 			<table class="table table-hover table-bordered">
 				<thead>
 					<tr>
-						<th width="50">ID</th>
-						<th>订单ID</th>
+						<th width="50">排序</th>
+						<th>订单编号</th>
 						<th>申请人</th>
 						<th>应发油卡</th>
 						<th>绑定油卡</th>
@@ -54,7 +54,7 @@
 				<tbody id="show">
 					<?php foreach ($data as $k => $v) { ?>
 						<tr>
-							<td style="text-align:center;"><?php echo $v['id']; ?></td>
+							<td style="text-align:center;"><?php echo $k+1; ?></td>
 							<td style="text-align:center;"><?php echo $v['serial_number']; ?></td>
 							<td style="text-align:center;">
 								{$v['nickname']}<img src="{$v['user_img']}" alt="{$v['user_img']}" style="width: 40px;height: 40px;" />

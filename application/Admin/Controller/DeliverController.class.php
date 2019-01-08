@@ -477,12 +477,11 @@ class DeliverController extends AdminbaseController{
     public function inportExcel(){
 
         $title = ['订单号','申请人微信昵称','姓名','手机号','联系地址','应发卡号','应发货人','支付金额','邮费','押金'];
-        $field ="R.serial_number,U.nickname,A.receive_person,A.phone,A.address,R.send_card_no,G.nickname,R.real_pay,R.postage,R.user_deposit";
+        $field ="R.serial_number,U.nickname,A.receive_person,A.phone,A.address,R.send_card_no,G.nickname as agent_nickname,R.real_pay,R.postage,R.user_deposit";
         $where = [
             'R.order_type' =>1,
             'R.order_status' =>2,
-            'R.applyfinish' =>1,
-            'R.pay_sn' =>['neq'=>'']
+            'R.applyfinish' =>1
         ];
 
         $data = M('order_record')
@@ -494,6 +493,9 @@ class DeliverController extends AdminbaseController{
                 ->field($field)
                 ->order('R.id desc')
                 ->select();
+        if($data)foreach ($data as $key => $value) {
+            if(empty($data[$key]['agent_nickname']))$data[$key]['agent_nickname']='总部发卡';
+        }
         createExcel($title,$data,'订单Excel');
         exit;
         echo 111;exit;
