@@ -18,24 +18,13 @@
 		   <li><a href="<?php echo U('Admin/Order/orderListing'); ?>">充值订单</a></li>
 		</ul>
 		<form class="well form-search" method="post" action="<?php echo U('Admin/Deliver/C_deliverList'); ?>">
-			<!-- 订单类型： 
-			<select class="select_2" name="order_type" style="width:80px;">
-				<option value="1">申领</option>
-				<option value="2">绑定</option>
-				<option value="3">充值</option>
-				<option value="4">升级</option>
-				<option value="5">续费</option>
-			</select> &nbsp;&nbsp; -->
 			关键字： 
 			<input type="text" name="keyword"  style="height:34px; width: 200px;" value="{$keyword}" placeholder="请输入查询的订单ID或卡号">
 			<input type="submit" class="btn btn-primary order-number-keyword" value="搜索">
 			<a class="btn btn-primary " href="{:U('Deliver/inportExcel')}">导出待发货记录</a>
 
 		</form> 
-		<!--<form style="display: block;" id="excel-import" method="post" action="<?php echo U('Admin/Goods/importFromExcel'); ?>" enctype="multipart/form-data">-->
-			<!--<input type="file" name="file" style="display: none;" />-->
-			<!--<input style="float: right;margin-top: -70px;margin-right: 20px;" id="import" type="submit" class="btn btn-primary" value="Excel导入">-->
-		<!--</form>-->
+		
 		<form class="js-ajax-form" action="<?php echo U('Admin/Deliver/C_saveDeliverListOrder'); ?>" method="post" novalidate="novalidate">
 			<table class="table table-hover table-bordered">
 				<thead>
@@ -131,97 +120,6 @@
 				</tbody>
 			</table>
 		</form>
-			<div class="modal-dialog">
-			<!-- <div class="modal-content"> -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;padding-left: 0px;margin-left:500px;height:340px;width: 50%;">
-		<div class="modal-header">
-			<button type="button" class="close"  data-dismiss="modal" aria-hidden="true">
-				<!--&times;-->
-			</button>
-			<h4 class="modal-title" align="center">
-				确认发货
-			</h4>
-		</div>
-		<div class="modal-body">
-			<table class="table table-hover table-bordered">
-				<thead>
-				<tr>
-					<th>订单编号</th>
-					<th>应发卡号</th>
-					<th>收货人</th>
-					<th>联系方式</th>
-					<th>收货地址</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<th id="serial_number"></th>
-					<th id="send_card_no"></th>
-					<th id="user_name"> </th>
-					<th id="mobile"></th>
-					<th id="address"></th>
-				</tr>
-				</tbody>
-				<tr>
-					<th>填写快递单号&nbsp&nbsp&nbsp&nbsp&nbsp</th>
-					<th colspan="4"><input name="express_number" id="express_number" style="width:250px;height: 50px;" type="text"></th>
-					<input name="serial_number" type="hidden" value="">
-					<input name="order_id" type="hidden" value="">
-				</tr>
-			</table>
-		</div>
-		<div class="modal-footer" style="text-align:center">
-			<button type="button" style="width:100px;" class="btn btn-default" data-dismiss="modal">取消
-			</button>
-			<button type="button" style="width:100px;" class="btn btn-primary send-out-goods" >
-				发货
-			</button>
-		</div>
-	</div>
-
-	<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;padding-left: 0px;margin-left:500px;height:340px;width: 50%;">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-				<!--&times;-->
-			</button>
-			<h4 class="modal-title"  align="center">
-				发货详情
-			</h4>
-		</div>
-		<div class="modal-body">
-			<!--<table>
-				<tr>
-					<th>商品&nbsp&nbsp&nbsp&nbsp&nbsp<span id="q"></span></th>
-				</tr>
-				<tr>
-					<th>充值&nbsp&nbsp&nbsp&nbsp&nbsp<span id="u"></span></th>
-				</tr>
-				<tr>
-					<th>收货人&nbsp&nbsp&nbsp&nbsp&nbsp<span id="t"></span></th>
-				</tr>
-				<tr>
-					<th>联系方式&nbsp&nbsp&nbsp&nbsp&nbsp<span id="a"></span></th>
-				</tr>
-				<tr>
-					<th>收货地址&nbsp&nbsp&nbsp&nbsp&nbsp<span id="n"></span></th>
-				</tr>
-				<tr>
-					<th>选择快递&nbsp&nbsp&nbsp&nbsp&nbsp<span id="c"></span></th>
-				</tr>
-			</table>-->
-
-		</div>
-		<div class="modal-footer" style="text-align:center">
-			
-			<button type="button" style="width:100px;" class="btn btn-primary push-message"  >
-				推送消息
-			</button>
-			<button type="button" style="width:100px;" class="btn btn-default" data-dismiss="modal">返回
-			</button>
-		</div>
-	</div>
-
-	</div>
 
 		<div id="page" class="pagination"><?php echo $page; ?></div>
 	</div>
@@ -231,102 +129,7 @@
 
 </body>
 <script type="text/javascript">
-	/** 关键字搜索 */
-	$(document).on('click','.order-number-keyword',function(){
-	    var keyword = $('input[name=keyword]').val();
-		$.ajax({
-			type:'post',
-			url:"{:U('Deliver/orderKeywordList')}",
-			data:{keyword:keyword},
-			dataType:'json',
-			success:function(result){
-			    $('#show').html(result.str);
-			    $('#page').html(result.page);
-			}
-		});
-	});
-
-	//推送消息
-	$(document).on('click','.push-message',function(){
-		card_no = $('.card_number').html();
-		user_id = $('#uuid').val();
-		$.ajax({
-	        type:"post",
-	        url:"{:U('Deliver/C_deliverPushMessage')}",
-			data:{card_no:card_no,user_id:user_id},
-	        success:function(result){
-				//判断推送成功
-	            console.log(result);
-	        }
-	    });
-	});
-
-	//确认发货
-	/*function test(){
-		card_no = $('.card_number').html();
-		user_id = $('#uid').val();
-		$.ajax({
-		        type:"post",
-		        url:"{:U('Deliver/C_deliverEnterSend')}",
-				data:{card_no:card_no,user_id:user_id},
-		        success:function(data){
-		            $("#q").html(data.card_names);//交互成功回调
-		            $("#i").html(data.card_number);//交互成功回调
-		            $("#u").html(data.recharge_money);//交互成功回调
-		            $("#t").html(data.consignee_name);//交互成功回调
-		            $("#a").html(data.consignee_phone);//交互成功回调
-		            $("#n").html(data.consignee_address);//交互成功回调
-		            $("#c").html(data.which_express);//交互成功回调
-								$('#myModal1').modal('show');//显示弹层
-		        }
-		    });
-	}*/
-
-//点击发货
-$(document).on('click','.send-out-goods',function(){
-    var order_id = $('input[name=order_id]').val();
-    var express_number = $('input[name=express_number]').val();
-    var serial_number = $('input[name=serial_number]').val();
-    if(order_id == '' || serial_number == ''){
-        layer.msg('参数错误',{icon:2,time:500});return false;
-	}
-	if(express_number == '' ){
-        layer.msg('请填写快递单号快递单号',{icon:2,time:500});return false;
-	}
-    $.ajax({
-        type:"post",
-        url:"{:U('Deliver/C_deliverEnterSend')}",
-        data:{order_id:order_id,express_number:express_number,serial_number:serial_number},
-        success:function(data){
-            data = $.parseJSON(data);
-			if(data.status == 200){
-                layer.msg(data.message,{icon:1,time:500},function(){
-                    window.location.reload();
-                })
-			}else{
-			    layer.msg(data.message,{icon:2,time:500},function(){
-			        window.location.reload();
-				})
-			}
-
-        }
-    });
-
-
-
-	/*number = $('.express-number').val();
-	card_no = $('.card_number').html();
-	$.ajax({
-        type:"post",//规定传输方式
-        url:"{:U('Deliver/C_deliverSendGoods')}",//提交URL
-		data:{number:number,card_no:card_no},
-        success:function(res){
-			test();             
-        }
-    });*/
-
-});
-
+	
 $(function(){
 	var imported = false;
 	$('#import').click(function(){
@@ -339,82 +142,6 @@ $(function(){
 		}
 	});
 });
-//立即发货
-$(document).on('click','.delivers',function(){
-    var order_id = $(this).attr('data-id');
-    $.ajax({
-        type:"post",//规定传输方式
-        url:"{:U('Deliver/C_deliverdetail')}",//提交URL
-        data:{order_id:order_id},
-        success:function(response){
-            response=$.parseJSON(response);
-            if(response.status == 200){
-                var data=response.data;
-                $('#serial_number').html(data.serial_number);
-                $('#send_card_no').html(data.send_card_no);
-                $('#user_name').html(data.user_name);
-                $('#mobile').html(data.mobile);
-                $('#address').html(data.address);
-                $('input[name=serial_number]').val(data.serial_number);
-                $('input[name=order_id]').val(data.order_id);
-                $('#myModal').modal('show');//显示弹层
-			}else{
-                layer.msg(response.message,{icon:2,time:1000});return false;
-			}
 
-        }
-    });
-
-	/*var num = $(this).index();
-	var this_id = $(this).siblings().val();
-	var user_id = $(this).parent().children().eq(1).val();
-	var card_no = $(this).parent().children().eq(2).val();
-	$.ajax({
-        type:"post",//规定传输方式
-        url:"{:U('Deliver/C_deliverdetail')}",//提交URL
-				data:{id:this_id,uid:user_id,card_no:card_no},
-        success:function(data){
-            $("#sp").html(data.card_name);//交互成功回调
-            $("#kh").html(data.card_number);//交互成功回调
-            $("#cz").html(data.recharge_money);//交互成功回调
-            $("#shr").html(data.consignee_name);//交互成功回调
-            $("#lxfs").html(data.consignee_phone);//交互成功回调
-            $("#shdz").html(data.consignee_address);//交互成功回调
-            $("#kd").html(data.which_express);//交互成功回调
-						$("#uuid").val(data.user_id);
-
-
-						$('#myModal').modal('show');//显示弹层
-       }
-   });*/
-
-})
-//查看发货信息
-    $(document).on('click','.see',function(){
-        var order_id = $(this).attr('data-id');
-        $('#myModal1').modal('show');//显示弹层
-        /*$.ajax({
-            type:"post",//规定传输方式
-            url:"{:U('Deliver/C_deliverdetail')}",//提交URL
-            data:{order_id:order_id},
-            success:function(response){
-                response=$.parseJSON(response);
-                if(response.status == 200){
-                    var data=response.data;
-                    $('#serial_number').html(data.serial_number);
-                    $('#send_card_no').html(data.send_card_no);
-                    $('#user_name').html(data.user_name);
-                    $('#mobile').html(data.mobile);
-                    $('#address').html(data.address);
-                    $('input[name=serial_number]').val(data.serial_number);
-                    $('input[name=order_id]').val(data.order_id);
-                    $('#myModal').modal('show');//显示弹层
-                }else{
-                    layer.msg(response.message,{icon:2,time:1000});return false;
-                }
-            }
-        });
-*/
-    })
 </script>
 </html>
