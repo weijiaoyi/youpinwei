@@ -1103,7 +1103,7 @@ class WechatController extends CommentoilcardController
 
         $data = file_get_contents('php://input');
         $obj_arr = XML::parse($data);
-
+        $obj_arr = I();
         $insert = array(
             'content'=>json_encode(array(
                     'InsertTime' =>date('Y-m-d H:i:s',time()),
@@ -1123,10 +1123,15 @@ class WechatController extends CommentoilcardController
         $cur_sign = strtoupper(MD5($string1));
         if($cur_sign==$sign) {
             if($obj_arr['result_code']=='SUCCESS'){
+                
+            
+
                 $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
                 $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
                 $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
-                if (!$OrderInfo) echo 'FAIL';exit;
+                if (!$OrderInfo){
+                    echo 'FAIL';exit;  
+                } 
                 $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
                 $Card = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->find();
                 $package = M('packages')->where(['pid'=>$OrderInfo['pid']])->find();
@@ -1157,7 +1162,7 @@ class WechatController extends CommentoilcardController
                         }
                         break;
                 }
-                $insert['content']['save']=json_encode(['OrderSave'=>$OrderSave,'CardSave'=>$CardSave]);
+                $insert['content']=json_encode(['OrderSave'=>$OrderSave,'CardSave'=>$CardSave]);
                 M('testt')->add($insert);
                 $OrderSave=M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
                 $CardSave=M('oil_card')->where(['id'=>$Card['id']])->save($CardSave);
