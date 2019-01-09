@@ -79,7 +79,7 @@
 				<?php foreach ($data as $k => $v) { ?>
 					<tr>
 						<td style="width:40px;text-align:center;">
-							<?php echo $v['id']; ?>
+							<?php echo $k+1; ?>
 						</td>
 						<td style="text-align:center;">
 							<?php echo empty($v['nickname'])?'未绑定':$v['nickname'].'&nbsp;&nbsp;'.'<img src="'.$v['user_img'].'" width="35" hight="35">'; ?>

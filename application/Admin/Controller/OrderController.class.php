@@ -366,11 +366,20 @@ class OrderController extends AdminbaseController{
 
         $card_info = $Card 
               ->alias('o')
-              ->join('__OIL_CARD__ p ON o.cardid = p.id','LEFT')
-              ->join('__USER__ u ON u.id = o.userid','LEFT')
-              ->field('o.*,p.id,p.card_no,u.nickname,u.user_img')
-              ->where( 'p.is_notmal=2 and o.type=1' ) ->order('o.id desc')-> page($p,'10') ->select();
-        $count = $Card -> where( 'type=1' ) -> count();
+              ->join('__OIL_CARD__ p ON o.cardid = p.id',LEFT)
+              ->join('__USER__ u ON u.id = o.userid',LEFT)
+              ->field('o.*,p.card_no,u.nickname,u.user_img')
+              ->where( 'p.is_notmal=2 and o.type=1' )
+              ->order('o.id desc')
+              -> page($p,'10')
+              ->select();
+        $count = $Card
+            ->alias('o')
+            ->join('__OIL_CARD__ p ON o.cardid = p.id','LEFT')
+            ->join('__USER__ u ON u.id = o.userid','LEFT')
+            ->field('o.*,p.card_no,u.nickname,u.user_img')
+            ->where( 'p.is_notmal=2 and o.type=1' )
+            -> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
 
@@ -391,9 +400,18 @@ class OrderController extends AdminbaseController{
               ->alias('o')
               ->join('__OIL_CARD__ p ON o.cardid = p.id','LEFT')
               ->join('__USER__ u ON u.id = o.userid','LEFT')
-              ->field('o.*,p.id,p.card_no,u.nickname,u.user_img')
-              ->where( 'p.is_notmal=2 and o.type=2' ) ->order('o.id desc')-> page($p,'10') ->select();
-        $count = $Card -> where( 'type=2' ) -> count();
+              ->field('o.*,p.card_no,u.nickname,u.user_img')
+              ->where( 'p.is_notmal=2 and o.type=2' )
+            ->order('o.id desc')
+            -> page($p,'10')
+            ->select();
+        $count = $Card
+            ->alias('o')
+            ->join('__OIL_CARD__ p ON o.cardid = p.id','LEFT')
+            ->join('__USER__ u ON u.id = o.userid','LEFT')
+            ->field('o.*,p.card_no,u.nickname,u.user_img')
+            ->where( 'p.is_notmal=2 and o.type=2' )
+            -> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
 
@@ -417,11 +435,11 @@ class OrderController extends AdminbaseController{
                     echo json_encode(array('status'=>100,'message'=>'该记录已处理，无需重复操作'));exit;
                 }else{
                     $data=array(
-                        'sataus'=>1,
+                        'status'=>1,
                         'updatetime'=>time(),
                         'adminid'=>$_SESSION['ADMIN_ID']
                     );
-                    $res = M('oil_option')->where('id="'.$id.'"')->update($data);
+                    $res = M('oil_option')->where('id="'.$id.'"')->save($data);
                     if(!empty($res)){
                         echo json_encode(array('status'=>200,'message'=>'已处理'));exit;
                     }else{
