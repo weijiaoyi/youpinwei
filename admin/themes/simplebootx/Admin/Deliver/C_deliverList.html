@@ -27,11 +27,32 @@
 				<option value="5">续费</option>
 			</select> &nbsp;&nbsp; -->
 			关键字： 
-			<input type="text" name="keyword"  style="height:34px; width: 200px;" value="{$keyword}" placeholder="请输入查询的订单ID或卡号">
+			<input type="text" name="keyword"  style="height:34px; width: 150px;" value="{$keyword}" placeholder="请输入查询的订单ID或卡号">
+			&nbsp;&nbsp;
+			时间范围： 
+			 <div class="layui-inline">
+		      <div class="layui-input-inline">
+		        <input type="text" class="layui-input" id="timeRange" placeholder=" - " style="height:34px; width: 180px;" name="timeRange">
+		      </div>
+		    </div>
+
+			&nbsp;&nbsp;
 			<input type="submit" class="btn btn-primary order-number-keyword" value="搜索">
+			&nbsp;&nbsp;
 			<a class="btn btn-primary " href="{:U('Deliver/inportExcel')}">导出待发货记录</a>
 
 		</form> 
+		<script type="text/javascript">
+			layui.use('laydate', function(){
+				var laydate = layui.laydate;
+				//日期时间范围
+				  laydate.render({
+				    elem: '#timeRange'
+				    ,range: true
+				  });
+			})
+  
+		</script>
 		<!--<form style="display: block;" id="excel-import" method="post" action="<?php echo U('Admin/Goods/importFromExcel'); ?>" enctype="multipart/form-data">-->
 			<!--<input type="file" name="file" style="display: none;" />-->
 			<!--<input style="float: right;margin-top: -70px;margin-right: 20px;" id="import" type="submit" class="btn btn-primary" value="Excel导入">-->
@@ -133,7 +154,7 @@
 		</form>
 			<div class="modal-dialog">
 			<!-- <div class="modal-content"> -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;padding-left: 0px;margin-left:500px;height:340px;width: 50%;">
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;padding-left: 0px;margin-left:500px;height:340px;width: 50%;">
 		<div class="modal-header">
 			<button type="button" class="close"  data-dismiss="modal" aria-hidden="true">
 				<!--&times;-->
@@ -179,7 +200,7 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;padding-left: 0px;margin-left:500px;height:340px;width: 50%;">
+	<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;padding-left: 0px;margin-left:500px;height:340px;width: 50%;">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 				<!--&times;-->
@@ -231,20 +252,6 @@
 
 </body>
 <script type="text/javascript">
-	/** 关键字搜索 */
-	$(document).on('click','.order-number-keyword',function(){
-	    var keyword = $('input[name=keyword]').val();
-		$.ajax({
-			type:'post',
-			url:"{:U('Deliver/orderKeywordList')}",
-			data:{keyword:keyword},
-			dataType:'json',
-			success:function(result){
-			    $('#show').html(result.str);
-			    $('#page').html(result.page);
-			}
-		});
-	});
 
 	//推送消息
 	$(document).on('click','.push-message',function(){

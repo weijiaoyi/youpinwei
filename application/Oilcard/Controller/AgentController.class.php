@@ -24,6 +24,7 @@ class AgentController extends CommentoilcardController
         $M = M('agent_earnings');
         $where = [
             'e.agent_id' => $Agent['id'],
+            'e.log_type' =>1,
         ];
         if ($Agent['role']==3) {
             //充值奖励列表

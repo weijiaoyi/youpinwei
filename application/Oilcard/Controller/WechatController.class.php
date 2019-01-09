@@ -1105,14 +1105,14 @@ class WechatController extends CommentoilcardController
         $obj_arr = XML::parse($data);
 
         $insert = array(
-            'content'=>json_encode(array(
-                'InsertTime'=>date('Y-m-d H:i:s',time()),
-                'InsertNote'=>'油卡升级或续费',
-                'input' =>$obj_arr,
-                'data' =>$data,
-            ))
+                'content'=>json_encode(array(
+                    'InsertTime'=>date('Y-m-d H:i:s',time()),
+                    'InsertNote'=>'油卡升级或续费',
+                    'input' =>$obj_arr,
+                    'data' =>$data,
+                )
+            )
         );
-        M('testt')->add($insert);
 
         $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
@@ -1156,20 +1156,32 @@ class WechatController extends CommentoilcardController
                         }
                         break;
                 }
+                $insert['content']['save']=json_encode(['OrderSave'=>$OrderSave,'CardSave'=>$CardSave]);
+                M('testt')->add($insert);
                 $OrderSave=M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
                 $CardSave=M('oil_card')->where(['id'=>$Card['id']])->save($CardSave);
                 if ($OrderSave && $CardSave) {
+                    $insert['content']['msg']='订单修改成功';
+                    M('testt')->add($insert);
                     echo 'SUCCESS';exit;
                 }else{
+                    $insert['content']['msg']='订单修改失败';
+                    M('testt')->add($insert);
                     echo 'FAIL';exit;    
                 }
             }else{
+                $insert['content']['msg']='支付失败';
+                M('testt')->add($insert);
                 echo 'FAIL';exit;
             }
         } else {
+            $insert['content']['msg']='签名错误';
+            M('testt')->add($insert);
+
             echo 'FAIL';exit;
             Log::record('签名错误，订单号:'.$obj_arr['out_trade_no']);
         }
+        exit;
         // 返回代码
 
         $data = [];

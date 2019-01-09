@@ -212,7 +212,7 @@ class IntegralController extends CommentoilcardController
         //判断充值后的额度
         
         $AfterRechage = $CardInfo['preferential'] - $money;
-        if ($CardInfo['pkgid']>1 && intval($BeforRechage) < 1 || intval($AfterRechage) < 0) {
+        if ($CardInfo['pkgid']>1 && ( intval($BeforRechage) < 1 || intval($AfterRechage) < 0) ) {
             $this->error('此油卡可用充值额度不足!');
         }
         $OrderAdd['pid'] = $CardInfo['pkgid'];

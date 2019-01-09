@@ -3,42 +3,7 @@ namespace Admin\Controller;
 use Common\Controller\AdminbaseController;
 use Common\Controller\ExcelController;
 class DeliverController extends AdminbaseController{
-    /**
-     * 根据订单编号查询相关数据
-     */
-    public function orderKeywordList(){
-        $keyword = trim(I('post.keyword'));
 
-        $OrderRecordModel = M('order_record');
-        $where = [
-            'serial_number' => $keyword
-        ];
-        $order_info = $OrderRecordModel -> where( $where ) -> find();
-        if( empty($order_info) ){
-            echo json_encode(['msg' => '暂无此数据','status' => 500]);
-        }
-
-        $str = '';
-        $str .="<tr>
-                    <td style='text-align:center;'>{$order_info['id']}</td>
-                    <td style='text-align:center;'>{$order_info['serial_number']}</td>
-                    <td style='text-align:center;'>{$order_info['card_no']}</td>
-                    <td style='text-align:center;'>{$order_info['createtime']}</td>
-                    <td style='text-align:center;'>{$order_info['order_type']}</td>
-                    <td style='text-align:center;'><font style='color:red'>￥</font>{$order_info['money']}</td>
-                    <td style='text-align:center;'><font style='color:red'>￥</font>{$order_info['real_pay']}</td>
-                    <td style='text-align:center;'><font style='color:red'>￥</font>{$order_info['discount_money']}</td>
-                    <td>
-                        <input type='hidden' class='this_id' value='{$order_info['id']}'>
-                        <input type='hidden' id='uid' class='uid' value='{$order_info['user_id']}}'>
-                        <input type='hidden' class='card_no' value='{$order_info['card_no']}'>
-                        <input type='button' class='delivers' style='margin-left:30px; background: #2c3e50;border:0px; width: 100px; height: 36px; color: white; font-size: 8px;' value='立即发货'>
-                    </td>
-                </tr>";
-        $data['str'] = $str;
-        $data['page'] = '';
-        echo json_encode( $data );
-    }
 
     /**
      * 订单列表信息
@@ -48,22 +13,29 @@ class DeliverController extends AdminbaseController{
         $p = trim(I('get.p','1'));
         $keyword = trim(I('post.keyword'));
         $Order = M('order_record');
-        $where='o.order_type != 3 AND o.order_status=2';
-        if(!empty($keyword)){
-            $where.=' AND (o.send_card_no LIKE "%'.$keyword.'%" OR o.serial_number LIKE "%'.$keyword.'%")';
+        $Apply = M('user_apply');
+        $where = [
+            'R.order_type' =>1 ,
+            'R.order_status' =>2,
+        ];
+        $timeRange = trim(I('timeRange',''));
+        if ($timeRange) {
+            $timeRange = explode(' - ', $timeRange);
+            $where['R.createtime'] = ['between',[$timeRange[0],$timeRange[1]]];
         }
-        $order_info = $Order
-            ->alias('o')
-            ->join('user_apply a ON a.serial_number=o.serial_number',LEFT)
-            ->join('user u ON u.id=o.user_id',LEFT)
-            ->field('o.*,a.id as apply_id,a.status,u.nickname,u.user_img')
-            -> where($where)
-            ->order('o.id DESC')
-            -> page($p,'10')
+        if (!empty($keyword)) {
+            $where['R.card_no'] = ['like','%'.$keyword.'%'];
+        }
+        $order_info = $Apply
+            ->alias('A')
+            ->field('R.*,A.id as apply_id,A.status,U.nickname,U.user_img')
+            ->join('__ORDER_RECORD__ R ON A.serial_number=R.serial_number',LEFT)
+            ->join('user U ON U.id=R.user_id',LEFT)
+            ->where($where)
+            ->order('R.id DESC')
+            ->page($p,'10')
             ->select();
-//        if(empty($order_info)){
-//            $this -> error( '暂无数据' );
-//        }
+
         foreach( $order_info as $k => $v ){
             if( $v['order_type'] == '1' ){
                 $order_info[$k]['order_type_message'] = '已申领';
@@ -77,13 +49,7 @@ class DeliverController extends AdminbaseController{
             }else {
                 $order_info[$k]['send_status'] = '已绑定';
             }
-//            else{
-//                $order_info[$k]['order_type'] = '充值';
-//            }
 
-//            if( $v['serial_number'] == '' ){
-//                $order_info[$k]['serial_number'] = '已绑定';
-//            }
             if( $v['send_card_no'] == '' ){
                 $order_info[$k]['send_card_no_message'] = '等待代理购买油卡';
             }
@@ -100,12 +66,11 @@ class DeliverController extends AdminbaseController{
 
 
         }
-        $count = $Order
-            ->alias('o')
-            ->join('user_apply a ON a.serial_number=o.serial_number',LEFT)
-            ->join('user u ON u.id=o.user_id',LEFT)
-            ->field('o.*,a.*,u.nickname,u.user_img')
-            -> where($where)
+        $count = $Apply
+            ->alias('A')
+            ->join('__ORDER_RECORD__ R ON A.serial_number=R.serial_number',LEFT)
+            ->join('__USER__ U ON U.id=R.user_id',LEFT)
+            ->where($where)
             -> count();
         $Page = new \Think\Page($count,10);
         $show = $Page -> show();
@@ -115,6 +80,150 @@ class DeliverController extends AdminbaseController{
         $this -> display();
 
 	}
+
+    /**
+     * 油卡绑定列表
+     * @Author 老王
+     * @创建时间   2019-01-08
+     */
+    public function CardBindList(){
+        $p = trim(I('get.p','1'));
+        $keyword = trim(I('post.keyword'));
+        $Order = M('order_record');
+        $Apply = M('user_apply');
+        $where = [
+            'R.order_type' =>2 ,
+            'R.order_status' =>2,
+        ];
+        $timeRange = trim(I('timeRange',''));
+        if ($timeRange) {
+            $timeRange = explode(' - ', $timeRange);
+            $where['R.createtime'] = ['between',[$timeRange[0],$timeRange[1]]];
+        }
+        if (!empty($keyword)) {
+            $where['R.card_no'] = ['like','%'.$keyword.'%'];
+        }
+        $order_info = $Apply
+            ->alias('A')
+            ->field('R.*,A.id as apply_id,A.status,U.nickname,U.user_img')
+            ->join('__ORDER_RECORD__ R ON A.serial_number=R.serial_number',LEFT)
+            ->join('user U ON U.id=R.user_id',LEFT)
+            ->where($where)
+            ->order('R.id DESC')
+            ->page($p,'10')
+            ->select();
+        
+        $count = $Apply
+            ->alias('A')
+            ->join('__ORDER_RECORD__ R ON A.serial_number=R.serial_number',LEFT)
+            ->join('__USER__ U ON U.id=R.user_id',LEFT)
+            ->where($where)
+            -> count();
+        $Page = new \Think\Page($count,10);
+        $show = $Page ->show();
+        $this->assign('keyword',$keyword);
+        $this -> assign('page',$show);
+        $this -> assign('data',$order_info);
+        $this->display();
+    }
+
+    /**
+     * 油卡升级列表
+     * @Author 老王
+     * @创建时间   2019-01-08
+     */
+    public function UpGradeList(){
+        $p = trim(I('get.p','1'));
+        $keyword = trim(I('post.keyword'));
+        $Order = M('order_record');
+        $Apply = M('user_apply');
+        $where = [
+            'R.order_type' => 4,
+            'R.order_status' =>2,
+        ];
+        if (!empty($keyword)) {
+            $where['R.card_no'] = ['like','%'.$keyword.'%'];
+        }
+        $timeRange = trim(I('timeRange',''));
+        if ($timeRange) {
+            $timeRange = explode(' - ', $timeRange);
+            $where['R.createtime'] = ['between',[$timeRange[0],$timeRange[1]]];
+        }
+        $M = M('order_record');
+        $OrderList = $M
+            ->alias('R')
+            ->field('R.*,U.nickname,U.user_img')
+            ->join('__USER__ U ON U.id=R.user_id',LEFT)
+            ->where($where)
+            ->order('R.id DESC')
+            ->page($p,'10')
+            ->select();
+        foreach( $order_info as $k => $v ){
+            
+
+        }
+        $count = $M
+            ->alias('R')
+            ->field('R.*,U.nickname,U.user_img')
+            ->join('__USER__ U ON U.id=R.user_id',LEFT)
+            ->where($where)
+            -> count();
+        $Page = new \Think\Page($count,10);
+        $show = $Page -> show();
+        $this->assign('keyword',$keyword);
+        $this -> assign('page',$show);
+        $this -> assign('data',$OrderList);
+        $this->display();
+    }
+
+    /**
+     * 油卡续费
+     * @Author 老王
+     * @创建时间   2019-01-08
+     */
+    public function RenewalsList(){
+        $p = trim(I('get.p','1'));
+        $keyword = trim(I('post.keyword'));
+        $Order = M('order_record');
+        $Apply = M('user_apply');
+        $where = [
+            'R.order_type' => 5,
+            'R.order_status' =>2,
+        ];
+        if (!empty($keyword)) {
+            $where['R.card_no'] = ['like','%'.$keyword.'%'];
+        }
+        $timeRange = trim(I('timeRange',''));
+        if ($timeRange) {
+            $timeRange = explode(' - ', $timeRange);
+            $where['R.createtime'] = ['between',[$timeRange[0],$timeRange[1]]];
+        }
+        $M = M('order_record');
+        $OrderList = $M
+            ->alias('R')
+            ->field('R.*,U.nickname,U.user_img')
+            ->join('__USER__ U ON U.id=R.user_id',LEFT)
+            ->where($where)
+            ->order('R.id DESC')
+            ->page($p,'10')
+            ->select();
+        foreach( $order_info as $k => $v ){
+            
+
+        }
+        $count = $M
+            ->alias('R')
+            ->field('R.*,U.nickname,U.user_img')
+            ->join('__USER__ U ON U.id=R.user_id',LEFT)
+            ->where($where)
+            -> count();
+        $Page = new \Think\Page($count,10);
+        $show = $Page -> show();
+        $this->assign('keyword',$keyword);
+        $this -> assign('page',$show);
+        $this -> assign('data',$OrderList);
+        $this->display();
+    }
 
 	public function createExcel() {
 		header("content-type:text/html;charset=gb2312");
@@ -126,30 +235,22 @@ class DeliverController extends AdminbaseController{
 		//header
 
 		$excel_data[0][] = array('styleid' => 's_title', 'data' => "订单ID");
-		// $excel_data[0][] = array('styleid' => 's_title', 'data' => "学号");
 		$excel_data[0][] = array('styleid' => 's_title', 'data' => "油卡");
 		$excel_data[0][] = array('styleid' => 's_title', 'data' => "时间");
 		$excel_data[0][] = array('styleid' => 's_title', 'data' => "分类");
 		$excel_data[0][] = array('styleid' => 's_title', 'data' => "充值金额");
 		$excel_data[0][] = array('styleid' => 's_title', 'data' => "支付金额");
-		// $excel_data[0][] = array('styleid' => 's_title', 'data' => "学生身份证号");
 		$excel_data[0][] = array('styleid' => 's_title', 'data' => "优惠金额");
-//		$excel_data[0][] = array('styleid' => 's_title', 'data' => "学校类型");
-//		$excel_data[0][] = array('styleid' => 's_title', 'data' => "所在班级");
 		//data
 		foreach ((array) $data as $k => $v) {
 			$tmp = array();
-//			$tmp[] = array('data' => $v['s_id']);
-			// $tmp[] = array('data' => $v['s_id']);
 			$tmp[] = array('data' => ($v['serial_number']));
 			$tmp[] = array('data' =>($v['card_no']));
 			$tmp[] = array('data' => $v['createtime']);
 			$tmp[] = array('data' => $v['order_type']==1?'绑定':'充值');
 			$tmp[] = array('data' => $v['money']);
-			// $tmp[] = array('data' => CardFomat($v['s_card']));
 			$tmp[] = array('data' => $v['real_pay']);
 			$tmp[] = array('data' => $v['discount_money']);
-//			$tmp[] = array('data' => $v['class_name']);
 			$excel_data[] = $tmp;
 		}
 		define('CHARSET','UTF-8');
@@ -387,17 +488,7 @@ class DeliverController extends AdminbaseController{
 	}
 
 
-    public function CardBindList(){
-        $this->display();
-    }
 
-    public function UpGradeList(){
-        $this->display();
-    }
-
-    public function RenewalsList(){
-        $this->display();
-    }
 
     public function inportExcel(){
 
