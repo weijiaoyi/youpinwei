@@ -64,7 +64,7 @@ class OrderController extends AdminbaseController{
         $OrderRecordModel = M('order_record');
         $p = trim(I('get.p','1'));
         $keyword = trim(I('post.keyword'));
-        $where='o.order_type = 3 AND o.order_status = 2 AND e.log_type=1';
+        $where='o.order_type = 3 AND o.order_status = 2 ';
         if(!empty($keyword)){
             $where.=' AND (a.card_no LIKE "%'.$keyword.'%" OR o.serial_number LIKE "%'.$keyword.'%")';
         }
@@ -72,7 +72,7 @@ class OrderController extends AdminbaseController{
             ->alias('o')
             ->join('add_money a ON a.order_no=o.serial_number',LEFT)
             ->join('user u ON u.id=o.user_id',LEFT)
-            ->join('agent_earnings e ON e.sn=o.serial_number',LEFT)
+            ->join('agent_earnings e ON e.sn=o.serial_number AND e.log_type=1',LEFT)
             ->join('user us ON us.id=o.agent_id',LEFT)
             ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,o.coupon_money,o.discount_money as zk_money,a.*,e.earnings,u.nickname,u.user_img,us.nickname as agent_name,us.user_img as agent_img')
             ->where($where)
@@ -91,7 +91,7 @@ class OrderController extends AdminbaseController{
             ->alias('o')
             ->join('add_money a ON a.order_no=o.serial_number',LEFT)
             ->join('user u ON u.id=o.user_id',LEFT)
-            ->join('agent_earnings e ON e.sn=o.serial_number',LEFT)
+            ->join('agent_earnings e ON e.sn=o.serial_number AND e.log_type=1',LEFT)
             ->join('user us ON us.id=o.agent_id',LEFT)
             ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,o.coupon_money,o.discount_money as zk_money,a.*,u.nickname,u.user_img,us.nickname as agent_name,us.user_img as agent_img')
             ->where($where)
