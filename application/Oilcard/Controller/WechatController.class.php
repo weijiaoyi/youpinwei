@@ -1127,7 +1127,7 @@ class WechatController extends CommentoilcardController
 
                 $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
                 $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
-                $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no','order_status'=>1]])->find();
+                $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no'],'order_status'=>1])->find();
                 if (!$OrderInfo){
                     echo 'FAIL';exit;  
                 } 
