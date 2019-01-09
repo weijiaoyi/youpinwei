@@ -1160,7 +1160,7 @@ class WechatController extends CommentoilcardController
                         if ($cardTime < TIMESTAMP) {
                             $CardSave['preferential'] = $package['limits'];
                         }else{
-                            $CardSave['preferential'] = ($CardSave['preferential']+$package['limits']);
+                            $CardSave['preferential'] = ($Card['preferential']+$package['limits']);
                         }
                         break;
                 }
