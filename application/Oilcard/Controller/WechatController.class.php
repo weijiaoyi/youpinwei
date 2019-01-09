@@ -1165,7 +1165,7 @@ class WechatController extends CommentoilcardController
                     M('testt')->add($insert);
                     echo 'SUCCESS';exit;
                 }else{
-                    $insert['content']['msg']='订单修改失败:'.json_encode(value);
+                    $insert['content']['msg']='订单修改失败';
                     M('testt')->add($insert);
                     echo 'FAIL';exit;    
                 }
