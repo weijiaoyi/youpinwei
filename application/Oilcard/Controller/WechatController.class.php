@@ -1150,7 +1150,7 @@ class WechatController extends CommentoilcardController
                     //升级 ->交会员费 ->把卡变成所购买的登记的油卡
                     case '4':
                         $CardSave['preferential'] = $package['limits'];
-                        if ($Member['role']=>1) {
+                        if ($Member['role']=1) {
                             M('agent')->where(['openid'=>$openId])->save(['role'=>2]);
                         }
                         break;
