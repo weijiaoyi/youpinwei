@@ -401,6 +401,42 @@ class OrderController extends AdminbaseController{
         $this -> assign('data',$card_info);
         $this -> display();
     }
+
+    /**
+     * @author langzhiyao
+     * @desc 处理退卡/挂失
+     * @time20190109
+     */
+    public function HandleCard(){
+        $id = trim(I('post.id'));
+        if(!empty($id)){
+            //查询记录
+            $result = M('oil_option')->where('id="'.$id.'"')->find();
+            if(!empty($result)){
+                if($result['status'] == 1){
+                    echo json_encode(array('status'=>100,'message'=>'该记录已处理，无需重复操作'));exit;
+                }else{
+                    $data=array(
+                        'sataus'=>1,
+                        'updatetime'=>time(),
+                        'adminid'=>$_SESSION['ADMIN_ID']
+                    );
+                    $res = M('oil_option')->where('id="'.$id.'"')->update($data);
+                    if(!empty($res)){
+                        echo json_encode(array('status'=>200,'message'=>'已处理'));exit;
+                    }else{
+                        echo json_encode(array('status'=>100,'message'=>'操作失败'));exit;
+                    }
+                }
+
+            }else{
+                echo json_encode(array('status'=>100,'message'=>'该记录不存在'));exit;
+            }
+        }else{
+            echo json_encode(array('status'=>100,'message'=>'参数错误'));exit;
+        }
+
+    }
     
 
 

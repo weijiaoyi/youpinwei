@@ -66,12 +66,13 @@
 				<tr>
 					<th>ID</th>
 					<th>用户</th>
+					<th>联系电话</th>
 					<th style="text-align:center;">卡号</th>
 					<th style="text-align:center;">申请时间</th>
 					<th style="text-align:center;">操作时间</th>
 					<th style="text-align:center;">申请理由</th>
 					<th style="text-align:center;">处理状态</th>
-					<!-- <th style="text-align:center;">操作</th> -->
+					 <th style="text-align:center;">操作</th>
 				</tr>
 			</thead>
 			<tbody id="show">
@@ -82,6 +83,9 @@
 						</td>
 						<td style="text-align:center;">
 							<?php echo empty($v['nickname'])?'未绑定':$v['nickname'].'&nbsp;&nbsp;'.'<img src="'.$v['user_img'].'" width="35" hight="35">'; ?>
+						</td>
+						<td style="text-align:center;">
+							<?php echo $v['phone']; ?>
 						</td>
                         <td style="text-align:center;">
                             <?php echo $v['card_no']; ?>
@@ -110,18 +114,22 @@
 							} 
 						?>
 						</td>
-						
-						<!-- <td style="width:300px; height: 53px; text-align:center;">
-							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="xiajia"><span style="color: white; font-size: 8px;">下架</span></button>
-							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">充值</span></button>
-							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button>
-						</td> -->
+
+						<td style="width:300px; height: 53px; text-align:center;">
+							<if condition="$v['status'] eq 1" >
+								<button style="background: #999999;border:2px; width: 70px; height: 40px;" ><span style="color: white; font-size: 8px;">已处理</span></button>
+								<else/>
+								<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="true"><span style="color: white; font-size: 8px;">确定处理</span></button>
+							</if>
+						</td>
 					</tr>
 				<?php } ?>
 				
 			</tbody>
 		</table>
+		<if condition="$page neq ''">
 			<div id="page" class="pagination"><span class="page"><?php echo $page; ?></span></div>
+		</if>
 	</div>
 	<!-- 充值弹出层 -->
 	
@@ -173,6 +181,32 @@
 <script src="__PUBLIC__/js/bootstrap.min.js"></script>
 
 <script>
+    //处理
+    $(document).on('click','.true',function(){
+        var id = $(this).attr('data-id');
+        layer.confirm('确定已处理吗？该操作不可逆，请谨慎操作',{
+            btn: ['确定','取消']
+        },function(){
+            $.ajax({
+                type:'post',
+                url:"{:U('order/HandleCard')}",
+                dataType:'json',
+                data:{id:id},
+                success:function(result){
+                    if(result.status == 200){
+                        layer.msg(result.message,{icon:1,time:3000},function(){
+                            window.location.reload();
+                        })
+                    }else{
+                        layer.msg(result.message,{icon:2,time:3000},function(){
+                            window.location.reload();
+                        })
+                    }
+                }
+            });
+        })
+
+    });
 	/** 根据卡号查询该油卡信息 */
 	$(document).on('click','.CardKeyword',function(){
 	    var card_no = $('input[name=keyword]').val();
