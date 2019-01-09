@@ -5,11 +5,12 @@
     .pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
     .pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
 </style>
+<link rel="stylesheet" href="__PUBLIC__/js/bootstrap.min.css">
 </head>
 <body>
-<div class="wrap js-check-wrap">
 
-    <ul class="nav nav-tabs">
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs" style="margin-bottom: 20px;">
         <li><a href="<?php echo U('Admin/Deliver/C_deliverList'); ?>">申领订单</a></li>
         <li><a href="<?php echo U('Admin/Deliver/CardBindList'); ?>">线下绑定订单</a></li>
         <li><a href="<?php echo U('Admin/Deliver/UpGradeList'); ?>">升级订单</a></li>
@@ -18,15 +19,10 @@
     </ul>
         <!-- 搜索 start by LEE  -->
         <form class="well form-search" method="post" action="<?php echo U('Admin/Order/orderListing'); ?>">
-            <!--当前状态： -->
-            <!--<select class="select_1" name="status">-->
-                <!--<option value="-1" <?php if($where['status'] == -1) echo 'selected="selected"';?>>所有</option>-->
-                <!--<option value="0" <?php if(isset($where['status']) && $where['status'] == 0) echo 'selected="selected"';?>>正常</option>-->
-                <!--<option value="1" <?php if($where['status'] == 1) echo 'selected="selected"';?>>禁用</option>-->
-            <!--</select> &nbsp;&nbsp;-->
             关键字： 
-            <input type="text" name="keyword" style="width: 200px;" value="{$keyword}" placeholder="请输入查询订单的订单ID或卡号">
+            <input type="text" name="keyword" style="width: 300px;height: 40px;" value="{$keyword}" placeholder="请输入查询订单的订单ID或卡号">
             <input type="submit" id="selectUser" class="btn btn-primary order-number-pay-keyword" value="搜索">
+            <a class="btn btn-primary " href="{:U('Deliver/inportExcel')}">导出充值记录</a>
         </form>
     <table class="table table-hover table-bordered">
         <thead>
