@@ -1150,11 +1150,14 @@ class WechatController extends CommentoilcardController
                     //升级 ->交会员费 ->把卡变成所购买的登记的油卡
                     case '4':
                         $CardSave['preferential'] = $package['limits'];
-                        M('agent')->where(['openid'=>$openId])->save(['role'=>2]);
+                        if ($Member['role']=>1) {
+                            M('agent')->where(['openid'=>$openId])->save(['role'=>2]);
+                        }
                         break;
                     //续费->交会员费 ->如果在期限内,把油卡剩余额度叠加到此次购买的额度内->如果已过期,则油卡剩余额度清0,重新加入额度
                     case '5':
-                        if ($Card['end_time']<$NowTime) {
+                        $cardTime = strtotime($Card['end_time']);
+                        if ($cardTime < TIMESTAMP) {
                             $CardSave['preferential'] = $package['limits'];
                         }else{
                             $CardSave['preferential'] = ($CardSave['preferential']+$package['limits']);
