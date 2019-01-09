@@ -1103,7 +1103,6 @@ class WechatController extends CommentoilcardController
 
         $data = file_get_contents('php://input');
         $obj_arr = XML::parse($data);
-        $obj_arr = I();
         $insert = array(
             'content'=>json_encode(array(
                     'InsertTime' =>date('Y-m-d H:i:s',time()),
