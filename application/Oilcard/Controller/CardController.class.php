@@ -382,6 +382,7 @@ class CardController extends CommentoilcardController
         $card_no=trim(I('post.card_no',''));
         $desc = trim( I('post.desc','') );
         $type = trim( I('post.type','') );
+        $phone = trim( I('post.phone','') );
 
         $openid  = trim(I('post.openid'));
         $this->_empty($card_no,'数据传输错误');
@@ -402,6 +403,7 @@ class CardController extends CommentoilcardController
                 $addLog = [
                     'userid'     => $user_arr['id'],
                     'cardid'     => $cardInfo['id'],
+                    'phone'     => $phone,
                     'addtime'    => TIMESTAMP,
                     'updatetime' => TIMESTAMP,
                     'desc'       => !empty($desc)?$desc:'申请退卡',
@@ -424,6 +426,7 @@ class CardController extends CommentoilcardController
                 $addLog = [
                     'userid'     => $user_arr['id'],
                     'cardid'     => $cardInfo['id'],
+                    'phone'     => $phone,
                     'addtime'    => TIMESTAMP,
                     'updatetime' => TIMESTAMP,
                     'desc'       => !empty($desc)?$desc:'申请挂失',
