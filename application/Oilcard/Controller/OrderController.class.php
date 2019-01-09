@@ -61,7 +61,15 @@ class OrderController extends CommentoilcardController
     public function orderDetails(){
         $id = I('post.order_id','');
         $this->_empty($id,'参数错误');
-        $order_data=M('order_record')
+        $M = M('order_record');
+        $order_data = $M->alias('o')
+            ->join('packages p ON p.pid=o.pid',LEFT)
+            ->where('o.id='.$id)
+            ->find();
+        if ($order_data['order_type'] ==4 || $order_data['order_type']==5) {
+            echo json_encode($order_data);exit;
+        }
+        $order_data=$M
             ->alias('o')
             ->join('user_apply u ON u.serial_number=o.serial_number',LEFT)
             ->join('packages p ON p.pid=o.pid',LEFT)
