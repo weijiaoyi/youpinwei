@@ -91,10 +91,10 @@
                             <?php echo $v['card_no']; ?>
                         </td>
 						<td style="text-align:center;">
-							<?php echo $v['addtime']; ?>
+							<?php echo date('Y-m-d',$v['addtime']); ?>
 						</td>
 						<td style="text-align:center;" title="">
-							<?php echo $v['updatetime'];?>
+							<?php echo date('Y-m-d',$v['updatetime']);?>
 						</td>
 						<td style="text-align:center;">	
 							<?php echo $v['desc']; ?>
