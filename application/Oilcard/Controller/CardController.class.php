@@ -94,8 +94,9 @@ class CardController extends CommentoilcardController
                 'note' => '油卡绑定成功',
                 'updatetime' => $NowTime
             ];
+            $sendcardInfo = M('oil_card')->where(['card_no'=>$Order['send_card_no'] ])->find();
             //修改之前油卡信息状态
-            if ($card['card_no'] != $Order['send_card_no']) {
+            if (($card['card_no'] != $Order['send_card_no']) && empty($sendcardInfo['user_id'])) {
                 $BeforCard = [
                     'status' =>1,
                 ];
