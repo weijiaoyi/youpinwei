@@ -117,11 +117,6 @@ class ApplyController extends CommentoilcardController
         $sn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
         //获取套餐信息
         $packages = M('packages')->where(['pid'=>$pid])->find();
-        //线下绑定油卡时
-        $card= M('oil_card')->where(['card_no'=>$checked_card])->find();
-        $aid  = isset($card['agent_id'])?$card['agent_id']:0;
-        
-
         $SysWhere=[
             'agent_id'  =>0,
             'is_notmal' =>1,
@@ -131,20 +126,29 @@ class ApplyController extends CommentoilcardController
         ]; 
         $Syscount = M('oil_card')->where($SysWhere)->count();
         $card_from =0;
+        $aid = 0;
         switch ($checked) {
             case '1'://线上办卡-邮寄油卡
                 //查询代理名下油卡库存是否足够
-                if ($Member['agentid'] !=0 && !empty($Member['agentid']))$aid =  $Member['agentid'];
-                if ($Agent && $Agent['agent_oilcard_stock_num']>=1) {
+                //如果代理油卡数量大于等于1,并且不等于0,代理发卡
+                if ($Agent && $Agent['agent_oilcard_stock_num']>=1 && $Agent['agent_oilcard_stock_num'] !=0) {
                     $card_from =2; // 最终由代理发卡
-                }elseif ($Agent && $Agent['agent_oilcard_stock_num'] <1 && $Syscount<1) {
-                    $card_from =2; // 最终由代理发卡
+                    $aid =  $Member['agentid'];
                 }else{
-                    $card_from =1;//最终由总部发卡
-                    $aid =  0;
+                    if ($Syscount >=1) {
+                        //如果总部有卡,代理无卡,总部发卡
+                        $card_from =1; // 最终由总部发卡
+                        $aid = 0 ;
+                    }else{//如果总部无卡,代理也无卡
+                        $card_from =2; // 最终由代理发卡
+                        $aid =  $Member['agentid'];
+                    }
                 }
                 break;
             case '2'://现场办卡
+                //线下绑定油卡时
+                $card= M('oil_card')->where(['card_no'=>$checked_card])->find();
+                $aid  = isset($card['agent_id'])?$card['agent_id']:0;
                 if(!$card) $this->error('油卡号不正确，请输入我平台发放的正确油卡号！');
                 if (!empty($card['user_id'])) $this->error('该卡号已经被绑定！');
                 switch ($card['is_notmal']) {
