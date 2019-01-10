@@ -107,6 +107,8 @@ class DeliverController extends AdminbaseController{
         }
         if ($online) {
             $where['R.online'] = $online;
+            $this->assign('online',$online);
+
         }
         $order_info = $Apply
             ->alias('A')
