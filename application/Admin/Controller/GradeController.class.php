@@ -32,6 +32,7 @@ class GradeController extends AdminbaseController
         $ordinary_info = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
+            ->order('user.id DESC')
             -> page($p,$pageNum)
             ->select();
         if(!empty($ordinary_info)){
@@ -79,6 +80,7 @@ class GradeController extends AdminbaseController
         $vip_info = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
+            ->order('user.id DESC')
             -> page($p,$pageNum)
             -> select();
         if(!empty($vip_info)){
@@ -132,8 +134,8 @@ class GradeController extends AdminbaseController
         $agent_info = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
-            -> page($p,$pageNum)
             ->order('agent.id desc')
+            -> page($p,$pageNum)
             -> select();
         $count = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
