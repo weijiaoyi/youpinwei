@@ -519,8 +519,9 @@ class OrderController extends AdminbaseController{
             ->join('user u ON u.id=o.user_id',LEFT)
             ->join('agent_earnings e ON e.sn=o.serial_number AND e.log_type=1',LEFT)
             ->join('user us ON us.id=o.agent_id',LEFT)
-            ->field('o.serial_number,u.nickname,a.money,a.real_pay,o.coupon_money,o.discount_money,e.earnings,us.nickname as agent_name')
+            ->field('o.serial_number,u.nickname,o.card_no,a.money,a.real_pay,o.coupon_money,o.discount_money,us.nickname as agent_name,e.earnings,o.createtime')
             ->where($where)
+            ->order('o.id DESC')
             ->select();
         if($order_info)foreach ($order_info as $key => $value) {
             if(empty($order_info[$key]['agent_name']))$order_info[$key]['agent_name']='总部';
