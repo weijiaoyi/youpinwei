@@ -167,7 +167,7 @@ class ApplyController extends CommentoilcardController
                         break;
                 }
                 $card_from =$aid==0?1:2; // 1总部卡，2代理卡
-                $OrderInfo['card_no'] =$checked_card; // 线下绑定的卡号
+                // $OrderInfo['card_no'] =$card['card_no']; // 线下绑定的卡号
                 break;
         }
         
@@ -175,6 +175,7 @@ class ApplyController extends CommentoilcardController
         $OrderInfo = [
             'user_id'       =>$Member['id'],//购买人id
             'serial_number' => $sn,
+            'card_no'       => $checked ==2?$card['card_no']:'',// 线下绑定的卡号
             'pid'           => $pid,
             'online'        => $checked,
             'createtime'    => date('Y-m-d H:i:s',TIMESTAMP),
@@ -188,7 +189,7 @@ class ApplyController extends CommentoilcardController
             'order_type'    =>$checked,
             'order_status'  =>1,
             'preferential'  =>$packages['limits'],
-            'card_from' =>$card_from
+            'card_from'     =>$card_from
         ];
         
 
@@ -206,6 +207,7 @@ class ApplyController extends CommentoilcardController
             M('address')->where(['id'=>$address_res['id']])->save(['use_time'=>time()]);
             $OrderInfo['addressid'] =$address_res['id'];
         }
+        $user_applu_data =[];
         if (!empty($checked_card)) {//线下领卡
              $user_applu_data['card_no']=$checked_card;
         }
