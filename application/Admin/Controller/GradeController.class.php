@@ -32,7 +32,7 @@ class GradeController extends AdminbaseController
         $ordinary_info = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
-            ->order('user.id DESC')
+            ->order('agent.id DESC')
             -> page($p,$pageNum)
             ->select();
         if(!empty($ordinary_info)){
@@ -80,7 +80,7 @@ class GradeController extends AdminbaseController
         $vip_info = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
-            ->order('user.id DESC')
+            ->order('agent.id DESC')
             -> page($p,$pageNum)
             -> select();
         if(!empty($vip_info)){

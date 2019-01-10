@@ -20,8 +20,8 @@
 		<form class="well form-search" method="post" action="<?php echo U('Admin/Deliver/CardBindList'); ?>">
 			订单类型： 
 			<select class="select_2" name="online" style="width:80px;">
-				<option value="1">线上</option>
-				<option value="2">线下</option>
+				<option value="1" <?php if($online == 1 || empty($online)){?>selected<?php }?>>线上</option>
+				<option value="2" <?php if($online == 2 ){?>selected<?php }?>>线下</option>
 			</select> &nbsp;&nbsp;
 			关键字： 
 			<input type="text" name="keyword"  style="height:34px; width: 200px;" value="{$keyword}" placeholder="请输入查询的订单ID或卡号">

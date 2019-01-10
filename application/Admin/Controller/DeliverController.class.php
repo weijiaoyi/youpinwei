@@ -129,6 +129,7 @@ class DeliverController extends AdminbaseController{
         $Page = new \Think\Page($count,10);
         $show = $Page ->show();
         $this->assign('keyword',$keyword);
+        $this->assign('online',$online);
         $this -> assign('page',$show);
         $this -> assign('data',$order_info);
         $this->display();
