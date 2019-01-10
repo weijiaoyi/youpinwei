@@ -144,7 +144,7 @@ class WechatController extends CommentoilcardController
         $data['attach'] = '充值购买';
         $data['out_trade_no'] = $create_res['order_no'];
         $data['fee_type'] = 'CNY';
-        $data['total_fee'] = 1;//$order_item['real_pay'] * 100; // 分
+        $data['total_fee'] = $create_res['real_pay']*100;//$order_item['real_pay'] * 100; // 分
         $data['spbill_create_ip'] = Tool::getClientIp();
         $data['time_start'] = date('YmdHis');
         $data['time_expire'] = date('YmdHis',time()+7200);
@@ -208,7 +208,7 @@ class WechatController extends CommentoilcardController
         $data['attach']           = '缴纳年费';
         $data['out_trade_no']     = $OrderInfo['serial_number'];
         $data['fee_type']         = 'CNY';
-        $data['total_fee']        = 1;//$OrderInfo['real_pay']*100
+        $data['total_fee']        = $OrderInfo['real_pay']*100;//$OrderInfo['real_pay']*100
         $data['spbill_create_ip'] = Tool::getClientIp();
         $data['time_start']       = date('YmdHis');
         $data['time_expire']      = date('YmdHis',time()+7200);
@@ -367,7 +367,7 @@ class WechatController extends CommentoilcardController
         $data['attach']               = $body;
         $data['out_trade_no']         = $OrderSn;
         $data['fee_type']             = 'CNY';
-        $data['total_fee']            = 1;//正确的是20000
+        $data['total_fee']            = $money*100;//正确的是20000
         $data['spbill_create_ip']     = Tool::getClientIp();
         $data['time_start']           = date('YmdHis');
         $data['time_expire']          = date('YmdHis',time()+7200);
