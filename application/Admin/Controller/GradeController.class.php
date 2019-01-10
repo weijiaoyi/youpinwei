@@ -523,12 +523,12 @@ class GradeController extends AdminbaseController
                 );
                 $result3 = $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
                 if($result3){
-                    $agentInfo = $agentModel->where('openid="'.$data["openid"].'"')->find();
                     //修改订单send_card_no
                     $orderRecordModel=M('order_record');
-                    $order = $orderRecordModel->where('send_card_no="" AND agent_id="'.$agentInfo['id'].'" AND order_status=2 AND order_type=1')->select();
+                    $order = $orderRecordModel->where('send_card_no="" AND agent_id="'.$agent['id'].'" AND order_status=2 AND order_type=1')->select();
                     if(!empty($order)){
                         foreach ($order as $key=>$val){
+                            $agentInfo = $agentModel->where('openid="'.$data["openid"].'"')->find();
                             $SendCard = M('oil_card')->where('agent_id="'.$agentInfo["id"].'" AND status=1 AND chomd=1 AND is_notmal=1 AND activate=1')->getField('card_no');
                             if($SendCard){
                                 //修改订单
