@@ -220,7 +220,7 @@ class GradeController extends AdminbaseController
 
 
         if($role == 2){
-            $where = ' agent.openid = user.openid AND user.parentid = "'.$id.'" AND agent.role<3';
+            $where = ' user.parentid = "'.$id.'" AND agent.role<3';
             if(!empty($status)){
                 $where .= ' AND is_notmal = "'.$status.'"';
             }
@@ -228,7 +228,7 @@ class GradeController extends AdminbaseController
                 $where .= ' AND nickname LIKE "%'.$keywords.'%"';
             }
             $agent_earnings_data = $AgentModel
-                -> join('user')
+                -> join('user ON agent.openid = user.openid ')
                 -> where($where)
                 -> page($p,$pageNum)
                 -> select();
@@ -237,7 +237,7 @@ class GradeController extends AdminbaseController
                 -> where($where)
                 -> count();
         }else if($role == 3){
-            $where = ' agent.openid = user.openid AND user.agentid = "'.$id.'" AND agent.role<3';
+            $where = ' user.agentid = "'.$id.'" AND agent.role<3';
             if(!empty($status)){
                 $where .= ' AND is_notmal = "'.$status.'"';
             }
@@ -245,7 +245,7 @@ class GradeController extends AdminbaseController
                 $where .= ' AND nickname LIKE "%'.$keywords.'%"';
             }
             $agent_earnings_data = $AgentModel
-                -> join('user')
+                -> join('user ON agent.openid = user.openid ',LEFT)
                 -> where($where)
                 -> page($p,$pageNum)
                 -> select();
