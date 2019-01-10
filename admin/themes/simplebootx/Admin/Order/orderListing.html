@@ -22,7 +22,7 @@
             关键字： 
             <input type="text" name="keyword" style="width: 300px;height: 40px;" value="{$keyword}" placeholder="请输入查询订单的订单ID或卡号">
             <input type="submit" id="selectUser" class="btn btn-primary order-number-pay-keyword" value="搜索">
-            <a class="btn btn-primary " href="{:U('Deliver/inportExcel')}">导出充值记录</a>
+            <a class="btn btn-primary " id="import">导出充值记录</a>
         </form>
     <table class="table table-hover table-bordered">
         <thead>
@@ -36,8 +36,9 @@
             <th style="text-align:center;">使用加油券</th>
             <th style="text-align:center;">折扣金额</th>
             <th style="text-align:center;">上级代理商</th>
-            <th style="text-align:center;">分成分润</th>
+            <th style="text-align:center;">代理分润</th>
             <th style="text-align:center;">充值时间</th>
+            <th style="text-align:center;">操作</th>
         </tr>
         </thead>
         <tbody id="show">
@@ -87,6 +88,13 @@
                 <td style="text-align:center;">
                     {$val['createtime']}
                 </td>
+                <td style="text-align:center;">
+                    <if condition="$val['is_import'] eq '1'">
+                        <span style="font-size: 20px;color: red;font-weight: bold;">未处理</span>
+                        <else/>
+                        <span style="font-size: 20px;color: red;font-weight: bold;">已处理</span>
+                    </if>
+                </td>
             </tr>
         </volist>
         </tbody>
@@ -100,6 +108,14 @@
 </html>
 
 <script type="text/javascript">
+    $('#import').click(function(){
+        layer.confirm('确定导出所有用户的充值记录吗？',['确定','取消'],function(){
+            window.location.href='{:U("Order/rechargeImportExcel")}';
+            layer.msg('导出成功',{icon:1},function(){
+                window.location.reload();//页面刷新
+            });
+        })
+    });
     /** 订单编号(关键字搜索) */
     $(document).on('click','.order-number-pay-keyword',function(){
         var keyword = $('input[name=keyword]').val();

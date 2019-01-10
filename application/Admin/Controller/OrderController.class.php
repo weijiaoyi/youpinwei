@@ -74,7 +74,7 @@ class OrderController extends AdminbaseController{
             ->join('user u ON u.id=o.user_id',LEFT)
             ->join('agent_earnings e ON e.sn=o.serial_number AND e.log_type=1',LEFT)
             ->join('user us ON us.id=o.agent_id',LEFT)
-            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,o.coupon_money,o.discount_money as zk_money,a.*,e.earnings,u.nickname,u.user_img,us.nickname as agent_name,us.user_img as agent_img')
+            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,o.coupon_money,o.discount_money as zk_money,o.is_import,a.*,e.earnings,u.nickname,u.user_img,us.nickname as agent_name,us.user_img as agent_img')
             ->where($where)
             ->order('o.id DESC')
             -> page($p,'10')
@@ -446,7 +446,6 @@ class OrderController extends AdminbaseController{
                         echo json_encode(array('status'=>100,'message'=>'操作失败'));exit;
                     }
                 }
-
             }else{
                 echo json_encode(array('status'=>100,'message'=>'该记录不存在'));exit;
             }
@@ -500,6 +499,37 @@ class OrderController extends AdminbaseController{
             ]);
         }
 
+    }
+
+    /**
+     * @author langzhiyao
+     * @desc 导出所有充值的记录
+     * @time 20190110
+     */
+    public function rechargeImportExcel(){
+        //开启事务
+        $things=M();
+        $things->startTrans();
+        $title = ['订单ID','充值用户','充值卡号','充值金额','支付金额','使用加油券','折扣金额','上级代理商','代理分润','充值时间'];
+        $where='o.order_type = 3 AND o.order_status = 2 ';
+        $OrderRecordModel = M('order_record');
+        $order_info=$OrderRecordModel
+            ->alias('o')
+            ->join('add_money a ON a.order_no=o.serial_number',LEFT)
+            ->join('user u ON u.id=o.user_id',LEFT)
+            ->join('agent_earnings e ON e.sn=o.serial_number AND e.log_type=1',LEFT)
+            ->join('user us ON us.id=o.agent_id',LEFT)
+            ->field('o.serial_number,u.nickname,a.money,a.real_pay,o.coupon_money,o.discount_money,e.earnings,us.nickname as agent_name')
+            ->where($where)
+            ->select();
+        if($order_info)foreach ($order_info as $key => $value) {
+            if(empty($order_info[$key]['agent_name']))$order_info[$key]['agent_name']='总部';
+            if(empty($order_info[$key]['earnings']))$order_info[$key]['earnings']='0.00';
+        }
+        $OrderRecordModel->alias('o')->where($where)->save(array('is_import'=>2));
+        if($order_info)inportExcelLog($order_info,2,'用户充值记录Excel');
+         createExcel($title,$order_info,'用户充值记录Excel');
+        exit;
     }
 
 }

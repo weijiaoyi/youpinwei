@@ -1163,13 +1163,14 @@ class GradeController extends AdminbaseController
                 $res = $AgentEarningModel-> add(array('openid'=>$value["openid"],'createtime'=>date('Y-m-d H:i:s',time()),'order_type'=>4,'earning_body'=>0,'updatetime'=>date('Y-m-d H:i:s',time()),'log_type'=>2));
                 if($res){
                     $AgentModel-> where('openid="'.$value["openid"].'" AND role=3')-> save(array('currt_earnings'=>0));
+                    if($agent_info)inportExcelLog($agent_info,3,'代理商当前收益Excel');
                     $things->commit();
                 }else{
                     $things->rollback();
                 }
             }
         }
-        $r = createExcel($title,$agent_info,'代理商当前收益Excel');
+        createExcel($title,$agent_info,'代理商当前收益Excel');
         exit;
     }
 
