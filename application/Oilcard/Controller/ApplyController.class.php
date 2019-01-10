@@ -380,11 +380,13 @@ class ApplyController extends CommentoilcardController
     }
 
     public function GetCommentInfo(){
-        $img = D("Common/Slide")->where(array('slide_id'=>1))->find();
+        $img = D("Common/Slide")->where(array('slide_id'=>1))->select();
         $packages = M('packages')->select();
         $config = M('setting')->find();
         $data = [
-            'img'=>sp_get_image_preview_url($img['slide_pic']),
+            'img'=>sp_get_image_preview_url($img[0]['slide_pic']),
+            'img01'=>sp_get_image_preview_url($img[1]['slide_pic']),
+            'img02'=>sp_get_image_preview_url($img[2]['slide_pic']),
             'plainMember'=>$packages[0]['scale'],
             'vipMember'=>end($packages)['scale'],
         ];
