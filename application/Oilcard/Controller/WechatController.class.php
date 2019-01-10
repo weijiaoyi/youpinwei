@@ -907,11 +907,11 @@ class WechatController extends CommentoilcardController
                         break;
                 }
                 //获取一张 应发卡
-                $SendCard = M('oil_card')->where($cardCondition)->getField('card_no');
+                $SendCard = M('oil_card')->where($cardCondition)->find();
                 if ($SendCard) {
-                    $OrderSave['send_card_no'] =$SendCard;
+                    $OrderSave['send_card_no'] =$SendCard['card_no'];
                     //把应发卡号状态改为 已申领状态
-                    $OrderSaveResult = M('oil_card')->where(['card_no'=>$SendCard])->save(['status'=>2,'apply_fo_time'=>$NowTime]);
+                    $OrderSaveResult = M('oil_card')->where(['card_no'=>$SendCard['card_no']])->save(['status'=>2,'apply_fo_time'=>$NowTime]);
                 }
                 
             }
