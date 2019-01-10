@@ -1103,16 +1103,16 @@ class WechatController extends CommentoilcardController
 
         $data = file_get_contents('php://input');
         $obj_arr = XML::parse($data);
-
         $insert = array(
-                'content'=>json_encode(array(
-                    'InsertTime'=>date('Y-m-d H:i:s',time()),
-                    'InsertNote'=>'油卡升级或续费',
-                    'input' =>$obj_arr,
-                    'data' =>$data,
+            'content'=>json_encode(array(
+                    'InsertTime' =>date('Y-m-d H:i:s',time()),
+                    'InsertNote' =>'油卡申领',
+                    'input'      =>$obj_arr,
+                    'data'       =>$data,
                 )
             )
         );
+        M('testt')->add($insert);
 
         $openId=$obj_arr['openid'];
         $sign = $obj_arr['sign'];
@@ -1122,10 +1122,15 @@ class WechatController extends CommentoilcardController
         $cur_sign = strtoupper(MD5($string1));
         if($cur_sign==$sign) {
             if($obj_arr['result_code']=='SUCCESS'){
+                
+            
+
                 $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
                 $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
-                $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
-                if (!$OrderInfo) echo 'FAIL';exit;
+                $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no'],'order_status'=>1])->find();
+                if (!$OrderInfo){
+                    echo 'FAIL';exit;  
+                } 
                 $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
                 $Card = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->find();
                 $package = M('packages')->where(['pid'=>$OrderInfo['pid']])->find();
@@ -1145,39 +1150,41 @@ class WechatController extends CommentoilcardController
                     //升级 ->交会员费 ->把卡变成所购买的登记的油卡
                     case '4':
                         $CardSave['preferential'] = $package['limits'];
-                        M('agent')->where(['openid'=>$openId])->save(['role'=>2]);
+                        if ($Member['role'] ==1) {
+                            M('agent')->where(['openid'=>$openId])->save(['role'=>2]);
+                        }
                         break;
                     //续费->交会员费 ->如果在期限内,把油卡剩余额度叠加到此次购买的额度内->如果已过期,则油卡剩余额度清0,重新加入额度
                     case '5':
-                        if ($Card['end_time']<$NowTime) {
+                        $cardTime = strtotime($Card['end_time']);
+                        if ($cardTime < TIMESTAMP) {
                             $CardSave['preferential'] = $package['limits'];
                         }else{
-                            $CardSave['preferential'] = ($CardSave['preferential']+$package['limits']);
+                            $CardSave['preferential'] = ($Card['preferential']+$package['limits']);
                         }
                         break;
                 }
-                $insert['content']['save']=json_encode(['OrderSave'=>$OrderSave,'CardSave'=>$CardSave]);
+                $insert['content']=json_encode(['OrderSave'=>$OrderSave,'CardSave'=>$CardSave]);
                 M('testt')->add($insert);
                 $OrderSave=M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
                 $CardSave=M('oil_card')->where(['id'=>$Card['id']])->save($CardSave);
                 if ($OrderSave && $CardSave) {
-                    $insert['content']['msg']='订单修改成功';
+                    $insert['content']='订单修改成功';
                     M('testt')->add($insert);
                     echo 'SUCCESS';exit;
                 }else{
-                    $insert['content']['msg']='订单修改失败';
+                    $insert['content']='订单修改失败';
                     M('testt')->add($insert);
                     echo 'FAIL';exit;    
                 }
             }else{
-                $insert['content']['msg']='支付失败';
+                $insert['content']='支付失败';
                 M('testt')->add($insert);
                 echo 'FAIL';exit;
             }
         } else {
-            $insert['content']['msg']='签名错误';
+            $insert['content']='签名错误';
             M('testt')->add($insert);
-
             echo 'FAIL';exit;
             Log::record('签名错误，订单号:'.$obj_arr['out_trade_no']);
         }
