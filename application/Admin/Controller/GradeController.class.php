@@ -458,6 +458,9 @@ class GradeController extends AdminbaseController
      * 确认发卡(确认发卡)
      */
     public function confirmSendCard(){
+        //开启事务
+        $things = M();
+        $things->startTrans();
         $data = I('post.');
         $agentModel=M('agent');
         $agent = $agentModel->where('openid="'.$data["openid"].'"')->find();
@@ -501,51 +504,60 @@ class GradeController extends AdminbaseController
             ];
             $AgentLibraryModel = M('agent_library');
             $result2 = $AgentLibraryModel -> add( $insert_agent_library_data );
-            //修改押金 库存
-            $new_deposit = $card_no_num*$data['each_price'];
-            $new_agent_oilcard_num = $card_no_num;
-            $new_agent_oilcard_stock_num = $card_no_num;
-            $old_deposit = $agent['agent_deposit'];
-            $old_agent_oilcard_num= $agent['agent_oilcard_num'];
-            $old_agent_oilcard_stock_num= $agent['agent_oilcard_stock_num'];
-            $agent_deposit= $new_deposit+$old_deposit;
-            $agent_oilcard_num= $new_agent_oilcard_num+$old_agent_oilcard_num;
-            $agent_oilcard_stock_num= $new_agent_oilcard_stock_num+$old_agent_oilcard_stock_num;
-            $update_data=array(
-                'agent_deposit'=>$agent_deposit,
-                'agent_oilcard_num' =>$agent_oilcard_num,
-                'agent_oilcard_stock_num'=>$agent_oilcard_stock_num
-            );
-            $result3 = $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
-            $agentInfo = $agentModel->where('openid="'.$data["openid"].'"')->find();
-            //修改订单send_card_no
-            $orderRecordModel=M('order_record');
-            $order = $orderRecordModel->where('send_card_no = "" AND agent_id="'.$agentInfo['id'].'" AND order_status=2')->select();
-            if(!empty($order)){
-                foreach ($order as $key=>$val){
-                    $cardCondition =[
-                        'agent_id'  =>$agentInfo['id'],//此代理商名下
-                        'status'    =>1,//库存卡
-                        'chomd'     =>1,//未发放的卡
-                        'is_notmal' =>1,//可用的卡
-                        'activate'  =>1 //未激活的卡
-                    ];
-                    $SendCard = M('oil_card')->where($cardCondition)->getField('card_no');
-                    //写入订单
-                    $orderRecordModel->where('id="'.$val["id"].'"')->save(array('send_card_no'=>$SendCard));
-                    //修改卡信息
-                    $OilCardModel->where('card_no = "'.$SendCard.'" AND status=1')->save(array('status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
-                    //修改代理商库存
-                    $now_agent_oilcard_stock_num= $agentInfo['agent_oilcard_stock_num']-1;
-                    $agentModel->where('openid="'.$data["openid"].'"')->save(array('agent_oilcard_stock_num'=>$now_agent_oilcard_stock_num));
-                }
-            }
+
             if($result2){
-                echo json_encode(['msg' => '发卡成功','status' => 200]);exit;
+                //修改押金 库存
+                $new_deposit = $card_no_num*$data['each_price'];
+                $new_agent_oilcard_num = $card_no_num;
+                $new_agent_oilcard_stock_num = $card_no_num;
+                $old_deposit = $agent['agent_deposit'];
+                $old_agent_oilcard_num= $agent['agent_oilcard_num'];
+                $old_agent_oilcard_stock_num= $agent['agent_oilcard_stock_num'];
+                $agent_deposit= $new_deposit+$old_deposit;
+                $agent_oilcard_num= $new_agent_oilcard_num+$old_agent_oilcard_num;
+                $agent_oilcard_stock_num= $new_agent_oilcard_stock_num+$old_agent_oilcard_stock_num;
+                $update_data=array(
+                    'agent_deposit'=>$agent_deposit,
+                    'agent_oilcard_num' =>$agent_oilcard_num,
+                    'agent_oilcard_stock_num'=>$agent_oilcard_stock_num
+                );
+                $result3 = $agentModel->where('openid="'.$data["openid"].'"')->save($update_data);
+                if($result3){
+                    $agentInfo = $agentModel->where('openid="'.$data["openid"].'"')->find();
+                    //修改订单send_card_no
+                    $orderRecordModel=M('order_record');
+                    $order = $orderRecordModel->where('send_card_no="" AND agent_id="'.$agentInfo['id'].'" AND order_status=2')->select();
+                    if(!empty($order)){
+                        foreach ($order as $key=>$val){
+                            $cardCondition =[
+                                'agent_id'  =>$agentInfo['id'],//此代理商名下
+                                'status'    =>1,//库存卡
+                                'chomd'     =>1,//未发放的卡
+                                'is_notmal' =>1,//可用的卡
+                                'activate'  =>1 //未激活的卡
+                            ];
+                            $SendCard = M('oil_card')->where($cardCondition)->getField('card_no');
+                            //修改订单
+                            $orderRecordModel->where('id="'.$val["id"].'"')->save(array('send_card_no'=>$SendCard));
+                            //修改卡信息
+                            $OilCardModel->where('card_no = "'.$SendCard.'" AND status=1')->save(array('status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
+                            //修改代理商库存
+                            $now_agent_oilcard_stock_num= $agentInfo['agent_oilcard_stock_num']-1;
+                            $agentModel->where('openid="'.$data["openid"].'"')->save(array('agent_oilcard_stock_num'=>$now_agent_oilcard_stock_num));
+                        }
+                    }
+                    $things->commit();
+                    echo json_encode(['msg' => '发卡成功','status' => 200]);exit;
+                }else{
+                    $things->rollback();
+                    echo json_encode(['msg' => '发卡失败','status' => 100]);exit;
+                }
             }else{
+                $things->rollback();
                 echo json_encode(['msg' => '发卡失败','status' => 100]);exit;
             }
         }else{
+            $things->rollback();
             echo json_encode(['msg' => '修改卡状态失败','status' => 100]);
         }
     }
