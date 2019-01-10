@@ -512,6 +512,11 @@ class OrderController extends AdminbaseController{
         $things->startTrans();
         $title = ['订单ID','充值用户','充值卡号','充值金额','支付金额','使用加油券','折扣金额','上级代理商','代理分润','充值时间'];
         $where='o.order_type = 3 AND o.order_status = 2 ';
+        $timeRange = trim(I('timeRange',''));
+        if ($timeRange) {
+            $timeRange = explode(' - ', $timeRange);
+            $where['o.createtime'] = ['between',[$timeRange[0],$timeRange[1]]];
+        }
         $OrderRecordModel = M('order_record');
         $order_info=$OrderRecordModel
             ->alias('o')
