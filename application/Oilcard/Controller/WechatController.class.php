@@ -866,6 +866,7 @@ class WechatController extends CommentoilcardController
             if ($OrderInfo['pid'] ==1) {
                 $EndTime = '';
             }
+            $Agent =M('agent')->where(['id'=>$Member['agentid'],'role'=>3])->find();
             //线下绑卡设置 -- 直接成功发放油卡，并绑定到用户名下
             if ($OrderInfo['online']==2) {
                 //修改油卡信息
@@ -900,7 +901,6 @@ class WechatController extends CommentoilcardController
                 switch ($OrderInfo['card_from']) {
                     case '2':
                         //从代理库存中取出一张卡号
-                        $Agent=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.id'=>$Member['agentid'],'b.role'=>3])->find();
                         $cardCondition['agent_id'] =$Agent['id'];//代理商名下的卡
                         break;
                     default:
@@ -918,8 +918,14 @@ class WechatController extends CommentoilcardController
                 
             }
             //直接使用油卡的代理id 
-            $OrderSave['agent_id'] =$SendCard['agent_id'];
-            $ApplySave['agentid']  =$SendCard['agent_id'];
+            if ($SendCard) {
+                $OrderSave['agent_id'] =$SendCard['agent_id'];
+                $ApplySave['agentid']  =$SendCard['agent_id'];
+            }else{
+                $OrderSave['agent_id'] =$Agent['id'];
+                $ApplySave['agentid']  =$Agent['id'];
+            }
+            
             if ($OrderInfo['card_from']==2) {
                 //如果是代理发卡 ，代理库存减少 1,如果库存为0 并且是代理发卡则不减少,当总部给代理发卡时补充
                 if($Agent['agent_oilcard_stock_num']>0){
