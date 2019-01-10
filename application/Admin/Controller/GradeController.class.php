@@ -535,9 +535,10 @@ class GradeController extends AdminbaseController
                                 $orderRecordModel->where('id="'.$val["id"].'"')->save(array('send_card_no'=>$SendCard));
                                 //修改卡信息
                                 $OilCardModel->where('card_no = "'.$SendCard.'" AND status=1')->save(array('status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
-                                //修改代理商库存
-                                $now_agent_oilcard_stock_num= $agentInfo['agent_oilcard_stock_num']-1;
-                                $agentModel->where('openid="'.$data["openid"].'"')->save(array('agent_oilcard_stock_num'=>$now_agent_oilcard_stock_num));
+                                if($agentInfo['agent_oilcard_stock_num']>0){
+                                    //修改代理商库存
+                                    $agentModel->where('openid="'.$data["openid"].'"')->setDec('agent_oilcard_stock_num');
+                                }
                             }
                         }
                     }
