@@ -515,7 +515,7 @@ class OrderController extends AdminbaseController{
         $timeRange = trim(I('timeRange',''));
         if ($timeRange) {
             $timeRange = explode(' - ', $timeRange);
-            $where['o.createtime'] = ['between',[$timeRange[0],$timeRange[1]]];
+            $where .=' AND o.createtime>="'.$timeRange[0].'" AND o.createtime<="'.$timeRange[1].'" ';
         }
         $OrderRecordModel = M('order_record');
         $order_info=$OrderRecordModel
