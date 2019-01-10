@@ -130,7 +130,7 @@
             return false;
         }
         layer.confirm('确定导出'+timeRange+'的用户的充值记录吗？',['确定','取消'],function(){
-            window.location.href='{:U("Deliver/rechargeImportExcel")}&timeRange='+timeRange;
+            window.location.href='{:U("Order/rechargeImportExcel")}&timeRange='+timeRange;
             layer.msg('导出成功',{icon:1},function(){
                 window.location.reload();//页面刷新
             });

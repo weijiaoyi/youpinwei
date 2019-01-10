@@ -22,7 +22,7 @@ class GradeController extends AdminbaseController
         $pageNum = 10;
         $status = trim(I('post.status'));
         $keywords = trim(I('post.keywords'));
-        $where =' agent.openid = user.openid AND agent.role = 1 AND user.user_img != ""';
+        $where =' agent.openid = user.openid AND agent.role = 1 AND user.nickname != ""';
         if(!empty($status)){
             $where .= ' AND user.is_notmal = "'.$status.'"';
         }
@@ -70,7 +70,7 @@ class GradeController extends AdminbaseController
         $status = trim(I('post.status'));
         $keywords = trim(I('post.keywords'));
         $pageNum = 10;
-        $where =' agent.openid = user.openid AND agent.role = 2 AND user.user_img != ""';
+        $where =' agent.openid = user.openid AND agent.role = 2 AND user.nickname != ""';
         if(!empty($status)){
             $where .= ' AND user.is_notmal = "'.$status.'"';
         }
