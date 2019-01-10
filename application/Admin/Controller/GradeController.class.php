@@ -529,21 +529,16 @@ class GradeController extends AdminbaseController
                     $order = $orderRecordModel->where('send_card_no="" AND agent_id="'.$agentInfo['id'].'" AND order_status=2 AND order_type=1')->select();
                     if(!empty($order)){
                         foreach ($order as $key=>$val){
-                            $cardCondition =[
-                                'agent_id'  =>$agentInfo['id'],//此代理商名下
-                                'status'    =>1,//库存卡
-                                'chomd'     =>1,//未发放的卡
-                                'is_notmal' =>1,//可用的卡
-                                'activate'  =>1 //未激活的卡
-                            ];
-                            $SendCard = M('oil_card')->where($cardCondition)->getField('card_no');
-                            //修改订单
-                            $orderRecordModel->where('id="'.$val["id"].'"')->save(array('send_card_no'=>$SendCard));
-                            //修改卡信息
-                            $OilCardModel->where('card_no = "'.$SendCard.'" AND status=1')->save(array('status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
-                            //修改代理商库存
-                            $now_agent_oilcard_stock_num= $agentInfo['agent_oilcard_stock_num']-1;
-                            $agentModel->where('openid="'.$data["openid"].'"')->save(array('agent_oilcard_stock_num'=>$now_agent_oilcard_stock_num));
+                            $SendCard = M('oil_card')->where('agent_id="'.$agentInfo["id"].'" AND status=1 AND chomd=1 AND is_notmal=1 AND activate=1')->getField('card_no');
+                            if($SendCard){
+                                //修改订单
+                                $orderRecordModel->where('id="'.$val["id"].'"')->save(array('send_card_no'=>$SendCard));
+                                //修改卡信息
+                                $OilCardModel->where('card_no = "'.$SendCard.'" AND status=1')->save(array('status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
+                                //修改代理商库存
+                                $now_agent_oilcard_stock_num= $agentInfo['agent_oilcard_stock_num']-1;
+                                $agentModel->where('openid="'.$data["openid"].'"')->save(array('agent_oilcard_stock_num'=>$now_agent_oilcard_stock_num));
+                            }
                         }
                     }
                     $things->commit();
