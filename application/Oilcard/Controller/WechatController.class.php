@@ -545,7 +545,9 @@ class WechatController extends CommentoilcardController
                 }
                 //更改油卡信息状态
                 $OilCardSave =[
+                    //充值成功,减少可用额度
                     'preferential' =>$CardInfo['pkgid']>1? ($CardInfo['preferential'] - $order_item['money']):0,
+                    //增加总充值额度
                     'card_total_add_money' => intval($CardInfo['card_total_add_money'] + $order_item['money'])
                 ];
                 if ($order_item['is_first']==1) {

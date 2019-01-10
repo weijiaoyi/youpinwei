@@ -216,9 +216,9 @@ class IntegralController extends CommentoilcardController
             $this->error('此油卡可用充值额度不足!');
         }
         $OrderAdd['pid'] = $CardInfo['pkgid'];
-        $RechageCount = M('add_money')->where(['card_no'=>$card_no,'openid'=>$openid])->count();
+        $RechageCount = M('add_money')->where(['card_no'=>$card_no,'openid'=>$openid,'status'=>1])->find();
         $is_first =2;
-        if ($RechageCount < 1) { // 是否是首充
+        if (!$RechageCount) { // 是否是首充
             if (intval($money) < intval( $config['first_rechage']) ){
                 $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
             } 
@@ -233,7 +233,7 @@ class IntegralController extends CommentoilcardController
             'discount_money' => $save,
             'real_pay'       => $pay_money,
             'pay_way'        => 1,
-            'note'           => $RechageCount ==1?'用户对此油卡的首次充值':'油卡额度充值',
+            'note'           => $is_first==1?'用户对此油卡的首次充值':'油卡额度充值',
             'status'         => 2,
             'createtime'     => $NowTime,
             'order_no'       => $orderSn,
