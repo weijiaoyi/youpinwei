@@ -25,6 +25,7 @@
             关键字：
             <input type="text" name="keywords" style="width: 200px;" value="{$keywords}" placeholder="请输入要查询联系人名称">
             <input type="submit" id="selectUser" class="btn btn-primary" value="搜索">
+            <a class="btn btn-primary" id="import">导出代理当前收益</a>
         </form>
 
     <table class="table table-hover table-bordered">
@@ -41,7 +42,7 @@
         <tr>
             <th>ID</th>
             <th style="text-align:center;">代理商名称</th>
-            <th style="text-align:center;">头像</th>
+            <th style="text-align:center;">代理商备注</th>
             <th style="text-align:center;">代理称号</th>
             <!--<th style="text-align:center;">押金</th>-->
             <th style="text-align:center;">当前收益</th>
@@ -62,10 +63,10 @@
                 {$key+1}
             </td>
             <td style="text-align:center;">
-                {$val['nickname']}
+                {$val['nickname']}<img src="{$val['user_img']}" alt="{$val['user_img']}" style="width:40px;" />
             </td>
-            <td style="width:40px;text-align:center;">
-                <img src="{$val['user_img']}" alt="{$val['user_img']}" />
+            <td style="text-align:center;">
+                <input type="text" name="remarks" class="remarks" value="{$val['remarks']}" data-id="{$val['id']}"/>
             </td>
             <td style="text-align:center;">
             	<if condition="$val['role'] eq '3'">
@@ -122,5 +123,34 @@
     </if>
 </div>
 <script src="__PUBLIC__/js/common.js"></script>
+<script>
+    $(function(){
+        $('#import').click(function(){
+            layer.confirm('确定清空所有代理商的当前收益吗？',['确定','取消'],function(){
+                window.location.href='{:U("Grade/importExcel")}';
+                layer.msg('导出成功',{icon:1},function(){
+                    window.location.reload();//页面刷新
+                });
+            })
+        });
+        $('.remarks').on('blur',function(){
+            var id=$(this).attr('data-id');
+            var remarks=$(this).val();
+            $.ajax({
+                type:'POST',
+                url:'{:U("Grade/addRemarks")}',
+                data:{id:id,remarks:remarks},
+                dataType:'json',
+                success:function(response){
+                    if(response.status == 200){
+                        layer.msg(response.message,{icon:1});return false;
+                    }else{
+                        layer.msg(response.message,{icon:2});return false;
+                    }
+                }
+            })
+        })
+    })
+</script>
 </body>
 </html>

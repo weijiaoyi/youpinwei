@@ -74,7 +74,7 @@ class GradeController extends AdminbaseController
             $where .= ' AND user.is_notmal = "'.$status.'"';
         }
         if(!empty($keywords)){
-            $where .= ' AND user.nickname LIKE "%'.$keywords.'%"';
+            $where .= ' AND  user.nickname LIKE "%'.$keywords.'%" ';
         }
         $vip_info = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
@@ -127,12 +127,13 @@ class GradeController extends AdminbaseController
             $where .= ' AND is_notmal = "'.$status.'"';
         }
         if(!empty($keywords)){
-            $where .= ' AND nickname LIKE "%'.$keywords.'%"';
+            $where .= ' AND ( user.nickname LIKE "%'.$keywords.'%" OR user.remarks LIKE "%'.$keywords.'%" )';
         }
         $agent_info = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
             -> where($where)
             -> page($p,$pageNum)
+            ->order('agent.id desc')
             -> select();
         $count = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
@@ -142,7 +143,7 @@ class GradeController extends AdminbaseController
         $already_pay = M('agent_library')->where('card_mode=1')->field('sum(count_price) as count_price')->find();
         $no_already_pay = M('agent_library')->where('card_mode=2')->field('sum(count_price) as no_count_price')->find();
         $number = M('oil_card')->where('agent_id != 0')->field('count(id) as number')->find();
-        $no_number = M('oil_card')->where('activate=1 AND agent_id="'.$id.'"')->field('count(id) as no_number')->find();
+        $no_number = M('oil_card')->where('activate=1 AND agent_id != 0')->field('count(id) as no_number')->find();
 
         $Page = new \Think\Page($count,$pageNum);
         $show = $Page -> show();
@@ -1114,6 +1115,62 @@ class GradeController extends AdminbaseController
         {
             $this->error('修改失败');
         }
+    }
+    /**
+     * @author langzhiyao
+     * @desc 添加代理商备注
+     * @time 20190110
+     */
+    public function addRemarks(){
+        $id=trim(I('post.id'));
+        $remarks = trim(I('post.remarks'));
+        if(!empty($id)){
+            $user = M('user')->where('id="'.$id.'"')->find();
+            if(!empty($user)){
+                M('user')->where('id="'.$id.'"')->save(array('remarks'=>$remarks));
+                echo json_encode(array('status'=>'200','message'=>'更改备注成功'));exit;
+            }else{
+                echo json_encode(array('status'=>'100','message'=>'操作失败'));exit;
+            }
+        }else{
+            echo json_encode(array('status'=>'100','message'=>'操作失败'));exit;
+        }
+
+    }
+
+    /**
+     * @author langzhiyao
+     * @desc 导出所有代理商的当前收益
+     * @time 20190110
+     */
+    public function importExcel(){
+        //开启事务
+        $things=M();
+        $things->startTrans();
+        $title = ['代理商微信openid','代理商微信昵称','代理商备注','当前收益'];
+
+        $where =' agent.role = 3';
+        $AgentModel = M('agent');
+        $AgentEarningModel = M('agent_earnings');
+        $agent_info = $AgentModel
+            -> join('user ON user.openid=agent.openid',LEFT)
+            ->field('user.openid,user.nickname,user.remarks,agent.currt_earnings')
+            -> where($where)
+            ->order('agent.id desc')
+            -> select();
+        if(!empty($agent_info)){
+            foreach ($agent_info as $key=>$value){
+                $res = $AgentEarningModel-> add(array('openid'=>$value["openid"],'createtime'=>date('Y-m-d H:i:s',time()),'order_type'=>4,'earning_body'=>0,'updatetime'=>date('Y-m-d H:i:s',time()),'log_type'=>2));
+                if($res){
+                    $AgentModel-> where('openid="'.$value["openid"].'" AND role=3')-> save(array('currt_earnings'=>0));
+                    $things->commit();
+                }else{
+                    $things->rollback();
+                }
+            }
+        }
+        $r = createExcel($title,$agent_info,'代理商当前收益Excel');
+        exit;
     }
 
 
