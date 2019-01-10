@@ -25,7 +25,15 @@ function createExcel($title,$data,$filename='订单列表'){
 	$excel_obj->generateXML($excel_obj->charset($filename, CHARSET) . '-' . date('Y-m-d-H', time()));
 }
 
-
+function inportExcelLog($data,$t,$desc){
+	$ins = [
+		'content' => json_encode($data),
+		'type' => $t,
+		'desc' => !empty($desc)?$desc:'发货人记录导出',
+		'createtime' => date('Y-m-d H:i:s'),
+	];
+	M('inportexcel')->add($ins);
+}
 /**
  * 超大正整数相加
  * @Author 老王

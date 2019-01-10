@@ -18,11 +18,7 @@
 		   <li><a href="<?php echo U('Admin/Order/orderListing'); ?>">充值订单</a></li>
 		</ul>
 		<form class="well form-search" method="post" action="<?php echo U('Admin/Deliver/C_deliverList'); ?>">
-			订单类型： 
-			<select class="select_2" name="order_type" style="width:80px;">
-				<option value="1">线上</option>
-				<option value="2">线下</option>
-			</select> &nbsp;&nbsp;
+			
 			关键字： 
 			<input type="text" name="keyword"  style="height:34px; width: 150px;" value="{$keyword}" placeholder="请输入查询的订单ID或卡号">
 			&nbsp;&nbsp;
@@ -36,7 +32,7 @@
 			&nbsp;&nbsp;
 			<input type="submit" class="btn btn-primary order-number-keyword" value="搜索">
 			&nbsp;&nbsp;
-			<a class="btn btn-primary " href="{:U('Deliver/inportExcel')}">导出待发货记录</a>
+			<a class="btn btn-primary " id="import" >导出待发货记录</a>
 
 		</form> 
 		<script type="text/javascript">
@@ -48,7 +44,20 @@
 				    ,range: true
 				  });
 			})
-  
+  		$('#import').click(function(){
+		    layer.confirm('确定导出所有待发货记录？',['确定','取消'],function(){
+		    	var timeRange = $('#timeRange').val();
+		    	if(!timeRange){
+		    		layer.msg('请选择时间范围!');
+		    		return false;
+		    	}
+		    	
+		        window.location.href='{:U("Deliver/inportExcel")}&timeRange='+timeRange;
+		        layer.msg('导出成功',{icon:1},function(){
+		            window.location.reload();//页面刷新
+		        });
+		    })
+		});
 		</script>
 		<!--<form style="display: block;" id="excel-import" method="post" action="<?php echo U('Admin/Goods/importFromExcel'); ?>" enctype="multipart/form-data">-->
 			<!--<input type="file" name="file" style="display: none;" />-->
