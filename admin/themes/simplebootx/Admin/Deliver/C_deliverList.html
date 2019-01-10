@@ -45,13 +45,12 @@
 				  });
 			})
   		$('#import').click(function(){
-		    layer.confirm('确定导出所有待发货记录？',['确定','取消'],function(){
-		    	var timeRange = $('#timeRange').val();
-		    	if(!timeRange){
-		    		layer.msg('请选择时间范围!');
-		    		return false;
-		    	}
-		    	
+            var timeRange = $('#timeRange').val();
+            if(!timeRange){
+                layer.msg('请选择时间范围!');
+                return false;
+            }
+		    layer.confirm('确定导出'+timeRange+'的待发货记录？',['确定','取消'],function(){
 		        window.location.href='{:U("Deliver/inportExcel")}&timeRange='+timeRange;
 		        layer.msg('导出成功',{icon:1},function(){
 		            window.location.reload();//页面刷新
