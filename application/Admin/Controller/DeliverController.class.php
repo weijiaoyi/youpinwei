@@ -500,7 +500,7 @@ class DeliverController extends AdminbaseController{
     public function inportExcel(){
 
         $title = ['订单号','申请人微信昵称','姓名','手机号','联系地址','应发卡号','应发货人','支付金额','邮费','押金'];
-        $field ="R.serial_number,U.nickname,A.receive_person,A.phone,A.address,R.send_card_no,G.nickname as agent_nickname,R.real_pay,R.postage,R.user_deposit,A.id";
+        $field ="R.serial_number,U.nickname,A.receive_person,A.phone,A.address,R.send_card_no,G.nickname as agent_nickname,R.real_pay,R.postage,R.user_deposit,A.id as aid,R.id as rid";
         $where = [
             'R.order_type' =>1,
             'R.order_status' =>2,
@@ -521,15 +521,21 @@ class DeliverController extends AdminbaseController{
                 ->field($field)
                 ->order('R.id desc')
                 ->select();
-        $ids = '';
+        $aids = '';
+        $rids = '';
         if($data)foreach ($data as $key => $value) {
             if(empty($data[$key]['agent_nickname']))$data[$key]['agent_nickname']='总部发卡';
-            $ids .= $value['id'].',';
-            unset($data[$key]['id']);
+            $aids .= $value['aid'].',';
+            $rids .= $value['rid'].',';
+            unset($data[$key]['aid']);
+            unset($data[$key]['rid']);
+
         }
-        $ids = trim($ids,',');
+        $aids = trim($aids,',');
+        $rids = trim($rids,',');
         $res = false;
-        $res = M('user_apply')->where(['id'=>['in',$ids]])->save(['status'=>2]);
+        $res = M('user_apply')->where(['id'=>['in',$aids]])->save(['status'=>2]);
+        $res = M('order_record')->where(['id'=>['in',$rids]])->save(['is_import'=>2]);
         if($data)inportExcelLog($data,1,'发货记录导出');
         createExcel($title,$data,'订单Excel');
         echo 1;
