@@ -526,7 +526,7 @@ class GradeController extends AdminbaseController
                     $agentInfo = $agentModel->where('openid="'.$data["openid"].'"')->find();
                     //修改订单send_card_no
                     $orderRecordModel=M('order_record');
-                    $order = $orderRecordModel->where('send_card_no="" AND agent_id="'.$agentInfo['id'].'" AND order_status=2')->select();
+                    $order = $orderRecordModel->where('send_card_no="" AND agent_id="'.$agentInfo['id'].'" AND order_status=2 AND order_type=1')->select();
                     if(!empty($order)){
                         foreach ($order as $key=>$val){
                             $cardCondition =[
