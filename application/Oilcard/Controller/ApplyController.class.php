@@ -380,7 +380,7 @@ class ApplyController extends CommentoilcardController
     }
 
     public function GetCommentInfo(){
-        $img = D("Common/Slide")->where(array('slide_id'=>1))->select();
+        $img = D("Common/Slide")->select();
         $packages = M('packages')->select();
         $config = M('setting')->find();
         $data = [
