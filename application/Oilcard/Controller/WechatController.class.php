@@ -917,15 +917,14 @@ class WechatController extends CommentoilcardController
                 }
                 
             }
-            if ($SendCard) {
-                //直接使用油卡的代理id 
-                $OrderSave['agent_id'] =$SendCard['agent_id'];
-                $ApplySave['agentid']  =$SendCard['agent_id'];
-            }
-            if ($SendCard && $OrderInfo['card_from']==2) {
+            //直接使用油卡的代理id 
+            $OrderSave['agent_id'] =$SendCard['agent_id'];
+            $ApplySave['agentid']  =$SendCard['agent_id'];
+            if ($OrderInfo['card_from']==2) {
                 //如果是代理发卡 ，代理库存减少 1,如果库存为0 并且是代理发卡则不减少,当总部给代理发卡时补充
                 if($Agent['agent_oilcard_stock_num']>0){
-                    $ReduceAgentCardStock = M('agent')->where(['id'=>$Member['agentid'],'role'=>3])->setDec('agent_oilcard_stock_num');    
+                    $agent_oilcard_stock_num = $Agent['agent_oilcard_stock_num'] -1;
+                    $ReduceAgentCardStock = M('agent')->where(['id'=>$Member['agentid'],'role'=>3])->save(['agent_oilcard_stock_num'=>$agent_oilcard_stock_num]);    
                 }
                 
             }
