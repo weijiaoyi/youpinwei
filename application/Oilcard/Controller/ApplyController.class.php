@@ -120,28 +120,8 @@ class ApplyController extends CommentoilcardController
         //线下绑定油卡时
         $card= M('oil_card')->where(['card_no'=>$checked_card])->find();
         $aid  = isset($card['agent_id'])?$card['agent_id']:0;
-        if ($aid ==0) {
-            if ($Member['agentid'] !=0 && !empty($Member['agentid']))$aid =  $Member['agentid'];
-            
-        }
-        //生成订单信息
-        $OrderInfo = [
-            'user_id'       =>$Member['id'],//购买人id
-            'serial_number' => $sn,
-            'pid'           => $pid,
-            'online'        => $checked,
-            'createtime'    => date('Y-m-d H:i:s',TIMESTAMP),
-            //本次购卡时 最近的邀请人id--暂不锁定邀请人
-            'parentid'      => isset($ParentMember['id'])?$ParentMember['id']:0 ,
-            // 0总部发放，代理id  --暂不锁定代理id
-            'agent_id'      =>$aid, 
-            'real_pay'      => $money,
-            'user_deposit'  => $user_deposit,
-            'postage'       => $postage,
-            'order_type'    =>$checked,
-            'order_status'  =>1,
-            'preferential'  =>$packages['limits'],
-        ];
+        
+
         $SysWhere=[
             'agent_id'  =>0,
             'is_notmal' =>1,
@@ -150,15 +130,18 @@ class ApplyController extends CommentoilcardController
             'chomd'     =>1
         ]; 
         $Syscount = M('oil_card')->where($SysWhere)->count();
+        $card_from =0;
         switch ($checked) {
             case '1'://线上办卡-邮寄油卡
                 //查询代理名下油卡库存是否足够
+                if ($Member['agentid'] !=0 && !empty($Member['agentid']))$aid =  $Member['agentid'];
                 if ($Agent && $Agent['agent_oilcard_stock_num']>=1) {
-                    $OrderInfo['card_from'] =2; // 最终由代理发卡
+                    $card_from =2; // 最终由代理发卡
                 }elseif ($Agent && $Agent['agent_oilcard_stock_num'] <1 && $Syscount<1) {
-                    $OrderInfo['card_from'] =2; // 最终由代理发卡
+                    $card_from =2; // 最终由代理发卡
                 }else{
-                    $OrderInfo['card_from'] =1;//最终由总部发卡
+                    $card_from =1;//最终由总部发卡
+                    $aid =  0;
                 }
                 break;
             case '2'://现场办卡
@@ -183,10 +166,31 @@ class ApplyController extends CommentoilcardController
                         $this->error('此油卡已被系统废弃！');
                         break;
                 }
-                $OrderInfo['card_from'] =$aid==0?1:2; // 1总部卡，2代理卡
+                $card_from =$aid==0?1:2; // 1总部卡，2代理卡
                 $OrderInfo['card_no'] =$checked_card; // 线下绑定的卡号
                 break;
         }
+        
+        //生成订单信息
+        $OrderInfo = [
+            'user_id'       =>$Member['id'],//购买人id
+            'serial_number' => $sn,
+            'pid'           => $pid,
+            'online'        => $checked,
+            'createtime'    => date('Y-m-d H:i:s',TIMESTAMP),
+            //本次购卡时 最近的邀请人id--暂不锁定邀请人
+            'parentid'      => isset($ParentMember['id'])?$ParentMember['id']:0 ,
+            // 0总部发放，代理id  --暂不锁定代理id
+            'agent_id'      =>$aid, 
+            'real_pay'      => $money,
+            'user_deposit'  => $user_deposit,
+            'postage'       => $postage,
+            'order_type'    =>$checked,
+            'order_status'  =>1,
+            'preferential'  =>$packages['limits'],
+            'card_from' =>$card_from
+        ];
+        
 
         $address_data=[
             'openid'=>$openid,

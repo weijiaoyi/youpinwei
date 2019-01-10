@@ -879,6 +879,7 @@ class WechatController extends CommentoilcardController
                     'pkgid'                => $OrderInfo['pid'],
                     'desc'                 => '线下绑定油卡',
                 ];
+                $SendCard = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->find();
                 $CardSaveResult = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->save($CardSave);
                 //修改申领记录信息
                 $ApplySave['deliver_number'] =1;
@@ -907,15 +908,26 @@ class WechatController extends CommentoilcardController
                 }
                 //获取一张 应发卡
                 $SendCard = M('oil_card')->where($cardCondition)->getField('card_no');
-
-                $OrderSave['send_card_no'] =$SendCard;
-                //把应发卡号状态改为 已申领状态
-                $OrderSaveResult = M('oil_card')->where(['card_no'=>$SendCard])->save(['status'=>2,'apply_fo_time'=>$NowTime]);
+                if ($SendCard) {
+                    $OrderSave['send_card_no'] =$SendCard;
+                    //把应发卡号状态改为 已申领状态
+                    $OrderSaveResult = M('oil_card')->where(['card_no'=>$SendCard])->save(['status'=>2,'apply_fo_time'=>$NowTime]);
+                }
+                
             }
-            if ($OrderInfo['card_from']) {
-                //如果是代理发卡 ，代理库存减少 1
-                $ReduceAgentCardStock = M('agent')->where(['id'=>$Member['agentid'],'role'=>3])->setDec('agent_oilcard_stock_num');
+            if ($SendCard) {
+                //直接使用最总发的油卡的代理id 
+                $OrderSave['agent_id'] =$SendCard['agent_id'];
+                $ApplySave['agentid']  =$SendCard['agent_id'];
             }
+            if (!$SendCard && $OrderInfo['card_from']==2) {
+                //如果是代理发卡 ，代理库存减少 1,如果库存为0 并且是代理发卡则不减少,当总部给代理发卡时补充
+                if($Agent['agent_oilcard_stock_num']>0){
+                    $ReduceAgentCardStock = M('agent')->where(['id'=>$Member['agentid'],'role'=>3])->setDec('agent_oilcard_stock_num');    
+                }
+                
+            }
+           
             if ($obj_arr['result_code']=='SUCCESS') {
                 /* 
                 1，判断用户是否为第一张卡，如果是第一次申领，锁定上级邀请人，如果没有，则为总部，锁定上级代理，如果没有，则为总部

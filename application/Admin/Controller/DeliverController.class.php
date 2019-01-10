@@ -88,12 +88,14 @@ class DeliverController extends AdminbaseController{
      */
     public function CardBindList(){
         $p = trim(I('get.p','1'));
-        $keyword = trim(I('post.keyword'));
+        $keyword = trim(I('keyword'));
+        $online = intval(I('online'),0);
         $Order = M('order_record');
         $Apply = M('user_apply');
         $where = [
             'R.order_type' =>2 ,
             'R.order_status' =>2,
+            'A.status' =>3
         ];
         $timeRange = trim(I('timeRange',''));
         if ($timeRange) {
@@ -103,11 +105,15 @@ class DeliverController extends AdminbaseController{
         if (!empty($keyword)) {
             $where['R.card_no'] = ['like','%'.$keyword.'%'];
         }
+        if ($online) {
+            $where['R.online'] = $online;
+        }
         $order_info = $Apply
             ->alias('A')
-            ->field('R.*,A.id as apply_id,A.status,U.nickname,U.user_img')
+            ->field('R.*,A.id as apply_id,A.status,U.nickname,U.user_img,UA.nickname as agent_nickname,UA.user_img as agent_user_img')
             ->join('__ORDER_RECORD__ R ON A.serial_number=R.serial_number',LEFT)
             ->join('user U ON U.id=R.user_id',LEFT)
+            ->join('user UA ON UA.id=R.user_id')
             ->where($where)
             ->order('R.id DESC')
             ->page($p,'10')
@@ -117,6 +123,7 @@ class DeliverController extends AdminbaseController{
             ->alias('A')
             ->join('__ORDER_RECORD__ R ON A.serial_number=R.serial_number',LEFT)
             ->join('__USER__ U ON U.id=R.user_id',LEFT)
+            ->join('user UA ON UA.id=R.user_id',LEFT)
             ->where($where)
             -> count();
         $Page = new \Think\Page($count,10);
@@ -493,13 +500,18 @@ class DeliverController extends AdminbaseController{
     public function inportExcel(){
 
         $title = ['订单号','申请人微信昵称','姓名','手机号','联系地址','应发卡号','应发货人','支付金额','邮费','押金'];
-        $field ="R.serial_number,U.nickname,A.receive_person,A.phone,A.address,R.send_card_no,G.nickname as agent_nickname,R.real_pay,R.postage,R.user_deposit";
+        $field ="R.serial_number,U.nickname,A.receive_person,A.phone,A.address,R.send_card_no,G.nickname as agent_nickname,R.real_pay,R.postage,R.user_deposit,A.id";
         $where = [
             'R.order_type' =>1,
             'R.order_status' =>2,
             'R.applyfinish' =>1,
             'A.status' =>1
         ];
+        $timeRange = trim(I('timeRange',''));
+        if ($timeRange) {
+            $timeRange = explode(' - ', $timeRange);
+            $where['R.createtime'] = ['between',[$timeRange[0],$timeRange[1]]];
+        }
         $data = M('order_record')
                 ->alias('R')
                 ->join('__USER_APPLY__ as A ON A.serial_number=R.serial_number','LEFT')
@@ -509,10 +521,18 @@ class DeliverController extends AdminbaseController{
                 ->field($field)
                 ->order('R.id desc')
                 ->select();
+        $ids = '';
         if($data)foreach ($data as $key => $value) {
             if(empty($data[$key]['agent_nickname']))$data[$key]['agent_nickname']='总部发卡';
+            $ids .= $value['id'].',';
+            unset($data[$key]['id']);
         }
+        $ids = trim($ids,',');
+        $res = false;
+        $res = M('user_apply')->where(['id'=>['in',$ids]])->save(['status'=>2]);
+        if($data)inportExcelLog($data,1,'发货记录导出');
         createExcel($title,$data,'订单Excel');
+        echo 1;
         exit;
         echo 111;exit;
     }
