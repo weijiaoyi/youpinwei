@@ -397,6 +397,7 @@ class ApplyController extends CommentoilcardController
             'img'=>sp_get_image_preview_url($img[0]['slide_pic']),
             'img01'=>sp_get_image_preview_url($img[1]['slide_pic']),
             'img02'=>sp_get_image_preview_url($img[2]['slide_pic']),
+            'service_img'=>sp_get_image_preview_url($img[3]['slide_pic']),
             'plainMember'=>$packages[0]['scale'],
             'vipMember'=>end($packages)['scale'],
         ];
