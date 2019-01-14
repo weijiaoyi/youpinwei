@@ -140,12 +140,12 @@ class SettingController extends AdminbaseController{
 			
 			$old_password=I('post.old_password');
 			$password=I('post.password');
-			if(sp_compare_password($old_password,$admin['user_pass'])){
+			if(sp_compare_password($old_password,$admin['password'])){
 				if($password==I('post.repassword')){
-					if(sp_compare_password($password,$admin['user_pass'])){
+					if(sp_compare_password($password,$admin['password'])){
 						$this->error("新密码不能和原始密码相同！");
 					}else{
-						$data['user_pass']=sp_password($password);
+						$data['password']=sp_password($password);
 						$data['id']=$uid;
 						$r=$user_obj->save($data);
 						if ($r!==false) {
