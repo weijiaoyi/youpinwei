@@ -47,15 +47,13 @@ class ApplyController extends CommentoilcardController
             'openid'=>$openId,
             'address'=>$data['address'],
             'phone'=>$data['phone'],
-            'receive_person'=>$data['receive_person'],
-            'use_time '=>time()
+            'receive_person'=>$data['receive_person']
         ];
         $address_res=M('address')->where($address_data)->find();
         if (empty($address_res)){
             M('address')->add($address_data);
         }else{
             $address_id=$address_res['id'];
-            M('address')->where("id='$address_id'")->save(['use_time'=>time()]);
         }
         Log::record('创建订单返回:'.json_encode($data));
         /*
@@ -208,7 +206,6 @@ class ApplyController extends CommentoilcardController
             $address_data['address']=$data['address'];
             $OrderInfo['addressid']=M('address')->add($address_data);
         }else{
-            M('address')->where(['id'=>$address_res['id']])->save(['use_time'=>time()]);
             $OrderInfo['addressid'] =$address_res['id'];
         }
         $user_applu_data =[];
@@ -249,7 +246,7 @@ class ApplyController extends CommentoilcardController
         if (empty($openid)){
             $this->error('用户标志为空，请重新登录');
         }
-        $address_data=M('address')->where("status='1' and openid='$openid'")->order('use_time desc')->find();
+        $address_data=M('address')->where("status='1' and openid='$openid'")->find();
         if ($address_data){
             $this->success($address_data);
         }else{
