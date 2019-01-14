@@ -18,11 +18,11 @@
 // );
 return array(
     'DB_TYPE' => 'mysql',
-    'DB_HOST' => '47.94.196.82',
+    'DB_HOST' => '114.116.142.79',
     'DB_NAME' => 'yishengyou',
     // 'DB_NAME' => 'yds_online',
     'DB_USER' => 'root',
-    'DB_PWD' => '20cdbc47ae',
+    'DB_PWD' => 'root',
     'DB_PORT' => '3306',
     'DB_PREFIX' => '',
     //密钥
