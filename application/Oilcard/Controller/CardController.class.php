@@ -238,9 +238,9 @@ class CardController extends CommentoilcardController
             $this->success('账户下无对应的加油卡','1001');exit;
         }
         $data=[];
-        $normal ='';
-        $abnormal='';
-        $process='';
+        $normal =[];
+        $abnormal=[];
+        $process=[];
 
 
 
