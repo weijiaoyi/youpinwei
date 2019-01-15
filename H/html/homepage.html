@@ -139,7 +139,7 @@
 				localStorage.setItem('agent_op',agent_op);
 				$.ajax({
 					type:'post',
-					url:'http://ysy.edshui.com/index.php?g=oilcard&m=wechat&a=getCodeUrl',
+					url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=wechat&a=getCodeUrl',
 					dataType:'json',
 					data:{},
 					async:false,
@@ -179,7 +179,7 @@
 		if(localStorage.openid&&localStorage.agent_op){
 			$.ajax({
 				type:'post',
-				url:'http://ysy.edshui.com/index.php?g=oilcard&m=agent&a=agentRelation',
+				url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=agent&a=agentRelation',
 				dataType:'json',
 				data:{openid:openid,agent_op:agent_op},
 				async:false,
@@ -193,7 +193,7 @@
 			var list={};
 			$.ajax({
 				type:'post',
-				url:'http://ysy.edshui.com/index.php?g=oilcard&m=user&a=userinfo',
+				url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=user&a=userinfo',
 				dataType:'json',
 				data:{openid:openid},
 				async:false,

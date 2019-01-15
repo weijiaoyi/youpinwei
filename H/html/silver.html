@@ -156,7 +156,7 @@
 								var list={};
 								$.ajax({
 									type:'post',
-									url:'http://ysy.edshui.com/index.php?g=oilcard&m=card&a=cardList',
+									url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=card&a=cardList',
 									dataType:'json',
 									data:{openid:openid,flag:95},
 									async:false,
@@ -265,7 +265,7 @@
 				var mon={};
 				$.ajax({
 					type:'post',
-					url:'http://ysy.edshui.com/index.php?g=oilcard&m=wechat&a=jsConfig',
+					url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=wechat&a=jsConfig',
 					dataType:'json',
 					data:{openid:openid},
 					async:false,
@@ -294,7 +294,7 @@
 						signType:ret0.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
 						paySign:ret0.paySign, // 支付签名
 						success: function (res) {
-							window.location.href='http://ysy.edshui.com/H/html/agent.html';
+							window.location.href='http://ysy.xiangjianhai.com/H/html/agent.html';
 						}		
 					});
 				});

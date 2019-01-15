@@ -188,7 +188,7 @@
         var message = $(".remarks-infomation").val();
         $.ajax({
             type:'post',
-            url:'http://ysy.edshui.com/index.php?g=admin&m=order&a=rechargeMoney',
+            url:'http://ysy.xiangjianhai.com/index.php?g=admin&m=order&a=rechargeMoney',
             dataType:'json',
             data:{card_no:card_no,discount:discount,money:money,message:message},
             success:function(res){
@@ -206,7 +206,7 @@
         var id = $(this).val();
         $.ajax({
             type:'post',
-            url:'http://ysy.edshui.com/index.php?g=admin&m=order&a=underGoods',
+            url:'http://ysy.xiangjianhai.com/index.php?g=admin&m=order&a=underGoods',
             dataType:'json',
             data:{id:id},
             // async:false,
@@ -228,7 +228,7 @@
         var discountid = $(this).val();
         $.ajax({
             type:'post',
-            url:'http://ysy.edshui.com/index.php?g=admin&m=order&a=withdrawCard',
+            url:'http://ysy.xiangjianhai.com/index.php?g=admin&m=order&a=withdrawCard',
             dataType:'json',
             data:{discountid:discountid},
             success:function(res){
@@ -261,7 +261,7 @@
         var this_id = $(this).val();
         $.ajax({
             type:"post",//规定传输方式
-            url:"http://ysy.edshui.com/index.php?g=admin&m=order&a=getCard",//提交URL
+            url:"http://ysy.xiangjianhai.com/index.php?g=admin&m=order&a=getCard",//提交URL
             data:{id:this_id},
             success:function(data){
                 card_on_input(data);
