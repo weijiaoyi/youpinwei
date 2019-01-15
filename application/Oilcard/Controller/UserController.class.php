@@ -24,6 +24,10 @@ class UserController extends CommentoilcardController
         $agent_role=M('agent')->where("openid='$openid'")->getField('role');
         $userInfo = M('user')->where(['openid'=>$openid])->find();
         $card_count = count(M('OilCard')->where(['user_id'=>$userInfo['id']])->select());
+
+        //总人数
+        $user_count = M('user')->count();
+        $num_count = 11118+intval($user_count);
 //        if (!$userInfo)
 //        {
 //            //跳转到微信登录url
@@ -83,6 +87,7 @@ class UserController extends CommentoilcardController
         $output['already_save_money'] = $userInfo['already_save_money'] ?: 0;
         $output['total_add_money'] = $userInfo['total_add_money']?: 0;
         $output['agent'] = $agent_role;
+        $output['num_count'] = $num_count;
 
         echo json_encode(['msg'=>'success','status'=>1000,'data'=>$output]);
         exit();
