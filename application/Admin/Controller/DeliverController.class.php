@@ -115,7 +115,7 @@ class DeliverController extends AdminbaseController{
             ->field('R.*,A.id as apply_id,A.status,U.nickname,U.user_img,UA.nickname as agent_nickname,UA.user_img as agent_user_img')
             ->join('__ORDER_RECORD__ R ON A.serial_number=R.serial_number',LEFT)
             ->join('user U ON U.id=R.user_id',LEFT)
-            ->join('user UA ON UA.id=R.agent_id')
+            ->join('user UA ON UA.id=R.agent_id',LEFT)
             ->where($where)
             ->order('R.id DESC')
             ->page($p,'10')
