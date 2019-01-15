@@ -26,7 +26,7 @@ class WechatController extends CommentoilcardController
     static $card_no;
     static $data;
     private $base_uri = 'https://api.weixin.qq.com';
-    private $my_uri = 'http://ysy.edshui.com';
+    private $my_uri = 'http://ysy.xiangjianhai.com';
     private $pay_uri = 'https://api.mch.weixin.qq.com';
 
     public function __construct()
@@ -2036,8 +2036,8 @@ class WechatController extends CommentoilcardController
 //        }
 //
 
-        $path="https://ysy.edshui.com/application/Oilcard/Controller/wechat/$openid.png";
-//        $path="https://ysy.edshui.com/H/img/$openid.png";
+        $path="https://ysy.xiangjianhai.com/application/Oilcard/Controller/wechat/$openid.png";
+//        $path="https://ysy.xiangjianhai.com/H/img/$openid.png";
 
         file_put_contents(__DIR__."/wechat/$openid.png",print_r($result,true));
 //        file_put_contents($path,print_r($result,true));
