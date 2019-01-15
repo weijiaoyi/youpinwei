@@ -942,12 +942,17 @@ class WechatController extends CommentoilcardController
                     2.1 如果为普通套餐 ，上级邀请人无加油卷返利，对上级代理不做任何操作
                     2.2 如果为VIP套餐，对上级邀请人 返利加油卷 config里获取百分比，对上级代理不做操作
                 */
+                $MemberAgent=[];
+                //用户每申领一张卡，需要增加一次此卡押金
+                $MemberAgent['deposit']= ($Member['deposit']+$OrderInfo['user_deposit']);
                 
                 $isFirst = M('order_record')->where(['user_id'=>$Member['id'],'order_status'=>2])->find();
                 if ($OrderInfo['pid'] > 1 && $Member['role']==1) {
                     //如果买的套餐是VIP套餐 就把会员身份改为VIP   -- 只做身份标识 --并没有什么用
-                    M('agent')->where(['openid'=>$openId])->save(['role'=>2]);
+                    $MemberAgent['role']=2;
                 }
+                M('agent')->where(['openid'=>$openId])->save($MemberAgent);
+
                 if (!$isFirst) { //如果为第一次购买
                     $Robate=[];
                     if ($Member['parent_bind'] ==0 && $Member['agent_bind']==0) {
