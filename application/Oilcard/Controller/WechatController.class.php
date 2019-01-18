@@ -323,7 +323,7 @@ class WechatController extends CommentoilcardController
         if(!$package)$this->error('参数错误:缺少套餐信息!');
         $OrderSn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
         $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
-
+        $config = M('setting')->find();
         $Order = [
             'user_id'        => $Member['id'],
             'card_no'        => $Card['card_no'],
@@ -355,68 +355,28 @@ class WechatController extends CommentoilcardController
         if ($type ==1 &&$Order['order_type'] !=4) $this->error('订单生成失败!');
         if ($type ==2 &&$Order['order_type'] !=5) $this->error('订单生成失败!');
 
-        //微信统一下单
-        $data = [];
-        $data['appid']                = CardConfig::$wxconf['appid'];
-        $data['mch_id']               = CardConfig::$wxconf['mch_id'];
-        $data['device_info']          = 'WEB';
-        $data['nonce_str']            = Tool::randomStr(20);
-        $data['sign_type']            = 'MD5';
-        $data['body']                 = $body;
-        $data['detail']               = $body;
-        $data['attach']               = $body;
-        $data['out_trade_no']         = $OrderSn;
-        $data['fee_type']             = 'CNY';
-        $data['total_fee']            = $money*100;//正确的是20000
-        $data['spbill_create_ip']     = Tool::getClientIp();
-        $data['time_start']           = date('YmdHis');
-        $data['time_expire']          = date('YmdHis',time()+7200);
-        //        $data['notify_url'] = $this->my_uri.'/index.php?g=oilcard&m=wechat&a=wxNoticePay';
-        $data['notify_url']           = $this->my_uri.'/upgradeNotify.php';
-        
-        $data['trade_type']           = 'JSAPI';
-        $data['openid']               = $openid;
-        ksort($data);
-        $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
-        $data['sign'] = md5($string1);
-
-        $content = XML::build($data);
-        Log::record('传给微信的XML:'.$content);
-
-        $ch_url = $this->pay_uri.'/pay/unifiedorder';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $ch_url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        $content = curl_exec($ch);
-        curl_close($ch);
-        Log::record('微信统一下单返回:'.$content);
-
-        $data = [];
-        $obj_arr = XML::parse($content);
-
-
-        if (!$obj_arr){
-            $this->success($data);
+        $PayCon = [
+                'body'     => '油卡充值',
+                'detail'   => '油卡充值',
+                'attach'   => '油卡充值',
+                'paymoney' => $config['paymoney']
+            ];
+        switch ($config['paytype']) {
+            case '1': //微信支付
+                $data = $this->_WxPay($Order,$Member,$PayCon);
+                # code...
+                break;
+            case '2': //聚合支付
+                # code...
+                break;
         }
-        if($obj_arr['result_code'] == 'SUCCESS') {
-            $data['appId'] = CardConfig::$wxconf['appid'];
-            $data['timeStamp'] = time();
-            $data['nonceStr'] = Tool::randomStr(20);
-            $data['package'] = 'prepay_id='.$obj_arr['prepay_id'];
-            $data['signType'] = 'MD5';
-
-            ksort($data);
-            $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
-            $data['paySign'] = md5($string1);
+        if($data){
             $OrderAdd = M('order_record')->add($Order);
             if(!$OrderAdd)$this->error('订单生成失败!');
+            $this->success($data);
+        }else{
+            $this->error('订单生成失败!');
         }
-        $this->success($data);
     }
 
 

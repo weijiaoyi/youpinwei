@@ -224,7 +224,6 @@ class IntegralController extends CommentoilcardController
             } 
             $is_first = 1;
         }
-
         $AddMoneySave = [
             'user_id'        => $Member['id'],
             'openid'         => $openid,
@@ -245,17 +244,8 @@ class IntegralController extends CommentoilcardController
         if ($IsOver) {
             $data['order_no'] = $orderSn;
             exit(json_encode(['msg'=>'success','status'=>2000,'data'=>$data]));
-        }
-
-        //生成订单
-        $record_res = M('OrderRecord')->add($OrderAdd);
-        if(!$record_res)$this->error('订单生成失败，请重试！');
-
-        //添加充值记录
-        $create_res = M('add_money')->add($AddMoneySave);
-        if ($create_res && $record_res){
-
-            $wechat = new WechatController();
+        }else{
+            //生成订单
             // $data = $wechat->payOrder($AddMoneySave,$OrderAdd,$openid);
             $PayCon = [
                 'body'     => '油卡充值',
@@ -265,6 +255,7 @@ class IntegralController extends CommentoilcardController
             ];
             switch ($config['paytype']) {
                 case '1': //微信支付
+                    $wechat = new WechatController();
                     $data = $wechat->_WxPay($OrderAdd,$Member,$PayCon);
                     # code...
                     break;
@@ -274,12 +265,13 @@ class IntegralController extends CommentoilcardController
             }
             if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
             if($data)$data['order_no'] = $AddMoneySave['order_no'];
+            $record_res = M('OrderRecord')->add($OrderAdd);
+            if(!$record_res)$this->error('订单生成失败，请重试！');
+
+            //添加充值记录
+            $create_res = M('add_money')->add($AddMoneySave);
             exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
-
-        }else {
-            exit(json_encode(['msg'=>'创建订单失败！','status'=>500]));
         }
-
 
     }
 
