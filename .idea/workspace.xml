@@ -25,13 +25,13 @@
         <counts>
           <entry key="p12" value="1" />
           <entry key="pem" value="2" />
-          <entry key="php" value="33" />
+          <entry key="php" value="37" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="PHP" value="33" />
+          <entry key="PHP" value="37" />
           <entry key="PLAIN_TEXT" value="4" />
         </counts>
       </usages-collector>
@@ -55,7 +55,7 @@
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="388">
-              <caret line="245" column="37" lean-forward="true" selection-start-line="245" selection-start-column="34" selection-end-line="245" selection-end-column="40" />
+              <caret line="245" column="38" selection-start-line="245" selection-start-column="38" selection-end-line="245" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -63,8 +63,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="2397" column="40" lean-forward="true" selection-start-line="2397" selection-start-column="40" selection-end-line="2397" selection-end-column="40" />
+            <state relative-caret-position="182">
+              <caret line="2396" column="48" selection-start-line="2396" selection-start-column="48" selection-end-line="2396" selection-end-column="48" />
               <folding>
                 <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
               </folding>
@@ -222,19 +222,19 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1547777314486</updated>
-      <workItem from="1547777315644" duration="20932000" />
+      <workItem from="1547777315644" duration="21604000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20932000" />
+    <option name="totallyTimeSpent" value="21604000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15884861" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.114072494" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
@@ -396,22 +396,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="148" column="19" selection-start-line="148" selection-start-column="14" selection-end-line="148" selection-end-column="19" />
-          <folding>
-            <element signature="e#127#150#0#PHP" expanded="true" />
-            <element signature="e#29797#29879#0#PHP" />
-            <element signature="e#30070#30196#0#PHP" />
-            <element signature="e#31000#31962#0#PHP" />
-            <element signature="e#31170#31269#0#PHP" />
-            <element signature="e#4691#5690#0#PHP" />
-            <element signature="e#20491#20551#0#PHP" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/Admin/Controller/PublicController.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
@@ -433,17 +417,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Conf/HJCloudConfig.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2538">
+          <caret line="12" column="12" selection-start-line="12" selection-start-column="12" selection-end-line="12" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3861">
+          <caret line="148" column="19" selection-start-line="148" selection-start-column="14" selection-end-line="148" selection-end-column="19" />
+          <folding>
+            <element signature="e#127#150#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="388">
-          <caret line="245" column="37" lean-forward="true" selection-start-line="245" selection-start-column="34" selection-end-line="245" selection-end-column="40" />
+          <caret line="245" column="38" selection-start-line="245" selection-start-column="38" selection-end-line="245" selection-end-column="38" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="2397" column="40" lean-forward="true" selection-start-line="2397" selection-start-column="40" selection-end-line="2397" selection-end-column="40" />
+        <state relative-caret-position="182">
+          <caret line="2396" column="48" selection-start-line="2396" selection-start-column="48" selection-end-line="2396" selection-end-column="48" />
           <folding>
             <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
           </folding>
