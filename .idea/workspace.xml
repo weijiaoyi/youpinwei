@@ -38,12 +38,12 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="pem" value="11" />
-          <entry key="php" value="660" />
+          <entry key="php" value="668" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PHP" value="660" />
+          <entry key="PHP" value="668" />
           <entry key="PLAIN_TEXT" value="11" />
         </counts>
       </usages-collector>
@@ -89,16 +89,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="479">
-              <caret line="74" column="31" lean-forward="true" selection-start-line="74" selection-start-column="31" selection-end-line="74" selection-end-column="31" />
+            <state relative-caret-position="280">
+              <caret line="71" column="45" lean-forward="true" selection-start-line="71" selection-start-column="45" selection-end-line="71" selection-end-column="45" />
               <folding>
-                <element signature="e#127#147#0#PHP" expanded="true" />
-                <element signature="e#15750#15869#0#PHP" />
-                <element signature="e#15874#25778#0#PHP" />
-                <element signature="e#17487#17596#0#PHP" />
-                <element signature="e#17601#22283#0#PHP" />
+                <element signature="e#127#150#0#PHP" expanded="true" />
                 <element signature="e#29797#29879#0#PHP" />
-                <element signature="e#30684#30863#0#PHP" />
                 <element signature="e#30070#30196#0#PHP" />
                 <element signature="e#31000#31962#0#PHP" />
                 <element signature="e#31170#31269#0#PHP" />
@@ -121,8 +116,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Desktop/PayDemo/PayDemo/PHP/Demo.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="791">
-              <caret line="180" column="18" selection-start-line="180" selection-start-column="4" selection-end-line="180" selection-end-column="18" />
+            <state relative-caret-position="523">
+              <caret line="76" column="21" selection-start-line="76" selection-start-column="21" selection-end-line="76" selection-end-column="21" />
               <folding>
                 <element signature="e#1914#1996#0#PHP" />
                 <element signature="n#RSASign#0;n#Demo#0;n#!!top" />
@@ -151,6 +146,8 @@
       <find>agentApply</find>
       <find>accessToken</find>
       <find>verifyRSASign</find>
+      <find>签名字段</find>
+      <find>setRequestUrl</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -281,12 +278,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1547777314486</updated>
-      <workItem from="1547777315644" duration="17284000" />
+      <workItem from="1547777315644" duration="18105000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17284000" />
+    <option name="totallyTimeSpent" value="18105000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -488,10 +485,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/Admin/Controller/PublicController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$USER_HOME$/Desktop/PayDemo/PayDemo/PHP/Demo.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="791">
-          <caret line="180" column="18" selection-start-line="180" selection-start-column="4" selection-end-line="180" selection-end-column="18" />
+        <state relative-caret-position="523">
+          <caret line="76" column="21" selection-start-line="76" selection-start-column="21" selection-end-line="76" selection-end-column="21" />
           <folding>
             <element signature="e#1914#1996#0#PHP" />
             <element signature="n#RSASign#0;n#Demo#0;n#!!top" />
@@ -502,25 +506,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/Admin/Controller/PublicController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="74" column="31" lean-forward="true" selection-start-line="74" selection-start-column="31" selection-end-line="74" selection-end-column="31" />
+        <state relative-caret-position="280">
+          <caret line="71" column="45" lean-forward="true" selection-start-line="71" selection-start-column="45" selection-end-line="71" selection-end-column="45" />
           <folding>
-            <element signature="e#127#147#0#PHP" expanded="true" />
-            <element signature="e#15750#15869#0#PHP" />
-            <element signature="e#15874#25778#0#PHP" />
-            <element signature="e#17487#17596#0#PHP" />
-            <element signature="e#17601#22283#0#PHP" />
+            <element signature="e#127#150#0#PHP" expanded="true" />
             <element signature="e#29797#29879#0#PHP" />
-            <element signature="e#30684#30863#0#PHP" />
             <element signature="e#30070#30196#0#PHP" />
             <element signature="e#31000#31962#0#PHP" />
             <element signature="e#31170#31269#0#PHP" />
