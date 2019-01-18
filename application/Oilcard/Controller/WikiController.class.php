@@ -55,7 +55,7 @@ class WikiController extends CommentoilcardController
         curl_setopt($con, CURLOPT_TIMEOUT, (int)5);
         $content= curl_exec($con);
         // 处理返回结果
-        $this->handleResponse($content);
+        $this->handleResponse($content,$OrderInfo);
     }
 
     /**
@@ -140,17 +140,21 @@ class WikiController extends CommentoilcardController
      * @param string $res
      * @param Demo $demo
      */
-    public function handleResponse($res) {
+    public function handleResponse($res,$OrderInfo) {
         $res = json_decode($res, true);
         $verifyResult = false;
         $verifyResult = $this->verifyRSASign($res);
         if ($verifyResult){
             // todo::验签成功
-            echo '验签成功';
+            //写入订单表
+            $order = M('order_record')->add($OrderInfo);
+            if (!$order) return [];
+            return $res;
         } else {
             // todo::验签失败
             $this->error('验签失败');
         }
+
     }
 
 }
