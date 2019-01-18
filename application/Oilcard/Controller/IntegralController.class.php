@@ -253,14 +253,14 @@ class IntegralController extends CommentoilcardController
                 'attach'   => '油卡充值',
                 'paymoney' => $config['paymoney']
             ];
+            $PayMent = new WechatController();
             switch ($config['paytype']) {
                 case '1': //微信支付
-                    $wechat = new WechatController();
-                    $data = $wechat->_WxPay($OrderAdd,$Member,$PayCon);
+                    $data = $PayMent->_WxPay($OrderAdd,$Member,$PayCon);
                     # code...
                     break;
                 case '2': //聚合支付
-                    # code...
+                    $data = $PayMent->_HjPay($OrderAdd,$Member,$PayCon);
                     break;
             }
             if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
