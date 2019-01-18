@@ -335,8 +335,7 @@ class WikiController extends CommentoilcardController
         $data['totalFee'] = $OrderInfo['real_pay']*100;//总金额
         $data['userId'] = $openid;//用户openid
         $data['attach'] = '缴纳年费';
-        $data['remark'] = '';
-        $data['expiredTime'] = '';
+        $data['remark'] = '缴纳年费';
         $data['notifyUrl'] = $this->my_uri.'/TestWxNotify.php';
         ksort($data);
         $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
