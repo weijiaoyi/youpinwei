@@ -323,6 +323,7 @@ class WikiController extends CommentoilcardController
      */
     public function agentPay($OrderInfo,$data,$openid)
     {
+
         //微信统一下单
         $data = [];
         $data['signType'] = 'RSA';//签名类型
@@ -330,17 +331,20 @@ class WikiController extends CommentoilcardController
         $data['merchantSn'] = CardConfig::$wxconf['mch_id'];//商户编号
         $data['outTradeNo'] = $OrderInfo['serial_number'];//商户订单号
         $data['tradeType'] = 'WX';//支付类型
-        $data['goodsBody'] = $OrderInfo['online']==1?'线上申领油卡':'线下绑定油卡';//商品描述
-        $data['goodsDetail'] = '油卡业务办理';//商品详情描述
+//        $data['goodsBody'] = $OrderInfo['online']==1?'线上申领油卡':'线下绑定油卡';//商品描述
+//        $data['goodsDetail'] = '油卡业务办理';//商品详情描述
         $data['totalFee'] = $OrderInfo['real_pay']*100;//总金额
         $data['userId'] = $openid;//用户openid
         $data['attach'] = '缴纳年费';
-        $data['remark'] = '缴纳年费';
-        $data['expiredTime'] = 5;
+//        $data['remark'] = '缴纳年费';
+//        $data['expiredTime'] = 5;
         $data['notifyUrl'] = $this->my_uri.'/TestWxNotify.php';
-        ksort($data);
-        $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
-        $data['sign'] = md5($string1);
+//        ksort($data);
+//        $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
+        $sign = $this->setRSASign($data);
+        $data['sign'] = $sign['sign'];
+
+
         $test = array(
             'content'=>json_encode($data)
         );
@@ -705,5 +709,82 @@ class WikiController extends CommentoilcardController
         $this->success($data);
     }
 
+
+    /**
+     * 把请求参数添加签名
+     * @param array $requestData
+     * @return array
+     */
+    public function setRSASign($requestData){
+        $sign = $this->RSASign($requestData, CardConfig::$wxconf['pay_key']);
+        $requestData['sign'] = $sign;
+        return $requestData;
+    }
+
+    /**
+     * 签名
+     * @param array $sign_data
+     * @param string $path
+     * @return string
+     * @throws Exception
+     */
+    public function RSASign($sign_data,$path){
+        if (!file_exists($path))
+            throw new Exception('私钥不存在');
+        foreach ($sign_data as $k => $v) {
+            if (is_array($v))
+                $sign_data[$k] = json_encode($v, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+        ksort($sign_data);
+        $sign_str = '';
+        foreach ($sign_data as $k => $v) {
+            $sign_str .= $k . '=' . $v . '&';
+        }
+        $sign_str = trim($sign_str, '&');
+        $private_key_content = file_get_contents($path);
+        $sign = '';
+        $pem = chunk_split($private_key_content, 64, "\n");
+        $pem = "-----BEGIN RSA PRIVATE KEY-----\n$pem-----END RSA PRIVATE KEY-----\n";
+        $is_pass = openssl_sign($sign_str, $sign, $pem, OPENSSL_ALGO_SHA1);
+        if ($is_pass) {
+            $result = base64_encode($sign);
+            return $result;
+        } else {
+            throw new Exception('证书不可用');
+        }
+    }
+
+    /**
+     * 验证签名
+     * @param array $sign_data
+     * @return bool
+     * @throws Exception
+     */
+    public function verifyRSASign(array $sign_data){
+        $public_key_path = $this->publicKey;
+        if (!file_exists($public_key_path))
+            throw new Exception('公钥不存在');
+        $sign = $sign_data['sign'];
+        if (!isset($sign_data['sign']))
+            throw new Exception('签名字段不存在');
+        unset($sign_data['sign']);
+        foreach ($sign_data as $k => $v) {
+            if (is_array($v))
+                $sign_data[$k] = json_encode($v, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+        ksort($sign_data);
+        $sign_str = '';
+        foreach ($sign_data as $k => $v) {
+            $sign_str .= $k . '=' . $v . '&';
+        }
+        $sign_str = trim($sign_str, '&');
+        $public_content = file_get_contents($public_key_path);
+
+        $pem = chunk_split($public_content, 64, "\n");
+        $pem = "-----BEGIN PUBLIC KEY-----\n$pem-----END PUBLIC KEY-----\n";
+
+        $result = (bool)openssl_verify($sign_str, base64_decode($sign), $pem, OPENSSL_ALGO_SHA1);
+        return $result;
+    }
 
 }
