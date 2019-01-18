@@ -2361,6 +2361,7 @@ class WechatController extends CommentoilcardController
                 $payMoney = $Order['real_pay']*100;
                 break;
         }
+        $orderSn = isset($Order['serial_number'])?$Order['serial_number']:$Order['order_no'];
         //微信统一下单
         $data                         = [];
         $data['appid']                = CardConfig::$wxconf['appid'];
@@ -2371,7 +2372,7 @@ class WechatController extends CommentoilcardController
         $data['body']                 = $PayCon['body'];
         $data['detail']               = isset($PayCon['detail'])?$PayCon['detail']:$PayCon['body'];
         $data['attach']               = isset($PayCon['attach'])?$PayCon['attach']:$PayCon['body'];
-        $data['out_trade_no']         = $Order['order_no'];
+        $data['out_trade_no']         = $orderSn;
         $data['fee_type']             = 'CNY';
         $data['total_fee']            = $payMoney;//$order_item['real_pay'] * 100; // 分
         $data['spbill_create_ip']     = Tool::getClientIp();
