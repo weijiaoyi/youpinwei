@@ -11,6 +11,7 @@ use Common\Lib\Tool;
 use Common\Lib\XML;
 use Endroid\QrCode\QrCode;
 use Oilcard\Conf\CardConfig;
+use Oilcard\Conf\HJCloudConfig;
 use Think\Controller;
 use Think\Log;
 use Org\Util\phpqrcode;
@@ -367,7 +368,7 @@ class WechatController extends CommentoilcardController
                 # code...
                 break;
             case '2': //聚合支付
-                # code...
+                $data = $this->_HjPay($Order,$Member,$PayCon);
                 break;
         }
         if($data){
@@ -2378,4 +2379,63 @@ class WechatController extends CommentoilcardController
         return $data;
     }
 
+    public function _HjPay($Order,$Member,$PayCon){
+        switch ($PayCon['paymoney']) {
+            case '2':
+                $payMoney = 1;
+                break;
+            default:
+                $payMoney = $Order['real_pay']*100;
+                break;
+        }
+        $orderSn = isset($Order['serial_number'])?$Order['serial_number']:$Order['order_no'];
+        //微信统一下单
+        
+        $data                = [];
+        $data['signType']    = 'RSA';
+        $data['appId']       = CardConfig::$wxconf['appid'];
+        $data['merchantSn']  = CardConfig::$wxconf['mch_id'];
+        $data['outTradeNo']  = $orderSn;
+        $data['tradeType']   = 'WX';
+        $data['goodsBody']   = $PayCon['body'];
+        $data['goodsDetail'] = isset($PayCon['detail'])?$PayCon['detail']:$PayCon['body'];
+        $data['feeType']     = 'CNY';
+        $data['totalFee']    = $payMoney;
+        $data['userId']      = $Member['openid'];
+        $data['attach']      = isset($PayCon['attach'])?$PayCon['attach']:$PayCon['body'];
+        $data['remark']      = isset($PayCon['attach'])?$PayCon['attach']:$PayCon['body'];
+        $data['expiredTime'] = '3';
+        $notify_url =$this->_GetNotifyUrl($Order['order_type']);
+        if (empty($notify_url)) exit(json_encode(['msg'=>'创建订单失败！','status'=>500]));
+        $data['notifyUrl'] = $notify_url;
+        p($data);
+        // 实例化Demo类
+        $hjpay = new HJCloudConfig();
+        
+
+        try {
+            // 设置秘钥文件
+            $hjpay->setPrivateKey('MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALqZX4pzN6jxJbNbXhuz+Drh8Obt7ekDrEPz2SK0IKoay6SDPiJMJXLqh69doiWjP2pim6/JrrsuBr3QFMjGIx0EnBSf354qorWNhkj+lkAcQnQ98NlziTgTg7vx2o3piCcJAa7i2WhbLegs1xtatwSeEY/weqJwZh7dOxmelEsJAgMBAAECgYAxNW9HsLjV+bpKgWbhAWYOCTWhgM+D6q8MQItbposSsPxRRzckjlY15vmfWp7/M/zuTlDmW9aTkEDA39YLWI07jsmaGOA8RbPinswzIWnowNVFQag/n21tpAL2/CGNkpe+7F667nZyD7htCYwz6ARBMUM+eH52MNEMcPSbOBM9PQJBAPUav3oCgnYx/F8nLzlW9+gSOD1oCK5GQUC1+TTwaPUfZeCl8CeHT/7DgdvyUUMm9CyEzhacl4xZPzWN+ijZIF8CQQDC5NfMtDHSCGknwMnZb4mxTpzrby+pnwVvxmJeOg+QTafAwHqIhh9wVLQNEJy0PojYOMpjA9GE1Wms537Pnq2XAkEArCkij3/NxVms6+UpHXyB2ydZC4DUgBzm3p4zMkUfY/Wu6JGF0y4POWJ4B1b4T1PANLj/zRAmvrU9Wc+lBCYmvwJBALv94esjJatjUYt2+z0xya+uFM9EwMTtD2FyCxC5EKoxPc8/2vI17b189vBjRcTXTUjD/vTjigaHlRejdT7v4KECQA2DEOHgZv39PmNIZJekcfNGXPrdHPU0eAEtanMCr6hTiN+jO4x66rrGXIa4aoZ3ezXq/sASLm4zuGuF65m9bnc=');
+
+            $hjpay->setPublicKey('MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6mV+Kczeo8SWzW14bs/g64fDm7e3pA6xD89kitCCqGsukgz4iTCVy6oevXaIloz9qYpuvya67Lga90BTIxiMdBJwUn9+eKqK1jYZI/pZAHEJ0PfDZc4k4E4O78dqN6YgnCQGu4tloWy3oLNcbWrcEnhGP8HqicGYe3TsZnpRLCQIDAQAB');
+            // 设置请求参数
+            $hjpay->setRequestData($data);
+            // 设置请求地址
+            $hjpay->setRequestUrl('https://open.smart4s.com/Api/Service/Pay/Mode/JSApi/tradePayJSApi');
+            // 发起请求
+            $res = $hjpay->doRequest();
+            $res = json_decode($res, true);
+            $verifyResult = false;
+            $verifyResult = $hjpay->verifyRSASign($res);
+            p($hjpay);
+            p($res);
+            var_dump($verifyResult);
+
+            // 处理返回结果
+        } catch (Exception $e) {
+            //todo::异常处理
+            p($e->getMessage());
+        }
+        exit;
+    }
 }
