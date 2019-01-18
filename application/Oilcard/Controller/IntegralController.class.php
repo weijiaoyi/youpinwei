@@ -255,14 +255,25 @@ class IntegralController extends CommentoilcardController
         $create_res = M('add_money')->add($AddMoneySave);
         if ($create_res && $record_res){
 
-            /*$wechat = new WechatController();
-            $data = $wechat->payOrder($AddMoneySave,$OrderAdd,$openid);
-            $data['order_no'] = $AddMoneySave['order_no'];*/
-            $Wiki = new WikiController();
-            $data = $Wiki->payOrder($AddMoneySave,$OrderAdd,$openid);
-            $data['order_no'] = $AddMoneySave['order_no'];
-            
+            $wechat = new WechatController();
+            // $data = $wechat->payOrder($AddMoneySave,$OrderAdd,$openid);
+            $PayCon = [
+                'body'     => '油卡充值',
+                'detail'   => '油卡充值',
+                'attach'   => '油卡充值',
+                'paymoney' => $config['paymoney']
+            ];
+            switch ($config['paytype']) {
+                case '1': //微信支付
+                    $data = $wechat->_WxPay($OrderAdd,$Member,$PayCon);
+                    # code...
+                    break;
+                case '2': //聚合支付
+                    # code...
+                    break;
+            }
             if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
+            if($data)$data['order_no'] = $AddMoneySave['order_no'];
             exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
 
         }else {

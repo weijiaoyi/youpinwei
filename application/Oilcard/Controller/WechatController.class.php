@@ -2311,4 +2311,110 @@ class WechatController extends CommentoilcardController
         return $output;
     }
 
+    /**
+     * 设置异步回调返回地址
+     * @Author 老王
+     * @创建时间   2019-01-18
+     * @param  [type]     $type [description]
+     * @return [type]           [description]
+     */
+    public function _GetNotifyUrl($type){
+        $notify_url = '';
+        $Myurl = 'http://'.$_SERVER['HTTP_HOST'];
+        switch ($type) {
+            case '1'://1，申领
+                //wxAgentNoticePay
+                $notify_url = $Myurl.'/agentMoneyNotify.php';
+                break;
+            case '3': //3，充值
+                //wxNoticePay
+                $notify_url = $Myurl.'/addMoneyNotify.php';
+                break;
+            case '4'://4升级
+                //upgradeNoticePay
+                $notify_url = $Myurl.'/upgradeNotify.php';
+                break;
+            case '5': //5续费
+                //upgradeNoticePay
+                $notify_url = $Myurl.'/upgradeNotify.php';
+                break;
+        }
+        return $notify_url;
+    }
+
+    /**
+     * 微信支付
+     * @Author 老王
+     * @创建时间   2019-01-18
+     * @param  [type]     $Order  [订单信息]
+     * @param  [type]     $Member [用户信息]
+     * @param  [type]     $PayCon [支付信息]
+     * @return [type]             [description]
+     */
+    public function _WxPay($Order,$Member,$PayCon)
+    {
+        switch ($PayCon['paymoney']) {
+            case '2':
+                $payMoney = 1;
+                break;
+            default:
+                $payMoney = $Order['real_pay']*100;
+                break;
+        }
+        //微信统一下单
+        $data                         = [];
+        $data['appid']                = CardConfig::$wxconf['appid'];
+        $data['mch_id']               = CardConfig::$wxconf['mch_id'];
+        $data['device_info']          = 'WEB';
+        $data['nonce_str']            = Tool::randomStr(20);
+        $data['sign_type']            = 'MD5';
+        $data['body']                 = $PayCon['body'];
+        $data['detail']               = isset($PayCon['detail'])?$PayCon['detail']:$PayCon['body'];
+        $data['attach']               = isset($PayCon['attach'])?$PayCon['attach']:$PayCon['body'];
+        $data['out_trade_no']         = $Order['order_no'];
+        $data['fee_type']             = 'CNY';
+        $data['total_fee']            = $payMoney;//$order_item['real_pay'] * 100; // 分
+        $data['spbill_create_ip']     = Tool::getClientIp();
+        $data['time_start']           = date('YmdHis');
+        $data['time_expire']          = date('YmdHis',time()+7200);
+        //        $data['notify_url'] = $this->my_uri.'/index.php?g=oilcard&m=wechat&a=wxNoticePay';
+        $notify_url =$this->_GetNotifyUrl($Order['order_type']);
+        if (empty($notify_url)) exit(json_encode(['msg'=>'创建订单失败！','status'=>500]));
+        $data['notify_url']           = $notify_url;
+        $data['trade_type']           = 'JSAPI';
+        $data['openid']               = $Member['openid'];
+        ksort($data);
+        $string1                      = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
+        $data['sign']                 = md5($string1);
+        $content                      = XML::build($data);
+        $ch_url                       = $this->pay_uri.'/pay/unifiedorder';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $ch_url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        $content = curl_exec($ch);
+        curl_close($ch);
+        Log::record('微信统一下单返回:'.$content);
+        $data = [];
+        $obj_arr = XML::parse($content);
+        if (!$obj_arr){
+            return $data;
+        }
+        if($obj_arr['result_code'] == 'SUCCESS') {
+            $data['appId'] = CardConfig::$wxconf['appid'];
+            $data['timeStamp'] = time();
+            $data['nonceStr'] = Tool::randomStr(20);
+            $data['package'] = 'prepay_id='.$obj_arr['prepay_id'];
+            $data['signType'] = 'MD5';
+            ksort($data);
+            $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
+            $data['paySign'] = md5($string1);
+        }
+        return $data;
+    }
+
 }
