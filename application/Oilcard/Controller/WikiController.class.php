@@ -336,11 +336,15 @@ class WikiController extends CommentoilcardController
         $data['userId'] = $openid;//用户openid
         $data['attach'] = '缴纳年费';
         $data['remark'] = '缴纳年费';
+        $data['expiredTime'] = 5;
         $data['notifyUrl'] = $this->my_uri.'/TestWxNotify.php';
         ksort($data);
         $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
         $data['sign'] = md5($string1);
-
+        $test = array(
+            'content'=>json_encode($data)
+        );
+        M('testt')->add($test);
         $url = $this->pay_uri.'/Api/Service/Pay/Mode/JSApi/tradePayJSApi';
         $con = curl_init($url);
         curl_setopt($con, CURLOPT_HEADER, false);
@@ -360,29 +364,6 @@ class WikiController extends CommentoilcardController
             'content'=>json_encode($content)
         );
         M('testt')->add($test);
-        $obj_arr = XML::parse($content);
-
-
-        if (!$obj_arr){
-            return $data;
-        }
-
-        $order = false;
-        if($obj_arr['result_code'] == 'SUCCESS') {
-            $data['appId'] = CardConfig::$wxconf['appid'];
-            $data['timeStamp'] = time();
-            $data['nonceStr'] = Tool::randomStr(20);
-            $data['package'] = 'prepay_id='.$obj_arr['prepay_id'];
-            $data['signType'] = 'MD5';
-            ksort($data);
-            $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
-            $data['paySign'] = md5($string1);
-            //写入订单表
-            $order = M('order_record')->add($OrderInfo);
-        }
-        if (!$order) return [];
-        return $data;
-
 
     }
 
