@@ -2386,7 +2386,7 @@ class WechatController extends CommentoilcardController
                 $payMoney = 1;
                 break;
             default:
-                $payMoney = $Order['real_pay']*100;
+                $payMoney = $Order['real_pay'];
                 break;
         }
         $orderSn = isset($Order['serial_number'])?$Order['serial_number']:$Order['order_no'];

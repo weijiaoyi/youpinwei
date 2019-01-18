@@ -230,15 +230,30 @@ class ApplyController extends CommentoilcardController
         
         /*$wechat = new WechatController();
         $data = $wechat->agentPay($OrderInfo,$data,$openid);*/
+        $PayCon = [
+                'body'     => '油卡充值',
+                'detail'   => '油卡充值',
+                'attach'   => '油卡充值',
+                'paymoney' => $config['paymoney']
+            ];
+        $PayMent = new WechatController();
+        switch ($config['paytype']) {
+            case '1': //微信支付
+                $data = $PayMent->_WxPay($OrderInfo,$Member,$PayCon);
+                # code...
+                break;
+            case '2': //聚合支付
+                $data = $PayMent->_HjPay($OrderInfo,$Member,$PayCon);
+                break;
+        }
 
-
-        $Wiki = new WikiController();
-        $data = $Wiki->agentPay($OrderInfo,$data,$openid);
+        // $Wiki = new WikiController();
+        // $data = $Wiki->agentPay($OrderInfo,$data,$openid);
 
         if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
 //        $Wechat = A('Wechat');
 //        $Wechat->templateMessage($openid,$data,1,$from_id);
-//        exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
+       exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
     }
 
     /**
