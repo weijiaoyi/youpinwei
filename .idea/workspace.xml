@@ -38,12 +38,12 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="pem" value="11" />
-          <entry key="php" value="684" />
+          <entry key="php" value="689" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PHP" value="684" />
+          <entry key="PHP" value="689" />
           <entry key="PLAIN_TEXT" value="11" />
         </counts>
       </usages-collector>
@@ -54,8 +54,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2583">
+            <state relative-caret-position="153">
               <caret line="262" column="34" selection-start-line="262" selection-start-column="34" selection-end-line="262" selection-end-column="34" />
+              <folding>
+                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -63,15 +66,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="61" column="10" lean-forward="true" selection-start-line="61" selection-start-column="10" selection-end-line="61" selection-end-column="10" />
+            <state relative-caret-position="290">
+              <caret line="136" lean-forward="true" selection-start-line="136" selection-end-line="136" />
               <folding>
                 <element signature="e#127#150#0#PHP" expanded="true" />
                 <element signature="e#29797#29879#0#PHP" />
                 <element signature="e#30070#30196#0#PHP" />
                 <element signature="e#31000#31962#0#PHP" />
                 <element signature="e#31170#31269#0#PHP" />
-                <element signature="e#32072#33105#0#PHP" />
                 <element signature="e#20491#20551#0#PHP" />
               </folding>
             </state>
@@ -119,9 +121,9 @@
       <find>CardConfig::$wxconf['pay_key']</find>
       <find>agentApply</find>
       <find>verifyRSASign</find>
-      <find>accessToken</find>
       <find>签名字段</find>
       <find>setRequestUrl</find>
+      <find>accessToken</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -252,12 +254,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1547777314486</updated>
-      <workItem from="1547777315644" duration="18783000" />
+      <workItem from="1547777315644" duration="19231000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18783000" />
+    <option name="totallyTimeSpent" value="19231000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -412,13 +414,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2583">
-          <caret line="262" column="34" selection-start-line="262" selection-start-column="34" selection-end-line="262" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/openssl/openssl.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="298">
@@ -461,17 +456,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="262" column="34" selection-start-line="262" selection-start-column="34" selection-end-line="262" selection-end-column="34" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="61" column="10" lean-forward="true" selection-start-line="61" selection-start-column="10" selection-end-line="61" selection-end-column="10" />
+        <state relative-caret-position="290">
+          <caret line="136" lean-forward="true" selection-start-line="136" selection-end-line="136" />
           <folding>
             <element signature="e#127#150#0#PHP" expanded="true" />
             <element signature="e#29797#29879#0#PHP" />
             <element signature="e#30070#30196#0#PHP" />
             <element signature="e#31000#31962#0#PHP" />
             <element signature="e#31170#31269#0#PHP" />
-            <element signature="e#32072#33105#0#PHP" />
             <element signature="e#20491#20551#0#PHP" />
           </folding>
         </state>
