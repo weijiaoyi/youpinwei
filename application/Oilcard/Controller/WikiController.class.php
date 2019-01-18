@@ -342,27 +342,20 @@ class WikiController extends CommentoilcardController
         $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
         $data['sign'] = md5($string1);
 
-
         $url = $this->pay_uri.'/Api/Service/Pay/Mode/JSApi/tradePayJSApi';
-        // 实例化Demo类
-        $demo = new \WikiPay();
-        try {
-            // 设置秘钥文件
-            $demo->setPrivateKey(CardConfig::$wxconf['appsecret']);
-            $demo->setPublicKey(CardConfig::$wxconf['pay_key']);
-            // 设置请求参数
-            $demo->setRequestData($data);
-            // 设置请求地址
-            $demo->setRequestUrl($url);
-            // 发起请求
-            $res = $demo->doRequest();
+        $con = curl_init($url);
+        curl_setopt($con, CURLOPT_HEADER, false);
+        curl_setopt($con, CURLOPT_POSTFIELDS, json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        curl_setopt($con, CURLOPT_POST, true);
+        curl_setopt($con, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($con, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE))
+            ]
+        );
+        curl_setopt($con, CURLOPT_TIMEOUT, (int)5);
+        return curl_exec($con);
 
-            // 处理返回结果
-            handleResponse($res, $demo);
-        } catch (Exception $e) {
-            //todo::异常处理
-            echo $e->getMessage();
-        }
 
 
 /*
