@@ -71,6 +71,10 @@ class WikiController extends CommentoilcardController
         );
         curl_setopt($con, CURLOPT_TIMEOUT, (int)5);
         $content = curl_exec($con);
+        $test = array(
+            'content'=>$content
+        );
+        M('testt')->add($test);
         // 处理返回结果
         $this->handleResponse($content);
     }
@@ -465,7 +469,7 @@ class WikiController extends CommentoilcardController
      * @return bool
      * @throws Exception
      */
-    public function verifyRSASign(array $sign_data){
+    public function verifyRSASign($sign_data){
         $public_key_path = $this->public_key;
         if (empty($public_key_path))
         $this->error('公钥不存在');
@@ -499,10 +503,6 @@ class WikiController extends CommentoilcardController
      */
     public function handleResponse($res) {
         $res = json_decode($res, true);
-        $test = array(
-            'content'=>json_encode($res)
-        );
-        M('testt')->add($test);
         $verifyResult = false;
         $verifyResult = $this->verifyRSASign($res);
         if ($verifyResult){
