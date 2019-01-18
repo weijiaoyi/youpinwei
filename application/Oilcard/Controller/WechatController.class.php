@@ -2393,8 +2393,8 @@ class WechatController extends CommentoilcardController
         
         $data                = [];
         $data['signType']    = 'RSA';
-        $data['appId']       = CardConfig::$wxconf['appid'];
-        $data['merchantSn']  = CardConfig::$wxconf['mch_id'];
+        $data['appId']       = 'C9q255qIg1Zp72yI';
+        $data['merchantSn']  = 'PHT2017000000002';
         $data['outTradeNo']  = $orderSn;
         $data['tradeType']   = 'WX';
         $data['goodsBody']   = $PayCon['body'];
