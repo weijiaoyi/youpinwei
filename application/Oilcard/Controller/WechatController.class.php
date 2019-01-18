@@ -1094,6 +1094,7 @@ class WechatController extends CommentoilcardController
                     'InsertNote' =>'油卡申领',
                     'input'      =>$obj_arr,
                     'data'       =>$data,
+                    'possst'       =>I(),
                 )
             )
         );
@@ -2390,7 +2391,6 @@ class WechatController extends CommentoilcardController
         }
         $orderSn = isset($Order['serial_number'])?$Order['serial_number']:$Order['order_no'];
         //微信统一下单
-        
         $data                = [];
         $data['signType']    = 'RSA';
         $data['appId']       = 'C9q255qIg1Zp72yI';
@@ -2408,7 +2408,6 @@ class WechatController extends CommentoilcardController
         $notify_url =$this->_GetNotifyUrl($Order['order_type']);
         if (empty($notify_url)) exit(json_encode(['msg'=>'创建订单失败！','status'=>500]));
         $data['notifyUrl'] = $notify_url;
-        p($data);
         // 实例化Demo类
         $hjpay = new HJCloudConfig();
         
@@ -2427,14 +2426,16 @@ class WechatController extends CommentoilcardController
             $res = json_decode($res, true);
             $verifyResult = false;
             $verifyResult = $hjpay->verifyRSASign($res);
-            p($hjpay);
-            p($res);
-            var_dump($verifyResult);
-
+            if ($verifyResult) {
+                return $res['data'];
+            }else{
+                exit(json_encode(['msg'=>'签名验证失败','status'=>500]));
+            }
+            
             // 处理返回结果
         } catch (Exception $e) {
             //todo::异常处理
-            p($e->getMessage());
+            exit(json_encode(['msg'=>'支付异常：'.$e->getMessage(),'status'=>500]));
         }
         exit;
     }
