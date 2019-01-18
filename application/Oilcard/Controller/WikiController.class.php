@@ -42,16 +42,8 @@ class WikiController extends CommentoilcardController
         $data['attach'] = '缴纳年费';
         $data['notifyUrl'] = $this->my_uri;
         $sign = $this->setRSASign($data);
-        $test = array(
-            'content'=>json_encode($sign)
-        );
-        M('testt')->add($test);
-        $test = array(
-            'content'=> $this->pay_uri
-        );
-        M('testt')->add($test);
 
-        $con = curl_init($this->pay_uri);
+        $con = curl_init((string)$this->pay_uri);
         curl_setopt($con, CURLOPT_HEADER, false);
         curl_setopt($con, CURLOPT_POSTFIELDS, json_encode($sign, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         curl_setopt($con, CURLOPT_POST, true);
@@ -62,7 +54,9 @@ class WikiController extends CommentoilcardController
             ]
         );
         curl_setopt($con, CURLOPT_TIMEOUT, (int)5);
-        $content = curl_exec($con);
+        return curl_exec($con);
+
+
         $test = array(
             'content'=>$content
         );
