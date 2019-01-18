@@ -72,7 +72,7 @@ class WikiController extends CommentoilcardController
         curl_setopt($con, CURLOPT_TIMEOUT, (int)5);
         $content = curl_exec($con);
         // 处理返回结果
-        handleResponse($content);
+        $this->handleResponse($content);
     }
 
 
@@ -497,7 +497,7 @@ class WikiController extends CommentoilcardController
      * @param string $res
      * @param Demo $demo
      */
-    function handleResponse($res) {
+    public function handleResponse($res) {
         $res = json_decode($res, true);
         $test = array(
             'content'=>json_encode($res)

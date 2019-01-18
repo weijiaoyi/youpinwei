@@ -38,12 +38,12 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="pem" value="11" />
-          <entry key="php" value="649" />
+          <entry key="php" value="657" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PHP" value="649" />
+          <entry key="PHP" value="657" />
           <entry key="PLAIN_TEXT" value="11" />
         </counts>
       </usages-collector>
@@ -89,8 +89,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="502" column="39" selection-start-line="502" selection-start-column="39" selection-end-line="502" selection-end-column="39" />
+            <state relative-caret-position="587">
+              <caret line="509" column="24" lean-forward="true" selection-start-line="509" selection-start-column="24" selection-end-line="509" selection-end-column="24" />
               <folding>
                 <element signature="e#127#147#0#PHP" expanded="true" />
                 <element signature="e#15750#15869#0#PHP" />
@@ -282,12 +282,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1547777314486</updated>
-      <workItem from="1547777315644" duration="16982000" />
+      <workItem from="1547777315644" duration="17058000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16982000" />
+    <option name="totallyTimeSpent" value="17058000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -513,8 +513,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="502" column="39" selection-start-line="502" selection-start-column="39" selection-end-line="502" selection-end-column="39" />
+        <state relative-caret-position="587">
+          <caret line="509" column="24" lean-forward="true" selection-start-line="509" selection-start-column="24" selection-end-line="509" selection-end-column="24" />
           <folding>
             <element signature="e#127#147#0#PHP" expanded="true" />
             <element signature="e#15750#15869#0#PHP" />
