@@ -325,7 +325,7 @@ class WikiController extends CommentoilcardController
     {
         //微信统一下单
         $data = [];
-        $data['signType'] = 'MD5';//签名类型
+        $data['signType'] = 'RSA';//签名类型
         $data['appId'] = CardConfig::$wxconf['appid'];//开发者APPid
         $data['merchantSn'] = CardConfig::$wxconf['mch_id'];//商户编号
         $data['outTradeNo'] = $OrderInfo['serial_number'];//商户订单号
