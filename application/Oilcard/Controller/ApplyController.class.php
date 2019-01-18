@@ -228,12 +228,17 @@ class ApplyController extends CommentoilcardController
 
         $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
         
-        $wechat = new WechatController();
-        $data = $wechat->agentPay($OrderInfo,$data,$openid);
+        /*$wechat = new WechatController();
+        $data = $wechat->agentPay($OrderInfo,$data,$openid);*/
+
+
+        $Wiki = new WikiController();
+        $data = $Wiki->agentPay($OrderInfo,$data,$openid);
+
         if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
-        $Wechat = A('Wechat');
-        $Wechat->templateMessage($openid,$data,1,$from_id);
-        exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
+//        $Wechat = A('Wechat');
+//        $Wechat->templateMessage($openid,$data,1,$from_id);
+//        exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
     }
 
     /**

@@ -1,7 +1,472 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bb53f77a-e695-4a02-b0bb-18fb8a070d14" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1761719293">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="php" value="18" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="PHP" value="18" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="php" value="355" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="PHP" value="355" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="226">
+              <caret line="800" lean-forward="true" selection-start-line="800" selection-end-line="800" />
+              <folding>
+                <element signature="e#946#1417#0#PHP" />
+                <element signature="e#1424#1953#0#PHP" />
+                <element signature="e#1959#4769#0#PHP" />
+                <element signature="e#4808#7222#0#PHP" />
+                <element signature="e#9966#11281#0#PHP" />
+                <element signature="e#11288#11397#0#PHP" />
+                <element signature="e#11402#16084#0#PHP" />
+                <element signature="e#16123#18281#0#PHP" />
+                <element signature="e#18288#18399#0#PHP" />
+                <element signature="e#18404#32995#0#PHP" />
+                <element signature="e#33002#33121#0#PHP" />
+                <element signature="e#33126#43030#0#PHP" />
+                <element signature="e#43036#43377#0#PHP" />
+                <element signature="e#43383#43412#0#PHP" />
+                <element signature="e#43417#44145#0#PHP" />
+                <element signature="e#44152#44176#0#PHP" />
+                <element signature="e#44181#45942#0#PHP" />
+                <element signature="e#61275#64260#0#PHP" />
+                <element signature="e#64792#72006#0#PHP" />
+                <element signature="e#79375#80317#0#PHP" />
+                <element signature="e#80629#89890#0#PHP" />
+                <element signature="e#81009#81053#0#PHP" />
+                <element signature="e#82076#83541#0#PHP" />
+                <element signature="e#84163#85624#0#PHP" />
+                <element signature="e#85695#86743#0#PHP" />
+                <element signature="e#86752#87800#0#PHP" />
+                <element signature="e#87801#87810#0#PHP" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/agentMoneyNotify.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="10" column="32" lean-forward="true" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="145">
+              <caret line="206" column="53" selection-start-line="206" selection-start-column="50" selection-end-line="206" selection-end-column="53" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="223">
+              <caret line="348" lean-forward="true" selection-start-line="348" selection-end-line="348" />
+              <folding>
+                <element signature="e#127#147#0#PHP" expanded="true" />
+                <element signature="e#2847#3328#0#PHP" />
+                <element signature="e#3104#3215#0#PHP" />
+                <element signature="e#3220#17811#0#PHP" />
+                <element signature="e#15531#16089#0#PHP" />
+                <element signature="e#15750#15869#0#PHP" />
+                <element signature="e#15874#25778#0#PHP" />
+                <element signature="e#17487#17596#0#PHP" />
+                <element signature="e#17601#22283#0#PHP" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="338">
+              <caret line="260" column="17" selection-start-line="260" selection-start-column="12" selection-end-line="260" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TestWxNotify.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="10" column="27" lean-forward="true" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="27" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>qrcode</find>
+      <find>wxd16b20528d23aff8</find>
+      <find>agentPay</find>
+      <find>wxNoticePay</find>
+      <find>createAddMoneyOrder</find>
+      <find>wxAgentNoticePay</find>
+      <find>agentApply</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/TestWxNotify.php" />
+        <option value="$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php" />
+        <option value="$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php" />
+        <option value="$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths>
+      <path value="$PROJECT_DIR$/H/load/package.json" />
+    </packageJsonPaths>
+  </component>
+  <component name="PhpServers">
+    <servers />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/overtrue/wechat" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/vendor/endroid/qr-code" />
+      <path value="$PROJECT_DIR$/vendor/pimple/pimple" />
+      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php54" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php55" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/psr-http-message-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/vendor/ircmaxell/password-compat" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/overtrue/pinyin" />
+      <path value="$PROJECT_DIR$/vendor/overtrue/socialite" />
+    </include_path>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="48" />
+    <option name="y" value="73" />
+    <option name="width" value="1460" />
+    <option name="height" value="909" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="youpinwei" type="b2602c69:ProjectViewProjectNode" />
+              <item name="youpinwei" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="youpinwei" type="b2602c69:ProjectViewProjectNode" />
+              <item name="youpinwei" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="youpinwei" type="b2602c69:ProjectViewProjectNode" />
+              <item name="youpinwei" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="Oilcard" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="youpinwei" type="b2602c69:ProjectViewProjectNode" />
+              <item name="youpinwei" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="Oilcard" type="462c0819:PsiDirectoryNode" />
+              <item name="Controller" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
   <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bb53f77a-e695-4a02-b0bb-18fb8a070d14" name="Default Changelist" comment="" />
+      <created>1547777314486</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1547777314486</updated>
+      <workItem from="1547777315644" duration="5855000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="5855000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Favorites" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15884861" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32899022" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="Favorites" order="0" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.15884861" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="1" />
+      <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Database Changes" order="3" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="4" />
+      <window_info anchor="bottom" id="Message" order="5" />
+      <window_info anchor="bottom" id="Find" order="6" weight="0.32899022" />
+      <window_info anchor="bottom" id="Run" order="7" />
+      <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="10" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="11" />
+      <window_info anchor="right" id="Database" order="0" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php</url>
+          <line>1057</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard/basic.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="449">
+          <caret line="144" column="9" selection-start-line="144" selection-start-column="9" selection-end-line="144" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/AgentController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-31" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Conf/CardConfig.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Common/Lib/Tool.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="16" column="27" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addMoneyNotify.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/simplewind/Core/Library/Think/Log.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="50" column="20" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestWxNotify.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="10" column="27" lean-forward="true" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="260" column="17" selection-start-line="260" selection-start-column="12" selection-end-line="260" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/agentMoneyNotify.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="10" column="32" lean-forward="true" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="800" lean-forward="true" selection-start-line="800" selection-end-line="800" />
+          <folding>
+            <element signature="e#946#1417#0#PHP" />
+            <element signature="e#1424#1953#0#PHP" />
+            <element signature="e#1959#4769#0#PHP" />
+            <element signature="e#4808#7222#0#PHP" />
+            <element signature="e#9966#11281#0#PHP" />
+            <element signature="e#11288#11397#0#PHP" />
+            <element signature="e#11402#16084#0#PHP" />
+            <element signature="e#16123#18281#0#PHP" />
+            <element signature="e#18288#18399#0#PHP" />
+            <element signature="e#18404#32995#0#PHP" />
+            <element signature="e#33002#33121#0#PHP" />
+            <element signature="e#33126#43030#0#PHP" />
+            <element signature="e#43036#43377#0#PHP" />
+            <element signature="e#43383#43412#0#PHP" />
+            <element signature="e#43417#44145#0#PHP" />
+            <element signature="e#44152#44176#0#PHP" />
+            <element signature="e#44181#45942#0#PHP" />
+            <element signature="e#61275#64260#0#PHP" />
+            <element signature="e#64792#72006#0#PHP" />
+            <element signature="e#79375#80317#0#PHP" />
+            <element signature="e#80629#89890#0#PHP" />
+            <element signature="e#81009#81053#0#PHP" />
+            <element signature="e#82076#83541#0#PHP" />
+            <element signature="e#84163#85624#0#PHP" />
+            <element signature="e#85695#86743#0#PHP" />
+            <element signature="e#86752#87800#0#PHP" />
+            <element signature="e#87801#87810#0#PHP" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="206" column="53" selection-start-line="206" selection-start-column="50" selection-end-line="206" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="348" lean-forward="true" selection-start-line="348" selection-end-line="348" />
+          <folding>
+            <element signature="e#127#147#0#PHP" expanded="true" />
+            <element signature="e#2847#3328#0#PHP" />
+            <element signature="e#3104#3215#0#PHP" />
+            <element signature="e#3220#17811#0#PHP" />
+            <element signature="e#15531#16089#0#PHP" />
+            <element signature="e#15750#15869#0#PHP" />
+            <element signature="e#15874#25778#0#PHP" />
+            <element signature="e#17487#17596#0#PHP" />
+            <element signature="e#17601#22283#0#PHP" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
