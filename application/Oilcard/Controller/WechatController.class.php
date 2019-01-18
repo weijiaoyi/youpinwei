@@ -1108,15 +1108,15 @@ class WechatController extends CommentoilcardController
         $cur_sign = strtoupper(MD5($string1));
         if($cur_sign==$sign) {
             if($obj_arr['result_code']=='SUCCESS'){
-                
-            
+
+
 
                 $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
                 $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
                 $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no'],'order_status'=>1])->find();
                 if (!$OrderInfo){
-                    echo 'FAIL';exit;  
-                } 
+                    echo 'FAIL';exit;
+                }
                 $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
                 $Card = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->find();
                 $package = M('packages')->where(['pid'=>$OrderInfo['pid']])->find();
@@ -1130,7 +1130,7 @@ class WechatController extends CommentoilcardController
                 $CardSave = [
                     'pkgid'      =>$package['pid'],
                     'updatetime' =>$NowTime,
-                    'end_time'   => $EndTime 
+                    'end_time'   => $EndTime
                 ];
                 switch ($OrderInfo['order_type']) {
                     //升级 ->交会员费 ->把卡变成所购买的登记的油卡
@@ -1161,7 +1161,7 @@ class WechatController extends CommentoilcardController
                 }else{
                     $insert['content']='订单修改失败';
                     M('testt')->add($insert);
-                    echo 'FAIL';exit;    
+                    echo 'FAIL';exit;
                 }
             }else{
                 $insert['content']='支付失败';
@@ -1270,7 +1270,7 @@ class WechatController extends CommentoilcardController
 
     }
 
-   
+
     /**
      * 银牌拉普通
      * $openid 银牌openid
@@ -1317,9 +1317,9 @@ class WechatController extends CommentoilcardController
             'end_time'=>date("Y-m-d H:i:s",strtotime('+1year'))
         ];
         M('agency_preferences')->add($agency_data);
-        
+
         M('agent_relation')->where("openid='$openid'")->save(['agent_id'=>$a]);
-            
+
     }
 
 
@@ -1423,7 +1423,7 @@ class WechatController extends CommentoilcardController
      * $recharge 充值金额
      */
     public function GoldPullOrdinary($openid,$recharge){
-   
+
         //查找上家的id和上家的openid
         $agent_house=M('agent_relation')->where("openid='$openid'")->find();
         $agent_id=$agent_house['agent_id'];//上家的id
@@ -1458,7 +1458,7 @@ class WechatController extends CommentoilcardController
         M('agency_preferences')->add($agency_data);
     }
 
-    
+
 
     /**
      * 新的代理拉vip
@@ -1466,7 +1466,7 @@ class WechatController extends CommentoilcardController
      * $recharge vip充值的年费 一次性的
      */
     public function AgentPullVip($openid,$recharge){
-        
+
         //查找上家的id和上家的openid
         $agent_house=M('agent_relation')->where("openid='$openid'")->find();
         $agent_id=$agent_house['agent_id'];//上家的id
@@ -1508,8 +1508,8 @@ class WechatController extends CommentoilcardController
     public function VipPullVipNew($openid,$recharge){
         $recharge=$recharge-20;
 
-        
-       
+
+
         $plainprofit=M('setting')->getField('scroll');
         // $agent_money=$recharge/100*$agent_quota;//代理的奖励钱
 
@@ -1571,7 +1571,7 @@ class WechatController extends CommentoilcardController
                 'order_type'=>2
             ];
             M('agent_earnings')->add($earnings_data);
-            
+
             log::record("添加agent——earnings数据结果");
             //更新代理商表
             $agent_data=[
@@ -1582,7 +1582,7 @@ class WechatController extends CommentoilcardController
             ];
             M('agent')->where("id='$agent_id'")->save($agent_data);
 
-            
+
             M('agent_relation')->where("openid='$openid'")->save(['agent_id'=>$a]);
 
         }
@@ -2394,7 +2394,8 @@ class WechatController extends CommentoilcardController
         $data                = [];
         $data['signType']    = 'RSA';
         $data['appId']       = 'C9q255qIg1Zp72yI';
-        $data['merchantSn']  = 'PHT2017000000002';
+//        $data['merchantSn']  = 'PHT2017000000002';测试商户编号
+        $data['merchantSn']  = '2019000010305';
         $data['outTradeNo']  = $orderSn;
         $data['tradeType']   = 'WX';
         $data['goodsBody']   = $PayCon['body'];
@@ -2410,6 +2411,7 @@ class WechatController extends CommentoilcardController
         $data['notifyUrl'] = $notify_url;
         // 实例化Demo类
         $hjpay = new HJCloudConfig();
+        
         try {
             // 设置秘钥文件
             $hjpay->setPrivateKey('MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALqZX4pzN6jxJbNbXhuz+Drh8Obt7ekDrEPz2SK0IKoay6SDPiJMJXLqh69doiWjP2pim6/JrrsuBr3QFMjGIx0EnBSf354qorWNhkj+lkAcQnQ98NlziTgTg7vx2o3piCcJAa7i2WhbLegs1xtatwSeEY/weqJwZh7dOxmelEsJAgMBAAECgYAxNW9HsLjV+bpKgWbhAWYOCTWhgM+D6q8MQItbposSsPxRRzckjlY15vmfWp7/M/zuTlDmW9aTkEDA39YLWI07jsmaGOA8RbPinswzIWnowNVFQag/n21tpAL2/CGNkpe+7F667nZyD7htCYwz6ARBMUM+eH52MNEMcPSbOBM9PQJBAPUav3oCgnYx/F8nLzlW9+gSOD1oCK5GQUC1+TTwaPUfZeCl8CeHT/7DgdvyUUMm9CyEzhacl4xZPzWN+ijZIF8CQQDC5NfMtDHSCGknwMnZb4mxTpzrby+pnwVvxmJeOg+QTafAwHqIhh9wVLQNEJy0PojYOMpjA9GE1Wms537Pnq2XAkEArCkij3/NxVms6+UpHXyB2ydZC4DUgBzm3p4zMkUfY/Wu6JGF0y4POWJ4B1b4T1PANLj/zRAmvrU9Wc+lBCYmvwJBALv94esjJatjUYt2+z0xya+uFM9EwMTtD2FyCxC5EKoxPc8/2vI17b189vBjRcTXTUjD/vTjigaHlRejdT7v4KECQA2DEOHgZv39PmNIZJekcfNGXPrdHPU0eAEtanMCr6hTiN+jO4x66rrGXIa4aoZ3ezXq/sASLm4zuGuF65m9bnc=');
@@ -2429,7 +2431,7 @@ class WechatController extends CommentoilcardController
             }else{
                 exit(json_encode(['msg'=>'签名验证失败','status'=>500]));
             }
-            
+
             // 处理返回结果
         } catch (Exception $e) {
             //todo::异常处理
