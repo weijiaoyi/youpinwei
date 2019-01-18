@@ -342,27 +342,23 @@ class WikiController extends CommentoilcardController
         $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
         $data['sign'] = md5($string1);
 
-        $content = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $ch_url=$this->pay_uri.'/Api/Service/Pay/Mode/JSApi/tradePayJSApi';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $ch_url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        $content = curl_exec($ch);
-        curl_close($ch);
-        $data = [];
-        $obj_arr = XML::parse($content);
-
-        $cs2 = array(
-            'content'=>json_encode($obj_arr)
+        $url = $this->pay_uri.'/Api/Service/Pay/Mode/JSApi/tradePayJSApi';
+        $con = curl_init($url);
+        curl_setopt($con, CURLOPT_HEADER, false);
+        curl_setopt($con, CURLOPT_POSTFIELDS, json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        curl_setopt($con, CURLOPT_POST, true);
+        curl_setopt($con, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($con, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE))
+            ]
         );
-        M('testt')->add($cs2);
+        curl_setopt($con, CURLOPT_TIMEOUT, (int)5);
+        return curl_exec($con);
 
 
+
+/*
         if (!$obj_arr){
             return $data;
         }
@@ -381,7 +377,7 @@ class WikiController extends CommentoilcardController
             $order = M('order_record')->add($OrderInfo);
         }
         if (!$order) return [];
-        return $data;
+        return $data;*/
 
 
     }
