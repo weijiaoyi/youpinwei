@@ -54,7 +54,7 @@ class WikiController extends CommentoilcardController
             ]
         );
         curl_setopt($con, CURLOPT_TIMEOUT, (int)5);
-        return curl_exec($con);
+        $content= curl_exec($con);
 
 
         $test = array(
