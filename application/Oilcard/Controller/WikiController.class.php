@@ -126,7 +126,7 @@ class WikiController extends CommentoilcardController
             $sign_str .= $k . '=' . $v . '&';
         }
         $sign_str = trim($sign_str, '&');
-        $public_content = file_get_contents($public_key_path);
+        $public_content = $public_key_path;
 
         $pem = chunk_split($public_content, 64, "\n");
         $pem = "-----BEGIN PUBLIC KEY-----\n$pem-----END PUBLIC KEY-----\n";
@@ -149,7 +149,7 @@ class WikiController extends CommentoilcardController
             echo '验签成功';
         } else {
             // todo::验签失败
-            echo '验签失败';
+            $this->error('验签失败');
         }
     }
 
