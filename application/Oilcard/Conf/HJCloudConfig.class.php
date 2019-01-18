@@ -50,12 +50,9 @@ class HJCloudConfig {
      * @throws Exception
      */
     public function doRequest() {
-        if (!$this->requestUrl)
-            throw new Exception('未设置请求地址');
-        if (!$this->requestData)
-            throw new Exception('未设置请求参数');
-        if (!$this->privateKey)
-            throw new Exception('未设置请求私钥');
+        if (!$this->requestUrl)exit(json_encode(['msg'=>'未设置请求地址','status'=>500]));
+        if (!$this->requestData)exit(json_encode(['msg'=>'未设置请求参数','status'=>500]));
+        if (!$this->privateKey)exit(json_encode(['msg'=>'未设置请求私钥','status'=>500]));
         $con = curl_init((string)$this->requestUrl);
         curl_setopt($con, CURLOPT_HEADER, false);
         curl_setopt($con, CURLOPT_POSTFIELDS, json_encode($this->requestData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
@@ -89,8 +86,7 @@ class HJCloudConfig {
      * @throws Exception
      */
     private function RSASign($sign_data, $path) {
-        if (empty($path))
-            throw new Exception('私钥不存在');
+        if (empty($path))exit(json_encode(['msg'=>'私钥不存在','status'=>500]));
         foreach ($sign_data as $k => $v) {
             if (is_array($v))
                 $sign_data[$k] = json_encode($v, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -101,7 +97,7 @@ class HJCloudConfig {
             $sign_str .= $k . '=' . $v . '&';
         }
         $sign_str = trim($sign_str, '&');
-        $private_key_content = file_get_contents($path);
+        $private_key_content = $path;
         $sign = '';
         $pem = chunk_split($private_key_content, 64, "\n");
         $pem = "-----BEGIN RSA PRIVATE KEY-----\n$pem-----END RSA PRIVATE KEY-----\n";
@@ -110,7 +106,7 @@ class HJCloudConfig {
             $result = base64_encode($sign);
             return $result;
         } else {
-            throw new Exception('证书不可用');
+            exit(json_encode(['msg'=>'证书不可用','status'=>500]));
         }
     }
 
@@ -122,11 +118,9 @@ class HJCloudConfig {
      */
     public function verifyRSASign($sign_data){
         $public_key_path = $this->publicKey;
-        if (!file_exists($public_key_path))
-            throw new Exception('公钥不存在');
+        if (empty($public_key_path))exit(json_encode(['msg'=>'公钥不存在','status'=>500]));
         $sign = $sign_data['sign'];
-        if (!isset($sign_data['sign']))
-            throw new Exception('签名字段不存在');
+        if (!isset($sign_data['sign']))exit(json_encode(['msg'=>'签名字段不存在','status'=>500]));
         unset($sign_data['sign']);
         foreach ($sign_data as $k => $v) {
             if (is_array($v))
@@ -138,7 +132,7 @@ class HJCloudConfig {
             $sign_str .= $k . '=' . $v . '&';
         }
         $sign_str = trim($sign_str, '&');
-        $public_content = file_get_contents($public_key_path);
+        $public_content = $public_key_path;
 
         $pem = chunk_split($public_content, 64, "\n");
         $pem = "-----BEGIN PUBLIC KEY-----\n$pem-----END PUBLIC KEY-----\n";
