@@ -26,6 +26,24 @@ class WikiController extends CommentoilcardController
     private $base_uri = 'https://api.weixin.qq.com';
     private $my_uri = 'http://ysy.xiangjianhai.com';
     private $pay_uri = 'https://open.smart4s.com';
+    private  $private_key = 'MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALqZX4pzN6jxJbNb
+Xhuz+Drh8Obt7ekDrEPz2SK0IKoay6SDPiJMJXLqh69doiWjP2pim6/JrrsuBr3Q
+FMjGIx0EnBSf354qorWNhkj+lkAcQnQ98NlziTgTg7vx2o3piCcJAa7i2WhbLegs
+1xtatwSeEY/weqJwZh7dOxmelEsJAgMBAAECgYAxNW9HsLjV+bpKgWbhAWYOCTWh
+gM+D6q8MQItbposSsPxRRzckjlY15vmfWp7/M/zuTlDmW9aTkEDA39YLWI07jsma
+GOA8RbPinswzIWnowNVFQag/n21tpAL2/CGNkpe+7F667nZyD7htCYwz6ARBMUM+
+eH52MNEMcPSbOBM9PQJBAPUav3oCgnYx/F8nLzlW9+gSOD1oCK5GQUC1+TTwaPUf
+ZeCl8CeHT/7DgdvyUUMm9CyEzhacl4xZPzWN+ijZIF8CQQDC5NfMtDHSCGknwMnZ
+b4mxTpzrby+pnwVvxmJeOg+QTafAwHqIhh9wVLQNEJy0PojYOMpjA9GE1Wms537P
+nq2XAkEArCkij3/NxVms6+UpHXyB2ydZC4DUgBzm3p4zMkUfY/Wu6JGF0y4POWJ4
+B1b4T1PANLj/zRAmvrU9Wc+lBCYmvwJBALv94esjJatjUYt2+z0xya+uFM9EwMTt
+D2FyCxC5EKoxPc8/2vI17b189vBjRcTXTUjD/vTjigaHlRejdT7v4KECQA2DEOHg
+Zv39PmNIZJekcfNGXPrdHPU0eAEtanMCr6hTiN+jO4x66rrGXIa4aoZ3ezXq/sAS
+Lm4zuGuF65m9bnc=';
+    private $public_key = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6mV+Kczeo8SWzW14bs/g64fDm
+7e3pA6xD89kitCCqGsukgz4iTCVy6oevXaIloz9qYpuvya67Lga90BTIxiMdBJwU
+n9+eKqK1jYZI/pZAHEJ0PfDZc4k4E4O78dqN6YgnCQGu4tloWy3oLNcbWrcEnhGP
+8HqicGYe3TsZnpRLCQIDAQAB';
 
     public function __construct()
     {
@@ -339,8 +357,6 @@ class WikiController extends CommentoilcardController
 //        $data['remark'] = '缴纳年费';
 //        $data['expiredTime'] = 5;
         $data['notifyUrl'] = $this->my_uri.'/TestWxNotify.php';
-//        ksort($data);
-//        $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
         $sign = $this->setRSASign($data);
         $data['sign'] = $sign['sign'];
 
@@ -716,7 +732,7 @@ class WikiController extends CommentoilcardController
      * @return array
      */
     public function setRSASign($requestData){
-        $sign = $this->RSASign($requestData, CardConfig::$wxconf['pay_key']);
+        $sign = $this->RSASign($requestData, $this->private_key);
         $requestData['sign'] = $sign;
         return $requestData;
     }
@@ -729,7 +745,7 @@ class WikiController extends CommentoilcardController
      * @throws Exception
      */
     public function RSASign($sign_data,$path){
-        if (!file_exists($path))
+        if (empty($path))
             throw new Exception('私钥不存在');
         foreach ($sign_data as $k => $v) {
             if (is_array($v))
@@ -741,7 +757,7 @@ class WikiController extends CommentoilcardController
             $sign_str .= $k . '=' . $v . '&';
         }
         $sign_str = trim($sign_str, '&');
-        $private_key_content = file_get_contents($path);
+        $private_key_content = $path;
         $sign = '';
         $pem = chunk_split($private_key_content, 64, "\n");
         $pem = "-----BEGIN RSA PRIVATE KEY-----\n$pem-----END RSA PRIVATE KEY-----\n";
@@ -761,8 +777,8 @@ class WikiController extends CommentoilcardController
      * @throws Exception
      */
     public function verifyRSASign(array $sign_data){
-        $public_key_path = $this->publicKey;
-        if (!file_exists($public_key_path))
+        $public_key_path = $this->public_key;
+        if (empty($public_key_path))
             throw new Exception('公钥不存在');
         $sign = $sign_data['sign'];
         if (!isset($sign_data['sign']))
