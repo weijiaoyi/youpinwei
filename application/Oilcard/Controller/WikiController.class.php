@@ -342,13 +342,8 @@ class WikiController extends CommentoilcardController
         $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
         $data['sign'] = md5($string1);
 
-        $cs = array(
-          'content'=>json_encode($data)
-        );
-        M('testt')->add($cs);
-
-        $content = XML::build($data);
-        $ch_url=$this->pay_uri.'/Api/Service/Pay/Mode/MiniProgram/tradePayMiniProgram';
+        $content = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $ch_url=$this->pay_uri.'/Api/Service/Pay/Mode/JSApi/tradePayJSApi';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $ch_url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
