@@ -354,11 +354,16 @@ class WikiController extends CommentoilcardController
             ]
         );
         curl_setopt($con, CURLOPT_TIMEOUT, (int)5);
-        return curl_exec($con);
+        $content = curl_exec($con);
+        curl_close($con);
+        $data = [];
+        $test = array(
+            'content'=>json_encode($content)
+        );
+        M('testt')->add($test);
+        $obj_arr = XML::parse($content);
 
 
-
-/*
         if (!$obj_arr){
             return $data;
         }
@@ -377,7 +382,7 @@ class WikiController extends CommentoilcardController
             $order = M('order_record')->add($OrderInfo);
         }
         if (!$order) return [];
-        return $data;*/
+        return $data;
 
 
     }
