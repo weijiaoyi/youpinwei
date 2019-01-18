@@ -2,56 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bb53f77a-e695-4a02-b0bb-18fb8a070d14" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/TestWxNotify.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/youpinwei.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/youpinwei.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4-ZMMqxc_vuGrt6aToMKnLE.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4-nLGXUms_fY0xglT8xfes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4-nLGXUms_fY0xglT8xfesE.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4-nLGXUms_fY0xglT8xfesE.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH406IE5IAp-tnFiok7zZhsjI.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH40um0-tzIPogqGdZjyWguK4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH41wWhAWkSndtRC1ZyAv717s.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH42ngYUOiQM55jK0QnBAsphg.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH43NEQjWj-DJj9TMXN5pPdj8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH44-8hoFHeVrfhkFrqQcbBDQ.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH443nH5ZvbpZhYgaDN5GB1aY.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4463WMrcWE4X4W4GDt1ve20.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH44t9CZZHFFNb9g9iHB_QR40.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4568cdRmiDQxItHnvvkKdIM.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH45XGVEbdi1nImp1rdgOvy4g.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH45Z_9RwMTFQpsbqdVRnOl8g.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH46HrC4Mb78BU7OuNnYZwBH8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH47WaRpRYboyn9dENlIbW1EE.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH47bW1x9DUIDDg9MBo0YWFFs.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH48MEmVrnH2NLtQbHOr4xo5Y.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH48_gH0bN5_RxCtEBKz0HxwQ.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH48jFIrpXCHBr5iUepfitBtY.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH48m9AgHgGaqZ0zubnSCQ9mI.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH49IUKd1Ynpm1w1-B4lrMq4I.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH49Jitc05-Uy1njRLS8NIhxc.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH49QaxKUm2kwAcGOzQqyv8Xg.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH49d14I6EclLBhRxRzvhPujY.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4_W-dceePAu5opFcx2lmZaY.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4_ywGW3Xy-NuWV56eQLn6zc.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4w-KOjbCp2bvOYWuxdsrBwE.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4w-SLW61q8_9r-371_iLwf8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4w15yVioWYR6M6z-dEznszY.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4w1qIMPe_cDFChsXbe1r5-g.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4w4zfkaeV2k774iuN8PimMk.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4wFHMHsW_1wnu0Ep4i3M25E.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4wSntFs-HTy3oLY-BX-0ofM.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4xDFQ9qX3qHI8EWNc0-pSIQ.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4xdFPi8tu1IbO8x5jBntMPI.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4yHHgcILjVZ0j5_grV4xL5c.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4zOPlNh6BDOVX-Q3n9MQloc.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4ztJWrRmMjZUEvbsA7tS_vU.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4zzB1rTQwkrwS8aWRweVs6c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/wechat/oKBRH4zzB1rTQwkrwS8aWRweVs6c.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -72,22 +23,22 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="php" value="16" />
+          <entry key="php" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="PHP" value="16" />
+          <entry key="PHP" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="php" value="215" />
+          <entry key="php" value="219" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PHP" value="215" />
+          <entry key="PHP" value="219" />
         </counts>
       </usages-collector>
     </session>
@@ -133,16 +84,34 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="358">
-              <caret line="68" column="55" lean-forward="true" selection-start-line="68" selection-start-column="55" selection-end-line="68" selection-end-column="55" />
+            <state relative-caret-position="655">
+              <caret line="79" column="23" lean-forward="true" selection-start-line="79" selection-start-column="23" selection-end-line="79" selection-end-column="23" />
               <folding>
                 <element signature="e#127#147#0#PHP" expanded="true" />
                 <element signature="e#2847#3328#0#PHP" />
                 <element signature="e#3104#3215#0#PHP" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="496">
+              <caret line="234" column="37" lean-forward="true" selection-start-line="234" selection-start-column="37" selection-end-line="234" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="338">
+              <caret line="260" column="17" selection-start-line="260" selection-start-column="12" selection-end-line="260" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -156,25 +125,16 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="365">
-              <caret line="261" column="69" lean-forward="true" selection-start-line="261" selection-start-column="69" selection-end-line="261" selection-end-column="69" />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
       <find>qrcode</find>
       <find>wxd16b20528d23aff8</find>
-      <find>agentApply</find>
       <find>agentPay</find>
       <find>wxNoticePay</find>
       <find>createAddMoneyOrder</find>
+      <find>agentApply</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -183,10 +143,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php" />
         <option value="$PROJECT_DIR$/TestWxNotify.php" />
         <option value="$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php" />
         <option value="$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php" />
+        <option value="$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php" />
       </list>
     </option>
   </component>
@@ -229,7 +189,7 @@
       <path value="$PROJECT_DIR$/vendor/overtrue/socialite" />
     </include_path>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="48" />
     <option name="y" value="73" />
     <option name="width" value="1460" />
@@ -300,19 +260,19 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1547777314486</updated>
-      <workItem from="1547777315644" duration="4009000" />
+      <workItem from="1547777315644" duration="4523000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4009000" />
+    <option name="totallyTimeSpent" value="4523000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15884861" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.15884861" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
@@ -333,7 +293,7 @@
     </layout>
     <layout-to-restore>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.15298508" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.15884861" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="1" />
@@ -397,13 +357,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="223" column="49" lean-forward="true" selection-start-line="223" selection-start-column="49" selection-end-line="223" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="253">
@@ -455,13 +408,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="261" column="69" lean-forward="true" selection-start-line="261" selection-start-column="69" selection-end-line="261" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TestWxNotify.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -471,13 +417,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="68" column="55" lean-forward="true" selection-start-line="68" selection-start-column="55" selection-end-line="68" selection-end-column="55" />
+        <state relative-caret-position="655">
+          <caret line="79" column="23" lean-forward="true" selection-start-line="79" selection-start-column="23" selection-end-line="79" selection-end-column="23" />
           <folding>
             <element signature="e#127#147#0#PHP" expanded="true" />
             <element signature="e#2847#3328#0#PHP" />
             <element signature="e#3104#3215#0#PHP" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="260" column="17" selection-start-line="260" selection-start-column="12" selection-end-line="260" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ApplyController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="496">
+          <caret line="234" column="37" lean-forward="true" selection-start-line="234" selection-start-column="37" selection-end-line="234" selection-end-column="37" />
         </state>
       </provider>
     </entry>
