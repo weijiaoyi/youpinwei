@@ -342,27 +342,30 @@ class WikiController extends CommentoilcardController
         $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
         $data['sign'] = md5($string1);
 
-        $content = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $ch_url=$this->pay_uri.'/Api/Service/Pay/Mode/JSApi/tradePayJSApi';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $ch_url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        $content = curl_exec($ch);
-        curl_close($ch);
-        $data = [];
-        $obj_arr = XML::parse($content);
 
-        $cs2 = array(
-            'content'=>json_encode($obj_arr)
-        );
-        M('testt')->add($cs2);
+        $url = $this->pay_uri.'/Api/Service/Pay/Mode/JSApi/tradePayJSApi';
+        // 实例化Demo类
+        $demo = new \WikiPay();
+        try {
+            // 设置秘钥文件
+            $demo->setPrivateKey(CardConfig::$wxconf['appsecret']);
+            $demo->setPublicKey(CardConfig::$wxconf['pay_key']);
+            // 设置请求参数
+            $demo->setRequestData($data);
+            // 设置请求地址
+            $demo->setRequestUrl($url);
+            // 发起请求
+            $res = $demo->doRequest();
+
+            // 处理返回结果
+            handleResponse($res, $demo);
+        } catch (Exception $e) {
+            //todo::异常处理
+            echo $e->getMessage();
+        }
 
 
+/*
         if (!$obj_arr){
             return $data;
         }
@@ -381,7 +384,7 @@ class WikiController extends CommentoilcardController
             $order = M('order_record')->add($OrderInfo);
         }
         if (!$order) return [];
-        return $data;
+        return $data;*/
 
 
     }
