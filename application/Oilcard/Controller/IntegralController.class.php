@@ -255,8 +255,11 @@ class IntegralController extends CommentoilcardController
         $create_res = M('add_money')->add($AddMoneySave);
         if ($create_res && $record_res){
 
-            $wechat = new WechatController();
+            /*$wechat = new WechatController();
             $data = $wechat->payOrder($AddMoneySave,$OrderAdd,$openid);
+            $data['order_no'] = $AddMoneySave['order_no'];*/
+            $Wiki = new WikiController();
+            $data = $Wiki->payOrder($AddMoneySave,$OrderAdd,$openid);
             $data['order_no'] = $AddMoneySave['order_no'];
             
             if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
