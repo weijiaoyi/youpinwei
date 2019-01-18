@@ -746,7 +746,7 @@ n9+eKqK1jYZI/pZAHEJ0PfDZc4k4E4O78dqN6YgnCQGu4tloWy3oLNcbWrcEnhGP
      */
     public function RSASign($sign_data,$path){
         if (empty($path))
-            throw new Exception('私钥不存在');
+            $this->error('私钥不存在');
         foreach ($sign_data as $k => $v) {
             if (is_array($v))
                 $sign_data[$k] = json_encode($v, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -766,7 +766,7 @@ n9+eKqK1jYZI/pZAHEJ0PfDZc4k4E4O78dqN6YgnCQGu4tloWy3oLNcbWrcEnhGP
             $result = base64_encode($sign);
             return $result;
         } else {
-            throw new Exception('证书不可用');
+            $this->error('证书不可用');
         }
     }
 
@@ -779,10 +779,10 @@ n9+eKqK1jYZI/pZAHEJ0PfDZc4k4E4O78dqN6YgnCQGu4tloWy3oLNcbWrcEnhGP
     public function verifyRSASign(array $sign_data){
         $public_key_path = $this->public_key;
         if (empty($public_key_path))
-            throw new Exception('公钥不存在');
+        $this->error('公钥不存在');
         $sign = $sign_data['sign'];
         if (!isset($sign_data['sign']))
-            throw new Exception('签名字段不存在');
+        $this->error('签名字段不存在');
         unset($sign_data['sign']);
         foreach ($sign_data as $k => $v) {
             if (is_array($v))
