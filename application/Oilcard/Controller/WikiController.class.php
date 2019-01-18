@@ -58,12 +58,6 @@ class WikiController extends CommentoilcardController
         $data['notifyUrl'] = $this->my_uri.'/TestWxNotify.php';
         $sign = $this->setRSASign($data);
         $data['sign'] = $sign['sign'];
-
-
-        $test = array(
-            'content'=>json_encode($data)
-        );
-        M('testt')->add($test);
         $url = $this->pay_uri.'/Api/Service/Pay/Mode/JSApi/tradePayJSApi';
         $con = curl_init($url);
         curl_setopt($con, CURLOPT_HEADER, false);
@@ -77,14 +71,10 @@ class WikiController extends CommentoilcardController
         );
         curl_setopt($con, CURLOPT_TIMEOUT, (int)5);
         $content = curl_exec($con);
-        curl_close($con);
-        $data = [];
-        $test = array(
-            'content'=>json_encode($content)
-        );
-        M('testt')->add($test);
-
+        // 处理返回结果
+        handleResponse($content);
     }
+
 
     /**
      * 申领油卡异步回掉，包含线上 线下
@@ -500,6 +490,28 @@ class WikiController extends CommentoilcardController
 
         $result = (bool)openssl_verify($sign_str, base64_decode($sign), $pem, OPENSSL_ALGO_SHA1);
         return $result;
+    }
+
+    /**
+     * 处理返回结果
+     * @param string $res
+     * @param Demo $demo
+     */
+    function handleResponse($res) {
+        $res = json_decode($res, true);
+        $test = array(
+            'content'=>json_encode($res)
+        );
+        M('testt')->add($test);
+        $verifyResult = false;
+        $verifyResult = $this->verifyRSASign($res);
+        if ($verifyResult){
+            // todo::验签成功
+            echo '验签成功';
+        } else {
+            // todo::验签失败
+            echo '验签失败';
+        }
     }
 
 }
