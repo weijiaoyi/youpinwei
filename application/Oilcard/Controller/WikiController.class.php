@@ -318,5 +318,232 @@ class WikiController extends CommentoilcardController
         return XML::build($data);
     }
 
+    /**
+     * 申请为银牌代理下单接口
+     */
+    public function agentPay($OrderInfo,$data,$openid)
+    {
+        //获取套餐信息
+        $package = M('packages')->where(['pid'=>$OrderInfo['pid']])->find();
+        //微信统一下单
+        $data = [];
+        $data['signType'] = 'MD5';//签名类型
+        $data['appId'] = CardConfig::$wxconf['appid'];//开发者APPid
+        $data['merchantSn'] = CardConfig::$wxconf['mch_id'];//商户编号
+        $data['outTradeNo'] = $OrderInfo['serial_number'];//商户订单号
+        $data['tradeType'] = 'WX';//支付类型
+        $data['goodsBody'] = $OrderInfo['online']==1?'线上申领油卡':'线下绑定油卡';//商品描述
+        $data['goodsDetail'] = '油卡业务办理';//商品详情描述
+        $data['totalFee'] = $OrderInfo['real_pay']*100;//总金额
+        $data['userId'] = $openid;//用户openid
+        $data['attach'] = '缴纳年费';
+        $data['remark'] = '';
+        $data['expiredTime'] = '';
+        $data['notifyUrl'] = $this->my_uri.'/TestWxNotify.php';
+        ksort($data);
+        $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
+        $data['sign'] = md5($string1);
+
+        $content = XML::build($data);
+        $ch_url=$this->pay_uri.'/pay/unifiedorder';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $ch_url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        $content = curl_exec($ch);
+        curl_close($ch);
+        $data = [];
+        $obj_arr = XML::parse($content);
+
+        if (!$obj_arr){
+            return $data;
+        }
+        var_dump($obj_arr);exit;
+        $order = false;
+        if($obj_arr['result_code'] == 'SUCCESS') {
+            $data['appId'] = CardConfig::$wxconf['appid'];
+            $data['timeStamp'] = time();
+            $data['nonceStr'] = Tool::randomStr(20);
+            $data['package'] = 'prepay_id='.$obj_arr['prepay_id'];
+            $data['signType'] = 'MD5';
+            ksort($data);
+            $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
+            $data['paySign'] = md5($string1);
+            //写入订单表
+            $order = M('order_record')->add($OrderInfo);
+        }
+        if (!$order) return [];
+        return $data;
+
+
+    }
+
+    public function pay_apply($openId,$card_number){
+        $userData=M('user')->where('openid="'.$openId.'"')->find();  //根据微信openid查询对应的用户
+        if (empty($userData)) {
+            $this->error('用户不存在');
+        }
+        $OilCardData=M('oil_card')->where('status=1 and discount=96')->limit($card_number)->select(); //从用户油卡表取卡
+        foreach ($OilCardData as $key=>$val){
+            $oilRes=M('oil_card')->where('id='.$val['id'])->save(['status'=>2]);
+            if ($oilRes===false) {
+                $this->error('油卡调用失败');
+            }
+        }
+
+        $data=file_get_contents(__DIR__.'/data/'.$openId.'data.txt');
+        $arr=(array)json_decode($data);
+        $arr['user_id']=$userData['id'];
+        $arr['status']='1';
+        $arr['card_number']=$card_number;
+
+        M('user_apply')->add($arr);   //添加申领信息
+
+        for ($i=0;$i<$card_number;$i++){
+            $OrderRecordData=[
+                'user_id'=>$userData['id'],
+                'order_type'=>1,
+                'status'=>1,
+                'money'=>$card_number*100,
+                'discount_money'=>0,
+                'real_pay'=>$card_number*100
+            ];
+
+
+            $res= M('order_record')->add($OrderRecordData);   //添加订单记录表记录
+
+        }
+        $this->templateMessage($openId,$data,1);
+
+        $this->success('ok');
+    }
+
+
+    /**
+     * 油卡升级续费
+     * @Author 老王
+     * @创建时间   2019-01-07
+     * @return [type]     [description]
+     */
+    public function upgradePay(){
+        $openid  =I('post.openid','');
+        $card_no =I('post.card_no','');
+        $card_id  =I('post.card_id','');//油卡id
+        $money   =I('post.money',0);//交的费用
+        $pid     =I('post.pid',0);//套餐id
+        $type    =I('post.type',1);//操作类型 ,升级 1 ,续费2
+        $Member  = M('user')->where(['openid'=>$openid])->find();
+        if(!$Member)$this->error('参数错误:缺少用户信息!');
+        $CWhere= [
+            'id'      =>$card_id,
+            'card_no' =>$card_no,
+            '_logic'  => 'OR'
+        ];
+        $Card    = M('oil_card')->where($CWhere)->find();
+        if(!$Card)$this->error('参数错误:缺少油卡信息!');
+        $package = M('packages')->where(['pid'=>$pid])->find();
+        if(!$package)$this->error('参数错误:缺少套餐信息!');
+        $OrderSn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
+        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
+
+        $Order = [
+            'user_id'        => $Member['id'],
+            'card_no'        => $Card['card_no'],
+            'serial_number'  => $OrderSn,
+            'order_status'   => 1,
+            'real_pay'       => $money,
+            'recharge_money' => $money,
+            'createtime'     => $NowTime,
+            'preferential'   => $package['limits'],
+            'card_from'      => $Card['agent_id'] ==0?1:2,
+            'agent_id'       => $Card['agent_id'] ==0?0:$Card['agent_id'],
+            'pid'            => $package['pid'],
+            'applyfinish'    =>2
+        ];
+        switch ($type) {
+            case '1':
+                //生成升级订单
+                $Order['order_type'] =4;
+                $body = '油卡升级订单';
+                break;
+
+            case '2':
+                //生成续费订单
+                $Order['order_type'] =5;
+                $body = '油卡续费订单';
+                break;
+        }
+        if(!$type) $this->error('参数错误:缺少类型!');
+        if ($type ==1 &&$Order['order_type'] !=4) $this->error('订单生成失败!');
+        if ($type ==2 &&$Order['order_type'] !=5) $this->error('订单生成失败!');
+
+        //微信统一下单
+        $data = [];
+        $data['appid']                = CardConfig::$wxconf['appid'];
+        $data['mch_id']               = CardConfig::$wxconf['mch_id'];
+        $data['device_info']          = 'WEB';
+        $data['nonce_str']            = Tool::randomStr(20);
+        $data['sign_type']            = 'MD5';
+        $data['body']                 = $body;
+        $data['detail']               = $body;
+        $data['attach']               = $body;
+        $data['out_trade_no']         = $OrderSn;
+        $data['fee_type']             = 'CNY';
+        $data['total_fee']            = $money*100;//正确的是20000
+        $data['spbill_create_ip']     = Tool::getClientIp();
+        $data['time_start']           = date('YmdHis');
+        $data['time_expire']          = date('YmdHis',time()+7200);
+        //        $data['notify_url'] = $this->my_uri.'/index.php?g=oilcard&m=wechat&a=wxNoticePay';
+        $data['notify_url']           = $this->my_uri.'/upgradeNotify.php';
+
+        $data['trade_type']           = 'JSAPI';
+        $data['openid']               = $openid;
+        ksort($data);
+        $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
+        $data['sign'] = md5($string1);
+
+        $content = XML::build($data);
+        Log::record('传给微信的XML:'.$content);
+
+        $ch_url = $this->pay_uri.'/pay/unifiedorder';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $ch_url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        $content = curl_exec($ch);
+        curl_close($ch);
+        Log::record('微信统一下单返回:'.$content);
+
+        $data = [];
+        $obj_arr = XML::parse($content);
+
+
+        if (!$obj_arr){
+            $this->success($data);
+        }
+        if($obj_arr['result_code'] == 'SUCCESS') {
+            $data['appId'] = CardConfig::$wxconf['appid'];
+            $data['timeStamp'] = time();
+            $data['nonceStr'] = Tool::randomStr(20);
+            $data['package'] = 'prepay_id='.$obj_arr['prepay_id'];
+            $data['signType'] = 'MD5';
+
+            ksort($data);
+            $string1 = urldecode(http_build_query($data).'&key='.CardConfig::$wxconf['pay_key']);
+            $data['paySign'] = md5($string1);
+            $OrderAdd = M('order_record')->add($Order);
+            if(!$OrderAdd)$this->error('订单生成失败!');
+        }
+        $this->success($data);
+    }
+
 
 }
