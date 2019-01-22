@@ -257,10 +257,11 @@ class IntegralController extends CommentoilcardController
             switch ($config['paytype']) {
                 case '1': //微信支付
                     $data = $PayMent->_WxPay($OrderAdd,$Member,$PayCon);
-                    # code...
+                    $OrderAdd['payment_code'] = 'wxpay';
                     break;
                 case '2': //聚合支付
                     $data = $PayMent->_HjPay($OrderAdd,$Member,$PayCon);
+                    $OrderAdd['payment_code'] = 'hjpay';
                     break;
             }
             if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
