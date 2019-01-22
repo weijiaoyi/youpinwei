@@ -357,9 +357,9 @@ class WechatController extends CommentoilcardController
         if ($type ==2 &&$Order['order_type'] !=5) $this->error('订单生成失败!');
 
         $PayCon = [
-                'body'     => '油卡充值',
-                'detail'   => '油卡充值',
-                'attach'   => '油卡充值',
+                'body'     => $Order['order_type']==4?'油卡升级订单':'油卡续费订单',
+                'detail'   => $Order['order_type']==4?'油卡升级订单':'油卡续费订单',
+                'attach'   => $Order['order_type']==4?'油卡升级订单':'油卡续费订单',
                 'paymoney' => $config['paymoney']
             ];
         switch ($config['paytype']) {
@@ -2462,7 +2462,7 @@ class WechatController extends CommentoilcardController
             // 设置请求参数
             $hjpay->setRequestData($data);
             // 设置请求地址
-            $hjpay->setRequestUrl('https://open.smart4s.com/Api/Service/Pay/Mode/JSApi/tradePayJSApi');
+            $hjpay->setRequestUrl('https://open.smart4s.com/Api/Service/Pay/Mode/MiniProgram/tradePayMiniProgram');
             // 发起请求
             $res = $hjpay->doRequest();
             $res = json_decode($res, true);
