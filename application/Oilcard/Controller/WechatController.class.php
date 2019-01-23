@@ -2437,7 +2437,13 @@ class WechatController extends CommentoilcardController
         $data['signType']    = 'RSA';
         $data['appId']       = 'C9q255qIg1Zp72yI';
 //        $data['merchantSn']  = 'PHT2017000000002';测试商户编号
-        $data['merchantSn']  = '2019000010305';
+        $merchantSn = '';
+        if ($Order['order_type']==3) { //充值商户
+            $merchantSn = '2019000010305';
+        }else{
+            $merchantSn = '2019000010308'; 
+        }
+        $data['merchantSn']  = $merchantSn;
         $data['outTradeNo']  = $orderSn;
         $data['tradeType']   = 'WX';
         $data['goodsBody']   = $PayCon['body'];
