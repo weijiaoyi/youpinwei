@@ -102,21 +102,21 @@ class CardController extends CommentoilcardController
                 ];
                 $BeforCard = M('oil_card')->where(['card_no'=>$Order['send_card_no'] ])->save($BeforCard);
             }
-
+        $CardSave =[
+            'user_id'       =>$Member['id'],
+            'apply_fo_time' =>$Order['createtime'],
+            'status'        =>2,
+            'updatetime'    => $NowTime,
+            'chomd'         => 2 ,
+            'agent_status'  =>2,
+            'end_time'      =>$EndTime,
+            'preferential'  => $Package['limits'],
+            'pkgid'         =>$Order['pid'],
+            'desc'          => '油卡绑定成功',
+        ];
             //修改当前油卡信息为当前绑定人
-            if ($Order['pid'] ==1)$EndTime = '';
-            $CardSave =[
-                'user_id'       =>$Member['id'],
-                'apply_fo_time' =>$Order['createtime'],
-                'status'        =>2,
-                'updatetime'    => $NowTime,
-                'chomd'         => 2 ,
-                'agent_status'  =>2,
-                'end_time'      =>$EndTime,
-                'preferential'  => $Package['limits'],
-                'pkgid'         =>$Order['pid'],
-                'desc'          => '油卡绑定成功',
-            ];
+            if ($Order['pid'] ==1)unset($CardSave['end_time']);
+
 
 
             $OrderSave = M('order_record')->where(['id'=>$Order['id'] ])->save($OrderSave);
