@@ -2330,6 +2330,10 @@ class WechatController extends CommentoilcardController
                 //wxAgentNoticePay
                 $notify_url = $Myurl.'/agentMoneyNotify.php';
                 break;
+            case '2'://1，申领
+                //wxAgentNoticePay
+                $notify_url = $Myurl.'/agentMoneyNotify.php';
+                break;
             case '3': //3，充值
                 //wxNoticePay
                 $notify_url = $Myurl.'/addMoneyNotify.php';
@@ -2472,6 +2476,15 @@ class WechatController extends CommentoilcardController
             // 发起请求
             $res = $hjpay->doRequest();
             $res = json_decode($res, true);
+            $insert = array(
+                'content'=>json_encode(array(
+                    'InsertTime'=>date('Y-m-d H:i:s',time()),
+                    'InsertNote'=>$PayCon['body'].'接口返回数据',
+                    'data' =>$res,
+                    
+                ))
+            );
+            M('testt')->add($insert);
             $verifyResult = false;
             $verifyResult = $hjpay->verifyRSASign($res);
             if ($verifyResult) {
