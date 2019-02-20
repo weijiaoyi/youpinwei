@@ -1,0 +1,28 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+@media screen and (max-width:375px) {
+    html {
+        font-size: 100px;
+    }
+}
+
+@media screen and (max-width:320px) {
+    /* html {
+        font-size: 90px;
+    } */
+    .container1 {
+        padding: 0 0.15rem;
+        margin: 0 auto;
+    }
+    .xqzx_btn2 {
+        bottom: .4rem;
+    }
+    .banner_btn {
+        bottom: 1.8rem;
+    }
+    .act10_btn3 {
+        bottom: .08rem;
+    }
+}
