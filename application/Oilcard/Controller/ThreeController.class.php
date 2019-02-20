@@ -71,7 +71,6 @@ class ThreeController extends CommentoilcardController
             $userinfo = json_decode($this->curlGet($userinfo_url),true);
             if (!is_array($userinfo) || !isset($userinfo['openid']))
             {
-                $this->error('获取用户信息失败!');
                 echo json_encode([
                     'msg'=>'获取用户信息失败！',
                     'status'=>500
