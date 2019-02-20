@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bb53f77a-e695-4a02-b0bb-18fb8a070d14" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/H/html/homepage.html" beforeDir="false" afterPath="$PROJECT_DIR$/H/html/homepage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Three/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Three/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,7 +34,7 @@
           <entry key="md" value="1" />
           <entry key="p12" value="1" />
           <entry key="pem" value="2" />
-          <entry key="php" value="63" />
+          <entry key="php" value="64" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
@@ -40,22 +42,22 @@
         <counts>
           <entry key="HTML" value="9" />
           <entry key="Markdown" value="1" />
-          <entry key="PHP" value="63" />
+          <entry key="PHP" value="64" />
           <entry key="PLAIN_TEXT" value="4" />
           <entry key="SmartyConfig" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="30" />
+          <entry key="html" value="74" />
           <entry key="pem" value="11" />
-          <entry key="php" value="2411" />
+          <entry key="php" value="2421" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="30" />
-          <entry key="PHP" value="2411" />
+          <entry key="HTML" value="74" />
+          <entry key="PHP" value="2421" />
           <entry key="PLAIN_TEXT" value="11" />
         </counts>
       </usages-collector>
@@ -63,11 +65,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="10" column="19" lean-forward="true" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
+            <state relative-caret-position="378">
+              <caret line="98" column="65" lean-forward="true" selection-start-line="98" selection-start-column="65" selection-end-line="98" selection-end-column="65" />
               <folding>
                 <element signature="e#36#57#0#PHP" expanded="true" />
                 <element signature="e#390#422#0#PHP" />
@@ -80,41 +82,26 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="803">
-              <caret line="2501" column="5" lean-forward="true" selection-start-line="2501" selection-start-column="5" selection-end-line="2501" selection-end-column="5" />
-              <folding>
-                <element signature="e#127#147#0#PHP" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Three/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="466">
-              <caret line="152" column="20" lean-forward="true" selection-start-line="152" selection-start-column="20" selection-end-line="152" selection-end-column="20" />
+            <state relative-caret-position="628">
+              <caret line="158" column="38" lean-forward="true" selection-start-line="158" selection-start-column="38" selection-end-line="158" selection-end-column="38" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/H/html/agent.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="648">
-              <caret line="93" column="4" lean-forward="true" selection-start-line="93" selection-start-column="4" selection-end-line="93" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/H/html/homepage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="136" column="38" lean-forward="true" selection-start-line="136" selection-start-column="38" selection-end-line="136" selection-end-column="38" />
+            <state relative-caret-position="167">
+              <caret line="192" column="39" selection-start-line="192" selection-start-column="39" selection-end-line="192" selection-end-column="39" />
+              <folding>
+                <element signature="e#3618#4263#0" />
+                <element signature="e#4282#4627#0" />
+                <element signature="e#4641#5007#0" />
+                <element signature="e#4677#4849#0" />
+                <element signature="e#5132#5408#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -149,6 +136,8 @@
       <find>$this-&gt;secret</find>
       <find>getCode</find>
       <find>issetLogin</find>
+      <find>smallProgramGetOpenid</find>
+      <find>ajaxFun</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -168,9 +157,10 @@
         <option value="$PROJECT_DIR$/application/Oilcard/Controller/CardController.class.php" />
         <option value="$USER_HOME$/AppData/Local/Temp/scp33076/home/work/youpinwei/application/Oilcard/Controller/WechatController.class.php" />
         <option value="$PROJECT_DIR$/H/html/tool_select_02.html" />
+        <option value="$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php" />
         <option value="$PROJECT_DIR$/Three/index.html" />
         <option value="$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php" />
-        <option value="$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php" />
+        <option value="$PROJECT_DIR$/H/html/homepage.html" />
       </list>
     </option>
   </component>
@@ -296,12 +286,12 @@
       <updated>1547777314486</updated>
       <workItem from="1547777315644" duration="29176000" />
       <workItem from="1550131896451" duration="2178000" />
-      <workItem from="1550461315440" duration="18003000" />
+      <workItem from="1550461315440" duration="19942000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49357000" />
+    <option name="totallyTimeSpent" value="51296000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -533,20 +523,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/H/html/agent.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="648">
-          <caret line="93" column="4" lean-forward="true" selection-start-line="93" selection-start-column="4" selection-end-line="93" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/H/html/homepage.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="136" column="38" lean-forward="true" selection-start-line="136" selection-start-column="38" selection-end-line="136" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/Comment/Controller/CommentoilcardController.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="513">
@@ -554,17 +530,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Three/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="466">
-          <caret line="152" column="20" lean-forward="true" selection-start-line="152" selection-start-column="20" selection-end-line="152" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="803">
-          <caret line="2501" column="5" lean-forward="true" selection-start-line="2501" selection-start-column="5" selection-end-line="2501" selection-end-column="5" />
+        <state relative-caret-position="-4283">
+          <caret line="2138" column="48" lean-forward="true" selection-start-line="2138" selection-start-column="48" selection-end-line="2138" selection-end-column="48" />
           <folding>
             <element signature="e#127#147#0#PHP" expanded="true" />
             <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
@@ -574,14 +543,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="10" column="19" lean-forward="true" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
+        <state relative-caret-position="378">
+          <caret line="98" column="65" lean-forward="true" selection-start-line="98" selection-start-column="65" selection-end-line="98" selection-end-column="65" />
           <folding>
             <element signature="e#36#57#0#PHP" expanded="true" />
             <element signature="e#390#422#0#PHP" />
             <element signature="e#471#3780#0#PHP" />
             <element signature="e#3786#3864#0#PHP" />
             <element signature="e#3869#10350#0#PHP" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/H/html/agent.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="729">
+          <caret line="93" column="4" lean-forward="true" selection-start-line="93" selection-start-column="4" selection-end-line="93" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Three/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="628">
+          <caret line="158" column="38" lean-forward="true" selection-start-line="158" selection-start-column="38" selection-end-line="158" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/H/html/homepage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="192" column="39" selection-start-line="192" selection-start-column="39" selection-end-line="192" selection-end-column="39" />
+          <folding>
+            <element signature="e#3618#4263#0" />
+            <element signature="e#4282#4627#0" />
+            <element signature="e#4641#5007#0" />
+            <element signature="e#4677#4849#0" />
+            <element signature="e#5132#5408#0" />
           </folding>
         </state>
       </provider>

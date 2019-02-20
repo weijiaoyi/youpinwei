@@ -24,11 +24,6 @@ class ThreeController extends CommentoilcardController
         $this->secret = CardConfig::$wxconf['appsecret'];
     }
 
-    public function test(){
-        echo 'aaaa';exit;
-    }
-
-
     public function getCode()
     {
         $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
@@ -94,7 +89,7 @@ class ThreeController extends CommentoilcardController
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
 
-                M('User')->add($user);
+//                M('User')->add($user);
 
             }else {
                 //更新用户信息
@@ -105,10 +100,10 @@ class ThreeController extends CommentoilcardController
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
 
-                M('User')->where(['openid'=>$userinfo['openid']])->save($user);
+//                M('User')->where(['openid'=>$userinfo['openid']])->save($user);
             }
 
-            header('location:'.'http://'.$_SERVER['SERVER_NAME'].'/H/html/homepage.html?op='.base64_encode($userinfo['openid']));
+            header('location:'.'http://'.$_SERVER['SERVER_NAME'].'/Three/index.html?op='.base64_encode($userinfo['openid']));
 
 
         }catch (\Exception $e) {
