@@ -243,9 +243,13 @@ class ApplyController extends CommentoilcardController
                 $OrderInfo['payment_code'] = 'wxpay';
                 # code...
                 break;
-            case '2': //聚合支付
+            case '2': //惠聚云支付
                 $data = $PayMent->_HjPay($OrderInfo,$Member,$PayCon);
                 $OrderInfo['payment_code'] = 'hjpay';
+                break;
+            case '3': //钱方支付
+                $data = $PayMent->_QFPay($OrderInfo,$Member,$PayCon);
+                $OrderInfo['payment_code'] = 'qfpay';
                 break;
         }
 
