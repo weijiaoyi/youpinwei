@@ -1,0 +1,12 @@
+Array
+(
+    [url] => https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=17_SroCHjnIwxJSqSsLXbtrsW1vTfE1dQ9ps3KsEeh8k6qQj6w6qidtYR2ch7Qqemr4yd5xJQGVx8QEBY5y2oO7QPJbta47MipAPsyCdhMx-NHhVV-6QTOuUtP79g5exM-_4e4HCLOwBtyRTkd4YRPeADANGE
+    [param] => {
+            "touser":"oKBRH4xYajPbA5zSAoz5a_gGpsA0",
+            "template_id": "O2hqarAUwBUkt2LySetp-7PWVQVqQladw4O97AjU8YY",
+            "form_id": "the formId is a mock one",
+            "data": ,
+            "emphasis_keyword": "keyword1.DATA"
+        }
+    [response] => {"errcode":47001,"errmsg":"data format error hint: [Be1E03094122]"}
+)

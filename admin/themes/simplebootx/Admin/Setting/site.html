@@ -4,6 +4,7 @@
 	<div class="wrap js-check-wrap">
 		<ul class="nav nav-tabs">
 			<li class="active" sid='s'><a href="#S" data-toggle="tab">分润设置</a></li>
+			<li><a href="#P" data-toggle="tab">支付设置</a></li>
 			<!-- <li class="active"><a href="#A" data-toggle="tab">{:L('WEB_SITE_INFOS')}</a></li>
 			<li><a href="#B" data-toggle="tab">{:L('SEO_SETTING')}</a></li>
 			<li><a href="#C" data-toggle="tab">{:L('URL_SETTING')}</a></li>
@@ -78,6 +79,24 @@
 								</div> -->
 							</fieldset>
 						</div>
+						<div class="tab-pane active" id="P">
+							<!-- <div class="well"><label>拉新奖励：只有VIP会获取此奖励<br/>
+									充值奖励：只有代理人会获取此奖励</label></div> -->
+							<fieldset>
+								<div class="well"><label>拉新奖励：当推荐人A推荐新会员B时<br/>
+									VIP说明：1,获取油卡 2,购买年费<br/>
+									1,当推荐人A推荐新会员B时<br/>
+									2,当新会员B第一次申领油卡时,如果套餐为普通套餐,无奖励，即使之后再次申领VIP套餐，也无奖励。<br/>
+									3,当新会员B第一次申领油卡时,如果套餐为VIP套餐，将按百分比奖励A加油卷 此加油卷与充值金额为1：1</label></div>
+								<div class="control-group">
+									<label class="control-label">加油卷奖励</label>
+									<div class="controls">
+										<input type="text" name="scroll" id="scroll" value="{$scroll}"> % <span>加油卷</span>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+
 						<div class="tab-pane" id="A">
 							<fieldset>
 								<div class="control-group">
