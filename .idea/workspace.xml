@@ -31,7 +31,7 @@
           <entry key="md" value="1" />
           <entry key="p12" value="1" />
           <entry key="pem" value="2" />
-          <entry key="php" value="67" />
+          <entry key="php" value="68" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
@@ -39,7 +39,7 @@
         <counts>
           <entry key="HTML" value="9" />
           <entry key="Markdown" value="1" />
-          <entry key="PHP" value="67" />
+          <entry key="PHP" value="68" />
           <entry key="PLAIN_TEXT" value="4" />
           <entry key="SmartyConfig" value="1" />
         </counts>
@@ -65,8 +65,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="28" column="124" selection-start-line="28" selection-start-column="124" selection-end-line="28" selection-end-column="146" />
+            <state relative-caret-position="446">
+              <caret line="28" column="142" selection-start-line="28" selection-start-column="142" selection-end-line="28" selection-end-column="142" />
               <folding>
                 <element signature="e#36#57#0#PHP" expanded="true" />
                 <element signature="e#390#422#0#PHP" />
@@ -135,6 +135,7 @@
       <find>smallProgramGetOpenid</find>
       <find>ajaxFun</find>
       <find>118</find>
+      <find>secret</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -284,12 +285,12 @@
       <updated>1547777314486</updated>
       <workItem from="1547777315644" duration="29176000" />
       <workItem from="1550131896451" duration="2178000" />
-      <workItem from="1550461315440" duration="23894000" />
+      <workItem from="1550461315440" duration="24161000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55248000" />
+    <option name="totallyTimeSpent" value="55515000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -382,13 +383,6 @@
     <entry file="file://$USER_HOME$/Desktop/PayDemo/__MACOSX/PayDemo/PHP/._Demo.php" />
     <entry file="file://$USER_HOME$/Desktop/cert/apiclient_cert.p12" />
     <entry file="file://$PROJECT_DIR$/WikiPay.php" />
-    <entry file="file://$PROJECT_DIR$/application/Oilcard/Conf/CardConfig.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="14" column="16" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/agentMoneyNotify.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -573,10 +567,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Conf/CardConfig.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="28" column="124" selection-start-line="28" selection-start-column="124" selection-end-line="28" selection-end-column="146" />
+        <state relative-caret-position="446">
+          <caret line="28" column="142" selection-start-line="28" selection-start-column="142" selection-end-line="28" selection-end-column="142" />
           <folding>
             <element signature="e#36#57#0#PHP" expanded="true" />
             <element signature="e#390#422#0#PHP" />
