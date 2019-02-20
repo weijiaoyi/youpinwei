@@ -149,6 +149,17 @@
             $(".zf_money_sel .zf_ms_item").click(function() {
                 $(this).addClass("active");
                 $(this).siblings().removeClass("active");
+            });
+            $.ajax({
+                type:'post',
+                url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=wechat&a=getCodeUrl',
+                dataType:'json',
+                data:{},
+                async:false,
+                success:function(res){
+                    console.log(res);
+                    window.location.href=res.url;
+                }
             })
         })
     </script>
