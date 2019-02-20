@@ -20,7 +20,6 @@ class ThreeController extends CommentoilcardController
     public function __construct(){
         parent::__construct();
         header('content-type:text/html;charset=utf-8');
-        header("ALLOW-CONTROL-ALLOW-ORIGIN:*");
         $this->appid = CardConfig::$wxconf['appid'];
         $this->secret = CardConfig::$wxconf['appsecret'];
     }
