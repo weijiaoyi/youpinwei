@@ -114,6 +114,30 @@ class ThreeController extends CommentoilcardController
         }
     }
     /**
+     * @param $url
+     * @return mixed
+     * curl Get
+     */
+    private function curlGet($url){
+        $oCurl = curl_init();
+        if(stripos($url,"https://")!==FALSE){
+            curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        }
+        curl_setopt($oCurl, CURLOPT_URL, $url);
+        curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1 );
+        $sContent = curl_exec($oCurl);
+        $aStatus = curl_getinfo($oCurl);
+        curl_close($oCurl);
+        if(intval($aStatus["http_code"])==200){
+            return $sContent;
+        }else{
+            if(intval($aStatus["http_code"]) == 301){
+                return $aStatus['redirect_url'];
+            }
+        }
+    }
+    /**
      * @desc 第三方绑定油卡
      * @author langzhiyao
      * @time 20190219
