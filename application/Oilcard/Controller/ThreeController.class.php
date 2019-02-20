@@ -15,9 +15,6 @@ class ThreeController extends CommentoilcardController
 {
     private $appid;
     private $secret;
-    private $base_uri = 'https://api.weixin.qq.com';
-    private $my_uri = 'http://ysy.xiangjianhai.com';
-    private $pay_uri = 'https://api.mch.weixin.qq.com';
 
     public function __construct(){
         parent::__construct();
@@ -25,6 +22,11 @@ class ThreeController extends CommentoilcardController
         $this->appid = CardConfig::$wxconf['appid'];
         $this->secret = CardConfig::$wxconf['appsecret'];
     }
+
+    public function test(){
+        echo 'aaaa';exit;
+    }
+
 
     public function getCode()
     {
