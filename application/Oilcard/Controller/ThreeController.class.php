@@ -27,7 +27,7 @@ class ThreeController extends CommentoilcardController
     public function getCode()
     {
         $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
-        $redirect_url = urlencode('http://'.$_SERVER['SERVER_NAME'].U('oilcard/Three/getAccessToken'));
+        $redirect_url = urlencode(U('oilcard/Three/getAccessToken'));
         $url = str_replace('APPID',$this->appid,$url);
         $url = str_replace('REDIRECT_URI',$redirect_url,$url);
         header('location:'.$url);
