@@ -1,0 +1,1250 @@
+@charset "utf-8";
+
+/*head*/
+
+
+/**/
+
+.vhidden {
+    visibility: hidden;
+}
+
+.vshow {
+    visibility: visible;
+}
+
+.paddl30 {
+    padding-left: 30px;
+}
+
+.paddb40 {
+    padding-bottom: 40px;
+}
+
+.main {
+    width: 750px;
+    margin: 0 auto;
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+.cont750 {
+    width: 750px;
+    margin: 0 auto;
+}
+
+.cont {
+    background: #fff;
+    margin-bottom: 30px;
+}
+
+.cont2 {
+    background: #f7f7f8;
+    margin-bottom: 30px;
+}
+
+.tixian_cont {
+    background: rgba(255, 255, 255, .6);
+    padding: 30px 0;
+    margin-bottom: 30px;
+}
+
+.v_hiden {
+    visibility: hidden;
+}
+
+.graybody {
+    background: #ebecee;
+}
+
+.imgbody {
+    /* background: #ebecee; */
+}
+
+.hide {
+    display: none;
+}
+
+
+/*head*/
+
+.head {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99;
+}
+
+.head.bg {
+    background: rgba(235, 236, 238, .9);
+}
+
+.head>div.head0 {
+    width: 750px;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    margin: 0 auto;
+    display: flex;
+    display: -webkit-flex;
+}
+
+.head0>div {
+    width: 150px;
+    height: 100%;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.head0>div.head_title {
+    width: 300px;
+    font-size: 30px;
+}
+
+.head_r {
+    font-size: 26px;
+}
+
+.head_r a {
+    color: #333;
+    display: block;
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+}
+
+.head_l a {
+    font-size: 26px;
+    color: #333;
+    display: block;
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+}
+
+.head_l a i {
+    font-size: 26px;
+    position: relative;
+    top: -4px;
+}
+
+
+/*head end*/
+
+.user_login_box {
+    padding: 40px 0;
+}
+
+.user_login {
+    -webkit-display: flex;
+    display: flex;
+}
+
+.user_headpic {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    margin-right: 30px;
+}
+
+.user_headpic>a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.user_operate {
+    -webkit-display: flex;
+    display: flex;
+    align-items: center;
+    font-size: 44px;
+    color: #000;
+}
+
+.user_operate a {
+    font-size: 44px;
+    color: #000;
+}
+
+.user_operate span {
+    padding: 0 10px;
+}
+
+.notice_box {
+    height: 75px;
+    background: #ffe8ea;
+    position: relative;
+}
+
+.notice_txt {
+    height: 75px;
+}
+
+a.swiper_link {
+    display: block;
+    width: 100%;
+    height: 75px;
+    line-height: 75px;
+    text-align: left;
+    padding-left: 45px;
+    font-size: 26px;
+    color: #d30313;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notice_icon {
+    width: 75px;
+    height: 75px;
+    position: absolute;
+    left: 30px;
+    top: 15px;
+}
+
+.notice_icon i {
+    font-size: 32px;
+    color: #d30313;
+}
+
+.cont {
+    background: #f7f7f8;
+    margin-bottom: 30px;
+}
+
+.remainder_box {
+    border-bottom: 2px solid #9a9a9a;
+    padding: 25px 0 20px;
+}
+
+.remainder_title {
+    font-size: 26px;
+    color: #000;
+    line-height: 40px;
+}
+
+.withdraw_cont {
+    height: 100px;
+    font-size: 60px;
+    color: #000;
+    -webkit-display: flex;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.withdraw_cont .withdraw_btn {
+    font-size: 26px;
+    color: #fff;
+    width: 120px;
+    height: 50px;
+    display: block;
+    border-radius: 25px;
+    background: #e21323;
+    text-align: center;
+    line-height: 50px;
+}
+
+.frozenamount {
+    -webkit-display: flex;
+    display: flex;
+}
+
+.frozenamount>div {
+    width: 50%;
+    box-sizing: border-box;
+    padding: 30px 0;
+}
+
+.frozenamount_r {
+    border-left: 1px solid #eee;
+}
+
+.frozenamount_dl {
+    padding-left: 15px;
+}
+
+.frozenamount_dl.paddl30 {
+    padding-left: 30px;
+}
+
+.frozenamount_dl dt {
+    font-size: 28px;
+    color: #9a9a9a;
+    line-height: 50px;
+}
+
+.frozenamount_dl dd {
+    font-size: 36px;
+    color: #000;
+    line-height: 50px;
+}
+
+.h_navbar {
+    padding: 35px 0;
+}
+
+.h_navbar>li {
+    width: 25%;
+    float: left;
+}
+
+.h_navbar>li>a {
+    display: block;
+}
+
+.h_navbar_icon {
+    text-align: center;
+    height: 80px;
+    line-height: 80px;
+    margin-bottom: 15px;
+}
+
+.h_navbar_icon i {
+    font-size: 70px;
+    color: #000;
+}
+
+.h_navbar_p {
+    font-size: 24px;
+    color: #000;
+    text-align: center;
+}
+
+.v_navbar>li {
+    height: 100px;
+    border-bottom: 2px solid #9a9a9a;
+}
+
+.v_navbar>li:last-child {
+    border-bottom: none;
+}
+
+.v_navbar>li>a {
+    display: block;
+    padding: 15px 30px;
+    line-height: 70px;
+}
+
+.v_navbar_item {
+    width: 100%;
+    height: 100%;
+    -webkit-display: flex;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 30px;
+    color: #000;
+}
+
+.login_logo_box {
+    /* height: 170px; */
+    padding-top: 74px;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.login_list>li {
+    border-bottom: 2px solid #9a9a9a;
+    position: relative;
+}
+
+.login_list>li>input {
+    width: 100%;
+    line-height: 68px;
+    padding: 20px 0;
+    box-sizing: border-box;
+    font-size: 32px;
+    color: #000;
+}
+
+.login_list>li.code>input {
+    padding-right: 150px;
+}
+
+a.getcode {
+    width: 143px;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    border-left: 2px solid #ccc;
+    font-size: 26px;
+    color: #000;
+    text-align: right;
+    position: absolute;
+    top: 50%;
+    margin-top: -15px;
+    right: 0;
+    z-index: 9;
+}
+
+.referee_title {
+    font-size: 24px;
+    color: #9a9a9a;
+    line-height: 40px;
+    padding-top: 20px;
+}
+
+.login_list>li>input::-webkit-input-placeholder {
+    color: #000;
+}
+
+.login_list>li>input::-moz-placeholder {
+    color: #000;
+}
+
+.login_list>li>input:-moz-placeholder {
+    color: #000;
+}
+
+.login_list>li>input:-ms-input-placeholder {
+    color: #000;
+}
+
+.login_submitbox {
+    padding-top: 65px;
+}
+
+.login_submit {
+    width: 100%;
+    height: 96px;
+    border: 2px solid #9a9a9a;
+    box-sizing: border-box;
+    font-size: 32px;
+    color: #000;
+}
+
+.withdraw_submit {
+    width: 100%;
+    height: 96px;
+    border: 2px solid #9a9a9a;
+    box-sizing: border-box;
+    font-size: 32px;
+    color: #000;
+}
+
+a.findpwd_next {
+    width: 100%;
+    height: 96px;
+    display: block;
+    border: 2px solid #9a9a9a;
+    box-sizing: border-box;
+    font-size: 32px;
+    color: #000;
+    line-height: 96px;
+    text-align: center;
+}
+
+a.add_bankcard_next {
+    width: 100%;
+    height: 96px;
+    display: block;
+    border: 2px solid #9a9a9a;
+    box-sizing: border-box;
+    font-size: 32px;
+    color: #000;
+    line-height: 96px;
+    text-align: center;
+    outline: 0;
+}
+
+a.sybtn {
+    width: 100%;
+    height: 96px;
+    display: block;
+    border: 2px solid #9a9a9a;
+    box-sizing: border-box;
+    font-size: 32px;
+    color: #000;
+    line-height: 96px;
+    text-align: center;
+}
+
+.login_protocol {
+    font-size: 26px;
+    color: #000;
+    text-align: center;
+    line-height: 70px;
+}
+
+.login_protocol a {
+    color: #9a9a9a;
+}
+
+.thirdparty_box {
+    padding-top: 100px;
+}
+
+.thirdparty {
+    -webkit-display: flex;
+    display: flex;
+    justify-content: space-around;
+}
+
+.thirdparty a {
+    display: block;
+}
+
+.thirdparty a i.icon-weixin-copy {
+    font-size: 86px;
+    color: #26aa4e;
+}
+
+.thirdparty_title {
+    font-size: 26px;
+    color: #000;
+    text-align: center;
+    line-height: 60px;
+    margin-bottom: 20px;
+}
+
+.thirdparty_title span {
+    position: relative;
+}
+
+.thirdparty_title span::before {
+    content: '';
+    width: 180px;
+    height: 2px;
+    background: #9a9a9a;
+    display: block;
+    position: absolute;
+    left: -200px;
+    top: 50%;
+    margin-top: -1px;
+}
+
+.thirdparty_title span::after {
+    content: '';
+    width: 180px;
+    height: 2px;
+    background: #9a9a9a;
+    display: block;
+    position: absolute;
+    right: -200px;
+    top: 50%;
+    margin-top: -1px;
+}
+
+.head.borderb {
+    border-bottom: 2px solid #9a9a9a;
+}
+
+.popularize_code {
+    font-size: 36px;
+    color: #9a9a9a;
+    line-height: 70px;
+    text-align: center;
+    padding-top: 15px;
+}
+
+.popularize_code span {
+    font-size: 60px;
+    color: #000;
+    margin-left: 20px;
+}
+
+.weui-dialog {
+    max-width: 700px !important;
+}
+
+.weui-dialog__hd .weui-dialog__title {
+    font-size: 36px;
+}
+
+.weui-dialog__bd {
+    font-size: 30px;
+    padding: 20px 30px;
+    line-height: 70px;
+}
+
+.weui-dialog__ft {
+    padding: 30px 0;
+}
+
+.weui-dialog__btn {
+    font-size: 30px;
+}
+
+.setpwd_input {
+    padding-top: 90px;
+}
+
+.setpwd_p {
+    font-size: 30px;
+    color: #000;
+    line-height: 50px;
+    margin-bottom: 15px;
+}
+
+.setpwd_inputs {
+    margin-bottom: 30px;
+}
+
+.setpwd_inputs li {
+    width: 16.66%;
+    float: left;
+    border: 2px solid #9a9a9a;
+    border-right: none;
+    box-sizing: border-box;
+    height: 90px;
+    margin-right: 0;
+}
+
+.setpwd_inputs li:last-child {
+    border-right: 2px solid #9a9a9a;
+}
+
+.setpwd_inputs li input {
+    width: 100%;
+    height: 100%;
+    font-size: 30px;
+    color: #000;
+    text-align: center;
+}
+
+.ordernumber {
+    font-size: 24px;
+    color: #000;
+    border-bottom: 2px solid #9a9a9a;
+    line-height: 78px;
+}
+
+.trade_resume {
+    height: 150px;
+    padding-left: 180px;
+    position: relative;
+    padding-top: 30px;
+}
+
+.tradeimg {
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    left: 0;
+    top: 30px;
+    z-index: 9;
+}
+
+.tradelist_title {
+    font-size: 32px;
+    color: #000;
+    padding-right: 180px;
+    position: relative;
+    line-height: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 15px;
+}
+
+.tradelist_price {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 9;
+    width: 180px;
+    height: 50px;
+    display: block;
+}
+
+.tradelist_dl dt,
+.tradelist_dl dd {
+    font-size: 28px;
+    color: #9a9a9a;
+    line-height: 44px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.member_tab {
+    padding: 30px 15px 20px;
+}
+
+.member_tab li {
+    width: 33.33%;
+    box-sizing: border-box;
+    border: 2px solid #000;
+    float: left;
+    background: #000;
+    text-align: center;
+    line-height: 44px;
+}
+
+.reward_tab.member_tab li {
+    width: 50%;
+}
+
+.member_tab li a {
+    font-size: 26px;
+    color: #fff;
+    line-height: 44px;
+    display: block;
+    position: relative;
+}
+
+.member_tab li a::before {
+    content: '';
+    width: 2px;
+    height: 24px;
+    display: block;
+    background: #666;
+    position: absolute;
+    left: 0;
+    top: 10px;
+    z-index: 9;
+}
+
+.member_tab li:first-child a::before,
+.member_tab li.active a::before,
+.member_tab li.active+li a::before {
+    content: none;
+}
+
+.member_tab li:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.member_tab li:last-child {
+    border-radius: 0 5px 5px 0;
+}
+
+.member_tab li.active {
+    background: #fff;
+}
+
+.member_tab li.active a {
+    color: #000;
+}
+
+.member_nmb {
+    font-size: 24px;
+    color: #999;
+    line-height: 60px;
+    padding: 0 40px;
+    margin-bottom: 5px;
+}
+
+.member_table {
+    table-layout: fixed;
+}
+
+.member_table thead tr th {
+    padding: 5px;
+    line-height: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: 2px solid #9a9a9a;
+    background: #eee;
+    font-size: 30px;
+    color: #666;
+    font-weight: normal;
+}
+
+.member_table tbody tr td {
+    padding: 10px;
+    line-height: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #eee;
+    font-size: 24px;
+    color: #000;
+    text-align: center;
+}
+
+.member_table tbody tr td:last-child {
+    font-size: 22px;
+    color: #000;
+    line-height: 35px;
+}
+
+.reward_sum {
+    font-size: 30px;
+    color: #000;
+    line-height: 70px;
+    padding: 15px 30px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.member_table tbody tr:nth-child(2n) td {
+    background: #efefef;
+}
+
+.bank_cont {
+    padding: 30px;
+}
+
+.bank_list {
+    width: 690px;
+    height: 210px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.bank_list a {
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding-top: 120px;
+    box-sizing: border-box;
+}
+
+.bank_nmb {
+    font-size: 48px;
+    color: #000;
+    line-height: 60px;
+    padding: 10px 30px;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bank_last_nmb {
+    margin-left: 20px;
+}
+
+a.add_bankcard {
+    width: 686px;
+    height: 96px;
+    display: block;
+    border: 2px solid #9a9a9a;
+    font-size: 32px;
+    color: #000;
+    text-align: center;
+    line-height: 96px;
+}
+
+a.add_bankcard span {
+    font-size: 36px;
+    margin-right: 20px;
+}
+
+.icbc_bank {
+    background: url(../images/banks/ICBC.png) no-repeat;
+}
+
+.cmbc_bank {
+    background: url(../images/banks/CMBC.png) no-repeat;
+}
+
+.abc_bank {
+    background: url(../images/banks/ABC.png) no-repeat;
+}
+
+.bc_bank {
+    background: url(../images/banks/BC.png) no-repeat;
+}
+
+.bccb_bank {
+    background: url(../images/banks/BCCB.png) no-repeat;
+}
+
+.bcm_bank {
+    background: url(../images/banks/BCM.png) no-repeat;
+}
+
+.cbc_bank {
+    background: url(../images/banks/CBC.png) no-repeat;
+}
+
+.cib_bank {
+    background: url(../images/banks/CIB.png) no-repeat;
+}
+
+.citicib_bank {
+    background: url(../images/banks/CITICIB.png) no-repeat;
+}
+
+.cmsb_bank {
+    background: url(../images/banks/CMSB.png) no-repeat;
+}
+
+.everbright_bank {
+    background: url(../images/banks/EVERBRIGHT.png) no-repeat;
+}
+
+.gdb_bank {
+    background: url(../images/banks/GDB.png) no-repeat;
+}
+
+.hb_bank {
+    background: url(../images/banks/HB.png) no-repeat;
+}
+
+.psbc_bank {
+    background: url(../images/banks/PSBC.png) no-repeat;
+}
+
+.sdb_bank {
+    background: url(../images/banks/SDB.png) no-repeat;
+}
+
+.shanghai_bank {
+    background: url(../images/banks/SHANGHAI.png) no-repeat;
+}
+
+.spdb_bank {
+    background: url(../images/banks/SPDB.png) no-repeat;
+}
+
+.xiamenInternational_bank {
+    background: url(../images/banks/XiamenInternational.png) no-repeat;
+}
+
+.zgxh_bank {
+    background: url(../images/banks/ZGXH.png) no-repeat;
+}
+
+.addbank_cont {
+    margin-bottom: 65px;
+}
+
+.addbank_success_cont {
+    background: url(../images/user/addbanksuccess.png) no-repeat center 100px;
+    padding-top: 290px;
+}
+
+.addbank_success_p {
+    font-size: 32px;
+    color: #161616;
+    line-height: 50px;
+    text-align: center;
+}
+
+.addbank_hint {
+    font-size: 26px;
+    color: #000;
+    height: 75px;
+    line-height: 74px;
+    background: #dfe0e1;
+    padding: 0 40px;
+}
+
+.tixian_list a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding-right: 40px;
+    box-sizing: border-box;
+}
+
+.nav_pointer2 {
+    width: 17px;
+    height: 30px;
+    display: block;
+    background: url(../images/icons/nav_pointer2.png) no-repeat;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -15px;
+}
+
+.tixian_bank_title {
+    font-size: 32px;
+    color: #000;
+}
+
+.tixian_bank_nmb {
+    padding-left: 215px;
+    background: url(../images/banks/bank_ellipsis.png) no-repeat left center;
+    font-size: 24px;
+    color: #000;
+    line-height: 30px;
+}
+
+.tixian_bank_nmb span {
+    padding-left: 30px;
+}
+
+.tixian_bank_title2 {
+    font-size: 28px;
+    color: #242424;
+}
+
+.tixian_input_box {
+    border-bottom: 2px solid #9a9a9a;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.tixian_input_label {
+    width: 50px;
+    height: 130px;
+    display: block;
+    font-size: 40px;
+    color: #9a9a9a;
+    position: absolute;
+    line-height: 130px;
+    bottom: 0;
+    left: 0;
+    z-index: 9;
+}
+
+.tixian_input {
+    width: 100%;
+    font-size: 120px;
+    color: #000;
+    line-height: 120px;
+    padding: 5px 30px 5px 50px;
+    box-sizing: border-box;
+}
+
+.withdrawable {
+    position: relative;
+}
+
+.withdrawable p {
+    font-size: 28px;
+    color: #000;
+    line-height: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.withdrawable .tixian_all {
+    line-height: 50px;
+    text-align: right;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 9;
+    font-size: 28px;
+    color: #000;
+    line-height: 50px;
+    padding-right: 0;
+}
+
+.predict_obtain {
+    font-size: 26px;
+    color: #000;
+    line-height: 50px;
+    margin-bottom: 30px;
+}
+
+.selectbank_list {
+    padding-bottom: 20px;
+}
+
+.selectbank_list li {
+    line-height: 98px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 30px;
+    color: #141414;
+    border-bottom: 2px solid #9a9a9a;
+    padding-right: 40px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.selectbank_list li:last-child {
+    border-bottom: none;
+}
+
+.selectbank_list li.active::after {
+    content: '';
+    width: 34px;
+    height: 26px;
+    display: block;
+    background: url(../images/banks/selected.png) no-repeat;
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    margin-top: -13px;
+}
+
+.withdraw_setpwd_inputs {
+    padding: 50px 0 0;
+}
+
+.withdraw_p {
+    font-size: 26px;
+    color: #000101;
+    text-align: right;
+    line-height: 30px;
+    margin-bottom: 100px;
+}
+
+.withdraw_p a {
+    color: #000101;
+}
+
+.withdraw_success_list {
+    padding-left: 15px;
+}
+
+.withdraw_success_list li {
+    position: relative;
+    height: 132px;
+    border-left: 6px solid rgba(154, 154, 154, 0);
+}
+
+.withdraw_success_list li.active {
+    border-left: 6px solid rgba(154, 154, 154, 1);
+}
+
+.withdraw_success_cont {
+    padding-top: 54px;
+}
+
+.withdraw_success_dl {
+    padding-left: 40px;
+}
+
+.withdraw_success_dl dt {
+    font-size: 32px;
+    color: #000;
+    font-weight: 100;
+    line-height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.withdraw_success_dl dd {
+    font-size: 24px;
+    color: #000;
+    line-height: 26px;
+}
+
+.wds_iconbox {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #9a9a9a;
+    line-height: 44px;
+    text-align: center;
+    position: absolute;
+    left: -25px;
+}
+
+.withdraw_success_list li.active .wds_iconbox {
+    background: #000;
+}
+
+.wds_iconbox0 {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.withdraw_success_list li.active .wds_iconbox0::after {
+    content: '';
+    width: 6px;
+    height: 44px;
+    display: block;
+    background: #000;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 100%;
+    z-index: 9;
+}
+
+.withdraw_success_list li.active_step2 .wds_iconbox0::before {
+    content: '';
+    width: 6px;
+    height: 44px;
+    display: block;
+    background: #000;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: -100%;
+    z-index: 9;
+}
+
+.withdraw_success_list li.active_step2 .wds_iconbox {
+    background: #000;
+}
+
+.presentation_list {
+    background: #fff;
+    padding: 30px 40px;
+    border-bottom: 2px solid #ddd;
+}
+
+.presentation_p {
+    line-height: 66px;
+    font-size: 28px;
+    color: #666;
+    padding: 0 30px;
+}
+
+.presentation_list_h2 {
+    font-size: 32px;
+    color: #000;
+}
+
+.presentation_list_h2 span {
+    font-size: 30px;
+    float: right;
+}
+
+.presentation_list_p1 {
+    font-size: 24px;
+    color: #9a9a9a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tx_false {
+    color: #e21323;
+}
+
+.no_list {
+    font-size: 24px;
+    color: #9a9a9a;
+    text-align: center;
+    line-height: 100px;
+    margin-bottom: 50px;
+}
+
+.revise_cont {
+    padding-top: 70px;
+}
+
+.binded_cont {
+    padding: 30px 40px;
+    background: #fff;
+}
+
+.binded_p {
+    font-size: 32px;
+    color: #000;
+    line-height: 50px;
+}
+
+.binded_p span {
+    float: right;
+}
+
+.fixedbg {
+    background-attachment: fixed;
+}
+
+.headbgimg {
+    background: #eee;
+}

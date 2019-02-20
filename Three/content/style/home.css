@@ -1,0 +1,180 @@
+.zf_title {
+    font-size: 30px;
+    color: #333;
+    font-weight: bold;
+    line-height: 80px;
+    margin-bottom: 5px;
+}
+
+.zf_title span {
+    position: relative;
+    padding-left: 20px;
+}
+
+.zf_title span::before {
+    content: '';
+    height: 28px;
+    width: 5px;
+    display: block;
+    background: #ff2e2a;
+    position: absolute;
+    left: 0;
+    top: 7px;
+    z-index: 3;
+    border-radius: 5px;
+}
+
+.zf_card {
+    height: 240px;
+    background: #fb4f3b;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.zf_card_nmb {
+    font-size: 60px;
+    color: #fff;
+    font-weight: bold;
+    line-height: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.zf_card a {
+    display: block;
+    height: 100%;
+    padding: 30px 20px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.zf_card_zhe {
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    display: block;
+    border-radius: 50%;
+    background: #fbded6;
+    font-size: 30px;
+    color: #fb4f3b;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    z-index: 3;
+}
+
+.zf_state {
+    font-size: 22px;
+    color: #fb4f3b;
+    line-height: 40px;
+    margin-bottom: 10px;
+}
+
+.zf_ms_item {
+    width: 344px;
+    height: 180px;
+    border-radius: 10px;
+    border: 1px solid #aaa;
+    margin-bottom: 20px;
+    float: left;
+}
+
+.zf_ms_item.floatr {
+    float: right;
+}
+
+.zf_ms_item a {
+    height: 160px;
+    display: flex;
+    display: -webkit-flex;
+    padding: 20px 10px;
+}
+
+.zf_jine {
+    width: 40%;
+    font-size: 30px;
+    color: #333;
+    line-height: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.zf_info {
+    width: 60%;
+    font-size: 26px;
+    color: #666;
+    line-height: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.zf_ms_item.active {
+    background: #eee;
+}
+
+.zf_input_box {
+    margin-bottom: 50px;
+}
+
+.zf_input {
+    width: 100%;
+    height: 90px;
+    border: 1px solid #aaa;
+    text-align: center;
+    padding: 20px 10px;
+    line-height: 50px;
+    box-sizing: border-box;
+    font-size: 30px;
+    color: #000;
+    border-radius: 50px;
+    outline: none;
+}
+
+.zf_input::-webkit-input-placeholder {
+    color: #999;
+}
+
+.zf_input::-moz-placeholder {
+    color: #999;
+}
+
+.zf_input::-moz-placeholder {
+    color: #999;
+}
+
+.zf_input::-ms-input-placeholder {
+    color: #999;
+}
+
+.zf_submit {
+    width: 100%;
+    height: 90px;
+    font-size: 34px;
+    color: #fff;
+    line-height: 90px;
+    text-align: center;
+    border-radius: 50px;
+    background: linear-gradient(to right, #ff3432, #ff6501);
+    outline: none;
+}
+
+.zf_submit_box {
+    margin-bottom: 30px;
+}
+
+.zf_rule_t {
+    font-size: 28px;
+    color: #666;
+    line-height: 50px;
+    margin-bottom: 10px;
+    padding-left: 20px;
+}
+
+.zf_rule_p {
+    font-size: 26px;
+    color: #666;
+    line-height: 50px;
+    margin-bottom: 10px;
+    padding-left: 20px;
+}
