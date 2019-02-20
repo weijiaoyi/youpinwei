@@ -2,6 +2,7 @@
 namespace Oilcard\Controller;
 use Think\Controller;
 use Oilcard\Controller\UserController;
+use Oilcard\Conf\CardConfig;
 use Comment\Controller\CommentoilcardController;
 use Think\Log;
 /**

@@ -2501,42 +2501,8 @@ class WechatController extends CommentoilcardController
         exit;
     }
 
-    /**
-     * 钱方支付
-     * @param  [type] $Order  [订单信息]
-     * @param  [type] $Member [用户信息]
-     * @param  [type] $PayCon [支付类型配置]
-     * @return [type]         [description]
-     */
-    public function _QFPay($Order,$Member,$PayCon){
-        switch ($PayCon['paymoney']) {
-            case '2':
-                $payMoney = 1;
-                break;
-            default:
-                $payMoney = $Order['real_pay']*100;
-                break;
-        }
-        $orderSn = isset($Order['serial_number'])?$Order['serial_number']:$Order['order_no'];
-        $notify_url =$this->_GetNotifyUrl($Order['order_type']);
 
-        $tm = date('Y-m-d h:i:s', time());
-        $data = array(
-            "txamt"        =>$payMoney, //支付金额，单位分
-            "txcurrcd"     =>"CNY", //币种 港币：HKD 人民币：CNY
-            "pay_type"     =>"800207", //支付类型 支付宝扫码:800101 支付宝反扫:800108 支付宝服务窗:800107 微信扫码:800201 微信刷卡:800208 微信公众号支付:800207 微信APP支付: 800210
-            "out_trade_no" =>$orderSn, //外部订单号，外部订单唯一标示
-            "udid"         =>"me",  //设备唯一id
-            "txdtm"        =>$tm, //请求方交易时间 格式为YYYY-mm-dd HH:MM:DD 
-            "pay_limit"    =>"no_credit" 
-        );
-        $QfPay = new QFPayConfig();  
-        $result = $QfPay->request("payment", $data);
-        p($result);
-        var_dump($result);
-        exit;
-        var_dump();
-    }
+
     /**
      * @desc 第三方绑定油卡
      * @author langzhiyao
@@ -2745,5 +2711,43 @@ class WechatController extends CommentoilcardController
 
         }
 
+    }
+
+
+        /**
+     * 钱方支付
+     * @param  [type] $Order  [订单信息]
+     * @param  [type] $Member [用户信息]
+     * @param  [type] $PayCon [支付类型配置]
+     * @return [type]         [description]
+     */
+    public function _QFPay($Order,$Member,$PayCon){
+        switch ($PayCon['paymoney']) {
+            case '2':
+                $payMoney = 1;
+                break;
+            default:
+                $payMoney = $Order['real_pay']*100;
+                break;
+        }
+        $orderSn = isset($Order['serial_number'])?$Order['serial_number']:$Order['order_no'];
+        $notify_url =$this->_GetNotifyUrl($Order['order_type']);
+
+        $tm = date('Y-m-d h:i:s', time());
+        $data = array(
+            "txamt"        =>$payMoney, //支付金额，单位分
+            "txcurrcd"     =>"CNY", //币种 港币：HKD 人民币：CNY
+            "pay_type"     =>"800207", //支付类型 支付宝扫码:800101 支付宝反扫:800108 支付宝服务窗:800107 微信扫码:800201 微信刷卡:800208 微信公众号支付:800207 微信APP支付: 800210
+            "out_trade_no" =>$orderSn, //外部订单号，外部订单唯一标示
+            "udid"         =>"me",  //设备唯一id
+            "txdtm"        =>$tm, //请求方交易时间 格式为YYYY-mm-dd HH:MM:DD 
+            "pay_limit"    =>"no_credit" 
+        );
+        $QfPay = new QFPayConfig();  
+        $result = $QfPay->request("payment", $data);
+        p($result);
+        var_dump($result);
+        exit;
+        var_dump();
     }
 }
