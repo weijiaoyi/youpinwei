@@ -201,8 +201,8 @@
                 $(this).addClass("active");
                 $(this).siblings().removeClass("active");
                 $('.zf_zf').show();
-                $('#truePay').html($(this).find('.zf').html());
-                $('#savePay').html($(this).find('.js').html());
+                $('#truePay').html($(this).attr('data-zf'));
+                $('#savePay').html($(this).attr('data-js'));
             })
 
             //微信支付

@@ -386,22 +386,22 @@ class ThreeController extends CommentoilcardController
             $truePay = sprintf("%.2f",$v*$scale/100);
             $savePay = sprintf("%.2f",$v*(1-$scale/100));
             if($k%2 == 0){
-                $html .='<div class="zf_ms_item">
+                $html .='<div class="zf_ms_item" data-zf="'.$truePay.'" data-js="'.$savePay.'">
                     <a href="javascript:;">
                         <div class="zf_jine">￥'.$v.'</div>
                         <div class="zf_info">
-                            <p class="zf">支付￥'.$truePay.'</p>
-                            <p class="js">节省￥'.$savePay.'</p>
+                            <p>支付￥'.$truePay.'</p>
+                            <p>节省￥'.$savePay.'</p>
                         </div>
                     </a>
                 </div>';
             }else{
-                $html .= '<div class="zf_ms_item floatr">
+                $html .= '<div class="zf_ms_item floatr" data-zf="'.$truePay.'" data-js="'.$savePay.'">
                     <a href="javascript:;">
                         <div class="zf_jine">￥'.$v.'</div>
                         <div class="zf_info">
-                            <p class="zf">支付￥'.$truePay.'</p>
-                            <p class="js">节省￥'.$savePay.'</p>
+                            <p>支付￥'.$truePay.'</p>
+                            <p>节省￥'.$savePay.'</p>
                         </div>
                     </a>
                 </div>';
