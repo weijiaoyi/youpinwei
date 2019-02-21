@@ -52,7 +52,7 @@ class QFPayConfig {
      */
     public function request($name, $data) {
         $url = $this->requestUrl . "/trade/v1/" . $name . "?" . http_build_query($data);
-        $header = array("X-QF-APPCODE: ".$this->APP_CODE, "X-QF-SIGN: ". make_req_sign($data, $this->KEY));
+        $header = array("X-QF-APPCODE: ".$this->APP_CODE, "X-QF-SIGN: ". $this->make_req_sign($data, $this->KEY));
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -75,11 +75,11 @@ class QFPayConfig {
                 break;
             }
         }
-        if ($sign && $sign != make_resp_sign($body, $this->KEY)) {
+        if ($sign && $sign != $this->make_resp_sign($body, $this->KEY)) {
             return array(
                 'msg'       => 'respinse sign check error:签名错误',
                 'sign'      => $sign,
-                'resp_sign' => make_resp_sign($body, $this->KEY),
+                'resp_sign' => $this->make_resp_sign($body, $this->KEY),
             );
         }
         return $body;
