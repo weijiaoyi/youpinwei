@@ -169,14 +169,17 @@ class ThreeController extends CommentoilcardController
             if(empty($card_no)){echo json_encode(array('status'=>100,'message'=>'卡号不能为空'));exit;}
             //开启事务
             M()->startTrans();
-            //判断手机号是否被其他第三方绑定
-            $is_phone = M('user')->where(array('phone'=>$phone,'fromId'=>array('neq',$from)))->find();
-            if(!empty($is_phone)){
-                echo json_encode(array('status'=>100,'message'=>'该手机号已在其他第三方平台绑定'));exit;
-            }
+
             //判断是否具有第三方标识
             $is_three = M('three_scale')->where(array('from'=>$from))->find();
             if(!empty($is_three)){
+                //查询第三方标识ID
+                $fromId = $is_three['id'];
+                //判断手机号是否被其他第三方绑定
+                $is_phone = M('user')->where(array('phone'=>$phone,'fromId'=>array('neq',$fromId)))->find();
+                if(!empty($is_phone)){
+                    echo json_encode(array('status'=>100,'message'=>'该手机号已在其他第三方平台绑定'));exit;
+                }
                 //判断卡号是否存在
                 $is_card = M('oil_card')->where(array('card_no'=>$card_no))->find();
                 if(!empty($is_card)){
