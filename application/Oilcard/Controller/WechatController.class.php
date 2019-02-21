@@ -2741,12 +2741,15 @@ class WechatController extends CommentoilcardController
             "out_trade_no" =>$orderSn, //外部订单号，外部订单唯一标示
             "udid"         =>"me",  //设备唯一id
             "txdtm"        =>$tm, //请求方交易时间 格式为YYYY-mm-dd HH:MM:DD 
-            "pay_limit"    =>"no_credit" 
+            "pay_limit"    =>"no_credit" ,
+            'goods_name'   =>$PayCon['body'], //商品名称
+            'sub_openi'    =>$Member['openid'], //用户的openid
         );
         $QfPay = new QFPayConfig();  
         $result = $QfPay->request("payment", $data);
-        p($result);
         var_dump($result);
+        exit(json_encode(['data'=>$data,'result'=>$result]));
+        
         exit;
         var_dump();
     }   

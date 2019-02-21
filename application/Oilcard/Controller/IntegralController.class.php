@@ -263,6 +263,10 @@ class IntegralController extends CommentoilcardController
                     $data = $PayMent->_HjPay($OrderAdd,$Member,$PayCon);
                     $OrderAdd['payment_code'] = 'hjpay';
                     break;
+                case '3': //钱方支付
+                    $data = $PayMent->_QFPay($OrderAdd,$Member,$PayCon);
+                    $OrderInfo['payment_code'] = 'qfpay';
+                    break;
             }
             if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
             if($data)$data['order_no'] = $AddMoneySave['order_no'];

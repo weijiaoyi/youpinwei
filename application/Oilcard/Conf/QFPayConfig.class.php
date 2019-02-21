@@ -7,9 +7,9 @@
 namespace Oilcard\Conf;
 class QFPayConfig {
 
-    private $requestUrl ='https://openapi-test.qfpay.com/';
-    private $APP_CODE = 'AAAAFF893B354F66BBAFA41EF6B324C1';
-    private $KEY = '6A7984FC3020463A971FB1DB061EE4A9';
+    private $requestUrl ='https://openapi-test.quanyipay.com';//'https://openapi-test.qfpay.com/';
+    private $APP_CODE = 'EBEEFB4A63CB45C2A667F3A6C9F76C12';
+    private $KEY = 'C6FBE7410F9848F48ADD977A002A8F21';
 
     /**
      * 生产签名
@@ -29,7 +29,6 @@ class QFPayConfig {
         $ret = strtoupper(md5($s));
         return $ret;
     }
-
     /**
      * 生产签名
      * @Author   Mr.Wang
@@ -52,7 +51,7 @@ class QFPayConfig {
      */
     public function request($name, $data) {
         $url = $this->requestUrl . "/trade/v1/" . $name . "?" . http_build_query($data);
-        $header = array("X-QF-APPCODE: ".$this->APP_CODE, "X-QF-SIGN: ". make_req_sign($data, $this->KEY));
+        $header = array("X-QF-APPCODE: ".$this->APP_CODE, "X-QF-SIGN: ". $this->make_req_sign($data, $this->KEY));
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -75,11 +74,11 @@ class QFPayConfig {
                 break;
             }
         }
-        if ($sign && $sign != make_resp_sign($body, $this->KEY)) {
+        if ($sign && $sign != $this->make_resp_sign($body, $this->KEY)) {
             return array(
                 'msg'       => 'respinse sign check error:签名错误',
                 'sign'      => $sign,
-                'resp_sign' => make_resp_sign($body, $this->KEY),
+                'resp_sign' => $this->make_resp_sign($body, $this->KEY),
             );
         }
         return $body;
