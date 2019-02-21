@@ -23,7 +23,7 @@ class ThreeController extends CommentoilcardController
 //        $this->appid = CardConfig::$wxconf['appid'];
 //        $this->secret = CardConfig::$wxconf['appsecret'];
         $this->appid = 'wx2fdc78cdc9c7d7b4';
-        $this->secret = '';
+        $this->secret = '025b938a78d46c8f3a0c55169e86b55d';
 
     }
 
