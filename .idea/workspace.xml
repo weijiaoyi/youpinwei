@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb53f77a-e695-4a02-b0bb-18fb8a070d14" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Three/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Three/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,13 +51,13 @@
         <counts>
           <entry key="html" value="231" />
           <entry key="pem" value="11" />
-          <entry key="php" value="3384" />
+          <entry key="php" value="3388" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="231" />
-          <entry key="PHP" value="3384" />
+          <entry key="PHP" value="3388" />
           <entry key="PLAIN_TEXT" value="11" />
         </counts>
       </usages-collector>
@@ -70,8 +68,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="533">
-              <caret line="377" column="51" lean-forward="true" selection-start-line="377" selection-start-column="51" selection-end-line="377" selection-end-column="51" />
+            <state relative-caret-position="317">
+              <caret line="369" column="64" selection-start-line="369" selection-start-column="64" selection-end-line="369" selection-end-column="64" />
               <folding>
                 <element signature="e#36#57#0#PHP" expanded="true" />
                 <element signature="e#4572#5256#0#PHP" />
@@ -291,12 +289,12 @@
       <updated>1547777314486</updated>
       <workItem from="1547777315644" duration="29176000" />
       <workItem from="1550131896451" duration="2178000" />
-      <workItem from="1550461315440" duration="36904000" />
+      <workItem from="1550461315440" duration="37005000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="68258000" />
+    <option name="totallyTimeSpent" value="68359000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -582,8 +580,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="533">
-          <caret line="377" column="51" lean-forward="true" selection-start-line="377" selection-start-column="51" selection-end-line="377" selection-end-column="51" />
+        <state relative-caret-position="317">
+          <caret line="369" column="64" selection-start-line="369" selection-start-column="64" selection-end-line="369" selection-end-column="64" />
           <folding>
             <element signature="e#36#57#0#PHP" expanded="true" />
             <element signature="e#4572#5256#0#PHP" />

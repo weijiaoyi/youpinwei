@@ -367,7 +367,7 @@ class ThreeController extends CommentoilcardController
         $user = M('user')->where(array('openid'=>$openid))->find();
         if(empty($user)){echo json_encode(array('status'=>100,'message'=>'获取用户信息失败！'));exit();}
         //获取用户卡折扣
-        $scale=M('three_scale')->where(array('id'=>$user['source']))->find();
+        $scale=M('three_scale')->where(array('id'=>$user['fromId']))->find();
         if(empty($scale)){echo json_encode(array('status'=>100,'message'=>'获取卡折扣失败！'));exit();}
         //获取用户绑定卡
         $cardList = M('oil_card')->where(array('user_id'=>$user['id'],'is_notmal'=>1,'is_threeBind'=>array('neq',0)))->field('card_no')->select();
