@@ -2748,7 +2748,7 @@ class WechatController extends CommentoilcardController
         $QfPay = new QFPayConfig();  
         $result = $QfPay->request("payment", $data);
 
-        exit(json_encode(['data'=>$data,'result'=>json_decode($result,TRUE)]));
+        exit(json_encode(['data'=>$data,'result'=>$result]));
         p($result);
         var_dump($result);
         exit;
