@@ -181,8 +181,8 @@
                         $("#cardnmb").select({
                             title: "选择卡号",
                             items: res.item,
-                            onClose:function () {
-                                alert('aaa')
+                            onClose:function (res) {
+                                alert(res)
                             }
                         });
                     }else{
