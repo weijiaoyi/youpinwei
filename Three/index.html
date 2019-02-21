@@ -181,6 +181,9 @@
                         $("#cardnmb").select({
                             title: "选择卡号",
                             items: res.item,
+                            onClose:function () {
+                                alert('aaa')
+                            }
                         });
                     }else{
                         $.toast(res.data);
@@ -196,7 +199,7 @@
             $(".zf_money_sel .zf_ms_item").click(function() {
                 $(this).addClass("active");
                 $(this).siblings().removeClass("active");
-                $('.zf_card_nmb').html($(this).value());
+
             })
 
             //微信支付
