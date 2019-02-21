@@ -180,7 +180,7 @@ class ThreeController extends CommentoilcardController
                 $is_card = M('oil_card')->where(array('card_no'=>$card_no))->find();
                 if(!empty($is_card)){
                     //判断卡号是否已被申领
-                    if($is_card['status'] != 1){
+                    if($is_card['status'] == 1){
                         //判断卡号是否已被其他第三方绑定
                         if($is_card['is_threeBind'] == 0){
                             //插入用户信息
@@ -355,23 +355,28 @@ class ThreeController extends CommentoilcardController
                 exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
             }
         }else{
-            //由第三方跳转到充值页面
-            $op = trim(I('get.op'));
-            $op = base64_decode($op);
-            //获取用户信息
-            $user = M('user')->where(array('openid'=>$op))->find();
-            if(empty($user)){echo json_encode(array('status'=>100,'message'=>'获取用户信息失败！'));exit();}
-            //获取用户卡折扣
-            $scale=M('three_scale')->where(array('id'=>$user['source']))->find();
-            if(empty($scale)){echo json_encode(array('status'=>100,'message'=>'获取卡折扣失败！'));exit();}
-            //获取用户绑定卡
-            $cardList = M('oil_card')->where(array('user_id'=>$user['id'],'is_notmal'=>1,'is_threeBind'=>array('neq',0)))->select();
-
-
-
-
         }
 
+    }
+
+    public function index(){
+        //由第三方跳转到充值页面
+        $op = trim(I('get.op'));
+        $op = base64_decode($op);
+        //获取用户信息
+        $user = M('user')->where(array('openid'=>$op))->find();
+        if(empty($user)){echo json_encode(array('status'=>100,'message'=>'获取用户信息失败！'));exit();}
+        //获取用户卡折扣
+        $scale=M('three_scale')->where(array('id'=>$user['source']))->find();
+        if(empty($scale)){echo json_encode(array('status'=>100,'message'=>'获取卡折扣失败！'));exit();}
+        //获取用户绑定卡
+        $cardList = M('oil_card')->where(array('user_id'=>$user['id'],'is_notmal'=>1,'is_threeBind'=>array('neq',0)))->field('card_no')->select();
+
+
+        $this->assign('scale',$scale);
+        $this->assign('cardList',$cardList);
+        $this->assign('id',1);
+        $this->display();
     }
 
 }

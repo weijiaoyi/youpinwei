@@ -34,7 +34,7 @@
             <div class="zf_card" id="cardnmb">
                 <a href="javascript:;">
                     <h3 class="zf_card_nmb">9130100000557368</h3>
-                    <span class="zf_card_zhe">93.6折</span>
+                    <span class="zf_card_zhe">{$id}折</span>
                 </a>
             </div>
             <p class="zf_state">声明：首次充值金额必须大于500元，才可以激活您的加油卡,第二次及以后对充值金额不作具体要求。</p>
@@ -155,6 +155,8 @@
             //微信支付
             $("#zf_submit").click(function() {
                 $.confirm("您确定要支付吗?", "确认支付?", function() {
+
+
                     $.toast("支付成功!");
                 }, function() {
                     //取消操作
