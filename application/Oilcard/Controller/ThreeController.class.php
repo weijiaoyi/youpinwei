@@ -52,11 +52,7 @@ class ThreeController extends CommentoilcardController
         try {
             $code = I('get.code');
             $sign = I('get.sign');
-            //校验第三方签名
-            $is_sign = M('user_source')->where(array('sign'=>$sign))->find();
-            if(empty($is_sign)){
-                echo '第三方签名错误';exit();
-            }
+
             $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code';
             $url = str_replace('APPID', $this->appid, $url);
             $url = str_replace('SECRET', $this->secret, $url);
@@ -89,10 +85,14 @@ class ThreeController extends CommentoilcardController
                 exit();
             }
 
-            $is_user = M('User')->where(['openid'=>$userinfo['openid']])->find();
+//            $is_user = M('User')->where(['openid'=>$userinfo['openid']])->find();
+            $is_user = M('User')->where(['sign'=>$sign])->find();
 
             if (!$is_user || empty($is_user) || !isset($is_user['id'])){
-                //注册新用户
+                echo '该手机号未绑定油卡！';
+                exit();
+
+                /*//注册新用户
                 $user = array();
                 $user['nickname'] = $userinfo['nickname'];
                 $user['user_img'] = $userinfo['headimgurl'];
@@ -104,7 +104,7 @@ class ThreeController extends CommentoilcardController
                 $user['phone']=$is_sign['phone'];
                 $user['fromId']=$is_sign['fromId'];
 
-                M('User')->add($user);
+                M('User')->add($user);*/
 
             }else {
                 //更新用户信息
@@ -115,7 +115,8 @@ class ThreeController extends CommentoilcardController
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
 
-                M('User')->where(['openid'=>$userinfo['openid']])->save($user);
+//                M('User')->where(['openid'=>$userinfo['openid']])->save($user);
+                M('User')->where(['sign'=>$sign])->save($user);
             }
 
             header('location:'.'http://'.$_SERVER['SERVER_NAME'].'/Three/index.html?op='.base64_encode($userinfo['openid']));
@@ -169,7 +170,7 @@ class ThreeController extends CommentoilcardController
             //开启事务
             M()->startTrans();
             //判断手机号是否被其他第三方绑定
-            $is_phone = M('user_source')->where(array('phone'=>$phone,'from'=>array('neq',$from)))->find();
+            $is_phone = M('user')->where(array('phone'=>$phone,'fromId'=>array('neq',$from)))->find();
             if(!empty($is_phone)){
                 echo json_encode(array('status'=>100,'message'=>'该手机号已在其他第三方平台绑定'));exit;
             }
@@ -183,17 +184,23 @@ class ThreeController extends CommentoilcardController
                     if($is_card['status'] == 1){
                         //判断卡号是否已被其他第三方绑定
                         if($is_card['is_threeBind'] == 0){
+                            $sign = MD5($phone.$card_no);
                             //插入用户信息
-                            $user_three = array(
-                                'sign'=>MD5($phone.$card_no),
+                           /* $user_three = array(
+                                'sign'=>$sign,
                                 'fromId'=>$is_three['id'],
                                 'phone'=>$phone,
                                 'card_no'=>$card_no,
                                 'time'=>time()
+                            );$result = M('user_source')->add($user_three);*/
+                            $user = array(
+                                'fromId'=>$is_three['id'],
+                                'phone'=>$phone,
+                                'sign'=>$sign,
                             );
-                            $result = M('user_source')->add($user_three);
+                            $result = M('user')->add($user);
                             if($result){
-                                $res = M('oil_card')->where(array('card_no'=>$card_no))->save(array('is_threeBind'=>$is_three['id']));
+                                $res = M('oil_card')->where(array('card_no'=>$card_no))->save(array('is_threeBind'=>$is_three['id'],'user_id'=>$result,'status'=>2));
                                 if($res){
                                     M()->commit();
                                     echo json_encode(array('status'=>200,'message'=>'绑定成功'));exit;
@@ -378,7 +385,7 @@ class ThreeController extends CommentoilcardController
                 $item['value'] .=$value['card_no'];
             }
         }
-        echo json_encode(array('status'=>200,'item'=>$item,'scale'=>$scale['scale']));
+        echo json_encode(array('status'=>200,'item'=>$cardList,'scale'=>$scale['scale']));
 
     }
 
