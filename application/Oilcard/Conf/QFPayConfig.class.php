@@ -8,8 +8,8 @@ namespace Oilcard\Conf;
 class QFPayConfig {
 
     private $requestUrl ='https://openapi-test.qfpay.com/';
-    private $APP_CODE = 'AAAAFF893B354F66BBAFA41EF6B324C1';
-    private $KEY = '6A7984FC3020463A971FB1DB061EE4A9';
+    private $APP_CODE = 'EBEEFB4A63CB45C2A667F3A6C9F76C12';
+    private $KEY = 'C6FBE7410F9848F48ADD977A002A8F21';
 
     /**
      * 生产签名
@@ -29,7 +29,6 @@ class QFPayConfig {
         $ret = strtoupper(md5($s));
         return $ret;
     }
-
     /**
      * 生产签名
      * @Author   Mr.Wang
