@@ -264,7 +264,7 @@ class IntegralController extends CommentoilcardController
                     $OrderAdd['payment_code'] = 'hjpay';
                     break;
                 case '3': //钱方支付
-                    $data = $PayMent->_QFPay($OrderInfo,$Member,$PayCon);
+                    $data = $PayMent->_QFPay($OrderAdd,$Member,$PayCon);
                     $OrderInfo['payment_code'] = 'qfpay';
                     break;
             }
