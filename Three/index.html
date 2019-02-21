@@ -31,10 +31,13 @@
     <div class="main">
         <div class="container2">
             <h2 class="zf_title"><span>选择卡号</span></h2>
+            <div class="zf_card_draw">
+                <a href="javascript:;">快去领卡吧</a>
+            </div>
             <div class="zf_card" id="cardnmb">
                 <a href="javascript:;">
                     <h3 class="zf_card_nmb">9130100000557368</h3>
-                    <span class="zf_card_zhe">{$id}折</span>
+                    <span class="zf_card_zhe">93.6折</span>
                 </a>
             </div>
             <p class="zf_state">声明：首次充值金额必须大于500元，才可以激活您的加油卡,第二次及以后对充值金额不作具体要求。</p>
@@ -101,6 +104,10 @@
             <div class="zf_input_box">
                 <input class="zf_input" type="text" placeholder="100的倍数" value="">
             </div>
+            <div class="zf_zf">
+                <div>支付：<span>48000</span>元</div>
+                <div>省油钱：<span>2000</span>元</div>
+            </div>
             <div class="zf_submit_box">
                 <input class="zf_submit" id="zf_submit" type="button" value="微信支付">
             </div>
@@ -145,13 +152,6 @@
     <script src="content/plugins/jqweui/js/jquery-weui.js"></script>
     <script src="content/scripts/common.js"></script>
     <script>
-        function getQueryString(name){
-            var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-            var r = window.location.search.substr(1).match(reg);
-            if (r!=null) return r[2]; return '';
-        }
-        var type = getQueryString('op');
-        alert(type);
         $(function() {
             //选择金额
             $(".zf_money_sel .zf_ms_item").click(function() {
@@ -162,8 +162,6 @@
             //微信支付
             $("#zf_submit").click(function() {
                 $.confirm("您确定要支付吗?", "确认支付?", function() {
-
-
                     $.toast("支付成功!");
                 }, function() {
                     //取消操作

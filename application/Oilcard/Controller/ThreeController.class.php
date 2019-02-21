@@ -102,7 +102,7 @@ class ThreeController extends CommentoilcardController
                 $user['refresh_token']=$info['refresh_token'];
                 //第三方
                 $user['phone']=$is_sign['phone'];
-                $user['source']=$is_sign['fromId'];
+                $user['fromId']=$is_sign['fromId'];
 
                 M('User')->add($user);
 
