@@ -178,3 +178,43 @@
     margin-bottom: 10px;
     padding-left: 20px;
 }
+
+.weui-toast {
+    width: 400px;
+    padding: 20px 0;
+}
+
+.weui-toast_content {
+    font-size: 30px;
+    line-height: 60px;
+}
+
+.weui-cells_radio .weui-check_label {
+    font-size: 30px;
+    line-height: 60px;
+}
+
+.weui-cells_radio .weui-cell::before {
+    border-top: 1px solid #aaa;
+    width: 95%
+}
+
+.toolbar .toolbar-inner {
+    height: 80px;
+}
+
+.toolbar .title {
+    font-size: 30px;
+    height: 80px;
+    line-height: 80px;
+}
+
+.toolbar .picker-button {
+    font-size: 30px;
+    height: 80px;
+    line-height: 80px;
+}
+
+.weui-cells_radio .weui-check:checked+.weui-icon-checked:before {
+    font-size: 32px;
+}

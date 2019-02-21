@@ -31,7 +31,7 @@
     <div class="main">
         <div class="container2">
             <h2 class="zf_title"><span>选择卡号</span></h2>
-            <div class="zf_card">
+            <div class="zf_card" id="cardnmb">
                 <a href="javascript:;">
                     <h3 class="zf_card_nmb">9130100000557368</h3>
                     <span class="zf_card_zhe">93.6折</span>
@@ -146,21 +146,35 @@
     <script src="content/scripts/common.js"></script>
     <script>
         $(function() {
+            //选择金额
             $(".zf_money_sel .zf_ms_item").click(function() {
                 $(this).addClass("active");
                 $(this).siblings().removeClass("active");
+            })
+
+            //微信支付
+            $("#zf_submit").click(function() {
+                $.confirm("您确定要支付吗?", "确认支付?", function() {
+                    $.toast("支付成功!");
+                }, function() {
+                    //取消操作
+                });
+            })
+
+            //选择卡号
+            $("#cardnmb").select({
+                title: "选择卡号",
+                items: [{
+                    title: "9130100000557368",
+                    value: "001",
+                }, {
+                    title: "9130100000557369",
+                    value: "002",
+                }, {
+                    title: "9130100000557370",
+                    value: "003",
+                }]
             });
-            /*$.ajax({
-                type:'post',
-                url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=Three&a=getCodeUrl',
-                dataType:'json',
-                data:{},
-                async:false,
-                success:function(res){
-                    // alert(res.url);
-                    window.location.href=res.url;
-                }
-            })*/
         })
     </script>
 
