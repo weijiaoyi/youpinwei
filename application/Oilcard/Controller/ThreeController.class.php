@@ -390,8 +390,8 @@ class ThreeController extends CommentoilcardController
                     <a href="javascript:;">
                         <div class="zf_jine">￥'.$v.'</div>
                         <div class="zf_info">
-                            <p>支付￥'.$truePay.'</p>
-                            <p>节省￥'.$savePay.'</p>
+                            <p class="zf">支付￥'.$truePay.'</p>
+                            <p class="js">节省￥'.$savePay.'</p>
                         </div>
                     </a>
                 </div>';
@@ -400,8 +400,8 @@ class ThreeController extends CommentoilcardController
                     <a href="javascript:;">
                         <div class="zf_jine">￥'.$v.'</div>
                         <div class="zf_info">
-                            <p>支付￥'.$truePay.'</p>
-                            <p>节省￥'.$savePay.'</p>
+                            <p class="zf">支付￥'.$truePay.'</p>
+                            <p class="js">节省￥'.$savePay.'</p>
                         </div>
                     </a>
                 </div>';
