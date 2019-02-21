@@ -175,7 +175,7 @@
 		var openid=localStorage.openid;
 		var agent_op=localStorage.agent_op;
 
-		
+
 		if(localStorage.openid&&localStorage.agent_op){
 			$.ajax({
 				type:'post',
@@ -190,6 +190,7 @@
 			})
 		}
 		function ajaxFun(){
+		    alert(openid);return false;
 			var list={};
 			$.ajax({
 				type:'post',

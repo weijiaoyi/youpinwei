@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bb53f77a-e695-4a02-b0bb-18fb8a070d14" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php" afterDir="false" />
-    </list>
+    <list default="true" id="bb53f77a-e695-4a02-b0bb-18fb8a070d14" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +29,7 @@
           <entry key="md" value="1" />
           <entry key="p12" value="1" />
           <entry key="pem" value="2" />
-          <entry key="php" value="63" />
+          <entry key="php" value="71" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
@@ -40,22 +37,22 @@
         <counts>
           <entry key="HTML" value="9" />
           <entry key="Markdown" value="1" />
-          <entry key="PHP" value="63" />
+          <entry key="PHP" value="71" />
           <entry key="PLAIN_TEXT" value="4" />
           <entry key="SmartyConfig" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="30" />
+          <entry key="html" value="95" />
           <entry key="pem" value="11" />
-          <entry key="php" value="2411" />
+          <entry key="php" value="2480" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="30" />
-          <entry key="PHP" value="2411" />
+          <entry key="HTML" value="95" />
+          <entry key="PHP" value="2480" />
           <entry key="PLAIN_TEXT" value="11" />
         </counts>
       </usages-collector>
@@ -66,8 +63,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="10" column="19" lean-forward="true" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
+            <state relative-caret-position="223">
+              <caret line="14" column="54" lean-forward="true" selection-start-line="14" selection-start-column="54" selection-end-line="14" selection-end-column="54" />
               <folding>
                 <element signature="e#36#57#0#PHP" expanded="true" />
                 <element signature="e#390#422#0#PHP" />
@@ -82,8 +79,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="803">
-              <caret line="2501" column="5" lean-forward="true" selection-start-line="2501" selection-start-column="5" selection-end-line="2501" selection-end-column="5" />
+            <state relative-caret-position="54">
+              <caret line="1848" lean-forward="true" selection-start-line="1848" selection-end-line="1848" />
               <folding>
                 <element signature="e#127#147#0#PHP" expanded="true" />
                 <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
@@ -93,19 +90,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Three/index.html">
+        <entry file="file://$PROJECT_DIR$/application/Oilcard/Conf/CardConfig.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="466">
-              <caret line="152" column="20" lean-forward="true" selection-start-line="152" selection-start-column="20" selection-end-line="152" selection-end-column="20" />
+            <state>
+              <caret column="5" lean-forward="true" selection-start-column="5" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/H/html/agent.html">
+        <entry file="file://$PROJECT_DIR$/Three/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="648">
-              <caret line="93" column="4" lean-forward="true" selection-start-line="93" selection-start-column="4" selection-end-line="93" selection-end-column="4" />
+            <state relative-caret-position="223">
+              <caret line="139" column="10" lean-forward="true" selection-start-line="139" selection-start-column="10" selection-end-line="139" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -113,8 +110,14 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/H/html/homepage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="136" column="38" lean-forward="true" selection-start-line="136" selection-start-column="38" selection-end-line="136" selection-end-column="38" />
+            <state relative-caret-position="443">
+              <caret line="145" column="42" lean-forward="true" selection-start-line="145" selection-start-column="42" selection-end-line="145" selection-end-column="42" />
+              <folding>
+                <element signature="e#4282#4627#0" />
+                <element signature="e#4641#5007#0" />
+                <element signature="e#4677#4849#0" />
+                <element signature="e#5132#5408#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -123,7 +126,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>qrcode</find>
       <find>wxd16b20528d23aff8</find>
       <find>agentPay</find>
       <find>wxNoticePay</find>
@@ -149,6 +151,11 @@
       <find>$this-&gt;secret</find>
       <find>getCode</find>
       <find>issetLogin</find>
+      <find>smallProgramGetOpenid</find>
+      <find>ajaxFun</find>
+      <find>118</find>
+      <find>secret</find>
+      <find>curlGet</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -168,9 +175,12 @@
         <option value="$PROJECT_DIR$/application/Oilcard/Controller/CardController.class.php" />
         <option value="$USER_HOME$/AppData/Local/Temp/scp33076/home/work/youpinwei/application/Oilcard/Controller/WechatController.class.php" />
         <option value="$PROJECT_DIR$/H/html/tool_select_02.html" />
+        <option value="$PROJECT_DIR$/H/html/homepage.html" />
         <option value="$PROJECT_DIR$/Three/index.html" />
-        <option value="$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php" />
+        <option value="$PROJECT_DIR$/application/Comment/Controller/CommentoilcardController.class.php" />
+        <option value="$PROJECT_DIR$/application/Oilcard/Conf/CardConfig.class.php" />
         <option value="$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php" />
+        <option value="$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php" />
       </list>
     </option>
   </component>
@@ -296,12 +306,12 @@
       <updated>1547777314486</updated>
       <workItem from="1547777315644" duration="29176000" />
       <workItem from="1550131896451" duration="2178000" />
-      <workItem from="1550461315440" duration="18003000" />
+      <workItem from="1550461315440" duration="28314000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49357000" />
+    <option name="totallyTimeSpent" value="59668000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -394,13 +404,6 @@
     <entry file="file://$USER_HOME$/Desktop/PayDemo/__MACOSX/PayDemo/PHP/._Demo.php" />
     <entry file="file://$USER_HOME$/Desktop/cert/apiclient_cert.p12" />
     <entry file="file://$PROJECT_DIR$/WikiPay.php" />
-    <entry file="file://$PROJECT_DIR$/application/Oilcard/Conf/CardConfig.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="14" column="16" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/agentMoneyNotify.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -535,36 +538,49 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/H/html/agent.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="648">
+        <state relative-caret-position="729">
           <caret line="93" column="4" lean-forward="true" selection-start-line="93" selection-start-column="4" selection-end-line="93" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/H/html/homepage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="136" column="38" lean-forward="true" selection-start-line="136" selection-start-column="38" selection-end-line="136" selection-end-column="38" />
+        <state relative-caret-position="443">
+          <caret line="145" column="42" lean-forward="true" selection-start-line="145" selection-start-column="42" selection-end-line="145" selection-end-column="42" />
+          <folding>
+            <element signature="e#4282#4627#0" />
+            <element signature="e#4641#5007#0" />
+            <element signature="e#4677#4849#0" />
+            <element signature="e#5132#5408#0" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/Comment/Controller/CommentoilcardController.class.php">
+    <entry file="file://$PROJECT_DIR$/simplewind/Core/Mode/Api/Controller.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="22" column="31" lean-forward="true" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+        <state relative-caret-position="-1370">
+          <caret line="14" column="15" selection-start-line="14" selection-start-column="15" selection-end-line="14" selection-end-column="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Three/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="466">
-          <caret line="152" column="20" lean-forward="true" selection-start-line="152" selection-start-column="20" selection-end-line="152" selection-end-column="20" />
+        <state relative-caret-position="223">
+          <caret line="139" column="10" lean-forward="true" selection-start-line="139" selection-start-column="10" selection-end-line="139" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Comment/Controller/CommentoilcardController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="97">
+          <caret line="102" lean-forward="true" selection-start-line="102" selection-end-line="102" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="803">
-          <caret line="2501" column="5" lean-forward="true" selection-start-line="2501" selection-start-column="5" selection-end-line="2501" selection-end-column="5" />
+        <state relative-caret-position="54">
+          <caret line="1848" lean-forward="true" selection-start-line="1848" selection-end-line="1848" />
           <folding>
             <element signature="e#127#147#0#PHP" expanded="true" />
             <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
@@ -572,10 +588,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/Oilcard/Conf/CardConfig.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="5" lean-forward="true" selection-start-column="5" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="10" column="19" lean-forward="true" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
+        <state relative-caret-position="223">
+          <caret line="14" column="54" lean-forward="true" selection-start-line="14" selection-start-column="54" selection-end-line="14" selection-end-column="54" />
           <folding>
             <element signature="e#36#57#0#PHP" expanded="true" />
             <element signature="e#390#422#0#PHP" />

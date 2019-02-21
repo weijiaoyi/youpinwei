@@ -20,19 +20,17 @@ class ThreeController extends CommentoilcardController
     public function __construct(){
         parent::__construct();
         header('content-type:text/html;charset=utf-8');
-        $this->appid = CardConfig::$wxconf['appid'];
-        $this->secret = CardConfig::$wxconf['appsecret'];
-    }
+//        $this->appid = CardConfig::$wxconf['appid'];
+//        $this->secret = CardConfig::$wxconf['appsecret'];
+        $this->appid = 'wx2fdc78cdc9c7d7b4';
+        $this->secret = '';
 
-    public function test(){
-        echo 'aaaa';exit;
     }
-
 
     public function getCode()
     {
         $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
-        $redirect_url = urlencode('http://'.$_SERVER['SERVER_NAME'].U('oilcard/Three/getAccessToken'));
+        $redirect_url = urlencode('https://'.$_SERVER['SERVER_NAME'].U('oilcard/Three/getAccessToken'));
         $url = str_replace('APPID',$this->appid,$url);
         $url = str_replace('REDIRECT_URI',$redirect_url,$url);
         header('location:'.$url);
@@ -94,7 +92,7 @@ class ThreeController extends CommentoilcardController
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
 
-                M('User')->add($user);
+//                M('User')->add($user);
 
             }else {
                 //更新用户信息
@@ -105,16 +103,40 @@ class ThreeController extends CommentoilcardController
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
 
-                M('User')->where(['openid'=>$userinfo['openid']])->save($user);
+//                M('User')->where(['openid'=>$userinfo['openid']])->save($user);
             }
 
-            header('location:'.'http://'.$_SERVER['SERVER_NAME'].'/H/html/homepage.html?op='.base64_encode($userinfo['openid']));
+            header('location:'.'http://'.$_SERVER['SERVER_NAME'].'/Three/index.html?op='.base64_encode($userinfo['openid']));
 
 
         }catch (\Exception $e) {
             echo $e->getMessage();
             Log::write('[' . $e->getCode() . '] ' . $e->getMessage(), 'ERR');
             exit();
+        }
+    }
+    /**
+     * @param $url
+     * @return mixed
+     * curl Get
+     */
+    private function curlGet($url){
+        $oCurl = curl_init();
+        if(stripos($url,"https://")!==FALSE){
+            curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        }
+        curl_setopt($oCurl, CURLOPT_URL, $url);
+        curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1 );
+        $sContent = curl_exec($oCurl);
+        $aStatus = curl_getinfo($oCurl);
+        curl_close($oCurl);
+        if(intval($aStatus["http_code"])==200){
+            return $sContent;
+        }else{
+            if(intval($aStatus["http_code"]) == 301){
+                return $aStatus['redirect_url'];
+            }
         }
     }
     /**

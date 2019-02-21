@@ -92,7 +92,8 @@ class CommentoilcardController extends Controller
 
     //获取code
     public function getCode(){
-            $url ='https://open.weixin.qq.com/connect/oauth2/authorize?appid='.$this->appId.'&redirect_uri='.urlencode("http://118.24.95.245/a.php").'&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
+//        http://118.24.95.245/a.php
+            $url ='https://open.weixin.qq.com/connect/oauth2/authorize?appid='.$this->appId.'&redirect_uri='.urlencode("http://114.116.142.79/a.php").'&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
             header('location:'.$url);
     } 
      //access_token
