@@ -359,24 +359,27 @@ class ThreeController extends CommentoilcardController
 
     }
 
-    public function index(){
+    public function getCardInfo(){
         //由第三方跳转到充值页面
-        $op = trim(I('get.op'));
-        $op = base64_decode($op);
+        $openid = trim(I('post.openid'));
+        $openid = base64_decode($openid);
         //获取用户信息
-        $user = M('user')->where(array('openid'=>$op))->find();
+        $user = M('user')->where(array('openid'=>$openid))->find();
         if(empty($user)){echo json_encode(array('status'=>100,'message'=>'获取用户信息失败！'));exit();}
         //获取用户卡折扣
         $scale=M('three_scale')->where(array('id'=>$user['source']))->find();
         if(empty($scale)){echo json_encode(array('status'=>100,'message'=>'获取卡折扣失败！'));exit();}
         //获取用户绑定卡
         $cardList = M('oil_card')->where(array('user_id'=>$user['id'],'is_notmal'=>1,'is_threeBind'=>array('neq',0)))->field('card_no')->select();
+        $item =[];
+        if(!empty($cardList)){
+            foreach($cardList as $key=>$value){
+                $item['title'] .=$value['card_no'];
+                $item['value'] .=$value['card_no'];
+            }
+        }
+        echo json_encode(array('status'=>200,'item'=>$item,'scale'=>$scale['scale']));
 
-
-        $this->assign('scale',$scale);
-        $this->assign('cardList',$cardList);
-        $this->assign('id',1);
-        $this->display();
     }
 
 }

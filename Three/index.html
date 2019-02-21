@@ -153,6 +153,30 @@
     <script src="content/scripts/common.js"></script>
     <script>
         $(function() {
+            function getQueryString(name){
+                var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r!=null) return r[2]; return '';
+            }
+            var openid = getQueryString('op');
+            $.ajax({
+                type:'post',
+                url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=Three&a=getCardInfo',
+                dataType:'json',
+                data:{openid:openid},
+                async:false,
+                success:function(res){
+                    if(res.status == 200){
+
+                    }else{
+                        $.toast(res.message);
+                    }
+
+                }
+            });
+
+
+
             //选择金额
             $(".zf_money_sel .zf_ms_item").click(function() {
                 $(this).addClass("active");
