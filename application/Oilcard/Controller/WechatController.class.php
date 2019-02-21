@@ -2737,7 +2737,7 @@ class WechatController extends CommentoilcardController
         $data = array(
             "txamt"        =>$payMoney, //支付金额，单位分
             "txcurrcd"     =>"CNY", //币种 港币：HKD 人民币：CNY
-            "pay_type"     =>"800201", //支付类型 支付宝扫码:800101 支付宝反扫:800108 支付宝服务窗:800107 微信扫码:800201 微信刷卡:800208 微信公众号支付:800207 微信APP支付: 800210
+            "pay_type"     =>"800213", //支付类型 支付宝扫码:800101 支付宝反扫:800108 支付宝服务窗:800107 微信扫码:800201 微信刷卡:800208 微信公众号支付:800207 微信APP支付: 800210
             "out_trade_no" =>$orderSn, //外部订单号，外部订单唯一标示
             "txdtm"        =>$tm, //请求方交易时间 格式为YYYY-mm-dd HH:MM:DD 
             'goods_name'   =>$PayCon['body'], //商品名称
