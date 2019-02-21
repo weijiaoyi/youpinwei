@@ -48,10 +48,10 @@
 
             </div>
 
-            <h2 class="zf_title"><span>自定义金额</span></h2>
+            <!--<h2 class="zf_title"><span>自定义金额</span></h2>
             <div class="zf_input_box">
-                <input class="zf_input" type="text" placeholder="100的倍数" value="">
-            </div>
+                <input class="zf_input" type="number" placeholder="100的倍数" value="">
+            </div>-->
             <div class="zf_zf" style="display: none;">
                 <div>支付：<span id="truePay"></span>元</div>
                 <div>省油钱：<span id="savePay"></span>元</div>
@@ -145,11 +145,42 @@
                 $('#truePay').html($(this).attr('data-zf'));
                 $('#savePay').html($(this).attr('data-js'));
             })
+            //自定义金额
+            // $('input[name=zf_input]').onkeyup(function () {
+            //     var price = $(this).val();
+            //
+            // })
 
+            /*var price = $("input[name=zf_input]").val();
+            if (price % 100 != 0) {
+                $.toast("请输入100的倍数!");
+            }*/
             //微信支付
             $("#zf_submit").click(function() {
+                var card_no = $('#cardnmb').val();
+                if(card_no == ''){$.toast("请先前往绑卡！");}
+                var is_active = $('.zf_ms_item').hasClass('active');
+                if(!is_active){$.toast('请选择充值金额！');}
+                var money = $('.zf_ms_item .active').attr('data-money');
+                var zf = $('.zf_ms_item .active').attr('data-zf');
+                var js = $('.zf_ms_item .active').attr('data-js');
+
                 $.confirm("您确定要支付吗?", "确认支付?", function() {
-                    $.toast("支付成功!");
+                    $.ajax({
+                        type:'post',
+                        url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=Three&a=payCard',
+                        data:{openid:openid,card_no:card_no,money:money,pay_money:zf,save:js},
+                        dataType:'json',
+                        success:function(response){
+                            if(response.status == 200){
+                                $.toast("支付成功!");
+                                window.location.reload();
+                            }else{
+                                $.toast(response.message);
+                            }
+                        }
+
+                    })
                 }, function() {
                     //取消操作
                 });

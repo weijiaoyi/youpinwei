@@ -232,7 +232,6 @@ class ThreeController extends CommentoilcardController
         if(!empty($_POST)){
             $openid  = trim(I('post.openid'));
             $card_no = trim(I('post.card_no'));
-            $from = trim(I('post.from'));//第三方标识
             if (empty($card_no) || !$card_no)exit(json_encode(['msg'=>'卡号不能为空！','status'=>100]));
             $money   = trim(I('post.money'));//实际充值金额
             if (empty($money)) exit(json_encode(['msg'=>'请选填充值金额！','status'=>100]));
@@ -247,11 +246,12 @@ class ThreeController extends CommentoilcardController
             $CardInfo = M('oil_card')->where(['card_no'=>$card_no,'status'=>2])->find();
             if (empty($CardInfo))exit(json_encode(['msg'=>'无效卡号！','status'=>100]));
             //用户信息
-            $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openid])->find();
+            $Member=M('user')->alias('a')->where(['a.openid'=>$openid])->find();
             if (!$Member)exit(json_encode(['msg'=>'需要先授权登陆之后才能做此操作！','status'=>100]));
             if(!$Member['nickname'] || !$Member['user_img'])exit(json_encode(['msg'=>'需要先授权登陆之后才能做此操作！','status'=>100]));
             if ($Member['is_notmal'] !=1)exit(json_encode(['msg'=>'当前用户信息异常，已被冻结用户信息，请向管理员或代理查询！','status'=>100]));
-            $Package = M('three_scale')->where(['from'=>$from])->find();//获取卡折扣
+
+//            $Package = M('three_scale')->where(['from'=>$from])->find();//获取卡折扣
             $config = M('setting')->find();
             //不是正常油卡
             if ($CardInfo['is_notmal'] !=1) {
@@ -290,15 +290,7 @@ class ThreeController extends CommentoilcardController
                 'coupon_money'   => $jyj,
                 'discount_money' => $zk,
             ];
-            //判断当前油卡额度
-            $BeforRechage =$CardInfo['preferential'];
-            //判断充值后的额度
 
-            $AfterRechage = $CardInfo['preferential'] - $money;
-            if ($CardInfo['pkgid']>1 && ( intval($BeforRechage) < 1 || intval($AfterRechage) < 0) ) {
-                $this->error('此油卡可用充值额度不足!');
-            }
-            $OrderAdd['pid'] = $CardInfo['pkgid'];
             $RechageCount = M('add_money')->where(['card_no'=>$card_no,'openid'=>$openid,'status'=>1])->find();
             $is_first =2;
             if (!$RechageCount) { // 是否是首充
@@ -315,19 +307,13 @@ class ThreeController extends CommentoilcardController
                 'discount_money' => $save,
                 'real_pay'       => $pay_money,
                 'pay_way'        => 1,
-                'note'           => $is_first==1?'用户对此油卡的首次充值':'油卡额度充值',
+                'note'           => $is_first==1?'用户对此油卡的首次充值':'油卡充值',
                 'status'         => 2,
                 'createtime'     => $NowTime,
                 'order_no'       => $orderSn,
-                'agent_id'       => $Member['agentid'],
                 'is_first'       => $is_first,
             ];
-            //如果 折扣加 加油卷 把充值金额全部抵消  则直接完成订单  并直接 给上级邀请人分润
-            $IsOver  = $this->FinishThisOrder($OrderAdd,$AddMoneySave,$Member,$Package,$config);
-            if ($IsOver) {
-                $data['order_no'] = $orderSn;
-                exit(json_encode(['msg'=>'success','status'=>2000,'data'=>$data]));
-            }else{
+
                 //生成订单
                 // $data = $wechat->payOrder($AddMoneySave,$OrderAdd,$openid);
                 $PayCon = [
@@ -354,8 +340,8 @@ class ThreeController extends CommentoilcardController
                 //添加充值记录
                 $create_res = M('add_money')->add($AddMoneySave);
                 exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
-            }
         }else{
+            exit(json_encode(['msg'=>'系统错误','status'=>1000]));
         }
 
     }
@@ -386,7 +372,7 @@ class ThreeController extends CommentoilcardController
             $truePay = sprintf("%.2f",$v*$scale/100);
             $savePay = sprintf("%.2f",$v*(1-$scale/100));
             if($k%2 == 0){
-                $html .='<div class="zf_ms_item" data-zf="'.$truePay.'" data-js="'.$savePay.'">
+                $html .='<div class="zf_ms_item" data-money="'.$v.'" data-zf="'.$truePay.'" data-js="'.$savePay.'">
                     <a href="javascript:;">
                         <div class="zf_jine">￥'.$v.'</div>
                         <div class="zf_info">
@@ -396,7 +382,7 @@ class ThreeController extends CommentoilcardController
                     </a>
                 </div>';
             }else{
-                $html .= '<div class="zf_ms_item floatr" data-zf="'.$truePay.'" data-js="'.$savePay.'">
+                $html .= '<div class="zf_ms_item floatr" data-money="'.$v.'" data-zf="'.$truePay.'" data-js="'.$savePay.'">
                     <a href="javascript:;">
                         <div class="zf_jine">￥'.$v.'</div>
                         <div class="zf_info">
