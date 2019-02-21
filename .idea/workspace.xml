@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bb53f77a-e695-4a02-b0bb-18fb8a070d14" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Three/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Three/index.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,7 +27,7 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="conf" value="1" />
-          <entry key="html" value="9" />
+          <entry key="html" value="10" />
           <entry key="md" value="1" />
           <entry key="p12" value="1" />
           <entry key="pem" value="2" />
@@ -38,7 +37,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="HTML" value="9" />
+          <entry key="HTML" value="10" />
           <entry key="Markdown" value="1" />
           <entry key="PHP" value="72" />
           <entry key="PLAIN_TEXT" value="4" />
@@ -47,14 +46,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="409" />
+          <entry key="html" value="490" />
           <entry key="pem" value="11" />
           <entry key="php" value="3615" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="409" />
+          <entry key="HTML" value="490" />
           <entry key="PHP" value="3615" />
           <entry key="PLAIN_TEXT" value="11" />
         </counts>
@@ -81,8 +80,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Three/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="182" column="44" lean-forward="true" selection-start-line="182" selection-start-column="44" selection-end-line="182" selection-end-column="44" />
+            <state relative-caret-position="442">
+              <caret line="183" column="46" lean-forward="true" selection-start-line="183" selection-start-column="46" selection-end-line="183" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -132,10 +131,10 @@
       <find>secret</find>
       <find>curlGet</find>
       <find>zf_card_draw</find>
-      <find>cardnmb</find>
       <find>zf_card_nmb</find>
       <find>zf_card_zhe</find>
       <find>zf_ms_item</find>
+      <find>cardnmb</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -160,6 +159,7 @@
         <option value="$PROJECT_DIR$/application/Oilcard/Conf/CardConfig.class.php" />
         <option value="$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php" />
         <option value="$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php" />
+        <option value="$USER_HOME$/Desktop/youpinweizhifu_web-20190220-3/youpinweizhifu_web-20190221/youpinweizhifu_web/index.html" />
         <option value="$PROJECT_DIR$/Three/index.html" />
       </list>
     </option>
@@ -286,12 +286,12 @@
       <updated>1547777314486</updated>
       <workItem from="1547777315644" duration="29176000" />
       <workItem from="1550131896451" duration="2178000" />
-      <workItem from="1550461315440" duration="40627000" />
+      <workItem from="1550461315440" duration="41046000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="71981000" />
+    <option name="totallyTimeSpent" value="72400000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -588,10 +588,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Desktop/youpinweizhifu_web-20190220-3/youpinweizhifu_web-20190221/youpinweizhifu_web/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="479">
+          <caret line="184" column="26" lean-forward="true" selection-start-line="184" selection-start-column="26" selection-end-line="184" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Three/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="182" column="44" lean-forward="true" selection-start-line="182" selection-start-column="44" selection-end-line="182" selection-end-column="44" />
+        <state relative-caret-position="442">
+          <caret line="183" column="46" lean-forward="true" selection-start-line="183" selection-start-column="46" selection-end-line="183" selection-end-column="46" />
         </state>
       </provider>
     </entry>

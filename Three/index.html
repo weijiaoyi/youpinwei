@@ -181,8 +181,8 @@
                         $("#cardnmb").select({
                             title: "选择卡号",
                             items: res.item,
-                            onClose:function (res) {
-                                alert(res)
+                            onClose:function () {
+                                $('.zf_card_nmb').html($('#cardnmb').val());
                             }
                         });
                     }else{
