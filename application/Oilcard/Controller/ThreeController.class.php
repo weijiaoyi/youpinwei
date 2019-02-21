@@ -52,7 +52,11 @@ class ThreeController extends CommentoilcardController
         try {
             $code = I('get.code');
             $sign = I('get.sign');
-            echo $code.'----------'.$sign;exit;
+            //校验第三方签名
+            $is_sign = M('user_source')->where(array('sign'=>$sign))->find();
+            if(empty($is_sign)){
+                echo '第三方签名错误';exit();
+            }
             $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code';
             $url = str_replace('APPID', $this->appid, $url);
             $url = str_replace('SECRET', $this->secret, $url);
@@ -63,10 +67,11 @@ class ThreeController extends CommentoilcardController
 
             if (!is_array($info) || !isset($info['openid']))
             {
-                echo json_encode([
+                /*echo json_encode([
                     'msg'=>'获取access_code失败！',
                     'status'=>500
-                ]);
+                ]);*/
+                echo '获取access_code失败！';
                 exit();
             }
 
@@ -76,10 +81,11 @@ class ThreeController extends CommentoilcardController
             $userinfo = json_decode($this->curlGet($userinfo_url),true);
             if (!is_array($userinfo) || !isset($userinfo['openid']))
             {
-                echo json_encode([
+               /* echo json_encode([
                     'msg'=>'获取用户信息失败！',
                     'status'=>500
-                ]);
+                ]);*/
+               echo '获取用户信息失败！';
                 exit();
             }
 
@@ -94,8 +100,11 @@ class ThreeController extends CommentoilcardController
                 $user['wx_access_token'] = $info['access_token'];
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
+                //第三方
+                $user['phone']=$is_sign['phone'];
+                $user['source']=$is_sign['fromId'];
 
-//                M('User')->add($user);
+                M('User')->add($user);
 
             }else {
                 //更新用户信息
@@ -106,7 +115,7 @@ class ThreeController extends CommentoilcardController
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
 
-//                M('User')->where(['openid'=>$userinfo['openid']])->save($user);
+                M('User')->where(['openid'=>$userinfo['openid']])->save($user);
             }
 
             header('location:'.'http://'.$_SERVER['SERVER_NAME'].'/Three/index.html?op='.base64_encode($userinfo['openid']));
@@ -171,7 +180,7 @@ class ThreeController extends CommentoilcardController
                 $is_card = M('oil_card')->where(array('card_no'=>$card_no))->find();
                 if(!empty($is_card)){
                     //判断卡号是否已被申领
-                    if($is_card['status'] != 1){
+                    if($is_card['status'] == 1){
                         //判断卡号是否已被其他第三方绑定
                         if($is_card['is_threeBind'] == 0){
                             //插入用户信息
@@ -346,11 +355,28 @@ class ThreeController extends CommentoilcardController
                 exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
             }
         }else{
-            //由第三方跳转到充值页面
-
-
         }
 
+    }
+
+    public function index(){
+        //由第三方跳转到充值页面
+        $op = trim(I('get.op'));
+        $op = base64_decode($op);
+        //获取用户信息
+        $user = M('user')->where(array('openid'=>$op))->find();
+        if(empty($user)){echo json_encode(array('status'=>100,'message'=>'获取用户信息失败！'));exit();}
+        //获取用户卡折扣
+        $scale=M('three_scale')->where(array('id'=>$user['source']))->find();
+        if(empty($scale)){echo json_encode(array('status'=>100,'message'=>'获取卡折扣失败！'));exit();}
+        //获取用户绑定卡
+        $cardList = M('oil_card')->where(array('user_id'=>$user['id'],'is_notmal'=>1,'is_threeBind'=>array('neq',0)))->field('card_no')->select();
+
+
+        $this->assign('scale',$scale);
+        $this->assign('cardList',$cardList);
+        $this->assign('id',1);
+        $this->display();
     }
 
 }
