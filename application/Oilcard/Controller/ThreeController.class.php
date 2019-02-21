@@ -29,8 +29,9 @@ class ThreeController extends CommentoilcardController
 
     public function getCode()
     {
+        $sign = trim(I('get.sign'));
         $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
-        $redirect_url = urlencode('https://'.$_SERVER['SERVER_NAME'].U('oilcard/Three/getAccessToken'));
+        $redirect_url = urlencode('https://'.$_SERVER['SERVER_NAME'].U('oilcard/Three/getAccessToken',array('sign'=>$sign)));
         $url = str_replace('APPID',$this->appid,$url);
         $url = str_replace('REDIRECT_URI',$redirect_url,$url);
         header('location:'.$url);
@@ -50,6 +51,8 @@ class ThreeController extends CommentoilcardController
     {
         try {
             $code = I('get.code');
+            $sign = I('get.sign');
+            echo $code.'----------'.$sign;exit;
             $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code';
             $url = str_replace('APPID', $this->appid, $url);
             $url = str_replace('SECRET', $this->secret, $url);
@@ -173,6 +176,7 @@ class ThreeController extends CommentoilcardController
                         if($is_card['is_threeBind'] == 0){
                             //插入用户信息
                             $user_three = array(
+                                'sign'=>MD5($phone.$card_no),
                                 'fromId'=>$is_three['id'],
                                 'phone'=>$phone,
                                 'card_no'=>$card_no,
