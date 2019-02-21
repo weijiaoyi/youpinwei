@@ -145,6 +145,13 @@
     <script src="content/plugins/jqweui/js/jquery-weui.js"></script>
     <script src="content/scripts/common.js"></script>
     <script>
+        function getQueryString(name){
+            var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r!=null) return r[2]; return '';
+        }
+        var type = getQueryString('op');
+        alert(type);
         $(function() {
             //选择金额
             $(".zf_money_sel .zf_ms_item").click(function() {
