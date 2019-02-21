@@ -2749,5 +2749,5 @@ class WechatController extends CommentoilcardController
         var_dump($result);
         exit;
         var_dump();
-    }
+    }   
 }
