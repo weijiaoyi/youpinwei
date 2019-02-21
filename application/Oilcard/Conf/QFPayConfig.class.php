@@ -56,7 +56,7 @@ class QFPayConfig {
         $url = $this->requestUrl . "/trade/v1/" . $name . "?" . http_build_query($data);
 
         $header = array("X-QYF-APPCODE: ".$this->APP_CODE, "X-QYF-SIGN: ". $this->make_req_sign($data, $this->KEY));
-        p($url);
+        // p($url);
         //var_dump($url);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -71,7 +71,7 @@ class QFPayConfig {
         $info = curl_getinfo($ch);
 
         $hsize = $info['header_size'];
-        p($info);
+        // p($info);
         //var_dump($info);
 
         curl_close($ch);
@@ -80,11 +80,11 @@ class QFPayConfig {
         
         $body = substr($result, $hsize);
 
-        echo "header:".$header.'\n';
-        echo "body:".$body.'\n';
+        // echo "header:".$header.'\n';
+        // echo "body:".$body.'\n';
 
         $headerdict = explode("\r\n", $header);
-        p($headerdict);
+        // p($headerdict);
 
         //var_dump($headerdict);
         $sign = "";
@@ -97,13 +97,14 @@ class QFPayConfig {
                 break;
             }
         }
-        p($sign);
+        // p($sign);
         if ($sign && $sign != $this->make_resp_sign($body, $this->KEY)) {
             echo "response sign check error\n";
             echo "sign: $sign\n";
             echo "make resp sign:". $this->make_resp_sign($body, $this->KEY)."\n";
             return "";
         }
+        exit($body);
         p($body);exit;
         return $body;
     }
