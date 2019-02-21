@@ -375,11 +375,11 @@ class ThreeController extends CommentoilcardController
         $item =[];
         if(!empty($cardList)){
             foreach($cardList as $key=>$value){
-                $item['title'] .=$value['card_no'];
-                $item['value'] .=$value['card_no'];
+                $item[$key]['title'] .=$value['card_no'];
+                $item[$key]['value'] .=$value['card_no'];
             }
         }
-        echo json_encode(array('status'=>200,'item'=>$cardList,'scale'=>$scale['scale']));
+        echo json_encode(array('status'=>200,'item'=>$item,'scale'=>$scale['scale']));
 
     }
 
