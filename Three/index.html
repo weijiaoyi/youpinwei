@@ -34,70 +34,18 @@
             <div class="zf_card_draw">
                 <a href="javascript:;"></a>
             </div>
-            <div class="zf_card" id="cardnmb">
-                <a href="javascript:;">
-                    <h3 class="zf_card_nmb"></h3>
+            <div class="zf_card">
+                <label for="cardnmb" class="cardnmb_label">
+                    <input class="weui-input zf_card_nmb" id="cardnmb" type="text" value="">
+                    <p class="zf_select">点击选择其他加油卡</p >
                     <span class="zf_card_zhe"></span>
-                </a>
+                </label>
             </div>
             <p class="zf_state">声明：首次充值金额必须大于500元，才可以激活您的加油卡,第二次及以后对充值金额不作具体要求。</p>
             <h2 class="zf_title"><span>充值金额</span></h2>
 
             <div class="zf_money_sel">
-                <div class="zf_ms_item active">
-                    <a href="javascript:;">
-                        <div class="zf_jine">￥200</div>
-                        <div class="zf_info">
-                            <p>支付￥187.20</p>
-                            <p>节省￥12.80</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="zf_ms_item floatr">
-                    <a href="javascript:;">
-                        <div class="zf_jine">￥500</div>
-                        <div class="zf_info">
-                            <p>支付￥468.00</p>
-                            <p>节省￥32.00</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="zf_ms_item">
-                    <a href="javascript:;">
-                        <div class="zf_jine">￥1000</div>
-                        <div class="zf_info">
-                            <p>支付￥936.00</p>
-                            <p>节省￥64.00</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="zf_ms_item floatr">
-                    <a href="javascript:;">
-                        <div class="zf_jine">￥2000</div>
-                        <div class="zf_info">
-                            <p>支付￥1872.00</p>
-                            <p>节省￥128.00</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="zf_ms_item">
-                    <a href="javascript:;">
-                        <div class="zf_jine">￥5000</div>
-                        <div class="zf_info">
-                            <p>支付￥4680.00</p>
-                            <p>节省￥320.00</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="zf_ms_item floatr">
-                    <a href="javascript:;">
-                        <div class="zf_jine">￥10000</div>
-                        <div class="zf_info">
-                            <p>支付￥9600.00</p>
-                            <p>节省￥400.00</p>
-                        </div>
-                    </a>
-                </div>
+
             </div>
 
             <h2 class="zf_title"><span>自定义金额</span></h2>
@@ -170,32 +118,25 @@
                     if(res.status == 200){
                         if(res.item.length >0){
                             $('.zf_card_draw').hide();
-                            $('#cardnmb').show();
-                            $('.zf_card_nmb').html(res.item[0].value);
+                            $('.zf_card').show();
+                            $('#cardnmb').val(res.item[0].value);
                             $('.zf_card_zhe').html(res.scale+'折');
                         }else{
                             $('.zf_card_draw').show();
                             $('.zf_card_draw a').html('快去领卡吧');
-                            $('#cardnmb').hide();
+                            $('.zf_card').hide();
                         }
                         //选择卡号
                         $("#cardnmb").select({
                             title: "选择卡号",
                             items: res.item,
-                            onClose:function () {
-                                $('.zf_card_nmb').html($('#cardnmb').val());
-                            }
                         });
                     }else{
-                        $.toast(res.data);
                         $.toast(res.message);
                     }
 
                 }
             });
-
-
-
             //选择金额
             $(".zf_money_sel .zf_ms_item").click(function() {
                 $(this).addClass("active");
