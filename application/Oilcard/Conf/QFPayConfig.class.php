@@ -21,11 +21,14 @@ class QFPayConfig {
      */
     public function make_req_sign($data, $key) {
         ksort($data);
+
         $p = array();
         foreach ($data as $k => $v) {
             array_push($p, "$k=$v");
         }
+
         $s = join("&", $p) . $key;
+
         $ret = strtoupper(md5($s));
         return $ret;
     }
@@ -51,7 +54,10 @@ class QFPayConfig {
      */
     public function request($name, $data) {
         $url = $this->requestUrl . "/trade/v1/" . $name . "?" . http_build_query($data);
-        $header = array("X-QF-APPCODE: ".$this->APP_CODE, "X-QF-SIGN: ". $this->make_req_sign($data, $this->KEY));
+
+        $header = array("X-QYF-APPCODE: ".$this->APP_CODE, "X-QYF-SIGN: ". $this->make_req_sign($data, $this->KEY));
+        p($url);
+        //var_dump($url);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -59,28 +65,46 @@ class QFPayConfig {
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);  
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_HEADER, true);
+
         $result = curl_exec($ch);
+
         $info = curl_getinfo($ch);
+
         $hsize = $info['header_size'];
+        p($info);
+        //var_dump($info);
+
         curl_close($ch);
+
         $header = substr($result, 0, $hsize-4);
+        
         $body = substr($result, $hsize);
+
+        echo "header:".$header.'\n';
+        echo "body:".$body.'\n';
+
         $headerdict = explode("\r\n", $header);
+        p($headerdict);
+
+        //var_dump($headerdict);
         $sign = "";
+        $signkey = "X-QYF-SIGN";
+        $keylen = strlen($signkey);
         for ($i=1; $i<count($headerdict); $i++) {
             $line = $headerdict[$i];
-            if (strncmp($line, "X-QF-SIGN", 9) == 0) {
-                $sign = trim(substr($line, 10));
+            if (strncmp($line, $signkey, $keylen) == 0) {
+                $sign = trim(substr($line, $keylen+1));
                 break;
             }
         }
+        p($sign);
         if ($sign && $sign != $this->make_resp_sign($body, $this->KEY)) {
-            return array(
-                'msg'       => 'respinse sign check error:签名错误',
-                'sign'      => $sign,
-                'resp_sign' => $this->make_resp_sign($body, $this->KEY),
-            );
+            echo "response sign check error\n";
+            echo "sign: $sign\n";
+            echo "make resp sign:". $this->make_resp_sign($body, $this->KEY)."\n";
+            return "";
         }
+        p($body);exit;
         return $body;
     }
 }
