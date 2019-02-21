@@ -32,12 +32,12 @@
         <div class="container2">
             <h2 class="zf_title"><span>选择卡号</span></h2>
             <div class="zf_card_draw">
-                <a href="javascript:;">快去领卡吧</a>
+                <a href="javascript:;"></a>
             </div>
             <div class="zf_card" id="cardnmb">
                 <a href="javascript:;">
-                    <h3 class="zf_card_nmb">9130100000557368</h3>
-                    <span class="zf_card_zhe">93.6折</span>
+                    <h3 class="zf_card_nmb"></h3>
+                    <span class="zf_card_zhe"></span>
                 </a>
             </div>
             <p class="zf_state">声明：首次充值金额必须大于500元，才可以激活您的加油卡,第二次及以后对充值金额不作具体要求。</p>
@@ -167,7 +167,21 @@
                 async:false,
                 success:function(res){
                     if(res.status == 200){
-
+                        if(res.item.length >0){
+                            $('.zf_card_draw').hide();
+                            $('#cardnmb').show();
+                            $('.zf_card_nmb').html(res.item[0].value);
+                            $('zf_card_zhe').html(res.scale+'折');
+                        }else{
+                            $('.zf_card_draw').show();
+                            $('.zf_card_draw a').html('快去领卡吧');
+                            $('#cardnmb').hide();
+                        }
+                        //选择卡号
+                        $("#cardnmb").select({
+                            title: "选择卡号",
+                            items: res.item,
+                        });
                     }else{
                         $.toast(res.data);
                         $.toast(res.message);
@@ -193,20 +207,7 @@
                 });
             })
 
-            //选择卡号
-            $("#cardnmb").select({
-                title: "选择卡号",
-                items: [{
-                    title: "9130100000557368",
-                    value: "001",
-                }, {
-                    title: "9130100000557369",
-                    value: "002",
-                }, {
-                    title: "9130100000557370",
-                    value: "003",
-                }]
-            });
+
         })
     </script>
 
