@@ -2742,8 +2742,8 @@ class WechatController extends CommentoilcardController
             "udid"         =>"me",  //设备唯一id
             "txdtm"        =>$tm, //请求方交易时间 格式为YYYY-mm-dd HH:MM:DD 
             "pay_limit"    =>"no_credit" ,
-            'goods_name' =>$PayCon['body'],
-            'sub_openi' =>$Member['openid'],
+            'goods_name'   =>$PayCon['body'], //商品名称
+            'sub_openi'    =>$Member['openid'], //用户的openid
         );
         $QfPay = new QFPayConfig();  
         $result = $QfPay->request("payment", $data);
