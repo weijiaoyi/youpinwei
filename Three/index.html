@@ -171,7 +171,7 @@
                             $('.zf_card_draw').hide();
                             $('#cardnmb').show();
                             $('.zf_card_nmb').html(res.item[0].value);
-                            $('zf_card_zhe').html(res.scale+'折');
+                            $('.zf_card_zhe').html(res.scale+'折');
                         }else{
                             $('.zf_card_draw').show();
                             $('.zf_card_draw a').html('快去领卡吧');
@@ -196,6 +196,7 @@
             $(".zf_money_sel .zf_ms_item").click(function() {
                 $(this).addClass("active");
                 $(this).siblings().removeClass("active");
+                $('.zf_card_nmb').html($(this).value());
             })
 
             //微信支付
