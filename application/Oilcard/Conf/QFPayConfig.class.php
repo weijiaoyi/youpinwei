@@ -7,7 +7,7 @@
 namespace Oilcard\Conf;
 class QFPayConfig {
 
-    private $requestUrl ='https://openapi-test.quanyipay.com';//'https://openapi-test.qfpay.com/';
+    private $requestUrl ='http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
     private $APP_CODE = 'EBEEFB4A63CB45C2A667F3A6C9F76C12';
     private $KEY = 'C6FBE7410F9848F48ADD977A002A8F21';
 
