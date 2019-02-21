@@ -105,8 +105,8 @@
                 <input class="zf_input" type="text" placeholder="100的倍数" value="">
             </div>
             <div class="zf_zf">
-                <div>支付：<span>48000</span>元</div>
-                <div>省油钱：<span>2000</span>元</div>
+                <div>支付：<span id="truePay"></span>元</div>
+                <div>省油钱：<span id="savePay"></span>元</div>
             </div>
             <div class="zf_submit_box">
                 <input class="zf_submit" id="zf_submit" type="button" value="微信支付">
@@ -166,6 +166,7 @@
                 data:{openid:openid},
                 async:false,
                 success:function(res){
+                    $('.zf_money_sel').html(res.html);
                     if(res.status == 200){
                         if(res.item.length >0){
                             $('.zf_card_draw').hide();
@@ -185,6 +186,8 @@
                                 $('.zf_card_nmb').html($('#cardnmb').val());
                             }
                         });
+
+
                     }else{
                         $.toast(res.data);
                         $.toast(res.message);

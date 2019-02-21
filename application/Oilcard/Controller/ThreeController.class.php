@@ -368,8 +368,8 @@ class ThreeController extends CommentoilcardController
         $user = M('user')->where(array('openid'=>$openid))->find();
         if(empty($user)){echo json_encode(array('status'=>100,'message'=>'获取用户信息失败！'));exit();}
         //获取用户卡折扣
-        $scale=M('three_scale')->where(array('id'=>$user['fromid']))->find();
-        if(empty($scale)){echo json_encode(array('status'=>100,'message'=>'获取卡折扣失败！','data'=>$user));exit();}
+        $scale=M('three_scale')->where(array('id'=>$user['fromid']))->getField('scale');
+        if(empty($scale)){echo json_encode(array('status'=>100,'message'=>'获取卡折扣失败！'));exit();}
         //获取用户绑定卡
         $cardList = M('oil_card')->where(array('user_id'=>$user['id'],'is_notmal'=>1,'is_threeBind'=>array('neq',0)))->field('card_no')->select();
         $item =[];
@@ -379,7 +379,35 @@ class ThreeController extends CommentoilcardController
                 $item[$key]['value'] .=$value['card_no'];
             }
         }
-        echo json_encode(array('status'=>200,'item'=>$item,'scale'=>$scale['scale']));
+        //充值金额选项
+         $price = array(200,500,1000,2000,5000,10000);
+         $html='';
+        foreach ($price as $k=>$v){
+            $truePay = sprintf("%.2f",$v*$scale/100);
+            $savePay = sprintf("%.2f",$v*(1-$scale/100));
+            if($k%2 == 0){
+                $html .='<div class="zf_ms_item">
+                    <a href="javascript:;">
+                        <div class="zf_jine">￥'.$v.'</div>
+                        <div class="zf_info">
+                            <p>支付￥'.$truePay.'</p>
+                            <p>节省￥'.$savePay.'</p>
+                        </div>
+                    </a>
+                </div>';
+            }else{
+                $html .= '<div class="zf_ms_item floatr">
+                    <a href="javascript:;">
+                        <div class="zf_jine">￥'.$v.'</div>
+                        <div class="zf_info">
+                            <p>支付￥'.$truePay.'</p>
+                            <p>节省￥'.$savePay.'</p>
+                        </div>
+                    </a>
+                </div>';
+            }
+        }
+        echo json_encode(array('status'=>200,'item'=>$item,'scale'=>$scale,'html'=>$html));
 
     }
 
