@@ -7,9 +7,41 @@
 namespace Oilcard\Conf;
 class QFPayConfig {
 
-    private $requestUrl ='http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
-    private $APP_CODE = 'EBEEFB4A63CB45C2A667F3A6C9F76C12';
-    private $KEY = 'C6FBE7410F9848F48ADD977A002A8F21';
+    private $requestUrl ;
+    private $APP_CODE ;
+    private $KEY ;
+
+    public function __construct($payType=1){
+        //钱方支付不支持 自定义设置 支付异步回调地址 ，只能一个code 和key 对应一个回调地址
+        //所以由钱方后台设置多个code和key ，以 满足不同的需求对应不同的地址
+        switch ($payType) {
+            case '1': //1，申领
+                $this->requestUrl = 'http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
+                $this->APP_CODE   = 'EBEEFB4A63CB45C2A667F3A6C9F76C12';
+                $this->KEY        = 'C6FBE7410F9848F48ADD977A002A8F21';
+                break;
+            case '2': //2，申领
+                # code...
+                break;
+            case '3': //3，充值
+                # code...
+                break;
+            case '4': ////4升级
+                # code...
+                break;
+            case '5': //5续费
+                # code...
+                break;
+            case '6': //网信 或者其他外部
+                # code...
+                break;
+            default: //默认使用的key和code
+                $this->requestUrl = 'http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
+                $this->APP_CODE   = 'EBEEFB4A63CB45C2A667F3A6C9F76C12';
+                $this->KEY        = 'C6FBE7410F9848F48ADD977A002A8F21';
+                break;
+        }
+    }
 
     /**
      * 生产签名
