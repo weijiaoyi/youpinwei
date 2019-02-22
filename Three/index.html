@@ -158,15 +158,15 @@
             //微信支付
             $("#zf_submit").click(function() {
                 var card_no = $('#cardnmb').val();
-                if(card_no == ''){$.toast("请先前往绑卡！");return false;}
+                if(card_no == ''){$.alert("请先前往绑卡！");return false;}
                 var is_active = $('.zf_ms_item').hasClass('active');
                 if(!is_active){$.alert('请选择充值金额！');return false;}
-                var money = $('.zf_ms_item .active').attr('data-money');
-                var pay_money = $('.zf_ms_item .active').attr('data-zf');
-                var save = $('.zf_ms_item .active').attr('data-js');
+                var money = $('.active').attr('data-money');
+                var pay_money = $('.active').attr('data-zf');
+                var save = $('.active').attr('data-js');
                 alert(money);
                 alert(pay_money);
-                alert(save);
+                alert(save);return false;
                 $.confirm("您确定要支付吗?", "确认支付?", function() {
                     $.ajax({
                         type:'post',
