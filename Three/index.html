@@ -107,6 +107,7 @@
                 if (r!=null) return r[2]; return '';
             }
             var openid = getQueryString('op');
+            alert(openid);
             $.ajax({
                 type:'post',
                 url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=Three&a=getCardInfo',
@@ -146,19 +147,19 @@
                 $('#savePay').html($(this).attr('data-js'));
             })
             //自定义金额
-            // $('input[name=zf_input]').onkeyup(function () {
-            //     var price = $(this).val();
-            //
-            // })
+            /*$('input[name=zf_input]').onkeyup(function () {
+                var price = $(this).val();
 
-            /*var price = $("input[name=zf_input]").val();
+            })
+
+            var price = $("input[name=zf_input]").val();
             if (price % 100 != 0) {
                 $.toast("请输入100的倍数!");
             }*/
             //微信支付
             $("#zf_submit").click(function() {
                 var card_no = $('#cardnmb').val();
-                alert(openid);
+                alert(openid);return false;
                 alert(card_no);
                 if(card_no == ''){$.toast("请先前往绑卡！");}
                 var is_active = $('.zf_ms_item').hasClass('active');
