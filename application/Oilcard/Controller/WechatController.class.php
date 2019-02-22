@@ -553,11 +553,11 @@ class WechatController extends CommentoilcardController
                 //用户信息变动记录
                 $MemberSave =[
                     //积分 1：1
-                    'integral' => intval($Member['integral'] + $order_item['real_pay']),
+                    'integral'             => intval($Member['integral'] + $order_item['real_pay']),
                     //总共给用户省下来的钱
-                    'already_save_money' => intval($Member['already_save_money'] + $order_item['discount_money']),
+                    'already_save_money'   => intval($Member['already_save_money'] + $order_item['discount_money']),
                     //总共充值的油卡额度 
-                    'total_add_money' => intval($Member['total_add_money'] + $order_item['money']),
+                    'total_add_money'      => intval($Member['total_add_money'] + $order_item['money']),
                     //用户真实充值的钱
                     'total_real_add_money' =>$Member['total_real_add_money'] + $order_item['real_pay'],
                 ];
@@ -589,7 +589,7 @@ class WechatController extends CommentoilcardController
                 $MemberAgentSave = [];
                 //如果用户使用加油卷  --  则 减少加油卷数量 
                 if (!empty($OrderInfo['coupon_money']) && $OrderInfo['coupon_money'] >0) {
-                    if (intval($Member['currt_earnings']) >= intval($OrderInfo['coupon_money'])) {
+                    if (intval($Member['currt_earnings']) >= intval($OrderInfo['coupon_money'])  && ($Member['currt_earnings'] - $OrderInfo['coupon_money'])>=0) {
                         $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderInfo['coupon_money'];
                         //用户信息修改
                         $MemberAgentSave = M('Agent')->where(['openid'=>$openId])->save($MemberAgentSave);
@@ -2754,7 +2754,7 @@ class WechatController extends CommentoilcardController
             exit(json_encode(['msg'=>'支付异常：'.$result['resperr'],'status'=>500]));
         }
         return $result['pay_params'];
-        
+
         // exit(json_encode(['data'=>$data,'result'=>$result]));
     }   
 }

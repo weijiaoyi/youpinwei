@@ -402,30 +402,35 @@ class IntegralController extends CommentoilcardController
         //用户信息变动记录
         $MemberSave =[
             //积分 1：1
-            'integral' => intval($Member['integral'] + $AddMoneySave['real_pay']),
+            'integral'             => intval($Member['integral'] + $AddMoneySave['real_pay']),
             //总共给用户省下来的钱
-            'already_save_money' => intval($Member['already_save_money'] + $AddMoneySave['discount_money']),
+            'already_save_money'   => intval($Member['already_save_money'] + $AddMoneySave['discount_money']),
             //总共充值的油卡额度 
-            'total_add_money' => intval($Member['total_add_money'] + $AddMoneySave['money']),
+            'total_add_money'      => intval($Member['total_add_money'] + $AddMoneySave['money']),
             //用户真实充值的钱
-            'total_real_add_money' =>$Member['total_real_add_money'] + $AddMoneySave['real_pay'],
+            'total_real_add_money' => $Member['total_real_add_money'] + $AddMoneySave['real_pay'],
         ];
         //积分变动记录
         $IntegralAdd = [
-            'user_id' => $Member['id'],
-            'change' => 1,
-            'chang_way' => '充值',
+            'user_id'      => $Member['id'],
+            'change'       => 1,
+            'chang_way'    => '充值',
             'change_value' => $AddMoneySave['real_pay'],
-            'createtime' => $NowTime,
-            'updatetime' => $NowTime,
-            'change_from'=> json_encode(['from'=>'OrderRechage','OrderSn'=>$OrderSn])
+            'createtime'   => $NowTime,
+            'updatetime'   => $NowTime,
+            'change_from'  => json_encode(['from'=>'OrderRechage','OrderSn'=>$OrderSn])
         ];
         $EarningsAdd =[];
         $AgentSave =[];
         $MemberAgentSave = [];
         //如果用户使用加油卷  --  则 减少加油卷数量 
         if (!empty($OrderAdd['coupon_money']) && $OrderAdd['coupon_money'] >0) {
-            $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderAdd['coupon_money'];
+            //如果使用加油卷并且加油卷数量大于使用的加油卷数量 
+            if (intval($Member['currt_earnings']) >= intval($OrderInfo['coupon_money'])  && ($Member['currt_earnings'] - $OrderAdd['coupon_money']>=0)) {
+                $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderAdd['coupon_money'];
+            }
+            //此次操作，是否按照使用数量减少，或者是。。。。
+            
         }
 
         //是否存在上级代理 
