@@ -2753,9 +2753,9 @@ class WechatController extends CommentoilcardController
         if ($result['respcd'] !='0000') {
             exit(json_encode(['msg'=>'支付异常：'.$result['resperr'],'status'=>500]));
         }
-        p($result);exit;
-        return $result['data'];
-        exit(json_encode(['data'=>$data,'result'=>$result]));
+        return $result['pay_params'];
+        
+        // exit(json_encode(['data'=>$data,'result'=>$result]));
     }   
 }
  
