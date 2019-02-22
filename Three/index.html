@@ -158,18 +158,23 @@
             //微信支付
             $("#zf_submit").click(function() {
                 var card_no = $('#cardnmb').val();
+                alert(openid);
+                alert(card_no);
                 if(card_no == ''){$.toast("请先前往绑卡！");}
                 var is_active = $('.zf_ms_item').hasClass('active');
+                alert(is_active);
                 if(!is_active){$.toast('请选择充值金额！');}
                 var money = $('.zf_ms_item .active').attr('data-money');
-                var zf = $('.zf_ms_item .active').attr('data-zf');
-                var js = $('.zf_ms_item .active').attr('data-js');
-
+                var pay_money = $('.zf_ms_item .active').attr('data-zf');
+                var save = $('.zf_ms_item .active').attr('data-js');
+                alert(money);
+                alert(pay_money);
+                alert(save);
                 $.confirm("您确定要支付吗?", "确认支付?", function() {
                     $.ajax({
                         type:'post',
                         url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=Three&a=payCard',
-                        data:{openid:openid,card_no:card_no,money:money,pay_money:zf,save:js},
+                        data:{openid:openid,card_no:card_no,money:money,pay_money:pay_money,save:save},
                         dataType:'json',
                         success:function(response){
                             if(response.status == 200){
