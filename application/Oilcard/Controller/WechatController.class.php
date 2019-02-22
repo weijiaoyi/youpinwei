@@ -2741,7 +2741,7 @@ class WechatController extends CommentoilcardController
             "out_trade_no" =>$orderSn, //外部订单号，外部订单唯一标示
             "txdtm"        =>$tm, //请求方交易时间 格式为YYYY-mm-dd HH:MM:DD 
             'goods_name'   =>$PayCon['body'], //商品名称
-            'sub_openi'    =>$Member['openid'], //用户的openid
+            'sub_openid'    =>$Member['openid'], //用户的openid
             "udid"         =>"me",  //设备唯一id
 
         );
