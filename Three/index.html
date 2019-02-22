@@ -164,8 +164,6 @@
                 var money = $('.active').attr('data-money');
                 var pay_money = $('.active').attr('data-zf');
                 var save = $('.active').attr('data-js');
-                alert(money);
-                alert(pay_money);return false;
                 $.confirm("您确定要支付吗?", "确认支付?", function() {
                     $.ajax({
                         type:'post',
