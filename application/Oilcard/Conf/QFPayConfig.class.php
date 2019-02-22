@@ -99,13 +99,8 @@ class QFPayConfig {
         }
         // p($sign);
         if ($sign && $sign != $this->make_resp_sign($body, $this->KEY)) {
-            echo "response sign check error\n";
-            echo "sign: $sign\n";
-            echo "make resp sign:". $this->make_resp_sign($body, $this->KEY)."\n";
-            return "";
+            exit(json_encode(['msg'=>'签名验证失败','status'=>500]));
         }
-        exit($body);
-        p($body);exit;
         return $body;
     }
 }
