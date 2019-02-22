@@ -60,14 +60,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="1266" />
+          <entry key="html" value="1267" />
           <entry key="pem" value="11" />
           <entry key="php" value="3991" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="1266" />
+          <entry key="HTML" value="1267" />
           <entry key="PHP" value="3991" />
           <entry key="PLAIN_TEXT" value="11" />
         </counts>
@@ -91,8 +91,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Three/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="586">
-              <caret line="168" column="41" selection-start-line="168" selection-start-column="41" selection-end-line="168" selection-end-column="41" />
+            <state relative-caret-position="532">
+              <caret line="166" column="29" lean-forward="true" selection-start-line="166" selection-start-column="29" selection-end-line="166" selection-end-column="29" />
               <folding>
                 <element signature="e#4505#5699#0" />
                 <element signature="e#5781#6056#0" />
@@ -326,12 +326,12 @@
       <updated>1547777314486</updated>
       <workItem from="1547777315644" duration="29176000" />
       <workItem from="1550131896451" duration="2178000" />
-      <workItem from="1550461315440" duration="48387000" />
+      <workItem from="1550461315440" duration="48446000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="79741000" />
+    <option name="totallyTimeSpent" value="79800000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -672,8 +672,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Three/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="586">
-          <caret line="168" column="41" selection-start-line="168" selection-start-column="41" selection-end-line="168" selection-end-column="41" />
+        <state relative-caret-position="532">
+          <caret line="166" column="29" lean-forward="true" selection-start-line="166" selection-start-column="29" selection-end-line="166" selection-end-column="29" />
           <folding>
             <element signature="e#4505#5699#0" />
             <element signature="e#5781#6056#0" />
