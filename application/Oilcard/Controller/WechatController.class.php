@@ -2747,11 +2747,15 @@ class WechatController extends CommentoilcardController
         );
         $QfPay = new QFPayConfig();  
         $result = $QfPay->request("payment", $data);
+        if($result){
+            $result = json_decode($result,TRUE);
+        }
+        if ($result['respcd'] !='0000') {
+            exit(json_encode(['msg'=>'支付异常：'.$result['resperr'],'status'=>500]));
+        }
         p($result);exit;
+        return $result['data'];
         exit(json_encode(['data'=>$data,'result'=>$result]));
-        
-        exit;
-        var_dump();
     }   
 }
  
