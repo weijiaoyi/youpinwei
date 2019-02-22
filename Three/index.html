@@ -158,10 +158,9 @@
             //微信支付
             $("#zf_submit").click(function() {
                 var card_no = $('#cardnmb').val();
-                alert(card_no);return false;
-                if(card_no == ''){$.toast("请先前往绑卡！");}
+                if(card_no == ''){$.toast("请先前往绑卡！");return false;}
                 var is_active = $('.zf_ms_item').hasClass('active');
-                alert(is_active);
+                alert(is_active);return false;
                 if(!is_active){$.toast('请选择充值金额！');}
                 var money = $('.zf_ms_item .active').attr('data-money');
                 var pay_money = $('.zf_ms_item .active').attr('data-zf');
