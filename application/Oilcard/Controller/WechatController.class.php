@@ -479,22 +479,21 @@ class WechatController extends CommentoilcardController
             $obj_arr['paymentType']    = 'HjPay';
         }
         Log::record('微信回调data:'.json_encode($obj_arr));
-        $insert = array(
-            'content'=>json_encode(array(
-                'InsertTime'=>date('Y-m-d H:i:s',time()),
-                'InsertNote'=>'油卡申领',
-                'input' =>$obj_arr,
-                'data' =>$data,
-                'return' =>I('post.'),
-            ))
-        );
-        M('testt')->add($insert);
+        $insert = [];
+        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
+        $insert['content']['InsertNote'] = '油卡申领';
+        $insert['content']['input'] = $obj_arr;
+        $insert['content']['return'] = I('post.');
+        $insert['content']['data'] = $data;
+
+        
         $sign = $obj_arr['sign'];
         unset($obj_arr['sign']);
         ksort($obj_arr);
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
         if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
+            $insert['content']['sign'] = '签名正确';
             $OrderSn = $obj_arr['out_trade_no'];
             $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
             $openId=$obj_arr['openid'];
@@ -519,6 +518,9 @@ class WechatController extends CommentoilcardController
                 //用户充值记录信息状态修改
                 $AddMoneySave = M('add_money')->where(['id'=>$order_item['id']])->save($AddMoneySave);
                 if(!$AddMoneySave){
+                    $insert['content']['msg'] = '充值记录写入失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
                     $Things->rollback();
                     echo 'FAIL';exit;
                 }
@@ -536,6 +538,9 @@ class WechatController extends CommentoilcardController
                 $OilCardSave = M('oil_card')->where(['id'=>$CardInfo['id']])->save($OilCardSave);
                 if(!$OilCardSave){
                     $Things->rollback();
+                    $insert['content']['msg'] = '油卡信息状态修改失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
                 //更改订单支付状态
@@ -548,6 +553,9 @@ class WechatController extends CommentoilcardController
                 $OrderSave = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
                 if(!$OrderSave){
                     $Things->rollback();
+                    $insert['content']['msg'] = '订单修改失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
                 //用户信息变动记录
@@ -565,6 +573,9 @@ class WechatController extends CommentoilcardController
                 $MemberSave = M('user')->where(['openid'=>$openId])->save($MemberSave);
                 if(!$MemberSave){
                     $Things->rollback();
+                    $insert['content']['msg'] = '用户信息修改失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
                 //积分变动记录
@@ -581,6 +592,9 @@ class WechatController extends CommentoilcardController
                 $IntegralAdd = M('IntegralRecord')->add($IntegralAdd);
                 if(!$IntegralAdd){
                     $Things->rollback();
+                    $insert['content']['msg'] = '积分变动失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
                 $EarningsAdd =[];
@@ -609,6 +623,9 @@ class WechatController extends CommentoilcardController
 
                         if(!$MemberAgentSave && !$EarningsReduce){
                             $Things->rollback();
+                            $insert['content']['msg'] = '收益修改失败';
+                            $insert['content'] = json_encode($insert['content']);
+                            M('testt')->add($insert);
                             echo 'FAIL';exit;
                         }
                     }
@@ -696,6 +713,9 @@ class WechatController extends CommentoilcardController
                     //代理收益记录
                     $EarningsAdd = M('agent_earnings')->add($EarningsAdd);
                     if(!$EarningsAdd){
+                        $insert['content']['msg'] = '代理收益写入失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
                         $Things->rollback();
                         echo 'FAIL';exit;
                     }
@@ -709,6 +729,9 @@ class WechatController extends CommentoilcardController
                     $AgentSave = M('agent')->where(['id'=>$Agent['id']])->save($AgentSave);
                     if(!$AgentSave){
                         $Things->rollback();
+                        $insert['content']['msg'] = '代理信息修改失败';
+                        $insert['content'] = json_encode($insert['content']);
+                        M('testt')->add($insert);
                         echo 'FAIL';exit;
                     }
                     
@@ -756,9 +779,15 @@ class WechatController extends CommentoilcardController
                     exit();
                 }*/
             } else {
+                $insert['content']['msg'] = '查询无订单';
+                $insert['content'] = json_encode($insert['content']);
+                M('testt')->add($insert);
                 Log::record('微信回调无此订单:'.$obj_arr['out_trade_no']);
             }
         } else {
+            $insert['content']['msg'] = '签名失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
             Log::record('签名错误，订单号:'.$obj_arr['out_trade_no']);
         }
         // 返回代码
