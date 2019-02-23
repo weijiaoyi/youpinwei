@@ -297,8 +297,8 @@ class IntegralController extends CommentoilcardController
         $user_data=M('agent')->where("openid='$openid'")->find();
         $discount=$user_data['currt_earnings'];//用户名下优惠额度
         $qackage=M('oil_card')->where("card_no='$card_no'")->getField('preferential');//绑定卡的优惠额度
-        $data['qackage']=$user_data['role'] ==3?0: $qackage;
-        $data['discount']=$discount;
+        $data['qackage']= $qackage;
+        $data['discount']=$user_data['role'] ==3?0:$discount;
         if (empty($data)){
             $this->error('0');
         }else{
