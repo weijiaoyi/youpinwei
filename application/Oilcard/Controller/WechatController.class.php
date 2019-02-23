@@ -466,16 +466,7 @@ class WechatController extends CommentoilcardController
         if (!$obj_arr) {
             $obj_arr= json_decode($data,TRUE);
         }
-        $insert = array(
-            'content'=>json_encode(array(
-                'InsertTime'=>date('Y-m-d H:i:s',time()),
-                'InsertNote'=>'油卡申领',
-                'input' =>$obj_arr,
-                'data' =>$data,
-                'return' =>I('post.'),
-            ))
-        );
-        M('testt')->add($insert);
+        
         $obj_arr['paymentType'] = 'WxPay';
         // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
         // $RAW = json_decode($RAW);
@@ -488,7 +479,16 @@ class WechatController extends CommentoilcardController
             $obj_arr['paymentType']    = 'HjPay';
         }
         Log::record('微信回调data:'.json_encode($obj_arr));
-
+        $insert = array(
+            'content'=>json_encode(array(
+                'InsertTime'=>date('Y-m-d H:i:s',time()),
+                'InsertNote'=>'油卡申领',
+                'input' =>$obj_arr,
+                'data' =>$data,
+                'return' =>I('post.'),
+            ))
+        );
+        M('testt')->add($insert);
         $sign = $obj_arr['sign'];
         unset($obj_arr['sign']);
         ksort($obj_arr);
