@@ -2427,6 +2427,15 @@ class WechatController extends CommentoilcardController
         return $data;
     }
 
+    /**
+     * 慧聚云支付
+     * @Author   Mr.Wang
+     * @DateTime 2019-02-23
+     * @param    [type]     $Order  [订单信息]
+     * @param    [type]     $Member [用户信息]
+     * @param    [type]     $PayCon [支付信息]
+     * @return   [type]             [array]
+     */
     public function _HjPay($Order,$Member,$PayCon){
         switch ($PayCon['paymoney']) {
             case '2':
@@ -2472,7 +2481,12 @@ class WechatController extends CommentoilcardController
             // 设置请求参数
             $hjpay->setRequestData($data);
             // 设置请求地址
-            $hjpay->setRequestUrl('https://open.smart4s.com/Api/Service/Pay/Mode/MiniProgram/tradePayMiniProgram');
+            if (isset($PayCon['MiniProgram']) && $PayCon['MiniProgram']=='YES') {
+                $hjpay->setRequestUrl('https://open.smart4s.com/Api/Service/Pay/Mode/JSApi/tradePayJSApi');
+            }else{
+                $hjpay->setRequestUrl('https://open.smart4s.com/Api/Service/Pay/Mode/MiniProgram/tradePayMiniProgram');    
+            }
+            
             // 发起请求
             $res = $hjpay->doRequest();
             $res = json_decode($res, true);

@@ -230,18 +230,18 @@ class ThreeController extends CommentoilcardController
      */
     public function payCard(){
         if(!empty($_POST)){
-            $openid  = trim(I('post.openid'));
-            $card_no = trim(I('post.card_no'));
+            $openid        = trim(I('post.openid'));
+            $card_no       = trim(I('post.card_no'));
             if (empty($card_no) || !$card_no)exit(json_encode(['msg'=>'卡号不能为空！','status'=>100]));
-            $money   = trim(I('post.money'));//实际充值金额
+            $money         = trim(I('post.money'));//实际充值金额
             if (empty($money)) exit(json_encode(['msg'=>'请选填充值金额！','status'=>100]));
-            $pay_money=trim(I('post.pay_money'));//实际支付金额
-            $save=trim(I('post.save')); //优惠金额
-            $flag=trim(I('post.flag',1));//1，选择卡优惠  2，选择账户优惠
-            $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
-            $initial_money=trim(I('post.money'));//折扣前价格
-            $jyj =trim(I('post.jyj',0));
-            $zk = trim(I('post.zk',0));
+            $pay_money     =trim(I('post.pay_money'));//实际支付金额
+            $save          =trim(I('post.save')); //优惠金额
+            $flag          =trim(I('post.flag',1));//1，选择卡优惠  2，选择账户优惠
+            $NowTime       = date('Y-m-d H:i:s',TIMESTAMP);
+            $initial_money =trim(I('post.money'));//折扣前价格
+            $jyj           =trim(I('post.jyj',0));
+            $zk            = trim(I('post.zk',0));
             //油卡信息
             $CardInfo = M('oil_card')->where(['card_no'=>$card_no,'status'=>2])->find();
             if (empty($CardInfo))exit(json_encode(['msg'=>'无效卡号！','status'=>100]));
@@ -320,7 +320,8 @@ class ThreeController extends CommentoilcardController
                     'body'     => '油卡充值',
                     'detail'   => '油卡充值',
                     'attach'   => '油卡充值',
-                    'paymoney' => $config['paymoney']
+                    'paymoney' => $config['paymoney'],
+                    'MiniProgram' =>'YES'
                 ];
                 $PayMent = new WechatController();
                 switch ($config['paytype']) {
