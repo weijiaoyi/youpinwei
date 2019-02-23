@@ -495,8 +495,11 @@ class WechatController extends CommentoilcardController
             $obj_arr['openid']         = $obj_arr['payDetailInfo']['wxSubOpenId'];
             $obj_arr['paymentType']    = 'HjPay';
         }
+
         if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
-            $insert['content']['sign'] = '签名正确';
+            $insert['content']['signs'] = '签名正确';
+            $insert['content'] = json_encode($insert['content']);
+            M('testt')->add($insert);
             $OrderSn = $obj_arr['out_trade_no'];
             $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
             $openId=$obj_arr['openid'];
