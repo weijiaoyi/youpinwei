@@ -786,6 +786,9 @@ class WechatController extends CommentoilcardController
             }
         } else {
             $insert['content']['msg'] = '签名失败';
+            $insert['content']['curlSign'] = $cur_sign;
+            $insert['content']['sign'] = $sign;
+
                     $insert['content'] = json_encode($insert['content']);
                     M('testt')->add($insert);
             Log::record('签名错误，订单号:'.$obj_arr['out_trade_no']);
