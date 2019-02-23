@@ -443,8 +443,9 @@ class IntegralController extends CommentoilcardController
             // user_direct_scale  普通直属会员充值分成
             // vip_indirect_scale  VIP间接会员充值分成
             // user_indirect_scale 普通间接会员充值分成
-            //用户充值的金额 ，使用真实面额
-            $RechageMoney = $order_item['money'];
+            //用户充值的金额 ，使用充值额度
+            $RechageMoney = $OrderRechage;
+
             //判断是直属下级还是间接下级身份 /// 此流程不适用
             switch ($CardInfo['pkgid']) {
                 case '1':
