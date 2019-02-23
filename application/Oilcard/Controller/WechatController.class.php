@@ -494,7 +494,7 @@ class WechatController extends CommentoilcardController
         ksort($obj_arr);
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
-        if( ($cur_sign === $sign && $obj_arr['paymentType'] = 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
+        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
             $OrderSn = $obj_arr['out_trade_no'];
             $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
             $openId=$obj_arr['openid'];
@@ -825,7 +825,7 @@ class WechatController extends CommentoilcardController
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
         //签名验证
-        if( ($cur_sign === $sign && $obj_arr['paymentType'] = 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
+        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
             //获取用户信息 根据微信openid查询对应的用户
             $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
             
@@ -1149,7 +1149,7 @@ class WechatController extends CommentoilcardController
         ksort($obj_arr);
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
-        if( ($cur_sign === $sign && $obj_arr['paymentType'] = 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
+        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
             if($obj_arr['result_code']=='SUCCESS'){
 
 

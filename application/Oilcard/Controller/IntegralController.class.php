@@ -452,7 +452,6 @@ class IntegralController extends CommentoilcardController
                     $Calculation = $RechageMoney* ($config['user_profit']/100);
                     $rewardMoney  = number_format($Calculation, 4, ".", "");
                     $earning_body = 5; //普通卡充值
-                            break;
                     break;
                 
                 default:
