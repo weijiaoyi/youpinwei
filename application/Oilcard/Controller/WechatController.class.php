@@ -467,17 +467,11 @@ class WechatController extends CommentoilcardController
             $obj_arr= json_decode($data,TRUE);
         }
         
-        $obj_arr['paymentType'] = 'WxPay';
+        
         // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
         // $RAW = json_decode($RAW);
         // $obj_arr = object_to_array($RAW);
-        if (isset($obj_arr['event'])) {
-            $obj_arr['out_trade_no']   = $obj_arr['outTradeNo'];
-            $obj_arr['transaction_id'] = $obj_arr['reqId'];
-            $obj_arr['result_code']    = $obj_arr['tradeStatus']==1?'SUCCESS':'FAIL';
-            $obj_arr['openid']         = $obj_arr['payDetailInfo']['wxSubOpenId'];
-            $obj_arr['paymentType']    = 'HjPay';
-        }
+        
         Log::record('微信回调data:'.json_encode($obj_arr));
         $insert = [];
         $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
@@ -492,6 +486,15 @@ class WechatController extends CommentoilcardController
         ksort($obj_arr);
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
+
+        $obj_arr['paymentType'] = 'WxPay';
+        if (isset($obj_arr['event'])) {
+            $obj_arr['out_trade_no']   = $obj_arr['outTradeNo'];
+            $obj_arr['transaction_id'] = $obj_arr['reqId'];
+            $obj_arr['result_code']    = $obj_arr['tradeStatus']==1?'SUCCESS':'FAIL';
+            $obj_arr['openid']         = $obj_arr['payDetailInfo']['wxSubOpenId'];
+            $obj_arr['paymentType']    = 'HjPay';
+        }
         if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
             $insert['content']['sign'] = '签名正确';
             $OrderSn = $obj_arr['out_trade_no'];
