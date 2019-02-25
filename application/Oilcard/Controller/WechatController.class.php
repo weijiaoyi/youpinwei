@@ -2218,14 +2218,6 @@ class WechatController extends CommentoilcardController
         $agent_openid=I('post.agent_openid','');//邀请人openid
         $APPID = 'wxd16b20528d23aff8';
         $AppSecret = 'b303f8f0002cd185cce101d63d342a85';
-//        if (empty($code) && empty($data)){
-//            log::record('小程序登录数据传输有误');
-//            $this->error('数据传输有误');
-//        }
-//        $test_data = array(
-//            'content'=>$agent_openid
-//        );
-//        M('testt')->add($test_data);
         //开发者使用登陆凭证 code 获取 session_key 和 openid
         include_once "wxBizDataCrypt.php";
         if (!empty($code)){
@@ -2242,41 +2234,6 @@ class WechatController extends CommentoilcardController
                 $user_id=M('user')->add(['openid'=>$openid]);
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
-            //判断是否申领过
-/*            $user_apply = M('user_apply')->where("openid='$openid'")->find();
-            if(empty($user_apply)){
-                if (!empty($agent_openid)){
-                    //查询邀请人ID及邀请人代理商ID
-                    $parent=M('user')
-                        ->alias('u')
-                        ->join('__AGENT__ a ON a.openid=u.openid',LEFT)
-                        ->where('u.openid="'.$agent_openid.'"')
-                        ->find();
-                    if($parent['role'] == 3){
-                        $parent_data=array(
-                            'parentid'=>$parent['id'],//邀请人ID
-                            'agentid'=>$parent['id'],//邀请人代理商ID
-                            'agent_relation'=>1//直接关系
-                        );
-                    }else{
-                        $parent_data=array(
-                            'parentid'=>$parent['id'],//邀请人ID
-                            'agentid'=>$parent['agentid'],//邀请人代理商ID
-                            'agent_relation'=>2//间接关系
-                        );
-                    }
-
-                    M('user')->where("openid='$openid'")->save($parent_data);
-
-                }else{
-                    $parent_data=array(
-                        'parentid'=>0,//邀请人ID
-                        'agentid'=>0,//邀请人代理商ID
-                        'agent_relation'=>3//关系
-                    );
-                    M('user')->where("openid='$openid'")->save($parent_data);
-                }
-            }*/
             $this->success($arr);
             log::record('小程序登录返回数据'.$arr);
 
@@ -2287,109 +2244,12 @@ class WechatController extends CommentoilcardController
                 $user_id=M('user')->add(['openid'=>$openid]);
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
-//            $nickname=(array)json_decode($nickname);
             M('user')->where("openid='$openid'")->save(['nickname'=>$nickname,'user_img'=>$user_img]);
             $arr= M('user')->where("openid='$openid'")->find();
             log::record($agent_openid);
-            //判断是否申领过
-   /*         $user_apply = M('user_apply')->where("openid='$openid'")->find();
-            if(empty($user_apply)){
-                if (!empty($agent_openid)){
-                    //查询邀请人ID及邀请人代理商ID
-                    $parent=M('user')
-                        ->alias('u')
-                        ->join('__AGENT__ a ON a.openid=u.openid',LEFT)
-                        ->where('u.openid="'.$agent_openid.'"')
-                        ->find();
-                    if($parent['role'] == 3){
-                        $parent_data=array(
-                            'parentid'=>$parent['id'],//邀请人ID
-                            'agentid'=>$parent['id'],//邀请人代理商ID
-                            'agent_relation'=>1//直接关系
-                        );
-                    }else{
-                        $parent_data=array(
-                            'parentid'=>$parent['id'],//邀请人ID
-                            'agentid'=>$parent['agentid'],//邀请人代理商ID
-                            'agent_relation'=>2//间接关系
-                        );
-                    }
-                    M('user')->where("openid='$openid'")->save($parent_data);
-
-                }else{
-                    $parent_data=array(
-                        'parentid'=>0,//邀请人ID
-                        'agentid'=>0,//邀请人代理商ID
-                        'agent_relation'=>3//关系
-                    );
-                    M('user')->where("openid='$openid'")->save($parent_data);
-                }
-            }*/
             $this->success($arr);
             exit;
         }
-        /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
-                            if (!empty($agent_openid)){
-                                $a_id= M('agent')->where("openid='$agent_openid'")->getField('id');
-
-                                $ad= M('agent_relation')->where("openid='$openid'")->find();
-                                if (empty($ad)) {
-
-                                    $res= M('agent_relation')->add(['agent_id'=>$a_id,'openid'=>$openid]);
-                                }else{
-                                    $earnings_data=M('agent_earnings')->where("openid='$openid' and agent_id='$ad'")->find();
-                                    if (empty($earnings_data)) {
-                                        M('agent_relation')->save(['agent_id'=>$a_id]);
-                                    }
-                                    $res= M('agent_relation')->save(['agent_id'=>$aid]);
-                                }
-
-                                log::record($res);
-                            }*/
-        /*$aid= M('agent_relation')->where("openid='$openid'")->getField('agent_id');
-                            if (!empty($agent_openid)){
-                                $a_id= M('agent')->where("openid='$agent_openid'")->getField('id');
-
-                                $ad= M('agent_relation')->where("openid='$openid'")->find();
-                                if (empty($ad)) {
-
-                                    $res= M('agent_relation')->add(['agent_id'=>$a_id,'openid'=>$openid]);
-                                }else{
-                                    $earnings_data=M('agent_earnings')->where("openid='$openid' and agent_id='$ad'")->find();
-                                    if (empty($earnings_data)) {
-                                        M('agent_relation')->save(['agent_id'=>$a_id]);
-                                    }
-                                    $res= M('agent_relation')->save(['agent_id'=>$aid]);
-                                }
-
-                                log::record($res);
-                            }*/
-// 数据签名校验
-        //        $signature = I('get.signature');
-        //        $signature2 = sha1($_GET['rawData'].$session_key);  //记住不应该用TP中的I方法，会过滤掉必要的数据
-        //        if ($signature != $signature2) {
-        //            echo '数据签名验证失败！';die;
-        //        }
-        //
-        //        //开发者如需要获取敏感数据，需要对接口返回的加密数据( encryptedData )进行对称解密
-        //        Vendor("PHP.wxBizDataCrypt");  //加载解密文件，在官方有下载
-        //       $encryptedData = $_GET['encryptedData'];
-//            $iv = $_GET['iv'];
-//            $pc = new \WXBizDataCrypt($APPID, $session_key);
-//            $errCode = $pc->decryptData("7TZ+H5vlVVFWyBzmNXIZUsO0cOVmVaydgdwu57zF0ruS2UMpdJnjGE6sxzeCVBdmF8QGwX5NmfEkir/8mr9KZDJNZzXHk/va12bTBzviE+XLjWtXDXta2PKXZxjZlOr8juLEhtU5QFmPZ0ITiSLtEvPYCIdtiA9Xh/mDzxosdUp0KwPpGeMyoBZfEXdQcT5kAkAi68GMobt0XVUAFohB7zPylM9aXLamK0scJDjq1xl1Rbce6gy6J8i45qG1mpayVVLt2koBNmc4WfY5uPN/81kwV//faK2b6Zs8BEC4MIaKZ0Wq0/TJ78HgeBFvpOP6xHy6Ut3z6YND8ZT8WXkqTNF5RfyRyDaAfLkB+Y6Md2YKxpUjWQvkMWQr2M6KtnnZiRBNvIHmfw28c/+wDct+PCq7AlfESBil1fV7XhB4/2pp/hTHBIqsop/X8/xVeIdhJOUF4uMx5WmoxMLbWYQ4Cw==", "7TZ+H5vlVVFWyBzmNXIZUsO0cOVmVaydgdwu57zF0ruS2UMpdJnjGE6sxzeCVBdmF8QGwX5NmfEkir/8mr9KZDJNZzXHk/va12bTBzviE+XLjWtXDXta2PKXZxjZlOr8juLEhtU5QFmPZ0ITiSLtEvPYCIdtiA9Xh/mDzxosdUp0KwPpGeMyoBZfEXdQcT5kAkAi68GMobt0XVUAFohB7zPylM9aXLamK0scJDjq1xl1Rbce6gy6J8i45qG1mpayVVLt2koBNmc4WfY5uPN/81kwV//faK2b6Zs8BEC4MIaKZ0Wq0/TJ78HgeBFvpOP6xHy6Ut3z6YND8ZT8WXkqTNF5RfyRyDaAfLkB+Y6Md2YKxpUjWQvkMWQr2M6KtnnZiRBNvIHmfw28c/+wDct+PCq7AlfESBil1fV7XhB4/2pp/hTHBIqsop/X8/xVeIdhJOUF4uMx5WmoxMLbWYQ4Cw==");  //其中$data包含用户的所有数据
-//       var_dump($errCode);exit;
-//       if ($errCode != 0) {
-//                echo '解密数据失败！';die;
-//            }
-        //
-        //        //生成第三方3rd_session
-        //        $session3rd  = null;
-        //        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
-        //        $max = strlen($strPol)-1;
-        //        for($i=0;$i<16;$i++){
-        //            $session3rd .=$strPol[rand(0,$max)];
-        //        }
-        //        echo $session3rd;
     }
 
     public function vget($url){

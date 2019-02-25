@@ -111,6 +111,7 @@ class ThreeController extends CommentoilcardController
                 $user = array();
                 $user['nickname'] = $userinfo['nickname'];
                 $user['user_img'] = $userinfo['headimgurl'];
+                $user['openid'] = $userinfo['openid'];
                 $user['wx_access_token'] = $info['access_token'];
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
@@ -177,6 +178,15 @@ class ThreeController extends CommentoilcardController
                 //判断卡号是否存在
                 $is_card = M('oil_card')->where(array('card_no'=>$card_no))->find();
                 if(!empty($is_card)){
+                    //判断卡的代理商是否为网信网通
+                    if($is_card['agent_id'] == 0){echo json_encode(array('status'=>100,'message'=>'卡号不属于该第三方卡号，无法进行绑定'));exit;}else{
+                        //获取代理商来源ID
+                        $fromId = M('user')->where(array('id'=>$is_card['agent_id']))->getField('fromId');
+                        //判断是否为第三方
+                        if($is_three['id'] != $fromId){
+                            echo json_encode(array('status'=>100,'message'=>'卡号不属于该第三方卡号，无法进行绑定’，无法进行绑定'));exit;
+                        }
+                    }
                     //判断卡号是否已被申领
                     if($is_card['status'] == 1){
                         //判断卡号是否已被其他第三方绑定
@@ -289,13 +299,15 @@ class ThreeController extends CommentoilcardController
                 'parentid'       => $Member['parentid'],
                 'coupon_money'   => $jyj,
                 'discount_money' => $zk,
+                'is_three'       =>$Member['fromId'] //订单来源
             ];
 
             $RechageCount = M('add_money')->where(['card_no'=>$card_no,'openid'=>$openid,'status'=>1])->find();
             $is_first =2;
             if (!$RechageCount) { // 是否是首充
                 if (intval($money) < intval( $config['first_rechage']) ){
-                    $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
+                    exit(json_encode(['msg'=>'当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！','status'=>100]));
+//                    $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
                 }
                 $is_first = 1;
             }
@@ -338,15 +350,15 @@ class ThreeController extends CommentoilcardController
                         $OrderAdd['payment_code'] = 'qfpay';
                         break;
                 }
-                if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
+                if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>100]));
                 if($data)$data['order_no'] = $AddMoneySave['order_no'];
                 $record_res = M('OrderRecord')->add($OrderAdd);
                 if(!$record_res)$this->error('订单生成失败，请重试！');
                 //添加充值记录
-                $create_res = M('add_money')->add($AddMoneySave);
-                exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
+                 M('add_money')->add($AddMoneySave);
+                exit(json_encode(['msg'=>'success','status'=>200,'data'=>$data]));
         }else{
-            exit(json_encode(['msg'=>'系统错误','status'=>1000]));
+            exit(json_encode(['msg'=>'系统错误','status'=>100]));
         }
 
     }
