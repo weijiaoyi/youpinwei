@@ -333,7 +333,7 @@ class ThreeController extends CommentoilcardController
                     'detail'   => '油卡充值',
                     'attach'   => '油卡充值',
                     'paymoney' => $config['paymoney'],
-                    'MiniProgram' =>'YES'
+                    'PublicAddress' =>'YES'
                 ];
                 $PayMent = new WechatController();
                 switch ($config['paytype']) {
@@ -344,6 +344,10 @@ class ThreeController extends CommentoilcardController
                     case '2': //聚合支付
                         $data = $PayMent->_HjPay($OrderAdd,$Member,$PayCon);
                         $OrderAdd['payment_code'] = 'hjpay';
+                        break;
+                    case '2': //钱方支付
+                        $data = $PayMent->_QFPay($OrderAdd,$Member,$PayCon);
+                        $OrderAdd['payment_code'] = 'qfpay';
                         break;
                 }
                 if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>100]));

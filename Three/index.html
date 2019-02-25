@@ -173,8 +173,7 @@
                         success:function(response){
                             console.log(response);
                             if(response.status == 200){
-                                $.toast("支付成功!");
-                                window.location.reload();
+                                callpay(response.data);
                             }else{
                                 $.toast(response.message);
                             }
@@ -185,9 +184,38 @@
                     //取消操作
                 });
             })
+                //调用微信JS api 支付
+                function jsApiCall(jsApiParameters)
+                {
+                    WeixinJSBridge.invoke(
+                        'getBrandWCPayRequest',
+                        jsApiParameters,
+                        function(res){
+                            WeixinJSBridge.log(res.err_msg);
+                            alert(res.err_code+res.err_desc+res.err_msg);
+                        }
+                    );
+                }
+
+                function callpay(jsApiParameters)
+                {
+                    if (typeof WeixinJSBridge == "undefined"){
+                        if( document.addEventListener ){
+                            document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+                        }else if (document.attachEvent){
+                            document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
+                            document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                        }
+                    }else{
+                        jsApiCall(jsApiParameters);
+                    }
+                }
 
 
         })
+    </script>
+<script type="text/javascript">
+
     </script>
 
 </body>
