@@ -89,7 +89,10 @@ class ThreeController extends CommentoilcardController
             $is_user = M('User')->where(['sign'=>$sign])->find();
 
             if (!$is_user || empty($is_user) || !isset($is_user['id'])){
-                //注册新用户
+                echo '该手机号未绑定油卡！';
+                exit();
+
+                /*//注册新用户
                 $user = array();
                 $user['nickname'] = $userinfo['nickname'];
                 $user['user_img'] = $userinfo['headimgurl'];
@@ -101,13 +104,14 @@ class ThreeController extends CommentoilcardController
                 $user['phone']=$is_sign['phone'];
                 $user['fromId']=$is_sign['fromId'];
 
-                M('User')->add($user);
+                M('User')->add($user);*/
 
             }else {
                 //更新用户信息
                 $user = array();
                 $user['nickname'] = $userinfo['nickname'];
                 $user['user_img'] = $userinfo['headimgurl'];
+                $user['openid'] = $userinfo['openid'];
                 $user['wx_access_token'] = $info['access_token'];
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
