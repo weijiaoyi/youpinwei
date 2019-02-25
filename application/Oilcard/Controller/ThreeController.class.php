@@ -240,7 +240,7 @@ class ThreeController extends CommentoilcardController
      */
     public function payCard(){
         if(!empty($_POST)){
-            $openid        = trim(I('post.openid'));
+            $openid        = base64_decode(trim(I('post.openid')));
             $card_no       = trim(I('post.card_no'));
             if (empty($card_no) || !$card_no)exit(json_encode(['msg'=>'卡号不能为空！','status'=>100]));
             $money         = trim(I('post.money'));//实际充值金额

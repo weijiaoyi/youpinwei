@@ -63,13 +63,13 @@
         <counts>
           <entry key="html" value="1268" />
           <entry key="pem" value="11" />
-          <entry key="php" value="4314" />
+          <entry key="php" value="4316" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="1268" />
-          <entry key="PHP" value="4314" />
+          <entry key="PHP" value="4316" />
           <entry key="PLAIN_TEXT" value="11" />
         </counts>
       </usages-collector>
@@ -77,28 +77,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/WechatController.class.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="424">
-              <caret line="2068" column="56" lean-forward="true" selection-start-line="2068" selection-start-column="56" selection-end-line="2068" selection-end-column="56" />
-              <folding>
-                <element signature="e#127#147#0#PHP" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="529">
-              <caret line="111" column="58" lean-forward="true" selection-start-line="111" selection-start-column="58" selection-end-line="111" selection-end-column="58" />
+            <state relative-caret-position="294">
+              <caret line="242" column="65" selection-start-line="242" selection-start-column="65" selection-end-line="242" selection-end-column="65" />
               <folding>
                 <element signature="e#36#57#0#PHP" expanded="true" />
                 <element signature="e#5900#9800#0#PHP" />
-                <element signature="e#9889#15823#0#PHP" />
                 <element signature="e#15829#18064#0#PHP" />
               </folding>
             </state>
@@ -280,12 +266,12 @@
       <updated>1547777314486</updated>
       <workItem from="1547777315644" duration="29176000" />
       <workItem from="1550131896451" duration="2178000" />
-      <workItem from="1550461315440" duration="58357000" />
+      <workItem from="1550461315440" duration="58752000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89711000" />
+    <option name="totallyTimeSpent" value="90106000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -600,12 +586,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="111" column="58" lean-forward="true" selection-start-line="111" selection-start-column="58" selection-end-line="111" selection-end-column="58" />
+        <state relative-caret-position="294">
+          <caret line="242" column="65" selection-start-line="242" selection-start-column="65" selection-end-line="242" selection-end-column="65" />
           <folding>
             <element signature="e#36#57#0#PHP" expanded="true" />
             <element signature="e#5900#9800#0#PHP" />
-            <element signature="e#9889#15823#0#PHP" />
             <element signature="e#15829#18064#0#PHP" />
           </folding>
         </state>
