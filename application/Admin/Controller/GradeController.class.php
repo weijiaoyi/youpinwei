@@ -235,7 +235,7 @@ class GradeController extends AdminbaseController
                 -> page($p,$pageNum)
                 -> select();
             $count = $AgentModel
-                -> join('user')
+                -> join('user ON agent.openid = user.openid ')
                 -> where($where)
                 -> count();
         }else if($role == 3){
@@ -252,7 +252,7 @@ class GradeController extends AdminbaseController
                 -> page($p,$pageNum)
                 -> select();
             $count = $AgentModel
-                -> join('user')
+                -> join('user ON agent.openid = user.openid ',LEFT)
                 -> where($where)
                 -> count();
         }
