@@ -297,8 +297,8 @@ class IntegralController extends CommentoilcardController
         $user_data=M('agent')->where("openid='$openid'")->find();
         $discount=$user_data['currt_earnings'];//用户名下优惠额度
         $qackage=M('oil_card')->where("card_no='$card_no'")->getField('preferential');//绑定卡的优惠额度
-        $data['qackage']=$qackage;
-        $data['discount']=$discount;
+        $data['qackage']= $qackage;
+        $data['discount']=$user_data['role'] ==3?0:$discount;
         if (empty($data)){
             $this->error('0');
         }else{
@@ -402,30 +402,35 @@ class IntegralController extends CommentoilcardController
         //用户信息变动记录
         $MemberSave =[
             //积分 1：1
-            'integral' => intval($Member['integral'] + $AddMoneySave['real_pay']),
+            'integral'             => intval($Member['integral'] + $AddMoneySave['real_pay']),
             //总共给用户省下来的钱
-            'already_save_money' => intval($Member['already_save_money'] + $AddMoneySave['discount_money']),
+            'already_save_money'   => intval($Member['already_save_money'] + $AddMoneySave['discount_money']),
             //总共充值的油卡额度 
-            'total_add_money' => intval($Member['total_add_money'] + $AddMoneySave['money']),
+            'total_add_money'      => intval($Member['total_add_money'] + $AddMoneySave['money']),
             //用户真实充值的钱
-            'total_real_add_money' =>$Member['total_real_add_money'] + $AddMoneySave['real_pay'],
+            'total_real_add_money' => $Member['total_real_add_money'] + $AddMoneySave['real_pay'],
         ];
         //积分变动记录
         $IntegralAdd = [
-            'user_id' => $Member['id'],
-            'change' => 1,
-            'chang_way' => '充值',
+            'user_id'      => $Member['id'],
+            'change'       => 1,
+            'chang_way'    => '充值',
             'change_value' => $AddMoneySave['real_pay'],
-            'createtime' => $NowTime,
-            'updatetime' => $NowTime,
-            'change_from'=> json_encode(['from'=>'OrderRechage','OrderSn'=>$OrderSn])
+            'createtime'   => $NowTime,
+            'updatetime'   => $NowTime,
+            'change_from'  => json_encode(['from'=>'OrderRechage','OrderSn'=>$OrderSn])
         ];
         $EarningsAdd =[];
         $AgentSave =[];
         $MemberAgentSave = [];
         //如果用户使用加油卷  --  则 减少加油卷数量 
         if (!empty($OrderAdd['coupon_money']) && $OrderAdd['coupon_money'] >0) {
-            $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderAdd['coupon_money'];
+            //如果使用加油卷并且加油卷数量大于使用的加油卷数量 
+            if (intval($Member['currt_earnings']) >= intval($OrderInfo['coupon_money'])  && ($Member['currt_earnings'] - $OrderAdd['coupon_money']>=0)) {
+                $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderAdd['coupon_money'];
+            }
+            //此次操作，是否按照使用数量减少，或者是。。。。
+            
         }
 
         //是否存在上级代理 
@@ -438,15 +443,15 @@ class IntegralController extends CommentoilcardController
             // user_direct_scale  普通直属会员充值分成
             // vip_indirect_scale  VIP间接会员充值分成
             // user_indirect_scale 普通间接会员充值分成
-            //用户充值的金额 ，使用真实面额
-            $RechageMoney = $order_item['money'];
+            //用户充值的金额 ，使用充值额度
+            $RechageMoney = $OrderRechage;
+
             //判断是直属下级还是间接下级身份 /// 此流程不适用
             switch ($CardInfo['pkgid']) {
                 case '1':
                     $Calculation = $RechageMoney* ($config['user_profit']/100);
                     $rewardMoney  = number_format($Calculation, 4, ".", "");
                     $earning_body = 5; //普通卡充值
-                            break;
                     break;
                 
                 default:

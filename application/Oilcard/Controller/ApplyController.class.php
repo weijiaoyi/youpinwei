@@ -128,7 +128,7 @@ class ApplyController extends CommentoilcardController
         switch ($checked) {
             case '1'://线上办卡-邮寄油卡
                 //查询代理名下油卡库存是否足够
-                //如果代理油卡数量大于等于1,并且不等于0,代理发卡
+                
                 if ($Agent && $Agent['agent_oilcard_stock_num']>=1 && $Agent['agent_oilcard_stock_num'] !=0) {
                     $card_from =2; // 最终由代理发卡
                     $aid =  $Member['agentid'];

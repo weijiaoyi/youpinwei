@@ -108,7 +108,7 @@ class CardController extends CommentoilcardController
             'status'        =>2,
             'updatetime'    => $NowTime,
             'chomd'         => 2 ,
-            'agent_status'  =>2,
+            'agent_status'  =>1,
             'end_time'      =>$EndTime,
             'preferential'  => $Package['limits'],
             'pkgid'         =>$Order['pid'],
@@ -132,75 +132,7 @@ class CardController extends CommentoilcardController
                 $this->error('绑定失败！');
             }
 
-            //下面的用不上
-            //
-//            if (!$user)
-//            {
-//                //跳转到微信登录url，待完善
-//                return redirect(U('oilcard/wechat/getCode'));
-//            }
-
-
-        if (!empty($id)){
-            $card = M('OilCard')->where(['card_no'=>$card_no,'status'=>2])->find();
-            //判断卡号是否已申领/已有人
-
-            
-            $card['user_id'] = $user['id'];
-            $update_oilCard = array(
-                'user_id'=>$user['id'],
-                'updatetime'=>date('Y-m-d H:i:s',time()),
-            );
-            $res = M('OilCard')->where(['card_no'=>$card_no,'status'=>2])->save($update_oilCard);
-            if ($res!==false){
-                //发送100元优惠券
-                /*$coupon = [];
-                $coupon['user_id'] = $user['id'];
-                $coupon['openid'] = $user['openid'];
-                $coupon['card_no'] = $card_no;
-                $coupon['type'] = '1';
-                $coupon['status'] = '1';
-                $coupon['replace_money'] = '100';
-                M('coupon')->add($coupon);*/
-
-//                M('order_record')->add(['order_type'=>2,'user_id'=>$user['id'],'card_no'=>$card_no,'order_status'=>2]);
-
-                $orderRecordModel = M('order_record');$userApplyModel=M('user_apply');
-                //查询订单号
-                $serial_number = $orderRecordModel->where(['id'=>$id,'order_type'=>1,'user_id'=>$user['id'],'order_status'=>2])->getField('serial_number');
-                //修改订单状态
-                $orderRecordModel->where(['id'=>$id,'order_type'=>1,'user_id'=>$user['id'],'order_status'=>2])->save(['order_type'=>2,'updatetime'=>date('Y-m-d H:i:s',time())]);
-                //修改申请表
-                $userApplyModel->where('serial_number="'.$serial_number.'" AND status !=3')->save(['status'=>3,'updatetime'=>date('Y-m-d H:i:s',time())]);
-
-//                    M('order_record')->where("id='$id'")->save(['preferential_type'=>2]);
-                    $preferential=M('order_record')->where("id='$id'")->getField('preferential');
-                    $card_arr=M('oil_card')->where("card_no='$card_no' AND user_id='".$user['id']."'")->find();
-//                    $end_time=$card_arr['end_time'];
-//                    if ($end_time<date('Y-m-d H:i:s')){
-//                        M('oil_card')->where("card_no='$card_no'")->save(['preferential'=>$preferential,'end_time'=>date("Y-m-d H:i:s",strtotime("+1years"))]);
-//                    }else{
-//                        $end_preferential=$card_arr['preferential'];
-//                        $send_preferential=$preferential+$end_preferential;
-                        M('oil_card')->where("card_no='$card_no'")->save(['end_time'=>date("Y-m-d H:i:s",strtotime("+1years"))]);
-//                    }
-                }
-
-                //微信通知
-//                $notice = [];
-//                $notice['card_no'] = $card_no;
-//                $notice['careatetime'] = date('Y-m-d H:i:s',time());
-//                $Wechat = A('Wechat');
-//                $Wechat->templateMessage($openid,$notice,2);
-
-                $this->success('绑定成功！');
-            }
-
-//        }catch (\Exception $e) {
-//            echo $e->getMessage();
-//            Log::write('['.$e->getCode().'] '.$e->getMessage(), 'ERR');
-//            exit();
-//        }
+ 
     }
 
 

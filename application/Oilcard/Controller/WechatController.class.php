@@ -150,7 +150,6 @@ class WechatController extends CommentoilcardController
         $data['spbill_create_ip'] = Tool::getClientIp();
         $data['time_start'] = date('YmdHis');
         $data['time_expire'] = date('YmdHis',time()+7200);
-//        $data['notify_url'] = $this->my_uri.'/index.php?g=oilcard&m=wechat&a=wxNoticePay';
         $data['notify_url'] = $this->my_uri.'/addMoneyNotify.php';
         $data['trade_type'] = 'JSAPI';
         $data['openid'] = $openid;
@@ -373,7 +372,12 @@ class WechatController extends CommentoilcardController
                 $data = $this->_HjPay($Order,$Member,$PayCon);
                 $Order['payment_code'] = 'hjpay';
                 break;
+            case '3': //钱方支付
+                $data = $this->_QFPay($Order,$Member,$PayCon);
+                $Order['payment_code'] = 'qfpay';
+                break;
         }
+        
         if($data){
             $OrderAdd = M('order_record')->add($Order);
             if(!$OrderAdd)$this->error('订单生成失败!');
@@ -466,20 +470,28 @@ class WechatController extends CommentoilcardController
         if (!$obj_arr) {
             $obj_arr= json_decode($data,TRUE);
         }
-        $insert = array(
-            'content'=>json_encode(array(
-                'InsertTime'=>date('Y-m-d H:i:s',time()),
-                'InsertNote'=>'油卡申领',
-                'input' =>$obj_arr,
-                'data' =>$data,
-                'return' =>I('post.'),
-            ))
-        );
-        M('testt')->add($insert);
-        $obj_arr['paymentType'] = 'WxPay';
+        
+        
         // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
         // $RAW = json_decode($RAW);
         // $obj_arr = object_to_array($RAW);
+        
+        Log::record('微信回调data:'.json_encode($obj_arr));
+        $insert = [];
+        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
+        $insert['content']['InsertNote'] = '油卡申领';
+        $insert['content']['input'] = $obj_arr;
+        $insert['content']['return'] = I('post.');
+        $insert['content']['data'] = $data;
+
+        
+        $sign = $obj_arr['sign'];
+        unset($obj_arr['sign']);
+        ksort($obj_arr);
+        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
+        $cur_sign = strtoupper(MD5($string1));
+
+        $obj_arr['paymentType'] = 'WxPay';
         if (isset($obj_arr['event'])) {
             $obj_arr['out_trade_no']   = $obj_arr['outTradeNo'];
             $obj_arr['transaction_id'] = $obj_arr['reqId'];
@@ -487,17 +499,14 @@ class WechatController extends CommentoilcardController
             $obj_arr['openid']         = $obj_arr['payDetailInfo']['wxSubOpenId'];
             $obj_arr['paymentType']    = 'HjPay';
         }
-        Log::record('微信回调data:'.json_encode($obj_arr));
+        $openId=$obj_arr['openid'];
 
-        $sign = $obj_arr['sign'];
-        unset($obj_arr['sign']);
-        ksort($obj_arr);
-        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
-        $cur_sign = strtoupper(MD5($string1));
-        if( ($cur_sign === $sign && $obj_arr['paymentType'] = 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
+        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
+            $insert['content']['signs'] = '签名正确';
+            $insert['content'] = json_encode($insert['content']);
+            M('testt')->add($insert);
             $OrderSn = $obj_arr['out_trade_no'];
             $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
-            $openId=$obj_arr['openid'];
             $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
             $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
             $order_item = M('add_money')->where(['order_no'=>$obj_arr['out_trade_no']])->find();
@@ -519,7 +528,10 @@ class WechatController extends CommentoilcardController
                 //用户充值记录信息状态修改
                 $AddMoneySave = M('add_money')->where(['id'=>$order_item['id']])->save($AddMoneySave);
                 if(!$AddMoneySave){
+                    $insert['content']['msg'] = '充值记录写入失败';
+                    $insert['content'] = json_encode($insert['content']);
                     $Things->rollback();
+                    M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
                 //更改油卡信息状态
@@ -536,6 +548,9 @@ class WechatController extends CommentoilcardController
                 $OilCardSave = M('oil_card')->where(['id'=>$CardInfo['id']])->save($OilCardSave);
                 if(!$OilCardSave){
                     $Things->rollback();
+                    $insert['content']['msg'] = '油卡信息状态修改失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
                 //更改订单支付状态
@@ -548,16 +563,19 @@ class WechatController extends CommentoilcardController
                 $OrderSave = M('order_record')->where(['id'=>$OrderInfo['id']])->save($OrderSave);
                 if(!$OrderSave){
                     $Things->rollback();
+                    $insert['content']['msg'] = '订单修改失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
                 //用户信息变动记录
                 $MemberSave =[
                     //积分 1：1
-                    'integral' => intval($Member['integral'] + $order_item['real_pay']),
+                    'integral'             => intval($Member['integral'] + $order_item['real_pay']),
                     //总共给用户省下来的钱
-                    'already_save_money' => intval($Member['already_save_money'] + $order_item['discount_money']),
+                    'already_save_money'   => intval($Member['already_save_money'] + $order_item['discount_money']),
                     //总共充值的油卡额度 
-                    'total_add_money' => intval($Member['total_add_money'] + $order_item['money']),
+                    'total_add_money'      => intval($Member['total_add_money'] + $order_item['money']),
                     //用户真实充值的钱
                     'total_real_add_money' =>$Member['total_real_add_money'] + $order_item['real_pay'],
                 ];
@@ -565,6 +583,9 @@ class WechatController extends CommentoilcardController
                 $MemberSave = M('user')->where(['openid'=>$openId])->save($MemberSave);
                 if(!$MemberSave){
                     $Things->rollback();
+                    $insert['content']['msg'] = '用户信息修改失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
                 //积分变动记录
@@ -581,6 +602,9 @@ class WechatController extends CommentoilcardController
                 $IntegralAdd = M('IntegralRecord')->add($IntegralAdd);
                 if(!$IntegralAdd){
                     $Things->rollback();
+                    $insert['content']['msg'] = '积分变动失败';
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
                 $EarningsAdd =[];
@@ -589,7 +613,7 @@ class WechatController extends CommentoilcardController
                 $MemberAgentSave = [];
                 //如果用户使用加油卷  --  则 减少加油卷数量 
                 if (!empty($OrderInfo['coupon_money']) && $OrderInfo['coupon_money'] >0) {
-                    if (intval($Member['currt_earnings']) >= intval($OrderInfo['coupon_money'])) {
+                    if (intval($Member['currt_earnings']) >= intval($OrderInfo['coupon_money'])  && ($Member['currt_earnings'] - $OrderInfo['coupon_money'])>=0) {
                         $MemberAgentSave['currt_earnings'] =$Member['currt_earnings'] - $OrderInfo['coupon_money'];
                         //用户信息修改
                         $MemberAgentSave = M('Agent')->where(['openid'=>$openId])->save($MemberAgentSave);
@@ -609,6 +633,9 @@ class WechatController extends CommentoilcardController
 
                         if(!$MemberAgentSave && !$EarningsReduce){
                             $Things->rollback();
+                            $insert['content']['msg'] = '收益修改失败';
+                            $insert['content'] = json_encode($insert['content']);
+                            M('testt')->add($insert);
                             echo 'FAIL';exit;
                         }
                     }
@@ -696,7 +723,10 @@ class WechatController extends CommentoilcardController
                     //代理收益记录
                     $EarningsAdd = M('agent_earnings')->add($EarningsAdd);
                     if(!$EarningsAdd){
+                        $insert['content']['msg'] = '代理收益写入失败';
+                    $insert['content'] = json_encode($insert['content']);
                         $Things->rollback();
+                    M('testt')->add($insert);
                         echo 'FAIL';exit;
                     }
                     //总收益
@@ -709,6 +739,9 @@ class WechatController extends CommentoilcardController
                     $AgentSave = M('agent')->where(['id'=>$Agent['id']])->save($AgentSave);
                     if(!$AgentSave){
                         $Things->rollback();
+                        $insert['content']['msg'] = '代理信息修改失败';
+                        $insert['content'] = json_encode($insert['content']);
+                        M('testt')->add($insert);
                         echo 'FAIL';exit;
                     }
                     
@@ -756,9 +789,18 @@ class WechatController extends CommentoilcardController
                     exit();
                 }*/
             } else {
+                $insert['content']['msg'] = '查询无订单';
+                $insert['content'] = json_encode($insert['content']);
+                M('testt')->add($insert);
                 Log::record('微信回调无此订单:'.$obj_arr['out_trade_no']);
             }
         } else {
+            $insert['content']['msg'] = '签名失败';
+            $insert['content']['curlSign'] = $cur_sign;
+            $insert['content']['sign'] = $sign;
+
+                    $insert['content'] = json_encode($insert['content']);
+                    M('testt')->add($insert);
             Log::record('签名错误，订单号:'.$obj_arr['out_trade_no']);
         }
         // 返回代码
@@ -793,6 +835,17 @@ class WechatController extends CommentoilcardController
         if (!$obj_arr) {
             $obj_arr= json_decode($data,TRUE);
         }
+        
+
+
+        
+        $sign = $obj_arr['sign'];
+        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
+        $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
+        unset($obj_arr['sign']);
+        ksort($obj_arr);
+        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
+        $cur_sign = strtoupper(MD5($string1));
         $insert = array(
             'content'=>json_encode(array(
                 'InsertTime'=>date('Y-m-d H:i:s',time()),
@@ -814,18 +867,9 @@ class WechatController extends CommentoilcardController
             $obj_arr['openid']         = $obj_arr['payDetailInfo']['wxSubOpenId'];
             $obj_arr['paymentType']    = 'HjPay';
         }
-
-
         $openId=$obj_arr['openid'];
-        $sign = $obj_arr['sign'];
-        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
-        $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
-        unset($obj_arr['sign']);
-        ksort($obj_arr);
-        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
-        $cur_sign = strtoupper(MD5($string1));
         //签名验证
-        if( ($cur_sign === $sign && $obj_arr['paymentType'] = 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
+        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
             //获取用户信息 根据微信openid查询对应的用户
             $Member=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.openid'=>$openId])->find();
             
@@ -1121,6 +1165,12 @@ class WechatController extends CommentoilcardController
         if (!$obj_arr) {
             $obj_arr= json_decode($data,TRUE);
         }
+        
+        $sign = $obj_arr['sign'];
+        unset($obj_arr['sign']);
+        ksort($obj_arr);
+        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
+        $cur_sign = strtoupper(MD5($string1));
         $insert = array(
             'content'=>json_encode(array(
                 'InsertTime'=>date('Y-m-d H:i:s',time()),
@@ -1142,14 +1192,9 @@ class WechatController extends CommentoilcardController
             $obj_arr['openid']         = $obj_arr['payDetailInfo']['wxSubOpenId'];
             $obj_arr['paymentType']    = 'HjPay';
         }
-
         $openId=$obj_arr['openid'];
-        $sign = $obj_arr['sign'];
-        unset($obj_arr['sign']);
-        ksort($obj_arr);
-        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
-        $cur_sign = strtoupper(MD5($string1));
-        if( ($cur_sign === $sign && $obj_arr['paymentType'] = 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
+
+        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
             if($obj_arr['result_code']=='SUCCESS'){
 
 
@@ -1228,11 +1273,6 @@ class WechatController extends CommentoilcardController
         log::record(XML::build($data));
         ob_end_clean();
         echo  XML::build($data);exit;
-//        ob_end_clean();
-//        echo "<xml>
-//              <return_code><![CDATA[SUCCESS]]></return_code>
-//              <return_msg><![CDATA[OK]]></return_msg>
-//            </xml>";exit;
     }
 
     /**
@@ -1259,14 +1299,10 @@ class WechatController extends CommentoilcardController
             $res= M('agent')->where("id='$agent_id'")->save($agentSaveArr);
 
 
-//        if(empty($result)){
-            //分销收益表更新数据
             $where=[
                 'openid'=>$openid,
                 'order_type'=>2
             ];
-//            $earnings_money=M('agent_earnings')->where($where)->find();
-            // print_r($earnings_moneys);exit;
             $earnings_data=[
                 'openid'=>$openid,
                 'agent_id'=>$agent_id,
@@ -1283,7 +1319,6 @@ class WechatController extends CommentoilcardController
      * 成为后为上线增加收益
      */
     public function earningsAddMoney( $openid,$money){
-//        $openid='oKBRH4-nLGXUms_fY0xglT8xfesE';
 
         $agent_data= M('agent')->where("openid='$openid'")->find();// 当前用户  agent数据
         $relation_data=M('agent_relation')->where("openid='$openid'")->find();
@@ -1293,10 +1328,6 @@ class WechatController extends CommentoilcardController
         $agent_arr=M('agent')->where("id='$agent_id'")->find();
         Log::record('下线如数据:'.json_encode($result));
         if (empty($result)){
-//            $agent_where['new_earnings']=$agent_arr['new_earnings']+40;
-//            $agent_where['currt_earnings']=$agent_arr['currt_earnings']+40;
-//            $agent_where['total_earnings']=$agent_arr['total_earnings']+40;
-//            $agent_res=M('agent')->where('id='.$agent_id)->save($agent_where);
             if ($money>0){
                 $earnings_data['order_type']=2;
             }else{
@@ -1307,7 +1338,6 @@ class WechatController extends CommentoilcardController
                 'agent_id'=>$agent_data['id'],
                 'openid'=>$openid
             ];
-//            M('agent_earnings')->add($earnings_data);
 
         }
 
@@ -1665,7 +1695,6 @@ class WechatController extends CommentoilcardController
         $accessTokenData=(array)json_decode($this->curlGet($getAccessTokenUrl));
         $access_token=$accessTokenData['access_token'];
         S('access_token',$access_token,7000);
-//        }
 
         $url="https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".$access_token;
         $url="https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=".$access_token;
@@ -1784,7 +1813,6 @@ class WechatController extends CommentoilcardController
                 }';
                 break;
             case '5':
-//                $order_data=M('order_record')->where('card_no='.$data['card'])->find();
                 $template_id='YedzPQhI70K3Pb7pN5yQBUWL41hYfwPkjS0ESYxJYxM';
                 $a=[];
                 $a=[
@@ -2009,22 +2037,7 @@ class WechatController extends CommentoilcardController
         $user_id=$user_arr['id'];
         $user_card_data=M('oil_card')->where("user_id='$user_id'")->select();
 
-//        if (empty($user_card_data)){
-//            $this->error('',501);
-//        }else{
-//            foreach ($user_card_data as $k=>$v){
-//                $card_order=M('order_record')->where("card_no='".$v['card_no']."'")->find();
-//                if ($card_order<500){
-//                    $this->error('',501);
-//                }
-//            }
-//        }
-
-
-//        $img=file_get_contents(__DIR__."/wechat/$openid.png");
-//        if (empty($img)){
         $access_token=S('program_access_token');
-//        if (empty($access_token)){
         $url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$APPID."&secret=".$AppSecret;
         $jsonData=$this->curlGet($url);
         $accessData=(array)json_decode($jsonData);
@@ -2033,24 +2046,17 @@ class WechatController extends CommentoilcardController
             $this->error('签名生成错误');
         }
         S('program_access_token',$access_token,'7000');
-//        }
         if(empty($access_token)){
             $this->error('参数生成错误');
         }
         $qcode ="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=$access_token";
-//        $param = json_encode(['page'=>'pages/vip/vip','scene'=>$openid]);
         $param = json_encode(array('scene'=>$openid));
         $json = $param;
         $result = $this->api_notice_increment($qcode, $json);
-//        $result = $this->httpRequest($qcode, $param,"POST");
-//        }
-//
 
         $path="https://ysy.xiangjianhai.com/application/Oilcard/Controller/wechat/$openid.png";
-//        $path="https://ysy.xiangjianhai.com/H/img/$openid.png";
 
         file_put_contents(__DIR__."/wechat/$openid.png",print_r($result,true));
-//        file_put_contents($path,print_r($result,true));
         $this->success($path);
 
 
@@ -2092,7 +2098,6 @@ class WechatController extends CommentoilcardController
             curl_setopt($curl, CURLOPT_POST, 1);
             if ($data != '')
             {
-//                $data = json_decode($data,true);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
             }
 
@@ -2427,6 +2432,15 @@ class WechatController extends CommentoilcardController
         return $data;
     }
 
+    /**
+     * 慧聚云支付
+     * @Author   Mr.Wang
+     * @DateTime 2019-02-23
+     * @param    [type]     $Order  [订单信息]
+     * @param    [type]     $Member [用户信息]
+     * @param    [type]     $PayCon [支付信息]
+     * @return   [type]             [array]
+     */
     public function _HjPay($Order,$Member,$PayCon){
         switch ($PayCon['paymoney']) {
             case '2':
@@ -2472,7 +2486,12 @@ class WechatController extends CommentoilcardController
             // 设置请求参数
             $hjpay->setRequestData($data);
             // 设置请求地址
-            $hjpay->setRequestUrl('https://open.smart4s.com/Api/Service/Pay/Mode/MiniProgram/tradePayMiniProgram');
+            if (isset($PayCon['MiniProgram']) && $PayCon['MiniProgram']=='YES') {
+                $hjpay->setRequestUrl('https://open.smart4s.com/Api/Service/Pay/Mode/JSApi/tradePayJSApi');
+            }else{
+                $hjpay->setRequestUrl('https://open.smart4s.com/Api/Service/Pay/Mode/MiniProgram/tradePayMiniProgram');    
+            }
+            
             // 发起请求
             $res = $hjpay->doRequest();
             $res = json_decode($res, true);
@@ -2696,6 +2715,11 @@ class WechatController extends CommentoilcardController
                         $data = $PayMent->_HjPay($OrderAdd,$Member,$PayCon);
                         $OrderAdd['payment_code'] = 'hjpay';
                         break;
+                    case '3': //钱方支付
+                        $data = $PayMent->_QFPay($OrderAdd,$Member,$PayCon);
+                        $OrderAdd['payment_code'] = 'qfpay';
+                        break;
+                        
                 }
                 if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
                 if($data)$data['order_no'] = $AddMoneySave['order_no'];
@@ -2741,16 +2765,21 @@ class WechatController extends CommentoilcardController
             "out_trade_no" =>$orderSn, //外部订单号，外部订单唯一标示
             "txdtm"        =>$tm, //请求方交易时间 格式为YYYY-mm-dd HH:MM:DD 
             'goods_name'   =>$PayCon['body'], //商品名称
-            'sub_openi'    =>$Member['openid'], //用户的openid
+            'sub_openid'   =>$Member['openid'], //用户的openid
             "udid"         =>"me",  //设备唯一id
 
         );
         $QfPay = new QFPayConfig();  
         $result = $QfPay->request("payment", $data);
-        exit(json_encode(['data'=>$data,'result'=>$result]));
-        
-        exit;
-        var_dump();
+        if($result){
+            $result = json_decode($result,TRUE);
+        }
+        if ($result['respcd'] !='0000') {
+            exit(json_encode(['msg'=>'支付异常：'.$result['resperr'],'status'=>500]));
+        }
+        return $result['pay_params'];
+
+        // exit(json_encode(['data'=>$data,'result'=>$result]));
     }   
 }
  
