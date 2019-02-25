@@ -177,6 +177,19 @@ class ThreeController extends CommentoilcardController
                 //判断卡号是否存在
                 $is_card = M('oil_card')->where(array('card_no'=>$card_no))->find();
                 if(!empty($is_card)){
+                    //判断卡的代理商是否为网信网通
+                    if($is_card['agent_id'] == 0){echo json_encode(array('status'=>100,'message'=>'卡号不属于该第三方卡号，无法进行绑定'));exit;}else{
+                        //获取代理商来源ID
+                        $fromId = M('user')->where(array('id'=>$is_card['agent_id']))->getField('fromId');
+                        //判断是否为第三方
+                        if($is_three['id'] != $fromId){
+                            echo json_encode(array('status'=>100,'message'=>'卡号不属于该第三方卡号，无法进行绑定’，无法进行绑定'));exit;
+                        }
+                    }
+
+
+
+
                     //判断卡号是否已被申领
                     if($is_card['status'] == 1){
                         //判断卡号是否已被其他第三方绑定
