@@ -129,25 +129,18 @@ class ApplyController extends CommentoilcardController
             case '1'://线上办卡-邮寄油卡
                 //查询代理名下油卡库存是否足够
                 
-                if ($Agent) {
-                    //如果代理油卡数量大于等于1,并且不等于0,代理发卡
-                    if($Agent['agent_oilcard_stock_num']>=1 && $Agent['agent_oilcard_stock_num'] !=0){
+                if ($Agent && $Agent['agent_oilcard_stock_num']>=1 && $Agent['agent_oilcard_stock_num'] !=0) {
+                    $card_from =2; // 最终由代理发卡
+                    $aid =  $Member['agentid'];
+                }else{
+                    if ($Syscount >=1) {
+                        //如果总部有卡,代理无卡,总部发卡
+                        $card_from =1; // 最终由总部发卡
+                        $aid = 0 ;
+                    }else{//如果总部无卡,代理也无卡
                         $card_from =2; // 最终由代理发卡
                         $aid =  $Member['agentid'];
-                    }else{
-                        //代理已经
-                        if ($Syscount >=1) {
-                            //如果总部有卡,代理无卡,总部发卡
-                            $card_from =1; // 最终由总部发卡
-                            $aid = 0 ;
-                        }else{//如果总部无卡,代理也无卡
-                            $card_from =2; // 最终由代理发卡
-                            $aid =  $Member['agentid'];
-                        }
                     }
-                }else{
-                    $card_from =1; // 最终由总部发卡
-                    $aid = 0 ;
                 }
                 break;
             case '2'://现场办卡
