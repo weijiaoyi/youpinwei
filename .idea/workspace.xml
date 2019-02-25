@@ -93,10 +93,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="618">
-              <caret line="188" lean-forward="true" selection-start-line="188" selection-end-line="188" />
+            <state relative-caret-position="43">
+              <caret line="90" column="72" selection-start-line="90" selection-start-column="72" selection-end-line="90" selection-end-column="72" />
               <folding>
                 <element signature="e#36#57#0#PHP" expanded="true" />
+                <element signature="e#5900#9800#0#PHP" />
+                <element signature="e#9889#15823#0#PHP" />
+                <element signature="e#15829#18064#0#PHP" />
               </folding>
             </state>
           </provider>
@@ -110,7 +113,6 @@
       <find>accessToken</find>
       <find>setRequestUrl</find>
       <find>PHT2017000000002</find>
-      <find>getAccessToken</find>
       <find>_HjPay</find>
       <find>end_time</find>
       <find>agentApply</find>
@@ -136,6 +138,7 @@
       <find>zf_money_sel</find>
       <find>_WxPay</find>
       <find>samll</find>
+      <find>getAccessToken</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -277,12 +280,12 @@
       <updated>1547777314486</updated>
       <workItem from="1547777315644" duration="29176000" />
       <workItem from="1550131896451" duration="2178000" />
-      <workItem from="1550461315440" duration="57456000" />
+      <workItem from="1550461315440" duration="58306000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="88810000" />
+    <option name="totallyTimeSpent" value="89660000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -597,10 +600,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="618">
-          <caret line="188" lean-forward="true" selection-start-line="188" selection-end-line="188" />
+        <state relative-caret-position="43">
+          <caret line="90" column="72" selection-start-line="90" selection-start-column="72" selection-end-line="90" selection-end-column="72" />
           <folding>
             <element signature="e#36#57#0#PHP" expanded="true" />
+            <element signature="e#5900#9800#0#PHP" />
+            <element signature="e#9889#15823#0#PHP" />
+            <element signature="e#15829#18064#0#PHP" />
           </folding>
         </state>
       </provider>

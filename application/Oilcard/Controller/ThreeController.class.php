@@ -89,10 +89,7 @@ class ThreeController extends CommentoilcardController
             $is_user = M('User')->where(['sign'=>$sign])->find();
 
             if (!$is_user || empty($is_user) || !isset($is_user['id'])){
-                echo '该手机号未绑定油卡！';
-                exit();
-
-                /*//注册新用户
+                //注册新用户
                 $user = array();
                 $user['nickname'] = $userinfo['nickname'];
                 $user['user_img'] = $userinfo['headimgurl'];
@@ -104,7 +101,7 @@ class ThreeController extends CommentoilcardController
                 $user['phone']=$is_sign['phone'];
                 $user['fromId']=$is_sign['fromId'];
 
-                M('User')->add($user);*/
+                M('User')->add($user);
 
             }else {
                 //更新用户信息
@@ -186,10 +183,6 @@ class ThreeController extends CommentoilcardController
                             echo json_encode(array('status'=>100,'message'=>'卡号不属于该第三方卡号，无法进行绑定’，无法进行绑定'));exit;
                         }
                     }
-
-
-
-
                     //判断卡号是否已被申领
                     if($is_card['status'] == 1){
                         //判断卡号是否已被其他第三方绑定
