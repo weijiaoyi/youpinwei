@@ -289,13 +289,15 @@ class ThreeController extends CommentoilcardController
                 'parentid'       => $Member['parentid'],
                 'coupon_money'   => $jyj,
                 'discount_money' => $zk,
+                'is_three'       =>$Member['fromId'] //订单来源
             ];
 
             $RechageCount = M('add_money')->where(['card_no'=>$card_no,'openid'=>$openid,'status'=>1])->find();
             $is_first =2;
             if (!$RechageCount) { // 是否是首充
                 if (intval($money) < intval( $config['first_rechage']) ){
-                    $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
+                    exit(json_encode(['msg'=>'当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！','status'=>100]));
+//                    $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
                 }
                 $is_first = 1;
             }
@@ -333,15 +335,15 @@ class ThreeController extends CommentoilcardController
                         $OrderAdd['payment_code'] = 'hjpay';
                         break;
                 }
-                if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
+                if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>100]));
                 if($data)$data['order_no'] = $AddMoneySave['order_no'];
                 $record_res = M('OrderRecord')->add($OrderAdd);
                 if(!$record_res)$this->error('订单生成失败，请重试！');
                 //添加充值记录
-                $create_res = M('add_money')->add($AddMoneySave);
-                exit(json_encode(['msg'=>'success','status'=>1000,'data'=>$data]));
+                 M('add_money')->add($AddMoneySave);
+                exit(json_encode(['msg'=>'success','status'=>200,'data'=>$data]));
         }else{
-            exit(json_encode(['msg'=>'系统错误','status'=>1000]));
+            exit(json_encode(['msg'=>'系统错误','status'=>100]));
         }
 
     }
