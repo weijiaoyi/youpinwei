@@ -2230,7 +2230,7 @@ class WechatController extends CommentoilcardController
             log::record($agent_openid);
 
             $data= M('user')->where("openid='$openid'")->find();
-            if (empty($data)){
+            if (empty($data) && !empty($openid)){
                 $user_id=M('user')->add(['openid'=>$openid]);
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
@@ -2240,7 +2240,7 @@ class WechatController extends CommentoilcardController
         }else {
 
             $arr= M('user')->where("openid='$openid'")->find();
-            if (empty($arr)){
+            if (empty($arr) && !empty($openid)){
                 $user_id=M('user')->add(['openid'=>$openid]);
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
