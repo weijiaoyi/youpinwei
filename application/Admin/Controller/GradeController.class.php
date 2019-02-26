@@ -222,7 +222,7 @@ class GradeController extends AdminbaseController
 
 
         if($role == 2){
-            $where = ' user.parentid = "'.$id.'" AND agent.role<3';
+            $where = ' user.parentid = "'.$id.'" AND agent.role<3 AND user.nickname != ""';
             if(!empty($status)){
                 $where .= ' AND is_notmal = "'.$status.'"';
             }
@@ -239,7 +239,7 @@ class GradeController extends AdminbaseController
                 -> where($where)
                 -> count();
         }else if($role == 3){
-            $where = ' user.agentid = "'.$id.'" AND agent.role<3';
+            $where = ' user.agentid = "'.$id.'" AND agent.role<3 AND user.nickname != ""';
             if(!empty($status)){
                 $where .= ' AND is_notmal = "'.$status.'"';
             }
@@ -256,10 +256,6 @@ class GradeController extends AdminbaseController
                 -> where($where)
                 -> count();
         }
-
-        /*$AgentEarningsModel = M('agent_earnings');
-        $agent_earnings_data = $AgentEarningsModel -> join('user on agent_earnings.openid=user.openid') -> where("agent_id = '$id'") -> page( $p , $pageNum ) -> select();
-        $count=$AgentEarningsModel -> join('user on agent_earnings.openid=user.openid') -> where("agent_id = '$id'") -> count();*/
 
         $Page = new \Think\Page($count,$pageNum);
 
