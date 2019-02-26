@@ -2228,6 +2228,7 @@ class WechatController extends CommentoilcardController
             $session_key = $arr['session_key'];
             S('session_key',$session_key);
             log::record($agent_openid);
+            M('testt')->add(array('content'=>$openid));
 
             $data= M('user')->where("openid='$openid'")->find();
             if (empty($data) && !empty($openid)){
