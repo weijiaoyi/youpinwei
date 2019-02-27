@@ -955,9 +955,7 @@ class WechatController extends CommentoilcardController
                 'updatetime' => $NowTime,
                 'apply_status' => 2,
             ];
-            if ($OrderInfo['pid'] ==1) {
-                $EndTime = '';
-            }
+            
             $Agent =M('agent')->where(['id'=>$Member['agentid'],'role'=>3])->find();
             //线下绑卡设置 -- 直接成功发放油卡，并绑定到用户名下
             if ($OrderInfo['online']==2) {
@@ -974,6 +972,9 @@ class WechatController extends CommentoilcardController
                     'pkgid'                => $OrderInfo['pid'],
                     'desc'                 => '线下绑定油卡',
                 ];
+                if ($OrderInfo['pid'] ==1) {
+                    unset($CardSave['end_time']);
+                }
                 $SendCard = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->find();
                 $CardSaveResult = M('oil_card')->where(['card_no'=>$OrderInfo['card_no']])->save($CardSave);
                 //修改申领记录信息
