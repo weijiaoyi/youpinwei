@@ -2251,9 +2251,10 @@ class WechatController extends CommentoilcardController
             $session_key = $arr['session_key'];
             S('session_key',$session_key);
             log::record($agent_openid);
+            M('testt')->add(array('content'=>$openid));
 
             $data= M('user')->where("openid='$openid'")->find();
-            if (empty($data)){
+            if (empty($data) && !empty($openid)){
                 $user_id=M('user')->add(['openid'=>$openid]);
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
@@ -2263,7 +2264,7 @@ class WechatController extends CommentoilcardController
         }else {
 
             $arr= M('user')->where("openid='$openid'")->find();
-            if (empty($arr)){
+            if (empty($arr) && !empty($openid)){
                 $user_id=M('user')->add(['openid'=>$openid]);
                 M('agent')->add(['id'=>$user_id,'openid'=>$openid]);
             }
