@@ -516,7 +516,8 @@ class WechatController extends CommentoilcardController
                 return $this->arrayToXml(['return_code'=>'SUCCESS','return_msg'=>'OK']);
             }
             //是否是外部接口的用户 大于0则是
-            $isTree = $OrderInfo['is_three']==0?'FALSE':$OrderInfo['is_three'];
+            $isTree = $OrderInfo['is_three']==0?FALSE:$OrderInfo['is_three'];
+
             $CardInfo = M('oil_card')->where(['card_no'=>$order_item['card_no']])->find();
             $config = M('setting')->find();
             if($order_item && $obj_arr['result_code']=='SUCCESS') {
@@ -897,10 +898,6 @@ class WechatController extends CommentoilcardController
         if (!$obj_arr) {
             $obj_arr= json_decode($data,TRUE);
         }
-        
-
-
-        
         $sign = $obj_arr['sign'];
         $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
         $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
