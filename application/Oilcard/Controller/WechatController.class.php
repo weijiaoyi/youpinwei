@@ -537,13 +537,13 @@ class WechatController extends CommentoilcardController
                     M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
+                //更改油卡信息状态
+                $OilCardSave = [];
                 //通过外部接口充值，如网信 网通
                 if (!$isTree) {
                     //充值成功,减少可用额度
                     $OilCardSave['preferential'] = $CardInfo['pkgid']>1? ($CardInfo['preferential'] - $order_item['money']):0;
                 }
-                //更改油卡信息状态
-                $OilCardSave = [];
                 //增加总充值额度
                 $OilCardSave['card_total_add_money'] = intval($CardInfo['card_total_add_money'] + $order_item['money']);
                 if ($order_item['is_first']==1) {
