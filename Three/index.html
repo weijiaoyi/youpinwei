@@ -171,7 +171,6 @@
                         data:{openid:openid,card_no:card_no,money:money,pay_money:pay_money,save:save},
                         dataType:'json',
                         success:function(response){
-                            console.log(response);
                             if(response.status == 200){
                                 callpay(response.data);
                             }else{
@@ -192,9 +191,11 @@
                         'getBrandWCPayRequest',
                         jsApiParameters,
                         function(res){
-                            console.log(res);
-                            WeixinJSBridge.log(res.err_msg);
-                            alert(res.err_code+res.err_desc+res.err_msg);
+                            if(res.err_msg == "get_brand_wcpay_request:ok" ){
+                                    $.toast('支付完成！');
+                              }else{
+                                    $.toast('支付失败！');
+                              }
                         }
                     );
                 }

@@ -515,6 +515,8 @@ class WechatController extends CommentoilcardController
                 echo 'SUCCESS';exit;
                 return $this->arrayToXml(['return_code'=>'SUCCESS','return_msg'=>'OK']);
             }
+            //是否是外部接口的用户 大于0则是
+            $isTree = $OrderInfo['is_three']==0?'FALSE':$OrderInfo['is_three'];
             $CardInfo = M('oil_card')->where(['card_no'=>$order_item['card_no']])->find();
             $config = M('setting')->find();
             if($order_item && $obj_arr['result_code']=='SUCCESS') {
@@ -534,13 +536,15 @@ class WechatController extends CommentoilcardController
                     M('testt')->add($insert);
                     echo 'FAIL';exit;
                 }
-                //更改油卡信息状态
-                $OilCardSave =[
+                //通过外部接口充值，如网信 网通
+                if (!$isTree) {
                     //充值成功,减少可用额度
-                    'preferential' =>$CardInfo['pkgid']>1? ($CardInfo['preferential'] - $order_item['money']):0,
-                    //增加总充值额度
-                    'card_total_add_money' => intval($CardInfo['card_total_add_money'] + $order_item['money'])
-                ];
+                    $OilCardSave['preferential'] = $CardInfo['pkgid']>1? ($CardInfo['preferential'] - $order_item['money']):0;
+                }
+                //更改油卡信息状态
+                $OilCardSave = [];
+                //增加总充值额度
+                $OilCardSave['card_total_add_money'] = intval($CardInfo['card_total_add_money'] + $order_item['money']);
                 if ($order_item['is_first']==1) {
                     $OilCardSave['activate'] =2;
                 }
@@ -579,6 +583,7 @@ class WechatController extends CommentoilcardController
                     //用户真实充值的钱
                     'total_real_add_money' =>$Member['total_real_add_money'] + $order_item['real_pay'],
                 ];
+
                 //用户信息修改
                 $MemberSave = M('user')->where(['openid'=>$openId])->save($MemberSave);
                 if(!$MemberSave){
@@ -658,8 +663,8 @@ class WechatController extends CommentoilcardController
                 //是否存在上级代理 
                 //当用户身份为代理时不做操作
                 //当上级代理未绑定时不做操作
-                //当上级代理为空 或者上级 代理身份是总部时 不做操作
-                if ($Member['role'] !=3 && $Member['agent_bind'] == 1 && $Member['agentid'] !=0 && !empty($Member['agentid'])) {
+                //当上级代理为空 或者上级 代理身份是总部时 不做操作 ，如果上级为外部 如 网信 网通 则不处理
+                if ( !$isTree && $Member['role'] !=3 && $Member['agent_bind'] == 1 && $Member['agentid'] !=0 && !empty($Member['agentid'])) {
                     $Agent=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.id'=>$Member['agentid'],'b.role'=>3])->find();
                     // vip_direct_scale  VIP直属会员充值分成
                     // user_direct_scale  普通直属会员充值分成
@@ -834,6 +839,18 @@ class WechatController extends CommentoilcardController
         $data['return_msg'] = 'OK';
         // ob_end_clean();
         if($IsOver){
+            if ($isTree) {
+                //统一给外部接口发送同志 
+                $Tree = M('three_scale')->where(['id'=>$order['is_three']])->find();
+                $url = $Tree['notify_url'];
+                $param = [
+
+                ];
+                //向外部--网信网通发送通知
+                // $result = $this->CurlPost($url, $param = []);
+
+                
+            }
             // echo 'SUCCESS';exit;
             if ($obj_arr['paymentType'] == 'WxPay') {
                 echo 'SUCCESS';exit;
@@ -858,6 +875,12 @@ class WechatController extends CommentoilcardController
         return XML::build($data);
     }
 
+    public function _NotifyUrl($order,$Member){
+        //根据订单表示 is_tree 获取到外部代理类型信息
+        
+
+        //根据
+    }
 
     /**
      * 申领油卡异步回掉，包含线上 线下
