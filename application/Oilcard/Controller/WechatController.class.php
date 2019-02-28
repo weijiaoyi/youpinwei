@@ -2336,6 +2336,7 @@ class WechatController extends CommentoilcardController
      */
     public function _WxPay($Order,$Member,$PayCon)
     {
+        if ($Order['real_pay']<0)exit(json_encode(['msg'=>'支付金额不正确！','status'=>500])); 
         switch ($PayCon['paymoney']) {
             case '2':
                 $payMoney = 1;
@@ -2411,6 +2412,7 @@ class WechatController extends CommentoilcardController
      * @return   [type]             [array]
      */
     public function _HjPay($Order,$Member,$PayCon){
+        if ($Order['real_pay']<0)exit(json_encode(['msg'=>'支付金额不正确！','status'=>500])); 
         switch ($PayCon['paymoney']) {
             case '2':
                 $payMoney = 1;
@@ -2499,6 +2501,7 @@ class WechatController extends CommentoilcardController
      * @return [type]         [description]
      */
     public function _QFPay($Order,$Member,$PayCon){
+        if ($Order['real_pay']<0)exit(json_encode(['msg'=>'支付金额不正确！','status'=>500])); 
         switch ($PayCon['paymoney']) {
             case '2':
                 $payMoney = 1;

@@ -94,6 +94,7 @@ class ApplyController extends CommentoilcardController
         $data['address']=I('post.address','');
         $data['receive_person']=I('post.receive_person','');
         $money=I('post.money',0);
+        if ($money<0) $this->error('支付金额不正确！');
         $card_no=I('post.card_no','');
         $checked=I('post.checked');
         $checked_card=I('post.checked_card','');
