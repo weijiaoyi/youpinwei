@@ -304,6 +304,7 @@ class WechatController extends CommentoilcardController
         $card_no =I('post.card_no','');
         $pid     =I('post.pid',0);//套餐id
         $card = M('oil_card')->where(['card_no'=>$card_no])->field('user_id')->find();
+        if(!$card){echo json_encode(['status'=>100,'message'=>'卡号不正确']);exit;}
         $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
         //生成订单号
         $sn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
@@ -330,9 +331,9 @@ class WechatController extends CommentoilcardController
             $res = M('oil_card')->where(['card_no'=>$card_no])->save($data);
             $result = M('order_record')->add($OrderSave);
             if($res && $result){
-                $this->success('成功！');
+                echo json_encode(['status'=>1000,'message'=>'success']);exit;
             }else{
-                $this->error('失败');
+                echo json_encode(['status'=>100,'message'=>'fail']);exit;
             }
         }
     }
