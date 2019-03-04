@@ -506,7 +506,9 @@ class WechatController extends CommentoilcardController
         $IsOver = false;
         $ReturnMsg ='';
         $data = file_get_contents('php://input');
+
         $obj_arr = XML::parse($data);
+
         if (!$obj_arr) {
             $obj_arr= json_decode($data,TRUE);
         }
@@ -539,6 +541,7 @@ class WechatController extends CommentoilcardController
             $obj_arr['openid']         = $obj_arr['payDetailInfo']['wxSubOpenId'];
             $obj_arr['paymentType']    = 'HjPay';
         }
+        
         $openId=$obj_arr['openid'];
 
         if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) ) {
@@ -881,7 +884,7 @@ class WechatController extends CommentoilcardController
         // ob_end_clean();
         if($IsOver){
             if ($isTree) {
-                //统一给外部接口发送同志 
+                //统一给外部接口发送通知 
                 $Tree = M('three_scale')->where(['id'=>$order['is_three']])->find();
                 $url = $Tree['notify_url'];
                 $param = [
@@ -1288,10 +1291,11 @@ class WechatController extends CommentoilcardController
         ksort($obj_arr);
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
+
         $insert = array(
             'content'=>json_encode(array(
                 'InsertTime'=>date('Y-m-d H:i:s',time()),
-                'InsertNote'=>'油卡申领',
+                'InsertNote'=>'油卡申领',9
                 'input' =>$obj_arr,
                 'data' =>$data,
                 'return' =>I('post.'),
