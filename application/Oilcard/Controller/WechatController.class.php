@@ -296,7 +296,46 @@ class WechatController extends CommentoilcardController
 
         $this->success('ok');
     }
+    /*
+         * 当充值额度为0时
+         */
 
+    public function demoTion(){
+        $card_no =I('post.card_no','');
+        $pid     =I('post.pid',0);//套餐id
+        $card = M('oil_card')->where(['card_no'=>$card_no])->field('user_id')->find();
+        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
+        //生成订单号
+        $sn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
+        if($pid == 1){
+            $data = [
+                'pkgid' => 1,
+                'end_time' =>'',
+                'updatetime' =>$NowTime,
+            ];
+
+            //修改订单状态
+            $OrderSave = [
+                'user_id'=>$card['user_id'],
+                'card_no' => $card_no,
+                'updatetime' => $NowTime,
+                'preferential' => 0,
+                'serial_number' =>$sn,
+                'order_status' =>2,
+                'real_pay' =>0,
+                'createtime'=>$NowTime,
+                'applyfinish' =>2,
+                'order_type' =>6
+            ];
+            $res = M('oil_card')->where(['card_no'=>$card_no])->save($data);
+            $result = M('order_record')->add($OrderSave);
+            if($res && $result){
+                $this->success('成功！');
+            }else{
+                $this->error('失败');
+            }
+        }
+    }
 
     /**
      * 油卡升级续费
@@ -1048,10 +1087,10 @@ class WechatController extends CommentoilcardController
 
                 if (!$isFirst) { //如果为第一次购买
                     $Robate=[];
-                    if ($Member['parent_bind'] ==0 && $Member['agent_bind']==0) {
-                        $Robate['agent_bind']=1;//锁定上级代理
-                        $Robate['parent_bind']=1;//锁定上级邀请人
-                    }
+//                    if ($Member['parent_bind'] ==0 && $Member['agent_bind']==0) {
+//                        $Robate['agent_bind']=1;//锁定上级代理
+//                        $Robate['parent_bind']=1;//锁定上级邀请人
+//                    }
                     //判断是否给上级邀请人拉新奖
                     if ($OrderInfo['pid'] > 1 && $Member['is_rebate']==1){//如果购买的是VIP套餐 并且上级邀请人还未获得过拉新奖
                         $Robate['is_rebate']=2; //已完成拉新奖励
