@@ -13,6 +13,7 @@ use Comment\Controller\CommentoilcardController;
 
 class UserController extends CommentoilcardController
 {
+
     public function userInfo()
     {
         $openid  = trim(I('post.openid'));
@@ -34,8 +35,10 @@ class UserController extends CommentoilcardController
 //            redirect(U('oilcard/wechat/getCode'));
 //        }
         //判断是否申领过
-        $user_apply = M('user_apply')->where("openid='$openid'")->find();
-        if(empty($user_apply)){
+//        $user_apply = M('user_apply')->where("openid='$openid'")->find();
+//        if(empty($user_apply)){
+
+        if($userInfo['agent_bind'] == 0 && $userInfo['parent_bind'] == 0){
             if (!empty($scene)){
                 //查询邀请人ID及邀请人代理商ID
                 $parent=M('user')
@@ -65,6 +68,8 @@ class UserController extends CommentoilcardController
                     }
 
                 }
+                $parent['agent_bind'] = 1;//锁定上级代理人
+                $parent['parent_bind'] = 1;//锁定邀请人
 
                 M('user')->where("openid='$openid'")->save($parent_data);
             }else{
@@ -73,9 +78,13 @@ class UserController extends CommentoilcardController
                     'agentid'=>0,//邀请人代理商ID
                     'agent_relation'=>3//关系
                 );
+                $parent_data['agent_bind'] = 1;//锁定上级代理人
+                $parent_data['parent_bind'] = 1;//锁定邀请人
                 M('user')->where("openid='$openid'")->save($parent_data);
             }
         }
+
+//        }
 
         $output = [];
         $output['nickname'] = $userInfo['nickname'];

@@ -151,6 +151,7 @@ class IntegralController extends CommentoilcardController
         $money   = trim(I('post.money'));//实际充值金额
          if (empty($money)) $this->error('请选填充值金额');
         $pay_money=trim(I('post.pay_money'));//实际支付金额
+         if (empty($pay_money) || $pay_money < 0 ) $this->error('支付金额不正确！');
         $save=trim(I('post.save')); //优惠金额
         $flag=trim(I('post.flag',1));//1，选择卡优惠  2，选择账户优惠
         $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
