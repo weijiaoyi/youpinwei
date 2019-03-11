@@ -252,7 +252,8 @@ class IntegralController extends CommentoilcardController
                 'body'     => '油卡充值',
                 'detail'   => '油卡充值',
                 'attach'   => '油卡充值',
-                'paymoney' => $config['paymoney']
+                'paymoney' => $config['paymoney'],
+                'payType'  => 3,
             ];
             $PayMent = new WechatController();
             switch ($config['paytype']) {

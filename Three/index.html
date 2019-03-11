@@ -107,11 +107,12 @@
                 if (r!=null) return r[2]; return '';
             }
             var openid = getQueryString('op');
+            var from = getQueryString('from');
             $.ajax({
                 type:'post',
                 url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=Three&a=getCardInfo',
                 dataType:'json',
-                data:{openid:openid},
+                data:{openid:openid,from:from},
                 async:false,
                 success:function(res){
                     $('.zf_money_sel').html(res.html);
@@ -165,16 +166,20 @@
                 var pay_money = $('.active').attr('data-zf');
                 var save = $('.active').attr('data-js');
                 $.confirm("您确定要支付吗?", "确认支付?", function() {
+
                     $.ajax({
                         type:'post',
                         url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=Three&a=payCard',
                         data:{openid:openid,card_no:card_no,money:money,pay_money:pay_money,save:save},
                         dataType:'json',
                         success:function(response){
+
                             if(response.status == 200){
+
                                 callpay(response.data);
                             }else{
-                                $.toast(response.message);
+
+                                $.toast(response.msg);
                             }
                         }
 
@@ -192,9 +197,9 @@
                         jsApiParameters,
                         function(res){
                             if(res.err_msg == "get_brand_wcpay_request:ok" ){
-                                    $.toast('支付完成！');
+                                    // $.toast('支付完成！');
                               }else{
-                                    $.toast('支付失败！');
+                                    // $.toast('支付失败！');
                               }
                         }
                     );

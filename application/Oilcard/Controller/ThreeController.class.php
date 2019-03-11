@@ -30,8 +30,9 @@ class ThreeController extends CommentoilcardController
     public function getCode()
     {
         $sign = trim(I('get.sign'));
+        $from = trim(I('from'));//如：wxwt
         $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
-        $redirect_url = urlencode('https://'.$_SERVER['SERVER_NAME'].U('oilcard/Three/getAccessToken',array('sign'=>$sign)));
+        $redirect_url = urlencode('https://'.$_SERVER['SERVER_NAME'].U('oilcard/Three/getAccessToken',array('sign'=>$sign,'from'=>$from)));
         $url = str_replace('APPID',$this->appid,$url);
         $url = str_replace('REDIRECT_URI',$redirect_url,$url);
         header('location:'.$url);
@@ -52,7 +53,7 @@ class ThreeController extends CommentoilcardController
         try {
             $code = I('get.code');
             $sign = I('get.sign');
-
+            $from = I('get.from');
             $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code';
             $url = str_replace('APPID', $this->appid, $url);
             $url = str_replace('SECRET', $this->secret, $url);
@@ -86,9 +87,10 @@ class ThreeController extends CommentoilcardController
             }
 
 //            $is_user = M('User')->where(['openid'=>$userinfo['openid']])->find();
-            $is_user = M('User')->where(['sign'=>$sign])->find();
-
-            if (!$is_user || empty($is_user) || !isset($is_user['id'])){
+            $is_user = M('three_user')->where(['sign'=>$sign])->find();
+            echo '<p>'.$is_user['three_user_id'].'</p>';
+            $card = M('three_card')->where(['three_user_id'=>$is_user['three_user_id']])->find();
+            if (!$is_user || empty($is_user) || !isset($is_user['three_user_id'])){
                 echo '该手机号未绑定油卡！';
                 exit();
 
@@ -110,17 +112,17 @@ class ThreeController extends CommentoilcardController
                 //更新用户信息
                 $user = array();
                 $user['nickname'] = $userinfo['nickname'];
-                $user['user_img'] = $userinfo['headimgurl'];
+                $user['wechat_img'] = $userinfo['headimgurl'];
                 $user['openid'] = $userinfo['openid'];
                 $user['wx_access_token'] = $info['access_token'];
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
 
 //                M('User')->where(['openid'=>$userinfo['openid']])->save($user);
-                M('User')->where(['sign'=>$sign])->save($user);
+                M('three_user')->where(['sign'=>$sign])->save($user);
             }
 
-            header('location:'.'http://'.$_SERVER['SERVER_NAME'].'/Three/index.html?op='.base64_encode($userinfo['openid']));
+            header('location:'.'http://'.$_SERVER['SERVER_NAME'].'/Three/index.html?op='.base64_encode($userinfo['openid']).'&from='.$from);
 
 
         }catch (\Exception $e) {
@@ -153,12 +155,102 @@ class ThreeController extends CommentoilcardController
             }
         }
     }
+
+    /**
+     * @desc 第三方绑定油卡
+     * @author yvette
+     * @time 20190305
+     */
+
+    public function bindCard(){
+        if(!empty($_POST)){
+            $from = trim(I('from'));//如：wxwt
+            $phone = trim(I('phone'));
+            $card_no = trim(I('card_no'));
+            $username = trim(I('username'));
+            $nowTime = time();
+            $sn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
+            if(empty($from)){echo json_encode(array('status'=>100,'message'=>'第三方标识不能为空'));exit;}
+            if(empty($phone)){echo json_encode(array('status'=>100,'message'=>'用户手机号不能为空'));exit;}
+            if(empty($username)){echo json_encode(array('status'=>100,'message'=>'用户姓名不能为空'));exit;}
+            if(!preg_match("/^1[3456789]\d{9}$/", $phone)){echo json_encode(array('status'=>100,'message'=>'手机号格式错误'));exit;}
+            if(empty($card_no)){echo json_encode(array('status'=>100,'message'=>'卡号不能为空'));exit;}
+
+            //开启事务
+            M()->startTrans();
+            //1 判断是否具有第三方表识
+            $is_three = M('three')->where(array('from'=>$from))->getField('id');
+
+            if(!empty($is_three)){
+            //判断该卡识否为该第三方的油卡
+                $card = M('three_card')->where(['three_card_no'=>$card_no])->field('three_id,status')->find();
+
+                if($is_three != $card['three_id']){
+                    echo json_encode(array('status'=>100,'message'=>'卡号不属于该第三方卡号，无法进行绑定’，无法进行绑定'));exit;
+                }
+
+                //判断该卡是否已被申领
+                if($card['status'] == 1){
+                    //判断该用户是否存在
+                    $is_phone = M('three_user')->where(array('phone'=>$phone,'three_id'=>$is_three))->find();
+
+                    //插入用户信息
+                    if(!empty($is_phone)){
+                        $user_id = $is_phone['three_user_id'];
+                    }else{
+                        $sign = MD5($phone.$from);
+                        $user = array(
+                            'three_id'=>$is_three['id'],
+                            'phone'=>$phone,
+                            'sign'=>$sign,
+                            'create_time' => $nowTime,
+                            'update_time' => $nowTime,
+                            'username'    => $username,
+                        );
+                        $user_id = M('three_user')->add($user);
+                    }
+
+                    if($user_id){
+                        $res = M('three_card')->where(array('three_card_no'=>$card_no))->save(array('three_user_id'=>$user_id,'status'=>2,'create_time'=>$nowTime,'bound_time'=>$nowTime));
+
+                        if($res){
+                            //修改用户绑卡数
+                            $cardCount = M('three_user')->where(['three_user_id'=>$user_id])->setInc('card_count');
+
+                            if($cardCount){
+                                M()->commit();
+                                echo json_encode(array('status'=>200,'message'=>'绑定成功'));exit;
+                            }else{
+                                M()->rollback();
+                                echo json_encode(array('status'=>100,'message'=>'用户信息修改失败'));exit;
+                            }
+
+                        }else{
+                            M()->rollback();
+                            echo json_encode(array('status'=>100,'message'=>'油卡状态修改失败'));exit;
+                        }
+                    }else{
+                        M()->rollback();
+                        echo json_encode(array('status'=>100,'message'=>'用户信息插入失败'));exit;
+                    }
+                }else{
+                    M()->rollback();
+                    echo json_encode(array('status'=>100,'message'=>'卡号已被绑定，无法重复操作'));exit;
+                }
+            }else{
+                echo json_encode(array('status'=>100,'message'=>'第三方标识错误'));exit;
+            }
+        }else{
+            echo json_encode(array('status'=>100,'message'=>'未获取到用户信息'));exit;
+        }
+
+    }
     /**
      * @desc 第三方绑定油卡
      * @author langzhiyao
      * @time 20190219
      */
-    public function bindCard(){
+    public function bindCards(){
         //获取第三方传过来的信息
         if(!empty($_POST)){
             $from = trim(I('post.from'));//如：wxwt
@@ -247,115 +339,86 @@ class ThreeController extends CommentoilcardController
             if (empty($money)) exit(json_encode(['msg'=>'请选填充值金额！','status'=>100]));
             $pay_money     =trim(I('post.pay_money'));//实际支付金额
             $save          =trim(I('post.save')); //优惠金额
-            $flag          =trim(I('post.flag',1));//1，选择卡优惠  2，选择账户优惠
-            $NowTime       = date('Y-m-d H:i:s',TIMESTAMP);
-            $initial_money =trim(I('post.money'));//折扣前价格
-            $jyj           =trim(I('post.jyj',0));
-            $zk            = trim(I('post.zk',0));
+            $NowTime       =time();
+
+
             //油卡信息
-            $CardInfo = M('oil_card')->where(['card_no'=>$card_no,'status'=>2])->find();
+            $CardInfo = M('three_card')->where(['three_card_no'=>$card_no])->find();
             if (empty($CardInfo))exit(json_encode(['msg'=>'无效卡号！','status'=>100]));
+            if($CardInfo['status'] != 2){
+                exit(json_encode(['msg'=>'此油卡异常','status'=>100]));
+            }
             //用户信息
-            $Member=M('user')->alias('a')->where(['a.openid'=>$openid])->find();
+            $Member=M('three_user')->where(['openid'=>$openid])->find();
             if (!$Member)exit(json_encode(['msg'=>'需要先授权登陆之后才能做此操作！','status'=>100]));
-            if(!$Member['nickname'] || !$Member['user_img'])exit(json_encode(['msg'=>'需要先授权登陆之后才能做此操作！','status'=>100]));
+            if(!$Member['nickname'] || !$Member['wechat_img'])exit(json_encode(['msg'=>'需要先授权登陆之后才能做此操作！','status'=>100]));
             if ($Member['is_notmal'] !=1)exit(json_encode(['msg'=>'当前用户信息异常，已被冻结用户信息，请向管理员或代理查询！','status'=>100]));
 
-//            $Package = M('three_scale')->where(['from'=>$from])->find();//获取卡折扣
             $config = M('setting')->find();
-            //不是正常油卡
-            if ($CardInfo['is_notmal'] !=1) {
-                //对此卡的操作信息
-                $CardOption = M('oil_option')->where(['userid'=>$Member['id'],'cardid'=>$CardInfo['id']])->find();
-                if($CardOption){
-                    switch ($CardOption['type']) {
-                        case '1':
-                            exit(json_encode(['msg'=>'此油卡持有者已向后台申请退卡请求！','status'=>100]));
-                            break;
-                        case '2':
-                            exit(json_encode(['msg'=>'此油卡持有者已向后台申请挂失请求！','status'=>100]));
-                            break;
-                        default:
-                            exit(json_encode(['msg'=>'系统已对此油卡冻结使用，请向管理员或代理查询！','status'=>100]));
-                            break;
-                    }
-                }else{
-                    exit(json_encode(['msg'=>'系统已对此油卡冻结使用，请向管理员或代理查询！','status'=>100]));
-                }
-            }
+
             //订单号
             $orderSn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
             $OrderAdd = [
-                'user_id'        => $Member['id'],
+                'three_user_id'   => $Member['three_user_id'],
+                'three_id'        => $CardInfo['three_id'],
                 'card_no'        => $card_no,
-                'order_type'     => 3,
-                'serial_number'  => $orderSn,
-                'order_status'   => 1,
-                'real_pay'       => $pay_money,
-                'recharge_money' => $money,
-                'createtime'     => $NowTime,
-                'card_from'      => $CardInfo['agent_id']==0?1:2,
-                'agent_id'       => !empty($CardInfo['agent_id'])?$CardInfo['agent_id']:0,
-                'parentid'       => $Member['parentid'],
-                'coupon_money'   => $jyj,
-                'discount_money' => $zk,
-                'is_three'       =>$Member['fromId'] //订单来源
+                'order_type'     => 1,
+                'order_number'  => $orderSn,
+                'pay_status'   => 1,
+                'payable_amount' =>$money,//应付金额
+                'real_amount'    => $pay_money,
+                'create_time'     => $NowTime,
+                'save_amount'     => $save,
             ];
 
-            $RechageCount = M('add_money')->where(['card_no'=>$card_no,'openid'=>$openid,'status'=>1])->find();
+            $RechageCount = M('three_order')->where(['card_no'=>$card_no,'pay_status'=>2])->find();
             $is_first =2;
             if (!$RechageCount) { // 是否是首充
                 if (intval($money) < intval( $config['first_rechage']) ){
                     exit(json_encode(['msg'=>'当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！','status'=>100]));
-//                    $this->error('当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！');
                 }
                 $is_first = 1;
             }
-            $AddMoneySave = [
-                'user_id'        => $Member['id'],
-                'openid'         => $openid,
+            //three_order表
+            $Order = [
                 'card_no'        => $card_no,
-                'money'          => $money,
-                'discount_money' => $save,
+                'order_type'     => 6,
+                'serial_number'  => $orderSn,
                 'real_pay'       => $pay_money,
-                'pay_way'        => 1,
-                'note'           => $is_first==1?'用户对此油卡的首次充值':'油卡充值',
-                'status'         => 2,
-                'createtime'     => $NowTime,
-                'order_no'       => $orderSn,
-                'is_first'       => $is_first,
             ];
 
-            //生成订单
-            // $data = $wechat->payOrder($AddMoneySave,$OrderAdd,$openid);
+
             $PayCon = [
                 'body'     => '油卡充值',
                 'detail'   => '油卡充值',
                 'attach'   => '油卡充值',
                 'paymoney' => $config['paymoney'],
-                'PublicAddress' =>'YES'
+                'PublicAddress' =>'YES',
+                'payType'  => 6,
             ];
             $PayMent = new WechatController();
             switch ($config['paytype']) {
                 case '1': //微信支付
-                    $data = $PayMent->_WxPay($OrderAdd,$Member,$PayCon);
-                    $OrderAdd['payment_code'] = 'wxpay';
+                    $data = $PayMent->_WxPay($Order,$Member,$PayCon);
+                    $OrderAdd['pay_type'] = 1;
                     break;
                 case '2': //聚合支付
-                    $data = $PayMent->_HjPay($OrderAdd,$Member,$PayCon);
-                    $OrderAdd['payment_code'] = 'hjpay';
+                    $data = $PayMent->_HjPay($Order,$Member,$PayCon);
+                    $OrderAdd['pay_type'] = 2;
                     break;
-                case '2': //钱方支付
-                    $data = $PayMent->_QFPay($OrderAdd,$Member,$PayCon);
-                    $OrderAdd['payment_code'] = 'qfpay';
+                case '3': //钱方支付
+                    $data = $PayMent->_QFPay($Order,$Member,$PayCon);
+                    $OrderAdd['pay_type'] = 3;
                     break;
             }
+
             if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>100]));
-            if($data)$data['order_no'] = $AddMoneySave['order_no'];
-            $record_res = M('OrderRecord')->add($OrderAdd);
+            if($data)$data['order_no'] = $orderSn;
+            $record_res = M('three_order')->add($OrderAdd);
+
             if(!$record_res)$this->error('订单生成失败，请重试！');
             //添加充值记录
-             M('add_money')->add($AddMoneySave);
+
             exit(json_encode(['msg'=>'success','status'=>200,'data'=>$data]));
         }else{
             exit(json_encode(['msg'=>'系统错误','status'=>100]));
@@ -365,23 +428,29 @@ class ThreeController extends CommentoilcardController
 
     public function getCardInfo(){
         //由第三方跳转到充值页面
-        $openid = trim(I('post.openid'));
+        $openid = trim(I('openid'));
+        $from = trim(I('from'));
         $openid = base64_decode($openid);
+        $three = M('three')->where(array('from'=>$from))->find();
+        $fromId = $three['id'];
         //获取用户信息
-        $user = M('user')->where(array('openid'=>$openid))->find();
+        $user = M('three_user')->where(array('openid'=>$openid,'three_id'=>$fromId))->find();
+//
         if(empty($user)){echo json_encode(array('status'=>100,'message'=>'获取用户信息失败！'));exit();}
         //获取用户卡折扣
-        $scale=M('three_scale')->where(array('id'=>$user['fromid']))->getField('scale');
+        $scale=$three['rebate'];
         if(empty($scale)){echo json_encode(array('status'=>100,'message'=>'获取卡折扣失败！'));exit();}
         //获取用户绑定卡
-        $cardList = M('oil_card')->where(array('user_id'=>$user['id'],'is_notmal'=>1,'is_threeBind'=>array('neq',0)))->field('card_no')->select();
+        $cardList = M('three_card')->where(array('three_user_id'=>$user['three_user_id']))->field('three_card_no')->select();
+//        print_r($cardList);
         $item =[];
         if(!empty($cardList)){
             foreach($cardList as $key=>$value){
-                $item[$key]['title'] .=$value['card_no'];
-                $item[$key]['value'] .=$value['card_no'];
+                $item[$key]['title'] .=$value['three_card_no'];
+                $item[$key]['value'] .=$value['three_card_no'];
             }
         }
+//             print_r($item);die;
         //充值金额选项
          $price = array(200,500,1000,2000,5000,10000);
          $html='';

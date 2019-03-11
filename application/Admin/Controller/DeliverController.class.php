@@ -66,6 +66,7 @@ class DeliverController extends AdminbaseController{
 
 
         }
+
         $count = $Apply
             ->alias('A')
             ->join('__ORDER_RECORD__ R ON A.serial_number=R.serial_number',LEFT)
@@ -80,6 +81,26 @@ class DeliverController extends AdminbaseController{
         $this -> display();
 
 	}
+
+
+    public function cardOrder(){
+        header("Access-Control-Allow-Origin: *");
+        $card_no = I('card_no');
+        if(!$card_no){echo json_encode(array('status'=>100,'message'=>'缺少必要参数！'));exit();}
+        $list = M('order_record')->where(['card_no'=>$card_no,'order_status'=>2])->field('card_no,order_type,serial_number,discount_money,real_pay,recharge_money,createtime')->select();
+        if($list){
+            echo json_encode([
+                'msg' => 'success',
+                'status' => 200,
+                'data' => $list
+            ]);
+        }else{
+            echo json_encode([
+                'msg' => '暂无订单',
+                'status' => 100
+            ]);
+        }
+    }
 
     /**
      * 油卡绑定列表

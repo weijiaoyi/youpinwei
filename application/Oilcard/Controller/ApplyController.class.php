@@ -235,7 +235,9 @@ class ApplyController extends CommentoilcardController
                 'body'     => '油卡申领',
                 'detail'   => '油卡申领',
                 'attach'   => '油卡申领',
-                'paymoney' => $config['paymoney']
+                'paymoney' => $config['paymoney'],
+                'payType'  => 1,
+
             ];
         $PayMent = new WechatController();
         switch ($config['paytype']) {

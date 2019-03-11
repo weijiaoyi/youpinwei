@@ -23,6 +23,7 @@ class PublicController extends AdminbaseController {
 
         $admin_id=session('ADMIN_ID');
         $config_id=session('CONFIG_ID');
+
     	if(!empty($admin_id) && isset($_SESSION['CONFIG_ID'])){//已经登录
     		redirect(U("admin/index/index"));
     	}else{

@@ -15,25 +15,40 @@ class QFPayConfig {
         //钱方支付不支持 自定义设置 支付异步回调地址 ，只能一个code 和key 对应一个回调地址
         //所以由钱方后台设置多个code和key ，以 满足不同的需求对应不同的地址
         switch ($payType) {
-            case '1': //1，申领
+            case '1': //1，申领 agentMoneyNotify.php
                 $this->requestUrl = 'http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
-                $this->APP_CODE   = 'EBEEFB4A63CB45C2A667F3A6C9F76C12';
-                $this->KEY        = 'C6FBE7410F9848F48ADD977A002A8F21';
+                $this->APP_CODE   = '901AEC7024CD40BCB2A548B10941EE3A';
+                $this->KEY        = '64D98349B8774B3E9A79BF2CB7616D8D';
                 break;
-            case '2': //2，申领
+            case '2': //2，申领 agentMoneyNotify.php
                 # code...
+                $this->requestUrl = 'http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
+                $this->APP_CODE   = '901AEC7024CD40BCB2A548B10941EE3A';
+                $this->KEY        = '64D98349B8774B3E9A79BF2CB7616D8D';
                 break;
-            case '3': //3，充值
+            case '3': //3，充值 addMoneyNotify.php
                 # code...
+                $this->requestUrl = 'http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
+                $this->APP_CODE   = '915F8B1756B54ABB84151FE62BE67EF2';
+                $this->KEY        = '0E52AFEE2F9D49859085D8EC7AFFC57D';
                 break;
-            case '4': ////4升级
+            case '4': ////4升级 upgradeNotify.php
                 # code...
+                $this->requestUrl = 'http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
+                $this->APP_CODE   = 'BACD85C59A7447E2AFABA96D50E90B58';
+                $this->KEY        = 'F9916B8D04D74898B7A9EA45B74A8D0D';
                 break;
-            case '5': //5续费
+            case '5': //5续费 upgradeNotify.php
                 # code...
+                $this->requestUrl = 'http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
+                $this->APP_CODE   = 'BACD85C59A7447E2AFABA96D50E90B58';
+                $this->KEY        = 'F9916B8D04D74898B7A9EA45B74A8D0D';
                 break;
             case '6': //网信 或者其他外部
                 # code...
+                $this->requestUrl = 'http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
+                $this->APP_CODE   = '53CA91F4691F4935887A6DF12B8984A8';
+                $this->KEY        = 'F31CE258DCE34795A2FBC72095BF6224';
                 break;
             default: //默认使用的key和code
                 $this->requestUrl = 'http://openapi.quanyipay.com/';//'https://openapi-test.qfpay.com/';
@@ -85,9 +100,15 @@ class QFPayConfig {
      * @return   [type]           [description]
      */
     public function request($name, $data) {
+
         $url = $this->requestUrl . "/trade/v1/" . $name . "?" . http_build_query($data);
 
         $header = array("X-QYF-APPCODE: ".$this->APP_CODE, "X-QYF-SIGN: ". $this->make_req_sign($data, $this->KEY));
+        $res['content']['url'] = $url;
+        $res['content']['header'] = $header;
+        $res['content'] = json_encode($res['content']);
+        M('testt')->add($res);
+
         // p($url);
         //var_dump($url);
         $ch = curl_init();

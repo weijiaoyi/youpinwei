@@ -500,6 +500,28 @@ class OrderController extends AdminbaseController{
         }
 
     }
+    /**
+     * 根据卡号查询订单记录
+     * @Author yvette
+     * @创建时间   2019-03-06
+     */
+    public function cardOrder(){
+        $card_no = I('card_no');
+        if(!$card_no){echo json_encode(array('status'=>100,'message'=>'缺少必要参数！'));exit();}
+        $list = M('order_record')->where(['card_no'=>$card_no,'order_status'=>2])->field('card_no,order_type,serial_number,discount_money,real_pay,recharge_money,createtime')->select();
+        if($list){
+            echo json_encode([
+                'msg' => 'success',
+                'status' => 200,
+                'data' => $list
+            ]);
+        }else{
+            echo json_encode([
+                'msg' => '暂无订单',
+                'status' => 100
+            ]);
+        }
+    }
 
     /**
      * @author langzhiyao

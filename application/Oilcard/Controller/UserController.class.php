@@ -68,8 +68,8 @@ class UserController extends CommentoilcardController
                     }
 
                 }
-                $parent['agent_bind'] = 1;//锁定上级代理人
-                $parent['parent_bind'] = 1;//锁定邀请人
+                $parent_data['agent_bind'] = 1;//锁定上级代理人
+                $parent_data['parent_bind'] = 1;//锁定邀请人
 
                 M('user')->where("openid='$openid'")->save($parent_data);
             }else{
