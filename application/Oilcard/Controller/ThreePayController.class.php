@@ -28,11 +28,6 @@ class ThreePayController extends CommentoilcardController
             $obj_arr= json_decode($data,TRUE);
         }
 
-
-        // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
-        // $RAW = json_decode($RAW);
-        // $obj_arr = object_to_array($RAW);
-
         Log::record('微信回调data:'.json_encode($obj_arr));
         $insert = [];
         $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
@@ -40,6 +35,7 @@ class ThreePayController extends CommentoilcardController
         $insert['content']['input'] = $obj_arr;
         $insert['content']['return'] = I('post.');
         $insert['content']['data'] = $data;
+        $insert['content']['hh'] = 1;
 
 
         $sign = $obj_arr['sign'];
@@ -114,38 +110,46 @@ class ThreePayController extends CommentoilcardController
                     'pay_money' => $OrderInfo['real_amount'],
                     'phone'    => $userInfo['phone'],
                     'from'     =>$Tree['from'],
-                    'return_code' => 'SUCCESS',
+                    'return_code' => '100',
+                    'return_msg' => '支付成功',
                     'pay_time' => $nowTime,
                 ];
             }else{
                 $Things->rollback();
                 $param = [
-                    'return_code' => 'FAIL',
+                    'return_msg' => '支付成功，写入数据库失败',
+                    'return_code' => '200',
                     'pay_time' => $nowTime,
                 ];
             }
-
-
-
             //向外部--网信网通发送通知
             $this->CurlPost($url, $param);
-
-
             if ($obj_arr['paymentType'] == 'WxPay') {
                 echo 'SUCCESS';exit;
             }elseif($obj_arr['paymentType'] == 'HjPay'){
                 exit(json_encode(['result'=>'SUCCESS']));
-            }elseif($obj_arr['paymentType'] == 'QfPay'){
+            }elseif($obj_arr['paymentType'] == 'QFPay'){
                 echo 'SUCCESS';exit;
             }
             return $this->arrayToXml(['return_code'=>'SUCCESS','return_msg'=>'OK']);
         }else{
             // echo 'FAIL';exit;
+            $OrderSn = $obj_arr['out_trade_no'];
+            $OrderInfo =  M('three_order')->where(['order_number'=>$OrderSn])->find();
+            $userInfo = M('three_user')->where(['three_user_id'=>$OrderInfo['three_user_id']])->find();
+            $Tree = M('three')->where(['id'=>$userInfo['three_id']])->find();
+            $url = $Tree['url'];
+            $param = [
+                'return_msg' => '支付失败',
+                'return_code' => '300',
+            ];
+            //向外部--网信网通发送通知
+            $this->CurlPost($url, $param);
             if ($obj_arr['paymentType'] == 'WxPay') {
                 echo 'FALI';exit;
             }elseif($obj_arr['paymentType'] == 'HjPay'){
                 exit(json_encode(['result'=>'SUCCESS']));
-            }elseif($obj_arr['paymentType'] == 'QfPay'){
+            }elseif($obj_arr['paymentType'] == 'QFPay'){
                 echo 'SUCCESS';exit;
             }
             return $this->arrayToXml(['return_code'=>'FAIL','return_msg'=>'支付失败']);
