@@ -133,37 +133,37 @@ class RbacController extends AdminbaseController {
     }
     
     // 角色授权提交
-//    public function authorize_post() {
-//    	$this->auth_access_model = D("Common/AuthAccess");
-//    	if (IS_POST) {
-//    		$roleid = I("post.roleid",0,'intval');
-//    		if(!$roleid){
-//    			$this->error("需要授权的角色不存在！");
-//    		}
-//    		if (is_array($_POST['menuid']) && count($_POST['menuid'])>0) {
-//
-//    			$menu_model=M("Menu");
-//    			$auth_rule_model=M("AuthRule");
-//    			$this->auth_access_model->where(array("role_id"=>$roleid,'type'=>'admin_url'))->delete();
-//    			foreach ($_POST['menuid'] as $menuid) {
-//    				$menu=$menu_model->where(array("id"=>$menuid))->field("app,model,action")->find();
-//    				if($menu){
-//    					$app=$menu['app'];
-//    					$model=$menu['model'];
-//    					$action=$menu['action'];
-//    					$name=strtolower("$app/$model/$action");
-//    					$this->auth_access_model->add(array("role_id"=>$roleid,"rule_name"=>$name,'type'=>'admin_url'));
-//    				}
-//    			}
-//
-//    			$this->success("授权成功！", U("Rbac/index"));
-//    		}else{
-//    			//当没有数据时，清除当前角色授权
-//    			$this->auth_access_model->where(array("role_id" => $roleid))->delete();
-//    			$this->error("没有接收到数据，执行清除授权成功！");
-//    		}
-//    	}
-//    }
+    public function authorize_post() {
+    	$this->auth_access_model = D("Common/AuthAccess");
+    	if (IS_POST) {
+    		$roleid = I("post.roleid",0,'intval');
+    		if(!$roleid){
+    			$this->error("需要授权的角色不存在！");
+    		}
+    		if (is_array($_POST['menuid']) && count($_POST['menuid'])>0) {
+
+    			$menu_model=M("Menu");
+    			$auth_rule_model=M("AuthRule");
+    			$this->auth_access_model->where(array("role_id"=>$roleid,'type'=>'admin_url'))->delete();
+    			foreach ($_POST['menuid'] as $menuid) {
+    				$menu=$menu_model->where(array("id"=>$menuid))->field("app,model,action")->find();
+    				if($menu){
+    					$app=$menu['app'];
+    					$model=$menu['model'];
+    					$action=$menu['action'];
+    					$name=strtolower("$app/$model/$action");
+    					$this->auth_access_model->add(array("role_id"=>$roleid,"rule_name"=>$name,'type'=>'admin_url'));
+    				}
+    			}
+
+    			$this->success("授权成功！", U("Rbac/index"));
+    		}else{
+    			//当没有数据时，清除当前角色授权
+    			$this->auth_access_model->where(array("role_id" => $roleid))->delete();
+    			$this->error("没有接收到数据，执行清除授权成功！");
+    		}
+    	}
+    }
     
     /**
      *  检查指定菜单是否有权限
