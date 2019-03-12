@@ -69,13 +69,13 @@ class PublicController extends AdminbaseController {
 //    			$where['user_email']=$name;
 //    		}else{
 //    			$where['user_login']=$name;
-    			$where['username']=$name;
+    			$where['user_login']=$name;
 //    		}
 
     		$result = $user->where($where)->find();
-    		if(!empty($result) && $result['status']==1){
+    		if(!empty($result) && $result['user_status']==1){
 //            echo $pass;echo '============';echo $result['password'];exit;
-    			if(sp_compare_password($pass,$result['password'])){
+    			if(sp_compare_password($pass,$result['user_pass'])){
     				
 //    				$role_user_model=M("RoleUser");
 //

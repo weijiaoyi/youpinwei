@@ -9,7 +9,7 @@ class UserController extends AdminbaseController{
 
 	public function _initialize() {
 		parent::_initialize();
-		$this->users_model = D("Common/Users");
+		$this->users_model = D("Common/AdminUser");
 		$this->role_model = D("Common/Role");
 	}
 
