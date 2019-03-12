@@ -21,8 +21,6 @@ class RbacController extends AdminbaseController {
 
     // 添加角色
     public function roleadd() {
-        $wechatServices = M('wechat_config')->field('id, wechat_name')->select();
-        $this->assign('services', $wechatServices);
         $this->display();
     }
     
