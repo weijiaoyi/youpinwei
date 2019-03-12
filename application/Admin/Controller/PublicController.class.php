@@ -77,21 +77,21 @@ class PublicController extends AdminbaseController {
 //            echo $pass;echo '============';echo $result['password'];exit;
     			if(sp_compare_password($pass,$result['user_pass'])){
     				
-//    				$role_user_model=M("RoleUser");
-//
-//    				$role_user_join = C('DB_PREFIX').'role as b on a.role_id =b.id';
-//
-//    				$groups=$role_user_model->alias("a")->join($role_user_join)->where(array("user_id"=>$result["id"],"status"=>1))->getField("role_id",true);
-//
-//    				if( $result["id"]!=1 && ( empty($groups) || empty($result['user_status']) ) ){
-//    					$this->error(L('USE_DISABLED'));
-//    				}
+    				$role_user_model=M("RoleUser");
+
+    				$role_user_join = C('DB_PREFIX').'role as b on a.role_id =b.id';
+
+    				$groups=$role_user_model->alias("a")->join($role_user_join)->where(array("user_id"=>$result["id"],"status"=>1))->getField("role_id",true);
+
+    				if( $result["id"]!=1 && ( empty($groups) || empty($result['user_status']) ) ){
+    					$this->error(L('USE_DISABLED'));
+    				}
     				//登入成功页面跳转
                     session('ADMIN_ID',$result["id"]);
-//    				session('CONFIG_ID',$result["config_id"]);
-//    				session('name',$result["user_login"]);
-//    				$result['last_login_ip']=get_client_ip(0,true);
-//    				$result['last_login_time']=date("Y-m-d H:i:s");
+    				session('CONFIG_ID',$result["config_id"]);
+    				session('name',$result["user_login"]);
+    				$result['last_login_ip']=get_client_ip(0,true);
+    				$result['last_login_time']=date("Y-m-d H:i:s");
     				$user->save($result);
     				cookie("admin_username",$name,3600*24*30);
     				$this->success(L('LOGIN_SUCCESS'),U("Index/index"));
