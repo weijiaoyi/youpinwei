@@ -228,12 +228,13 @@
         // let oilCard=$(this).parentsUntil("td").find(".oil-card")['0'].innerText;
         let oilCard=$(this).parent().parent().find(".oil-card")['0'].innerText;
         console.log("oilCard",oilCard);
+        let hostUrl=window.location.href;
         $.ajax({
             type:"post",//规定传输方式
             dataType:"json",
             // contentType:"jsonp",
             // url:"http://ysy.xiangjianhai.com/index.php?g=admin&m=order&a=getCard",//提交URL
-            url:"http://ypw.com/index.php?g=Admin&m=Order&a=cardOrder",//提交URL
+            url:hostUrl+"/index.php?g=Admin&m=Order&a=cardOrder",//提交URL
             data:{card_no:oilCard},
             success:function(data){
                 console.log("data",data);
