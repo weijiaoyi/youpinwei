@@ -254,6 +254,10 @@ class ApplyController extends CommentoilcardController
                 $data = $PayMent->_QFPay($OrderInfo,$Member,$PayCon);
                 $OrderInfo['payment_code'] = 'qfpay';
                 break;
+            case '4': //易宝支付
+                $data = $PayMent->_YEEPay($OrderInfo,$Member,$PayCon);
+                $OrderInfo['payment_code'] = 'yeepay';
+                break;
         }
 
         // $Wiki = new WikiController();
