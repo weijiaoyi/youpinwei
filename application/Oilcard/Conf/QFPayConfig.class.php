@@ -104,10 +104,7 @@ class QFPayConfig {
         $url = $this->requestUrl . "/trade/v1/" . $name . "?" . http_build_query($data);
 
         $header = array("X-QYF-APPCODE: ".$this->APP_CODE, "X-QYF-SIGN: ". $this->make_req_sign($data, $this->KEY));
-        $res['content']['url'] = $url;
-        $res['content']['header'] = $header;
-        $res['content'] = json_encode($res['content']);
-        M('testt')->add($res);
+        
 
         // p($url);
         //var_dump($url);

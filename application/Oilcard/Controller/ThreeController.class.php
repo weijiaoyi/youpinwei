@@ -354,7 +354,7 @@ class ThreeController extends CommentoilcardController
             if(!$Member['nickname'] || !$Member['wechat_img'])exit(json_encode(['msg'=>'需要先授权登陆之后才能做此操作！','status'=>100]));
             if ($Member['is_notmal'] !=1)exit(json_encode(['msg'=>'当前用户信息异常，已被冻结用户信息，请向管理员或代理查询！','status'=>100]));
 
-            $config = M('setting')->find();
+            $config = M('three_setting')->find();
 
             //订单号
             $orderSn = date('YmdHis').str_pad(mt_rand(1,999999),6,STR_PAD_LEFT);
@@ -372,12 +372,11 @@ class ThreeController extends CommentoilcardController
             ];
 
             $RechageCount = M('three_order')->where(['card_no'=>$card_no,'pay_status'=>2])->find();
-            $is_first =2;
+
             if (!$RechageCount) { // 是否是首充
                 if (intval($money) < intval( $config['first_rechage']) ){
                     exit(json_encode(['msg'=>'当前油卡首次充值额度必须大于'.$config['first_rechage'].'元额度才能被激活！','status'=>100]));
                 }
-                $is_first = 1;
             }
             //three_order表
             $Order = [
