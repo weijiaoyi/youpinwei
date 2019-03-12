@@ -4,9 +4,21 @@
 .pagination a, .pagination span{padding: 3px 10px;margin-left: 3px;border-radius: 3px;}
 .pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
 .pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
+	.select_list{
+		display: inline-block;
+		width: 100px;
+		height: 34px;
+		line-height: 34px;
+		font-size: 14px;
+		font-weight: 400;
+		white-space: nowrap;
+		vertical-align: middle;
+	}
 </style>
 </head>
-
+<?php
+//dump($data);exit;
+ ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">  
@@ -36,12 +48,32 @@
 			总部可发油卡：<span style="color: red;font-weight: bold;font-size: 28px;"><?php echo $send_count;?></span>张
 		</p>
 		</thead>
-		<form class="well form-search" method="post" action="{:U('order/C_orderList')}">
 
-			关键字： 
+		<form class="well form-search" method="post" action="{:U('order/C_orderList')}">
+			<!--关键字： -->
 			<input type="text" name="card_no" style="width: 190px; height:34px;" value="" placeholder="请输入要查询的油卡...">
+			<a href="javascript:;" class="import-many btn btn-danger" style="float: right">批量导入</a>
 			<input type="submit" class="btn btn-primary CardKeyword " value="搜索">
-			<a href="javascript:;" class="import-many btn">批量导入</a>
+			<br>
+			<br>
+			发货状态:&nbsp;<select class="select_list" name="deliver_status">
+				<option value="">所有</option>
+			<option value="2">未发放</option>
+			<option value="1">已发放</option>
+			</select> &nbsp;
+
+			激活状态:&nbsp;<select class="select_list" name="activation_status">
+				<option value="">所有</option>
+				<option value="1">未激活</option>
+				<option value="2">已激活</option>
+			</select> &nbsp;&nbsp;
+
+			油卡状态:&nbsp;<select class="select_list" name="oil_status">
+			<option value="">所有</option>
+			<option value="1">正常使用</option>
+			<option value="2">冻结使用</option>
+			<option value="3">注销油卡</option>
+		</select> &nbsp;&nbsp;
 
 			<!-- <a href="javascript:;" class="discount-many btn">批量折扣</a> -->
 		</form>
@@ -74,7 +106,7 @@
 						<td style="text-align:center;">
 							<?php echo empty($v['nickname'])?'未绑定':'<img src="'.$v['user_img'].'" width="35" hight="35">'.'&nbsp;&nbsp;'.$v['nickname']; ?>
 						</td>
-						<td style="text-align:center;">
+						<td class="oil-card" style="text-align:center;">
 							<?php echo $v['card_no']; ?>
 						</td>
 						<td style="text-align:center;">
@@ -143,12 +175,12 @@
 							<?php }else{?>
 								<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="edpro"><span style="color: white; font-size: 8px;">禁用</span></button>
 							<?php }?>
+							<button id="order-info" style="background: #2c3e50;border:2px; width: 70px; height: 40px;color: white" class="edpro">消费记录</button>
 							<!-- <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">充值</span></button>
 							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button> -->
 						</td>
 					</tr>
 				<?php } ?>
-				
 			</tbody>
 		</table>
 		<if condition="$page neq ''">
@@ -197,6 +229,30 @@
 				</button>
 			</div>
 		</div>
+	</div>
+
+	<!-- 消费记录弹出层 -->
+<div class="modal-dialog">
+	<!-- <div class="modal-content"> -->
+	<div class="modal fade" id="myModalInfoList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;padding-right: 0px;margin-left:500px;height:340px;">
+		<div style="height: 40px;width: 100%;line-height: 40px;">
+			<span style="display: inline-block;width: 88%; text-align:center;font-size: 20px;font-weight: bolder">消费记录</span>
+			<span style="display: inline-block;width: 10%;	text-align: center;cursor: pointer" data-dismiss="modal">返回</span>
+		</div>
+		<table id="orderInfoList" border="1" style="width: 100%;text-align: center;">
+			<tr style="width: 100%;height: 40px;line-height: 40px;">
+				<th style="width:20%;text-align: center !important;">类型</th>
+				<th style="width:20%;text-align: center !important;">消费额度</th>
+				<th style="width:20%;text-align: center !important;">折扣</th>
+				<th style="width:20%;text-align: center !important;">实际支付</th>
+				<th style="width:20%;text-align: center !important;">操作时间</th>
+			</tr>
+
+		</table>
+	</div>
+</div>
+
+
 </body>
 </html>
 
@@ -205,6 +261,72 @@
 <script src="__PUBLIC__/js/bootstrap.min.js"></script>
 
 <script>
+
+	//消费记录
+	$(document).on('click','#order-info',function(){
+		// let this_info = $(this).parent
+		let oilCard=$(this).parent().parent().find(".oil-card")['0'].innerText;
+		$.ajax({
+			type:"post",//规定传输方式
+			dataType:"json",
+			// contentType:"jsonp",
+			// url:"http://ysy.xiangjianhai.com/index.php?g=admin&m=order&a=getCard",//提交URL
+			url:"http://ypw.com/index.php?g=Admin&m=Order&a=cardOrder",//提交URL
+			data:{card_no:oilCard},
+			success:function(data){
+				console.log("dataaaa",data);
+				if(!data.data){
+					alert("此卡还未产生消费！");
+					return;
+				}
+				let orderData=increaseOrderInfo(data.data);
+				console.log("orderData",orderData);
+				card_input(orderData);
+			}
+		});
+	});
+
+	// 将订单详情进行分类
+	function increaseOrderInfo(info){
+		info.forEach(item=>{
+			if(item.order_type==1){
+				item["order"]="申领"
+			}else if(item.order_type==2){
+				item["order"]="绑定"
+			}else if(item.order_type==3){
+				item["order"]="充值"
+			}else if(item.order_type==4){
+				item["order"]="绑定"
+			}
+			else if(item.order_type==5){
+				item["order"]="续费"
+			}else if(item.order_type==6){
+				item["order"]="降级"
+			}
+		});
+		return info;
+
+	}
+
+	//点击后将卡号回显到页面
+	function card_input(data){
+		console.log("card_on_input",data);
+		var str = '';
+		data.forEach(function (item) {
+			str+='<tr id="orderInfoList">'+
+					'<td>'+item.order+'</td>'+
+					'<td>'+item.recharge_money+'</td>'+
+					'<td>'+item.discount_money+'</td>'+
+					'<td>'+ item.real_pay +'</td>'+
+					'<td>'+item.createtime+'</td>'+
+					'</tr>'
+		});
+		$('#orderInfoList').append(str);
+
+		$('#myModalInfoList').modal('show');
+
+	}
+
 	/** 根据卡号查询该油卡信息 */
 	// $(document).on('click','.CardKeyword',function(){
 	//     var card_no = $('input[name=keyword]').val();
@@ -242,8 +364,7 @@
 						location.href=url;
 					}, 2000);
 
-					console.log(res);
-					// if (res.status==500) {
+			     	// if (res.status==500) {
 					// 	$('.alert').text('导入失败啦');
 					// 	$('.alert').show().delay (1000).fadeOut();
 					// 	$('.alert').show().delay (1000).fadeOut();

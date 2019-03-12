@@ -57,6 +57,25 @@ class OrderController extends AdminbaseController{
         echo json_encode($data);
     }
 
+    //test
+    public function cardOrder(){
+        $card_no = I('card_no');
+        if(!$card_no){echo json_encode(array('status'=>100,'message'=>'缺少必要参数！'));exit();}
+        $list = M('order_record')->where(['card_no'=>$card_no,'order_status'=>2])->field('card_no,order_type,serial_number,discount_money,real_pay,recharge_money,createtime')->select();
+        if($list){
+            echo json_encode([
+                'msg' => 'success',
+                'status' => 200,
+                'data' => $list
+            ]);
+        }else{
+            echo json_encode([
+                'msg' => '暂无订单',
+                'status' => 100
+            ]);
+        }
+    }
+
     /**
      * 支付列表
      */
@@ -326,14 +345,29 @@ class OrderController extends AdminbaseController{
     public function C_orderList(){
         $p = trim(I('get.p','1'));
         $card_no = trim(I('post.card_no',''));
+
+        $deliver_status= trim(I('post.deliver_status',''));//发货状态
+        $activation_status = trim(I('activation_status',''));//激活状态
+        $oil_status = trim(I('oil_status',''));//油卡状态
+
         $Card = M('oil_card');
         $where = [];
         $condition=[];
+
         if (!empty($card_no)) {
           $where['o.card_no'] = ['LIKE','%'.$card_no.'%'];
           $condition = ['card_no'=>$card_no];
         }
-        $card_info = M('oil_card') 
+        if(!empty($deliver_status)){
+            $where['o.agent_status']=$deliver_status ;
+        }
+        if(!empty($activation_status)){
+            $where['o.activate']=$activation_status ;
+        }
+        if(!empty($oil_status)){
+            $where['o.is_notmal']=$oil_status ;
+        };
+        $card_info = M('oil_card')
               ->alias('o')
               ->join('__PACKAGES__ p ON o.pkgid = p.pid','LEFT')
               ->join('__USER__ u ON o.user_id = u.id','LEFT')
@@ -342,6 +376,7 @@ class OrderController extends AdminbaseController{
               ->order('o.id desc')
             ->page($p,'10')
             ->select();
+        $sql = M('oil_card')->getLastSql();
         $count = $Card ->where($condition)-> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
@@ -351,6 +386,7 @@ class OrderController extends AdminbaseController{
         $this -> assign('send_count',$send_count);
         $this -> assign('page',$show);
         // p($card_info);
+//        print_r($card_info);die;
         $this -> assign('data',$card_info);
         $this -> display();
     }

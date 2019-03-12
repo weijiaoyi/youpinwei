@@ -40,8 +40,8 @@
             <th style="text-align:center;">剩余充值额</th>
             <th style="text-align:center;">入库时间</th>
             <th style="text-align:center;">申领时间</th>
-            <th style="text-align:center;">状态</th>
-            <!--<th style="text-align:center;">操作</th>-->
+            <th style="text-align:center;">状态aaa</th>
+            <th style="text-align:center;">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -50,7 +50,7 @@
                 <td style="text-align:center;">
                     {$key+1}
                 </td>
-                <td style="text-align:center;">
+                <td class="oil-card" style="text-align:center;">
                     {$val['card_no']}
                 </td>
                 <td style="text-align:center;">
@@ -74,13 +74,13 @@
                         注销
                     </if>
                 </td>
-                <!--<td style="text-align:center;">-->
-                    <!--<a href="{:U('del',['id'=>$val['id']])}">删除</a>-->
-                    <!--<a href="{:U('del',['id'=>$val['id'],'flag'=>1])}">冻结</a>-->
-                    <!--<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="xiajia"><span style="color: white; font-size: 8px;">下架</span></button>-->
-                    <!--<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">充值记录</span></button>-->
-                    <!--<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button>-->
-                <!--</td>-->
+                <td style="text-align:center;">
+                    <a href="{:U('del',['id'=>$val['id']])}">删除</a>
+                    <a href="{:U('del',['id'=>$val['id'],'flag'=>1])}">冻结</a>
+                    <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="xiajia"><span style="color: white; font-size: 8px;">下架</span></button>
+                    <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">消费记录</span></button>
+                    <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button>
+                </td>
             </tr>
         </volist>
         </tbody>
@@ -90,94 +90,26 @@
     <div class="mengban" style="position: fixed;width:100%;height: 100%;background: white;opacity: 0.5;display: none"></div>
     <div class="alert" style="width:200px;height: 110px;background: #8c8887;position: absolute;top:50%;left: 50%;margin-top: -80px;margin-left:-200px;display:none;line-height: 114px;text-align: center;font-size:20px;color: #000"></div>
 
-    <!-- 充值弹出层 -->
-    <div class="modal-dialog">
+    <!-- 消费记录弹出层 -->
+    <div class="modal-dialog" style="height: 350px">
         <!-- <div class="modal-content"> -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;padding-left: 0px;margin-left:500px;height:340px;">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
-                <h4 class="modal-title" id="myModalLabel" align="center">
-                    油卡充值
-                </h4>
-            </div>
-            <div class="modal-body">
-                <table>
-                    <tr>
-                        <th>充值卡号&nbsp&nbsp&nbsp&nbsp&nbsp<input id="sp" value="" type="text"></th>
-                        <input type="hidden" id="discount" value="">
-                    </tr>
-                    <tr>
-                        <th>请选择面额&nbsp&nbsp&nbsp&nbsp&nbsp</th>
-                    </tr>
-                    <tr>
-                        <th>
-                            <input type="button" class="clickmoney" value='200'>
-                            <input type="button" class="clickmoney" value='500'>
-                            <input type="button" class="clickmoney" value='1000'>
-                            <input type="button" class="clickmoney" value='2000'>
-                            <input type="button" class="clickmoney" value='5000'>
-                        </th>
-                    </tr>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;padding-left: 0px;text-align: center;height:340px;overflow-y: scroll">
+            <!--<div id="orderList">-->
+            <!--</div>-->
+            <table id="order-info" border="1" style="width: 100%">
+                <tr style="width: 100%;height: 40px;line-height: 40px">
+                    <th style="width:20%;">类型</th>
+                    <th style="width:20%;">消费额度</th>
+                    <th style="width:20%;">折扣</th>
+                    <th style="width:20%;">实际支付</th>
+                    <th style="width:20%;">操作时间</th>
+                </tr>
 
-                    <tr>
-                        <th>自定义金额&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" id="shr"></th>
-                    </tr>
-                    <tr>
-                        <th>优惠后支付金额&nbsp&nbsp&nbsp&nbsp&nbsp<span id="lxfs"></span></th>
-                        <th>省油钱&nbsp&nbsp&nbsp&nbsp&nbsp<span id="lxfs"></span></th>
-                    </tr>
-                    <tr>
-                        <th>备注信息&nbsp&nbsp&nbsp&nbsp&nbsp<input class="remarks-infomation" type="text"></th>
-                    </tr>
-                </table>
-            </div>
-            <div class="modal-footer" style="text-align:center">
-                <button type="button" style="width:100px;" class="btn btn-default" data-dismiss="modal">返回
-                </button>
-                <button type="button" style="width:100px;" class="btn btn-primary go-pay" data-dismiss="modal" >
-                    去支付
-                </button>
-            </div>
+            </table>
+
         </div>
-        <div class="modal-dialog">
-            <!-- <div class="modal-content"> -->
-            <div class="modal fade" id="modal12" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;padding-left: 0px;margin-left:500px;height:340px;">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel" align="center">
-                        油卡充值状态
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <table>
-                        <tr>
-                            <th>充值卡号&nbsp&nbsp&nbsp&nbsp&nbsp<span id="callback_card_no">123</span></th>
 
-                        </tr>
-                        <tr>
-                            <th>充值额&nbsp&nbsp&nbsp&nbsp&nbsp<span id="callback_recharge_money">123</span></th>
-                        </tr>
-
-                        <tr>
-                            <th>消费额&nbsp&nbsp&nbsp&nbsp&nbsp<span id="callback_expenditure">123</span></th>
-                        </tr>
-                        <tr>
-                            <th>备注&nbsp&nbsp&nbsp&nbsp&nbsp<span id="callback_infomation">123</span></th>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer" style="text-align:center">
-                    <button type="button" style="width:100px;" class="btn btn-default" data-dismiss="modal">返回
-                    </button>
-                </div>
-            </div>
-
-    <div class="pagination"><?php echo $page; ?></div>
-</div>
+    </div>
 <script src="__PUBLIC__/js/common.js"></script>
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 <script src="__PUBLIC__/js/bootstrap.min.js"></script>
@@ -225,7 +157,7 @@
 
             }
         })
-    })
+    });
 
     /** 退卡 */
     $(document).on('click','.tuika',function(){
@@ -251,26 +183,63 @@
 
     //点击后将卡号回显到页面
     function card_on_input(data){
-        $("#sp").val(data.card_no);
-        $("#discount").val(data.discount);
-        $('#myModal').modal('show');
-        $(document).on('click','.clickmoney',function(){
-            var clickmoney = $(this).val();
-            $('#shr').val(clickmoney);
+        var str = '';
+        data.forEach(function (item) {
+            str+='<tr id="order-info">'+
+                '<td>'+item.order+'</td>'+
+                '<td>'+item.recharge_money+'</td>'+
+                '<td>'+item.discount_money+'</td>'+
+                '<td>'+ item.real_pay +'</td>'+
+            '<td>'+item.createtime+'</td>'+
+                '</tr>'
         });
+        $('#order-info').append(str);
+
+        $('#myModal').modal('show');
+
+    }
+
+
+    // 将订单详情进行分类
+    function increaseOrderInfo(info){
+        info.forEach(item=>{
+            if(item.order_type==1){
+                item["order"]="申领"
+            }else if(item.order_type==2){
+                item["order"]="绑定"
+            }else if(item.order_type==3){
+                item["order"]="充值"
+            }else if(item.order_type==4){
+                item["order"]="绑定"
+            }
+            else if(item.order_type==5){
+                item["order"]="续费"
+            }else if(item.order_type==6){
+                item["order"]="降级"
+            }
+        });
+        return info;
+
     }
 
     //点击充值
     $(document).on('click','.chongzhi',function(){
-        var this_id = $(this).val();
+        // let this_info = $(this).parent
+        // let oilCard=$(this).parentsUntil("td").find(".oil-card")['0'].innerText;
+        let oilCard=$(this).parent().parent().find(".oil-card")['0'].innerText;
+        console.log("oilCard",oilCard);
         $.ajax({
             type:"post",//规定传输方式
-            url:"http://ysy.xiangjianhai.com/index.php?g=admin&m=order&a=getCard",//提交URL
-            data:{id:this_id},
+            dataType:"json",
+            // contentType:"jsonp",
+            // url:"http://ysy.xiangjianhai.com/index.php?g=admin&m=order&a=getCard",//提交URL
+            url:"http://ypw.com/index.php?g=Admin&m=Order&a=cardOrder",//提交URL
+            data:{card_no:oilCard},
             success:function(data){
-                card_on_input(data);
+                console.log("data",data);
+                let orderData=increaseOrderInfo(data.data);
+                card_on_input(orderData);
             }
         });
-
     });
 </script>
