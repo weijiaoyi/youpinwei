@@ -71,8 +71,6 @@ class RbacController extends AdminbaseController {
         if (!$data) {
         	$this->error("该角色不存在！");
         }
-        $wechatServices = M('wechat_config')->field('id, wechat_name')->select();
-        $this->assign('services', $wechatServices);
         $this->assign("data", $data);
         $this->display();
     }
