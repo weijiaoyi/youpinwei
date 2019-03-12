@@ -119,6 +119,21 @@ class SettingController extends AdminbaseController{
 			
 		}
 	}
+	//支付设置
+    public function pay(){
+	    $payway = I('post.payway');
+	    $paytype = I('post.paytype');
+	    if($payway == 1){
+	        $res = M('setting')->where(['id'=>1])->setField('paytype',$paytype);
+        }elseif($payway == 2){
+            $res = M('three_setting')->where(['id'=>1])->setField('paytype',$paytype);
+        }
+        if($res){
+            echo json_encode(['status'=>200,'msg'=>'修改成功']);
+        }else{
+            echo json_encode(['status'=>100,'msg'=>'修改失败']);
+        }
+    }
 	
 	// 密码修改
 	public function password(){
