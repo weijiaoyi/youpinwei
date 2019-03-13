@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>油品味-充值页</title>
+    <meta name="author" content="油品味" />
+    <meta name="copyright" content="油品味" />
+    <meta name="description" content="油品味" />
+    <meta id="viewport" name="viewport" content="width=750" />
+    <link rel="stylesheet" href="content/style/reset.css" type="text/css" />
+    <link rel="stylesheet" href="content/plugins/jqweui/lib/weui.css" type="text/css" />
+    <link rel="stylesheet" href="content/plugins/jqweui/css/jquery-weui.css" type="text/css" />
+    <link rel="stylesheet" href="content/style/common.css" type="text/css" />
+    <link rel="stylesheet" href="content/style/home.css" type="text/css" />
+    <!-- <link rel="shortcut icon" href="content/images/ico.ico" type="image/x-icon" /> -->
+    <script src="content/scripts/mobile-util.js"></script>
+
+</head>
+
+<body class="loginbody">
+    <header class="head headbgimg">
+        <div class="head0">
+            <div class="head_l width90"></div>
+            <div class="head_title">油品味</div>
+            <div class="head_r width90 position_r flex_v"></div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <div class="main">
+        <div class="container2">
+            <h2 class="zf_title"><span>选择卡号</span></h2>
+            <div class="zf_card_draw">
+                <a href="javascript:;"></a>
+            </div>
+            <div class="zf_card">
+                <label for="cardnmb" class="cardnmb_label">
+                    <input class="weui-input zf_card_nmb" id="cardnmb" type="text" value="">
+                    <p class="zf_select">点击选择其他加油卡</p >
+                    <span class="zf_card_zhe"></span>
+                </label>
+            </div>
+            <p class="zf_state">声明：首次充值金额必须大于500元，才可以激活您的加油卡,第二次及以后对充值金额不作具体要求。</p>
+            <h2 class="zf_title"><span>充值金额</span></h2>
+
+            <div class="zf_money_sel">
+
+            </div>
+
+            <!--<h2 class="zf_title"><span>自定义金额</span></h2>
+            <div class="zf_input_box">
+                <input class="zf_input" type="number" placeholder="100的倍数" value="">
+            </div>-->
+            <div class="zf_zf" style="display: none;">
+                <div>支付：<span id="truePay"></span>元</div>
+                <div>省油钱：<span id="savePay"></span>元</div>
+            </div>
+            <div class="zf_submit_box">
+                <input class="zf_submit" id="zf_submit" type="button" value="微信支付">
+            </div>
+
+            <h2 class="zf_title"><span>充值规则说明</span></h2>
+            <div class="zf_rule">
+                <div class='quanyi'>
+                    <h4 class='zf_rule_t'>1、充值时间是什么什么时候呢？</h4>
+                    <p class='zf_rule_p'>答：客户的充值时间是没有限制的，但是由于微信结算时间和中石油财务人员非工作日休息原因，导致节假日及非工作日无法将充值金额立即分账到您的加油卡中。</p>
+                </div>
+                <div class='quanyi'>
+                    <h4 class='zf_rule_t'>2、加油卡的折扣有时间限制吗？</h4>
+                    <p class='zf_rule_p'>答：车主在平台办理的加油卡，可永久享受加油折扣优惠；</p>
+                </div>
+
+                <div class='quanyi'>
+                    <h4 class='zf_rule_t'>3、充值金额有限制吗？</h4>
+                    <p class='zf_rule_p'>答：首次充值金额必须大于500元，以后充值金额无限制性要求，您可以根据自己的需求，随用随充。</p>
+                </div>
+
+                <div class='quanyi'>
+                    <h4 class='zf_rule_t'>4、充值后什么时间去圈存？</h4>
+                    <p class='zf_rule_p'>答：（1）周日至周四充值：圈存时间为次日下午18：00后。</p>
+                    <p class='zf_rule_p'>（2）周五至周六充值：圈存时间为周一下午18：00后。</p>
+                    <p class='zf_rule_p'>（3）节日期间充值：圈存时间为节后第二个工作日18：00后。</p>
+                </div>
+
+                <div class='quanyi'>
+                    <h4 class='zf_rule_t'>5、是不是每次充值以后都需要去中石油加油站办理圈存？</h4>
+                    <p class='zf_rule_p'>答：是的，由于中石油、中石化的系统问题，所以每次充值以后，都需要在加油站内进行圈存。</p>
+                </div>
+                <div class='quanyi'>
+                    <h4 class='zf_rule_t'>注：这个圈存的问题是中石油、中石化体系内的问题，所有途径办理的加油卡都需要在加油站内进行圈存。</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="content/scripts/jquery.min.js"></script>
+    <script src="content/plugins/jqweui/js/jquery-weui.js"></script>
+    <script src="content/scripts/common.js"></script>
+    <script>
+        $(function() {
+            function getQueryString(name){
+                var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r!=null) return r[2]; return '';
+            }
+            var openid = getQueryString('op');
+            var from = getQueryString('from');
+            $.ajax({
+                type:'post',
+                url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=ThreeTest&a=getCardInfo',
+                dataType:'json',
+                data:{openid:openid,from:from},
+                async:false,
+                success:function(res){
+                    $('.zf_money_sel').html(res.html);
+                    if(res.status == 200){
+                        if(res.item.length >0){
+                            $('.zf_card_draw').hide();
+                            $('.zf_card').show();
+                            $('#cardnmb').val(res.item[0].value);
+                            $('.zf_card_zhe').html(res.scale+'折');
+                        }else{
+                            $('.zf_card_draw').show();
+                            $('.zf_card_draw a').html('快去领卡吧');
+                            $('.zf_card').hide();
+                        }
+                        //选择卡号
+                        $("#cardnmb").select({
+                            title: "选择卡号",
+                            items: res.item,
+                        });
+                    }else{
+                        $.toast(res.message);
+                    }
+
+                }
+            });
+            //选择金额
+            $(".zf_money_sel .zf_ms_item").click(function() {
+                $(this).addClass("active");
+                $(this).siblings().removeClass("active");
+                $('.zf_zf').show();
+                $('#truePay').html($(this).attr('data-zf'));
+                $('#savePay').html($(this).attr('data-js'));
+            })
+            //自定义金额
+            /*$('input[name=zf_input]').onkeyup(function () {
+                var price = $(this).val();
+
+            })
+
+            var price = $("input[name=zf_input]").val();
+            if (price % 100 != 0) {
+                $.toast("请输入100的倍数!");
+            }*/
+            //微信支付
+            $("#zf_submit").click(function() {
+                var card_no = $('#cardnmb').val();
+                if(card_no == ''){$.alert("请先前往绑卡！");return false;}
+                var is_active = $('.zf_ms_item').hasClass('active');
+                if(!is_active){$.alert('请选择充值金额！');return false;}
+                var money = $('.active').attr('data-money');
+                var pay_money = $('.active').attr('data-zf');
+                var save = $('.active').attr('data-js');
+                $.confirm("您确定要支付吗?", "确认支付?", function() {
+
+                    $.ajax({
+                        type:'post',
+                        url:'http://ysy.xiangjianhai.com/index.php?g=oilcard&m=ThreeTest&a=payCard',
+                        data:{openid:openid,card_no:card_no,money:money,pay_money:pay_money,save:save},
+                        dataType:'json',
+                        success:function(response){
+
+                            if(response.status == 200){
+
+                                callpay(response.data);
+                            }else{
+
+                                $.toast(response.msg);
+                            }
+                        }
+
+                    })
+                }, function() {
+                    //取消操作
+                });
+            })
+                //调用微信JS api 支付
+                function jsApiCall(jsApiParameters)
+                {
+                    console.log(jsApiParameters);
+                    WeixinJSBridge.invoke(
+                        'getBrandWCPayRequest',
+                        jsApiParameters,
+                        function(res){
+                            if(res.err_msg == "get_brand_wcpay_request:ok" ){
+                                    // $.toast('支付完成！');
+                              }else{
+                                    // $.toast('支付失败！');
+                              }
+                        }
+                    );
+                }
+
+                function callpay(jsApiParameters)
+                {
+                    if (typeof WeixinJSBridge == "undefined"){
+                        if( document.addEventListener ){
+                            document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+                        }else if (document.attachEvent){
+                            document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
+                            document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                        }
+                    }else{
+                        jsApiCall(jsApiParameters);
+                    }
+                }
+
+
+        })
+    </script>
+<script type="text/javascript">
+
+    </script>
+
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 <admintpl file="header" />
 </head>
+
 <body>
 	<div class="wrap js-check-wrap">
 		<ul class="nav nav-tabs">
@@ -22,11 +23,11 @@
 							<!-- <div class="well"><label>拉新奖励：只有VIP会获取此奖励<br/>
 									充值奖励：只有代理人会获取此奖励</label></div> -->
 							<fieldset>
-								<div class="well"><label>拉新奖励：当推荐人A推荐新会员B时<br/>
-									VIP说明：1,获取油卡 2,购买年费<br/>
-									1,当推荐人A推荐新会员B时<br/>
-									2,当新会员B第一次申领油卡时,如果套餐为普通套餐,无奖励，即使之后再次申领VIP套餐，也无奖励。<br/>
-									3,当新会员B第一次申领油卡时,如果套餐为VIP套餐，将按百分比奖励A加油卷 此加油卷与充值金额为1：1</label></div>
+								<div class="well"><label>拉新奖励：当推荐人A推荐新会员B时<br />
+										VIP说明：1,获取油卡 2,购买年费<br />
+										1,当推荐人A推荐新会员B时<br />
+										2,当新会员B第一次申领油卡时,如果套餐为普通套餐,无奖励，即使之后再次申领VIP套餐，也无奖励。<br />
+										3,当新会员B第一次申领油卡时,如果套餐为VIP套餐，将按百分比奖励A加油卷 此加油卷与充值金额为1：1</label></div>
 								<div class="control-group">
 									<label class="control-label">加油卷奖励</label>
 									<div class="controls">
@@ -34,7 +35,7 @@
 									</div>
 								</div>
 
-								<div class="well"><label>代理获取下级充值收益<br/></label></div>
+								<div class="well"><label>代理获取下级充值收益<br /></label></div>
 								<div class="control-group">
 									<label class="control-label">普通卡充值</label>
 									<div class="controls">
@@ -46,22 +47,22 @@
 									</div>
 								</div>
 
-								<div class="well"><label>油卡申领押金：针对所有油卡<br/><br/>0代表不收取押金</label></div>
+								<div class="well"><label>油卡申领押金：针对所有油卡<br /><br />0代表不收取押金</label></div>
 								<div class="control-group">
 									<label class="control-label">用户默认押金</label>
 									<div class="controls">
-										<input type="text" name="user_deposit" id="user_deposit" value="{$user_deposit}">  <span>元</span>
+										<input type="text" name="user_deposit" id="user_deposit" value="{$user_deposit}"> <span>元</span>
 									</div>
 									<label class="control-label">代理默认押金</label>
 									<div class="controls">
-										<input type="text" name="agent_deposit" id="agent_deposit" value="{$agent_deposit}">  <span>元</span>
+										<input type="text" name="agent_deposit" id="agent_deposit" value="{$agent_deposit}"> <span>元</span>
 									</div>
 								</div>
-								<div class="well"><label>邮费：只针对普通油卡设置<br/>1,油卡由代理发货时，将会把此邮费退还到代理余额内<br/>2,0代表不收取邮费</label></div>
+								<div class="well"><label>邮费：只针对普通油卡设置<br />1,油卡由代理发货时，将会把此邮费退还到代理余额内<br />2,0代表不收取邮费</label></div>
 								<div class="control-group">
 									<label class="control-label">邮费</label>
 									<div class="controls">
-										<input type="text" name="postage" id="postage" value="{$postage}">  <span>元</span>
+										<input type="text" name="postage" id="postage" value="{$postage}"> <span>元</span>
 									</div>
 								</div>
 								<!-- <div class="well"><label>充值奖励：只针对代理人设置<br/>1,当推荐人下级会员充值油卡时，会将此次充值的金额的1%奖励给此推荐人</label></div>
@@ -83,17 +84,8 @@
 							<!-- <div class="well"><label>拉新奖励：只有VIP会获取此奖励<br/>
 									充值奖励：只有代理人会获取此奖励</label></div> -->
 							<fieldset>
-								<div class="well"><label>拉新奖励：当推荐人A推荐新会员B时<br/>
-									VIP说明：1,获取油卡 2,购买年费<br/>
-									1,当推荐人A推荐新会员B时<br/>
-									2,当新会员B第一次申领油卡时,如果套餐为普通套餐,无奖励，即使之后再次申领VIP套餐，也无奖励。<br/>
-									3,当新会员B第一次申领油卡时,如果套餐为VIP套餐，将按百分比奖励A加油卷 此加油卷与充值金额为1：1</label></div>
-								<div class="control-group">
-									<label class="control-label">加油卷奖励</label>
-									<div class="controls">
-										<input type="text" name="scroll" id="scroll" value="{$scroll}"> % <span>加油卷</span>
-									</div>
-								</div>
+								<h3>支付渠道设置：</h3>
+
 							</fieldset>
 						</div>
 
@@ -111,11 +103,12 @@
 								<div class="control-group">
 									<label class="control-label">后台地址加密码：</label>
 									<div class="controls">
-										<input type="text" name="options[site_admin_url_password]" value="{$site_admin_url_password}" id="js-site-admin-url-password"><span class="form-required">*</span>
+										<input type="text" name="options[site_admin_url_password]" value="{$site_admin_url_password}" id="js-site-admin-url-password"><span
+										 class="form-required">*</span>
 										<span class="help-block" style="color: red;">设置加密码后必须通过以下地址访问后台,请劳记此地址，为了安全，您也可以定期更换此加密码!</span>
 										<php>$site_admin_url_password =C("SP_SITE_ADMIN_URL_PASSWORD");</php>
 										<if condition="!empty($site_admin_url_password)">
-										<span class="help-block">后台地址：<span id="js-site-admin-url">{:sp_get_host()}__ROOT__?g=admin&upw={:C('SP_SITE_ADMIN_URL_PASSWORD')}</span></span>
+											<span class="help-block">后台地址：<span id="js-site-admin-url">{:sp_get_host()}__ROOT__?g=admin&upw={:C('SP_SITE_ADMIN_URL_PASSWORD')}</span></span>
 										</if>
 									</div>
 								</div>
@@ -124,8 +117,8 @@
 									<div class="controls">
 										<select name="options[site_tpl]">
 											<foreach name="templates" item="vo">
-											<php>$tpl_selected=$site_tpl==$vo?"selected":"";</php>
-											<option value="{$vo}" {$tpl_selected}>{$vo}</option>
+												<php>$tpl_selected=$site_tpl==$vo?"selected":"";</php>
+												<option value="{$vo}" {$tpl_selected}>{$vo}</option>
 											</foreach>
 										</select>
 									</div>
@@ -134,7 +127,8 @@
 									<label class="control-label">{:L('ENABLE_MOBILE_THEME')}：</label>
 									<div class="controls">
 										<php>$mobile_tpl_enabled_checked=empty($mobile_tpl_enabled)?'':'checked';</php>
-										<label class="checkbox inline"><input type="checkbox" name="options[mobile_tpl_enabled]" value="1" {$mobile_tpl_enabled_checked}></label>
+										<label class="checkbox inline"><input type="checkbox" name="options[mobile_tpl_enabled]" value="1"
+											 {$mobile_tpl_enabled_checked}></label>
 									</div>
 								</div>
 								<div class="control-group">
@@ -143,8 +137,8 @@
 										<php>$site_adminstyle=empty($site_adminstyle)?'flat':$site_adminstyle;</php>
 										<select name="options[site_adminstyle]">
 											<foreach name="adminstyles" item="vo">
-											<php>$adminstyle_selected=$site_adminstyle==$vo?"selected":"";</php>
-											<option value="{$vo}" {$adminstyle_selected}>{$vo}</option>
+												<php>$adminstyle_selected=$site_adminstyle==$vo?"selected":"";</php>
+												<option value="{$vo}" {$adminstyle_selected}>{$vo}</option>
 											</foreach>
 										</select>
 									</div>
@@ -153,7 +147,8 @@
 									<label class="control-label">{:L('HTML_CACHE')}：</label>
 									<div class="controls">
 										<php>$html_cache_on_checked=empty($html_cache_on)?'':'checked';</php>
-										<label class="checkbox inline"><input type="checkbox" name="options[html_cache_on]" value="1" {$html_cache_on_checked}></label>
+										<label class="checkbox inline"><input type="checkbox" name="options[html_cache_on]" value="1"
+											 {$html_cache_on_checked}></label>
 									</div>
 								</div>
 								<div class="control-group">
@@ -212,8 +207,8 @@
 										<php>$urlmodes=array( "0"=>L('URL_NORMAL_MODE'), "1"=>L('URL_PATHINFO_MODE'), "2"=>L('URL_REWRITE_MODE'));</php>
 										<select name="options[urlmode]">
 											<foreach name="urlmodes" item="vo">
-											<php>$urlmode_selected=$key==$urlmode?"selected":"";</php>
-											<option value="{$key}" {$urlmode_selected}>{$vo}</option>
+												<php>$urlmode_selected=$key==$urlmode?"selected":"";</php>
+												<option value="{$key}" {$urlmode_selected}>{$vo}</option>
 											</foreach>
 										</select>
 										<span class="form-required">* {:L('URL_MODE_HELP_TEXT')}</span>
@@ -268,7 +263,7 @@
 											public<br>
 											themes/simplebootx/Public/assets<br>
 											例如未设置cdn前：jquery的访问地址是/public/js/jquery.js, 设置cdn是后它的访问地址就是：静态资源cdn地址+/public/js/jquery.js
-											
+
 										</span>
 									</div>
 								</div>
@@ -276,7 +271,7 @@
 						</div>
 					</div>
 				</div>
-				
+
 				<!-- <div class="form-actions">
 					<button type="submit" class="btn btn-primary  js-ajax-submit">{:L("SAVE")}</button>
 				</div> -->
@@ -285,66 +280,87 @@
 		<div style="text-align: center;" id="profit">
 			<button class="btn btn-primary" id="saveProfit">{:L("SAVE")}</button>
 		</div>
-	<script type="text/javascript">
-		$(function(){
-			$('.nav-tabs>li').click(function(event) {
-				var sid = $('.active').attr('sid');
-				if (sid !='s') {$('#profit').hide();}
+		<script type="text/javascript">
+			$(function () {
+				$('.nav-tabs>li').click(function (event) {
+					var sid = $('.active').attr('sid');
+					if (sid != 's') {
+						$('#profit').hide();
+					}
+				});
+			})
+			$('#saveProfit').click(function (event) {
+				var scroll = $('#scroll').val();
+				var postage = $('#postage').val();
+				var user_profit = $('#user_profit').val();
+				var vip_profit = $('#vip_profit').val();
+				var user_deposit = $('#user_deposit').val();
+				var agent_deposit = $('#agent_deposit').val();
+				if (!scroll || !postage || !user_profit || !vip_profit || !user_deposit || !agent_deposit) {
+					alert('所有数据不能为空');
+					return false;
+				}
+				if (confirm('是否重新设置分润标准？')) {
+					$.ajax({
+							url: "{:U('Setting/ProfitSetting')}",
+							type: 'POST',
+							dataType: 'json',
+							data: {
+								'scroll': scroll,
+								'postage': postage,
+								'user_profit': user_profit,
+								'vip_profit': vip_profit,
+								'user_deposit': user_deposit,
+								'agent_deposit': agent_deposit
+							},
+						})
+						.done(function (sb) {
+							alert('设置成功!');
+						})
+				}
+
 			});
-		})
-		$('#saveProfit').click(function(event) {
-			var scroll        =$('#scroll').val();
-			var	postage       =$('#postage').val();
-			var	user_profit   =$('#user_profit').val();
-			var	vip_profit    =$('#vip_profit').val();
-			var	user_deposit  =$('#user_deposit').val();
-			var	agent_deposit =$('#agent_deposit').val();
-			 if(!scroll || !postage || !user_profit || !vip_profit || !user_deposit || !agent_deposit){alert('所有数据不能为空');return false;}
-			if (confirm('是否重新设置分润标准？')) {
-				$.ajax({
-					url: "{:U('Setting/ProfitSetting')}",
-					type: 'POST',
-					dataType: 'json',
-					data: {
-						'scroll':scroll,
-						'postage':postage,
-						'user_profit':user_profit,
-						'vip_profit':vip_profit,
-						'user_deposit':user_deposit,
-						'agent_deposit':agent_deposit
-					},
-				})
-				.done(function(sb) {
-					alert('设置成功!');
-				})
-			}
-			
-		});
-	</script>
+		</script>
 	</div>
 	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
 	<script>
 		/////---------------------
-		$(function(){
-			$("#urlmode-select").change(function(){
-				if($(this).val()==1){
-					alert("更改后，若发现前台链接不能正常访问，可能是您的服务器不支持PATHINFO，请先修改data/conf/config.php文件的URL_MODEL为0保证网站正常运行,在配置服务器PATHINFO功能后再更新为PATHINFO模式！");
-				}
-				
-				if($(this).val()==2){
-					alert("更改后，若发现前台链接不能正常访问，可能是您的服务器不支持REWRITE，请先修改data/conf/config.php文件的URL_MODEL为0保证网站正常运行，在开启服务器REWRITE功能后再更新为REWRITE模式！");
+		$(function () {
+			var hostUrl = window.location.href;
+			$.ajax({
+				type: 'get',
+				url: hostUrl+'/index.php?g=admin&m=setting&a=pay',
+				dataType: 'json',
+				success: function (res) {
+					console.log("pay-ways-res",res);
 				}
 			});
-			$("#js-site-admin-url-password").change(function(){
-				$(this).data("changed",true);
+		})
+
+		$(function () {
+			$("#urlmode-select").change(function () {
+				if ($(this).val() == 1) {
+					alert(
+						"更改后，若发现前台链接不能正常访问，可能是您的服务器不支持PATHINFO，请先修改data/conf/config.php文件的URL_MODEL为0保证网站正常运行,在配置服务器PATHINFO功能后再更新为PATHINFO模式！"
+					);
+				}
+
+				if ($(this).val() == 2) {
+					alert(
+						"更改后，若发现前台链接不能正常访问，可能是您的服务器不支持REWRITE，请先修改data/conf/config.php文件的URL_MODEL为0保证网站正常运行，在开启服务器REWRITE功能后再更新为REWRITE模式！"
+					);
+				}
+			});
+			$("#js-site-admin-url-password").change(function () {
+				$(this).data("changed", true);
 			});
 		});
-		Wind.use('validate', 'ajaxForm', 'artDialog', function() {
+		Wind.use('validate', 'ajaxForm', 'artDialog', function () {
 			//javascript
 			var form = $('form.js-ajax-forms');
 			//ie处理placeholder提交问题
 			if ($.browser && $.browser.msie) {
-				form.find('[placeholder]').each(function() {
+				form.find('[placeholder]').each(function () {
 					var input = $(this);
 					if (input.val() == input.attr('placeholder')) {
 						input.val('');
@@ -354,96 +370,96 @@
 			//表单验证开始
 			form.validate({
 				//是否在获取焦点时验证
-				onfocusout : false,
+				onfocusout: false,
 				//是否在敲击键盘时验证
-				onkeyup : false,
+				onkeyup: false,
 				//当鼠标掉级时验证
-				onclick : false,
+				onclick: false,
 				//验证错误
-				showErrors : function(errorMap, errorArr) {
+				showErrors: function (errorMap, errorArr) {
 					//errorMap {'name':'错误信息'}
 					//errorArr [{'message':'错误信息',element:({})}]
 					try {
 						$(errorArr[0].element).focus();
 						art.dialog({
-							id : 'error',
-							icon : 'error',
-							lock : true,
-							fixed : true,
-							background : "#CCCCCC",
-							opacity : 0,
-							content : errorArr[0].message,
-							cancelVal : "{:L('OK')}",
-							cancel : function() {
+							id: 'error',
+							icon: 'error',
+							lock: true,
+							fixed: true,
+							background: "#CCCCCC",
+							opacity: 0,
+							content: errorArr[0].message,
+							cancelVal: "{:L('OK')}",
+							cancel: function () {
 								$(errorArr[0].element).focus();
 							}
 						});
-					} catch (err) {
-					}
+					} catch (err) {}
 				},
 				//验证规则
-				rules : {
-					'options[site_name]' : {
-						required : 1
+				rules: {
+					'options[site_name]': {
+						required: 1
 					},
-					'options[site_host]' : {
-						required : 1
+					'options[site_host]': {
+						required: 1
 					},
-					'options[site_root]' : {
-						required : 1
+					'options[site_root]': {
+						required: 1
 					}
 				},
 				//验证未通过提示消息
-				messages : {
-					'options[site_name]' : {
-						required : "{:L('WEBSITE_SITE_NAME_REQUIRED_MESSAGE')}"
+				messages: {
+					'options[site_name]': {
+						required: "{:L('WEBSITE_SITE_NAME_REQUIRED_MESSAGE')}"
 					},
-					'options[site_host]' : {
-						required : "{:L('WEBSITE_SITE_HOST_REQUIRED_MESSAGE')}"
+					'options[site_host]': {
+						required: "{:L('WEBSITE_SITE_HOST_REQUIRED_MESSAGE')}"
 					}
 				},
 				//给未通过验证的元素加效果,闪烁等
-				highlight : false,
+				highlight: false,
 				//是否在获取焦点时验证
-				onfocusout : false,
+				onfocusout: false,
 				//验证通过，提交表单
-				submitHandler : function(forms) {
+				submitHandler: function (forms) {
 					$(forms).ajaxSubmit({
-						url : form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
-						dataType : 'json',
-						beforeSubmit : function(arr, $form, options) {
+						url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+						dataType: 'json',
+						beforeSubmit: function (arr, $form, options) {
 
 						},
-						success : function(data, statusText, xhr, $form) {
+						success: function (data, statusText, xhr, $form) {
 							if (data.status) {
 								setCookie("refersh_time", 1);
-								var admin_url_changed=$("#js-site-admin-url-password").data("changed");
-								var message =admin_url_changed?data.info+'<br><span style="color:red;">后台地址已更新(请劳记！)</span>':data.info;
-								
+								var admin_url_changed = $("#js-site-admin-url-password").data("changed");
+								var message = admin_url_changed ? data.info + '<br><span style="color:red;">后台地址已更新(请劳记！)</span>' :
+									data.info;
+
 								//添加成功
-								Wind.use("artDialog", function() {
+								Wind.use("artDialog", function () {
 									art.dialog({
-										id : "succeed",
-										icon : "succeed",
-										fixed : true,
-										lock : true,
-										background : "#CCCCCC",
-										opacity : 0,
-										content : message,
-										button : [ {
-											name : "{:L('OK')}",
-											callback : function() {
+										id: "succeed",
+										icon: "succeed",
+										fixed: true,
+										lock: true,
+										background: "#CCCCCC",
+										opacity: 0,
+										content: message,
+										button: [{
+											name: "{:L('OK')}",
+											callback: function () {
 												reloadPage(window);
 												return true;
 											},
-											focus : true
+											focus: true
 										}, {
-											name : "{:L('CLOSE')}",
-											callback : function() {
+											name: "{:L('CLOSE')}",
+											callback: function () {
 												reloadPage(window);
 												return true;
 											}
-										} ]
+										}]
 									});
 								});
 							} else {
@@ -454,7 +470,7 @@
 				}
 			});
 		});
-		////-------------------------
 	</script>
 </body>
+
 </html>

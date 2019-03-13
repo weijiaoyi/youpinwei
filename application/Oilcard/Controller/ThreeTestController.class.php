@@ -12,7 +12,7 @@ use Think\Log;
  * Time: 17:22
  */
 
-class ThreeController extends CommentoilcardController
+class ThreeTestController extends CommentoilcardController
 {
     private $appid;
     private $secret;
@@ -78,35 +78,15 @@ class ThreeController extends CommentoilcardController
             $userinfo = json_decode($this->curlGet($userinfo_url),true);
             if (!is_array($userinfo) || !isset($userinfo['openid']))
             {
-               /* echo json_encode([
-                    'msg'=>'获取用户信息失败！',
-                    'status'=>500
-                ]);*/
                echo '获取用户信息失败！';
                 exit();
             }
 
-//            $is_user = M('User')->where(['openid'=>$userinfo['openid']])->find();
-            $is_user = M('three_user')->where(['sign'=>$sign])->find();
+            $is_user = M('test_user')->where(['sign'=>$sign])->find();
             echo '<p>'.$is_user['three_user_id'].'</p>';
-            $card = M('three_card')->where(['three_user_id'=>$is_user['three_user_id']])->find();
             if (!$is_user || empty($is_user) || !isset($is_user['three_user_id'])){
                 echo '该手机号未绑定油卡！';
                 exit();
-
-                /*//注册新用户
-                $user = array();
-                $user['nickname'] = $userinfo['nickname'];
-                $user['user_img'] = $userinfo['headimgurl'];
-                $user['openid'] = $userinfo['openid'];
-                $user['wx_access_token'] = $info['access_token'];
-                $user['access_token_expires'] = $info['expires_in']+time();
-                $user['refresh_token']=$info['refresh_token'];
-                //第三方
-                $user['phone']=$is_sign['phone'];
-                $user['fromId']=$is_sign['fromId'];
-
-                M('User')->add($user);*/
 
             }else {
                 //更新用户信息
@@ -118,11 +98,10 @@ class ThreeController extends CommentoilcardController
                 $user['access_token_expires'] = $info['expires_in']+time();
                 $user['refresh_token']=$info['refresh_token'];
 
-//                M('User')->where(['openid'=>$userinfo['openid']])->save($user);
-                M('three_user')->where(['sign'=>$sign])->save($user);
+                M('test_user')->where(['sign'=>$sign])->save($user);
             }
 
-            header('location:'.'http://'.$_SERVER['SERVER_NAME'].'/Three/index.html?op='.base64_encode($userinfo['openid']).'&from='.$from);
+            header('location:'.'http://'.$_SERVER['SERVER_NAME'].'/Three/test.html?op='.base64_encode($userinfo['openid']).'&from='.$from);
 
 
         }catch (\Exception $e) {
@@ -183,7 +162,7 @@ class ThreeController extends CommentoilcardController
 
             if(!empty($is_three)){
             //判断该卡识否为该第三方的油卡
-                $card = M('three_card')->where(['three_card_no'=>$card_no])->field('three_id,status')->find();
+                $card = M('test_card')->where(['three_card_no'=>$card_no])->field('three_id,status')->find();
 
                 if($is_three != $card['three_id']){
                     echo json_encode(array('status'=>100,'message'=>'卡号不属于该第三方卡号，无法进行绑定’，无法进行绑定'));exit;
@@ -192,7 +171,7 @@ class ThreeController extends CommentoilcardController
                 //判断该卡是否已被申领
                 if($card['status'] == 1){
                     //判断该用户是否存在
-                    $is_phone = M('three_user')->where(array('phone'=>$phone,'three_id'=>$is_three))->find();
+                    $is_phone = M('test_user')->where(array('phone'=>$phone,'three_id'=>$is_three))->find();
 
                     //插入用户信息
                     if(!empty($is_phone)){
@@ -207,15 +186,15 @@ class ThreeController extends CommentoilcardController
                             'update_time' => $nowTime,
                             'username'    => $username,
                         );
-                        $user_id = M('three_user')->add($user);
+                        $user_id = M('test_user')->add($user);
                     }
 
                     if($user_id){
-                        $res = M('three_card')->where(array('three_card_no'=>$card_no))->save(array('three_user_id'=>$user_id,'status'=>2,'create_time'=>$nowTime,'bound_time'=>$nowTime));
+                        $res = M('test_card')->where(array('three_card_no'=>$card_no))->save(array('three_user_id'=>$user_id,'status'=>2,'create_time'=>$nowTime,'bound_time'=>$nowTime));
 
                         if($res){
                             //修改用户绑卡数
-                            $cardCount = M('three_user')->where(['three_user_id'=>$user_id])->setInc('card_count');
+                            $cardCount = M('test_user')->where(['three_user_id'=>$user_id])->setInc('card_count');
 
                             if($cardCount){
                                 M()->commit();
@@ -246,7 +225,6 @@ class ThreeController extends CommentoilcardController
 
     }
 
-
     /**
      * @desc 第三方充值
      * @author langzhiyao
@@ -265,13 +243,13 @@ class ThreeController extends CommentoilcardController
 
 
             //油卡信息
-            $CardInfo = M('three_card')->where(['three_card_no'=>$card_no])->find();
+            $CardInfo = M('test_card')->where(['three_card_no'=>$card_no])->find();
             if (empty($CardInfo))exit(json_encode(['msg'=>'无效卡号！','status'=>100]));
             if($CardInfo['status'] != 2){
                 exit(json_encode(['msg'=>'此油卡异常','status'=>100]));
             }
             //用户信息
-            $Member=M('three_user')->where(['openid'=>$openid])->find();
+            $Member=M('test_user')->where(['openid'=>$openid])->find();
             if (!$Member)exit(json_encode(['msg'=>'需要先授权登陆之后才能做此操作！','status'=>100]));
             if(!$Member['nickname'] || !$Member['wechat_img'])exit(json_encode(['msg'=>'需要先授权登陆之后才能做此操作！','status'=>100]));
             if ($Member['is_notmal'] !=1)exit(json_encode(['msg'=>'当前用户信息异常，已被冻结用户信息，请向管理员或代理查询！','status'=>100]));
@@ -293,7 +271,7 @@ class ThreeController extends CommentoilcardController
                 'save_amount'     => $save,
             ];
 
-            $RechageCount = M('three_order')->where(['card_no'=>$card_no,'pay_status'=>2])->find();
+            $RechageCount = M('test_order')->where(['card_no'=>$card_no,'pay_status'=>2])->find();
 
             if (!$RechageCount) { // 是否是首充
                 if (intval($money) < intval( $config['first_rechage']) ){
@@ -331,15 +309,11 @@ class ThreeController extends CommentoilcardController
                     $data = $PayMent->_QFPay($Order,$Member,$PayCon);
                     $OrderAdd['pay_type'] = 3;
                     break;
-                case '4': //易支付
-                    $data = $PayMent->_YZPay($Order,$Member,$PayCon);
-                    $OrderAdd['pay_type'] = 4;
-                    break;
             }
 
             if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>100]));
             if($data)$data['order_no'] = $orderSn;
-            $record_res = M('three_order')->add($OrderAdd);
+            $record_res = M('test_order')->add($OrderAdd);
 
             if(!$record_res)$this->error('订单生成失败，请重试！');
             //添加充值记录
@@ -359,14 +333,14 @@ class ThreeController extends CommentoilcardController
         $three = M('three')->where(array('from'=>$from))->find();
         $fromId = $three['id'];
         //获取用户信息
-        $user = M('three_user')->where(array('openid'=>$openid,'three_id'=>$fromId))->find();
+        $user = M('test_user')->where(array('openid'=>$openid,'three_id'=>$fromId))->find();
 //
         if(empty($user)){echo json_encode(array('status'=>100,'message'=>'获取用户信息失败！'));exit();}
         //获取用户卡折扣
         $scale=$three['rebate'];
         if(empty($scale)){echo json_encode(array('status'=>100,'message'=>'获取卡折扣失败！'));exit();}
         //获取用户绑定卡
-        $cardList = M('three_card')->where(array('three_user_id'=>$user['three_user_id']))->field('three_card_no')->select();
+        $cardList = M('test_card')->where(array('three_user_id'=>$user['three_user_id']))->field('three_card_no')->select();
 //        print_r($cardList);
         $item =[];
         if(!empty($cardList)){
