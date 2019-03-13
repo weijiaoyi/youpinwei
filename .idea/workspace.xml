@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="bb53f77a-e695-4a02-b0bb-18fb8a070d14" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/themes/simplebootx/Admin/Order/C_orderList.html" beforeDir="false" afterPath="$PROJECT_DIR$/admin/themes/simplebootx/Admin/Order/C_orderList.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/themes/simplebootx/Admin/Setting/site.html" beforeDir="false" afterPath="$PROJECT_DIR$/admin/themes/simplebootx/Admin/Setting/site.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -40,15 +41,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/IntegralController.class.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6525">
-              <caret line="268" column="72" selection-start-line="268" selection-start-column="72" selection-end-line="268" selection-end-column="72" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/Oilcard/Conf/lib/YopRequest.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="3200">
@@ -70,18 +62,30 @@
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="100">
-              <caret line="4" column="6" lean-forward="true" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
+              <caret line="4" column="5" lean-forward="true" selection-start-line="4" selection-start-column="5" selection-end-line="4" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/themes/simplebootx/Admin/Order/C_orderList.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1800">
+              <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+              <folding>
+                <element signature="n#style#0;n#div#1;n#body#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/admin/themes/simplebootx/Admin/Order/C_orderList.html">
+        <entry file="file://$PROJECT_DIR$/admin/themes/simplebootx/Admin/Setting/site.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+            <state relative-caret-position="60">
+              <caret line="319" column="13" lean-forward="true" selection-start-line="319" selection-start-column="13" selection-end-line="319" selection-end-column="13" />
               <folding>
-                <element signature="n#style#0;n#div#1;n#body#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -160,7 +164,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$USER_HOME$/Desktop/PayDemo/PayDemo/PHP/Demo.php" />
         <option value="$PROJECT_DIR$/WikiPay.php" />
         <option value="$USER_HOME$/Desktop/cert/apiclient_key.pem" />
         <option value="$PROJECT_DIR$/application/Oilcard/Controller/WikiController.class.php" />
@@ -211,6 +214,7 @@
         <option value="$PROJECT_DIR$/application/Admin/Controller/SettingController.class.php" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/admin/themes/simplebootx/Admin/Order/C_orderList.html" />
+        <option value="$PROJECT_DIR$/admin/themes/simplebootx/Admin/Setting/site.html" />
       </list>
     </option>
   </component>
@@ -295,7 +299,7 @@
               <item name="themes" type="462c0819:PsiDirectoryNode" />
               <item name="simplebootx" type="462c0819:PsiDirectoryNode" />
               <item name="Admin" type="462c0819:PsiDirectoryNode" />
-              <item name="Order" type="462c0819:PsiDirectoryNode" />
+              <item name="Setting" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -353,12 +357,12 @@
       <workItem from="1551923184063" duration="38789000" />
       <workItem from="1552264666364" duration="9302000" />
       <workItem from="1552351109433" duration="880000" />
-      <workItem from="1552440631756" duration="473000" />
+      <workItem from="1552440631756" duration="2140000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="224502000" />
+    <option name="totallyTimeSpent" value="226169000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1600" height="900" extended-state="0" />
@@ -519,15 +523,6 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/themes/simplebootx/Admin/Setting/paytype.html" />
-    <entry file="file://$PROJECT_DIR$/admin/themes/simplebootx/Admin/Setting/site.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/Oilcard/Controller/ThreeController.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="400">
@@ -599,16 +594,26 @@
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="100">
-          <caret line="4" column="6" lean-forward="true" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
+          <caret line="4" column="5" lean-forward="true" selection-start-line="4" selection-start-column="5" selection-end-line="4" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/themes/simplebootx/Admin/Order/C_orderList.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+        <state relative-caret-position="-1800">
+          <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
           <folding>
             <element signature="n#style#0;n#div#1;n#body#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/themes/simplebootx/Admin/Setting/site.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="319" column="13" lean-forward="true" selection-start-line="319" selection-start-column="13" selection-end-line="319" selection-end-column="13" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>

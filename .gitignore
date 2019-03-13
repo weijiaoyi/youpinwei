@@ -2,4 +2,4 @@
 *.log
 *.apk
 data/
-.idea/
+.idea
