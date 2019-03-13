@@ -46,7 +46,7 @@
                 {$val['id']}
             </td>
             <td style="text-align:center;">
-                {$val['nickname']}
+                <?php echo base64_decode($val['nickname']) ?>
             </td>
             <!--<td style="text-align:center;">-->
                 <!--{$val['count']}张-->

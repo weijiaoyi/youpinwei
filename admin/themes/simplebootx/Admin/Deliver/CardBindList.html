@@ -52,7 +52,7 @@
 							<td style="text-align:center;"><?php echo $k+1; ?></td>
 							<td style="text-align:center;"><?php echo $v['serial_number']; ?></td>
 							<td style="text-align:center;">
-								<img src="{$v['user_img']}" alt="{$v['user_img']}" style="width: 40px;height: 40px;" /> {$v['nickname']}
+								<img src="{$v['user_img']}" alt="{$v['user_img']}" style="width: 40px;height: 40px;" /> <?php echo base64_decode($v['nickname']) ?>
 							</td>
 							<td style="text-align:center;">
 								<?php if($v['send_card_no'] == ''){ ?>

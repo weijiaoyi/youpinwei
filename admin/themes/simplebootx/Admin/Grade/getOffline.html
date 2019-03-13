@@ -49,7 +49,7 @@
                 {$key+1}
             </td>
             <td style="text-align:center;">
-                {$val['nickname']}
+                <?php echo base64_decode($val['nickname']) ?>
             </td>
             <td style="width:40px;text-align:center;">
                 <img src="{$val['user_img']}" alt="{$val['user_img']}" />
