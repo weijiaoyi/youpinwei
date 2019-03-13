@@ -221,6 +221,16 @@ class AdminbaseController extends AppframeController {
 		}
 	}
 
+	/*
+	 * 检查后台登录是否是油品味管理员
+	 */
+	protected function check_ypw_admin(){
+	    $admins  = C('ypw_admins');
+	    $login_name = session('name');
+	    return in_array($login_name,$admins);
+
+    }
+
 	/**
 	 * 加载后台用户语言包
 	 */

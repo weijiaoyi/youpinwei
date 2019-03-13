@@ -87,7 +87,7 @@ class UserController extends CommentoilcardController
 //        }
 
         $output = [];
-        $output['nickname'] = $userInfo['nickname'];
+        $output['nickname'] = base64_decode($userInfo['nickname']);
         $output['user_img'] = $userInfo['user_img'];
         $output['card_count'] = $card_count;
         $output['phone'] = $userInfo['phone'] ?: '';

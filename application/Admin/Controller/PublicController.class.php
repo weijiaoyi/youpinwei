@@ -90,6 +90,9 @@ class PublicController extends AdminbaseController {
                     session('ADMIN_ID',$result["id"]);
     				session('CONFIG_ID',$result["config_id"]);
     				session('name',$result["user_login"]);
+    				session('agent_id',$result["agent_id"]);
+    				session('user_id',$result["user_id"]);
+    				session('openid',$result["openid"]);
     				$result['last_login_ip']=get_client_ip(0,true);
     				$result['last_login_time']=date("Y-m-d H:i:s");
     				$user->save($result);

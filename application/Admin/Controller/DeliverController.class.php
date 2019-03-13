@@ -9,7 +9,7 @@ class DeliverController extends AdminbaseController{
      * 订单列表信息
      */
 	public function C_deliverList(){
-        
+        $is_ypw_admin  =  $this->check_ypw_admin();
         $p = trim(I('get.p','1'));
         $keyword = trim(I('post.keyword'));
         $Order = M('order_record');
@@ -25,6 +25,11 @@ class DeliverController extends AdminbaseController{
         }
         if (!empty($keyword)) {
             $where['R.card_no'] = ['like','%'.$keyword.'%'];
+        }
+        if(!$is_ypw_admin){
+            $agentID = session('agent_id');
+            $where['R.agent_id'] = $agentID;
+            $where['R.card_from'] = 2;
         }
         $order_info = $Apply
             ->alias('A')
@@ -118,6 +123,12 @@ class DeliverController extends AdminbaseController{
             'R.order_status' =>2,
             'A.status' =>3
         ];
+        $is_ypw_admin  =  $this->check_ypw_admin();
+        if(!$is_ypw_admin){
+            $agentID = session('agent_id');
+            $where['R.agent_id'] = $agentID;
+            $where['R.card_from'] = 2;
+        }
         $timeRange = trim(I('timeRange',''));
         if ($timeRange) {
             $timeRange = explode(' - ', $timeRange);
@@ -172,6 +183,12 @@ class DeliverController extends AdminbaseController{
             'R.order_type' => 4,
             'R.order_status' =>2,
         ];
+        $is_ypw_admin  =  $this->check_ypw_admin();
+        if(!$is_ypw_admin){
+            $agentID = session('agent_id');
+            $where['R.agent_id'] = $agentID;
+            $where['R.card_from'] = 2;
+        }
         if (!empty($keyword)) {
             $where['R.card_no'] = ['like','%'.$keyword.'%'];
         }
@@ -221,6 +238,12 @@ class DeliverController extends AdminbaseController{
             'R.order_type' => 5,
             'R.order_status' =>2,
         ];
+        $is_ypw_admin  =  $this->check_ypw_admin();
+        if(!$is_ypw_admin){
+            $agentID = session('agent_id');
+            $where['R.agent_id'] = $agentID;
+            $where['R.card_from'] = 2;
+        }
         if (!empty($keyword)) {
             $where['R.card_no'] = ['like','%'.$keyword.'%'];
         }

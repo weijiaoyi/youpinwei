@@ -87,6 +87,11 @@ class OrderController extends AdminbaseController{
         if(!empty($keyword)){
             $where.=' AND (a.card_no LIKE "%'.$keyword.'%" OR o.serial_number LIKE "%'.$keyword.'%")';
         }
+        $is_ypw_admin  =  $this->check_ypw_admin();
+        if(!$is_ypw_admin){
+            $agentID = session('agent_id');
+            $where.= ' AND o.agent_id = '.$agentID.' AND o.card_from = 2';
+        }
         $order_info=$OrderRecordModel
             ->alias('o')
             ->join('add_money a ON a.order_no=o.serial_number',LEFT)
@@ -98,14 +103,6 @@ class OrderController extends AdminbaseController{
             ->order('o.id DESC')
             -> page($p,'10')
             ->select();
-//        echo '<pre>';var_dump($order_info);exit;
-       /* $order_info = $OrderRecordModel
-            -> where( 'order_type = 3 ' )
-            -> page($p,'10')
-            ->select();
-        if(empty($order_info)){
-            echo '暂无数据';exit;
-        }*/
         $count = $OrderRecordModel
             ->alias('o')
             ->join('add_money a ON a.order_no=o.serial_number',LEFT)
@@ -120,6 +117,7 @@ class OrderController extends AdminbaseController{
         $this->assign('keyword',$keyword);
         $this -> assign('page',$show);
         $this -> assign('data',$order_info);
+        $this -> assign('is_ypw_admin',$is_ypw_admin);
         $this -> display();
     }
 
@@ -353,6 +351,14 @@ class OrderController extends AdminbaseController{
         $Card = M('oil_card');
         $where = [];
         $condition=[];
+        $is_ypw_admin  =  $this->check_ypw_admin();
+        $card_id_where = 'agent_id != 0';
+        $agentID = session('agent_id');
+        if(!$is_ypw_admin){
+            $where['o.agent_id'] = $agentID;
+            $condition = ['agent_id'=>$agentID];
+            $card_id_where = ['agent_id'=>$agentID];
+        }
 
         if (!empty($card_no)) {
           $where['o.card_no'] = ['LIKE','%'.$card_no.'%'];
@@ -380,13 +386,15 @@ class OrderController extends AdminbaseController{
         $count = $Card ->where($condition)-> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
-        //查询总部可发油卡数量
-        $card_id=$Card -> where('agent_id != 0')->order('id desc') -> getField('id');
-        $send_count = $Card -> where('id>"'.$card_id.'" AND status=1') -> count();
+        //查询总部或者代理可发油卡数量
+        $card_id=$Card -> where($card_id_where)->order('id desc') -> getField('id');
+        $send_count_where = 'id>="'.$card_id.'" AND status=1';
+        if(!$is_ypw_admin){
+            $send_count_where.= '  AND agent_id = '.$agentID;
+        }
+        $send_count = $Card -> where($send_count_where) -> count();
         $this -> assign('send_count',$send_count);
         $this -> assign('page',$show);
-        // p($card_info);
-//        print_r($card_info);die;
         $this -> assign('data',$card_info);
         $this -> display();
     }
@@ -399,13 +407,18 @@ class OrderController extends AdminbaseController{
     public function CardBack(){
         $p = trim(I('get.p','1'));
         $Card = M('oil_option');
-
+        $is_ypw_admin  =  $this->check_ypw_admin();
+        $where = 'p.is_notmal=2 and o.type=1';
+        if(!$is_ypw_admin){
+            $agentID = session('agent_id');
+            $where .=' and u.agentid ='.$agentID;
+        }
         $card_info = $Card 
               ->alias('o')
               ->join('__OIL_CARD__ p ON o.cardid = p.id',LEFT)
               ->join('__USER__ u ON u.id = o.userid',LEFT)
               ->field('o.*,p.card_no,u.nickname,u.user_img')
-              ->where( 'p.is_notmal=2 and o.type=1' )
+              ->where( $where )
               ->order('o.id desc')
               -> page($p,'10')
               ->select();
@@ -414,7 +427,7 @@ class OrderController extends AdminbaseController{
             ->join('__OIL_CARD__ p ON o.cardid = p.id','LEFT')
             ->join('__USER__ u ON u.id = o.userid','LEFT')
             ->field('o.*,p.card_no,u.nickname,u.user_img')
-            ->where( 'p.is_notmal=2 and o.type=1' )
+            ->where( $where )
             -> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
@@ -432,12 +445,18 @@ class OrderController extends AdminbaseController{
     public function CardLoss(){
         $p = trim(I('get.p','1'));
         $Card = M('oil_option');
+        $is_ypw_admin  =  $this->check_ypw_admin();
+        $where = 'p.is_notmal=2 and o.type=2';
+        if(!$is_ypw_admin){
+            $agentID = session('agent_id');
+            $where .=' and u.agentid ='.$agentID;
+        }
         $card_info = $Card 
               ->alias('o')
               ->join('__OIL_CARD__ p ON o.cardid = p.id','LEFT')
               ->join('__USER__ u ON u.id = o.userid','LEFT')
               ->field('o.*,p.card_no,u.nickname,u.user_img')
-              ->where( 'p.is_notmal=2 and o.type=2' )
+              ->where( $where )
             ->order('o.id desc')
             -> page($p,'10')
             ->select();
@@ -446,7 +465,7 @@ class OrderController extends AdminbaseController{
             ->join('__OIL_CARD__ p ON o.cardid = p.id','LEFT')
             ->join('__USER__ u ON u.id = o.userid','LEFT')
             ->field('o.*,p.card_no,u.nickname,u.user_img')
-            ->where( 'p.is_notmal=2 and o.type=2' )
+            ->where( $where )
             -> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
