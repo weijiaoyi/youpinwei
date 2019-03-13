@@ -127,7 +127,8 @@ class AgentController extends CommentoilcardController
         $user_id=M('user')->where("openid='$openid'")->getField('id');
         $card_count=M('oil_card')->where("agent_id='$user_id'")->count();
         $agent_id=$agent_arr['id'];
-        $user_count=M('user')->where(['agentid'=>$agent_id,'agent_bind'=>1])->count();
+        $user_count = M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.agentid'=>$agent_id,'a.agent_bind'=>1,'b.role'=>['neq',3]])->count();
+//        $user_count=M('user')->where(['agentid'=>$agent_id,'agent_bind'=>1])->count();
         $data['total_earnings']=ncPriceFormatb($agent_arr['total_earnings']); //总收益
         $data['card_count']=$card_count;   //卡数量
         $data['customer_count']=$user_count;   //客户数量
