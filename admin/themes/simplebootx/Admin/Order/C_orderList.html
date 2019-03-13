@@ -269,13 +269,13 @@
 				<!--<span style="display: inline-block;width: 10%;	text-align: center;cursor: pointer" data-dismiss="modal">返回</span>-->
 			</div>
 			<table id="orderInfoList" border="1" style="width: 100%;text-align: center;">
-				<tr style="width: 100%;height: 40px;line-height: 40px;">
-					<th style="width:20%;text-align: center !important;">类型</th>
-					<th style="width:20%;text-align: center !important;">消费额度</th>
-					<th style="width:20%;text-align: center !important;">折扣</th>
-					<th style="width:20%;text-align: center !important;">实际支付</th>
-					<th style="width:20%;text-align: center !important;">操作时间</th>
-				</tr>
+				<!--<tr style="width: 100%;height: 40px;line-height: 40px;">-->
+					<!--<th style="width:20%;text-align: center !important;">类型</th>-->
+					<!--<th style="width:20%;text-align: center !important;">消费额度</th>-->
+					<!--<th style="width:20%;text-align: center !important;">折扣</th>-->
+					<!--<th style="width:20%;text-align: center !important;">实际支付</th>-->
+					<!--<th style="width:20%;text-align: center !important;">操作时间</th>-->
+				<!--</tr>-->
 
 			</table>
 		</div>
@@ -329,7 +329,7 @@
 			} else if (item.order_type == 3) {
 				item["order"] = "充值"
 			} else if (item.order_type == 4) {
-				item["order"] = "绑定"
+				item["order"] = "升级"
 			} else if (item.order_type == 5) {
 				item["order"] = "续费"
 			} else if (item.order_type == 6) {
@@ -343,7 +343,13 @@
 	//点击后将卡号回显到页面
 	function card_input(data) {
 		console.log("card_on_input", data);
-		var str = '';
+		var str = "<tr style='width: 100%;height: 40px;line-height: 40px;'>"+
+				"<th style='width:20%;text-align: center !important;'>类型</th>"+
+				"<th style='width:20%;text-align: center !important;'>消费额度</th>"+
+				"<th style='width:20%;text-align: center !important;'>折扣</th>"+
+				"<th style='width:20%;text-align: center !important;'>实际支付</th>"+
+				"<th style='width:20%;text-align: center !important;'>操作时间</th>"+
+				"</tr>";
 		data.forEach(function (item) {
 			str += '<tr id="orderInfoList">' +
 				'<td>' + item.order + '</td>' +
@@ -353,7 +359,7 @@
 				'<td>' + item.createtime + '</td>' +
 				'</tr>'
 		});
-		$('#orderInfoList').append(str);
+		$('#orderInfoList').html(str);
 
 		$('#myModalInfoList').modal('show');
 
@@ -434,7 +440,6 @@
 					$('.alert').show().delay(1000).fadeOut();
 					$('.alert').show().delay(1000).fadeOut();
 				}
-
 			}
 		});
 	});
