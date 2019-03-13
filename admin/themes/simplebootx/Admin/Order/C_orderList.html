@@ -1,10 +1,32 @@
 <admintpl file="header" />
 <style type="text/css">
-.pagination{float: right;margin-right: 20px;}
-.pagination a, .pagination span{padding: 3px 10px;margin-left: 3px;border-radius: 3px;}
-.pagination a{background-color: #dadada;border: 1px solid #d1d1d1;color: black;text-decoration: none;}
-.pagination span{background-color: orangered;border: 1px solid orangered;color: white;cursor: default;}
-	.select_list{
+	.pagination {
+		float: right;
+		margin-right: 20px;
+	}
+
+	.pagination a,
+	.pagination span {
+		padding: 3px 10px;
+		margin-left: 3px;
+		border-radius: 3px;
+	}
+
+	.pagination a {
+		background-color: #dadada;
+		border: 1px solid #d1d1d1;
+		color: black;
+		text-decoration: none;
+	}
+
+	.pagination span {
+		background-color: orangered;
+		border: 1px solid orangered;
+		color: white;
+		cursor: default;
+	}
+
+	.select_list {
 		display: inline-block;
 		width: 100px;
 		height: 34px;
@@ -14,9 +36,7 @@
 		white-space: nowrap;
 		vertical-align: middle;
 	}
-	#myModalInfoList{
-		display: none !important;
-	}
+
 </style>
 </head>
 <?php
@@ -24,19 +44,20 @@
  ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">  
-<meta name="apple-mobile-web-app-status-bar-style" content="black">  
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta content="telephone=no" name="format-detection">
 
-<link rel="stylesheet" href="__PUBLIC__/assets/style/css/common.css"/>
+<link rel="stylesheet" href="__PUBLIC__/assets/style/css/common.css" />
 <link rel="stylesheet" href="__PUBLIC__/js/bootstrap.min.css">
-<body>
-<div id="wrapper">
-	
-</div>
 
-<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
-</div>
+<body>
+	<div id="wrapper">
+
+	</div>
+
+	<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+	</div>
 
 	<div class="wrap js-check-wrap" style="margin-top:-50px;">
 		<ul class="nav nav-tabs">
@@ -47,22 +68,25 @@
 		</ul>
 		<thead>
 
-		<p style="text-align:center;font-size: 20px;font-weight: bold;margin-top: 20px;">
-			总部可发油卡：<span style="color: red;font-weight: bold;font-size: 28px;"><?php echo $send_count;?></span>张
-		</p>
+			<p style="text-align:center;font-size: 20px;font-weight: bold;margin-top: 20px;">
+				总部可发油卡：<span style="color: red;font-weight: bold;font-size: 28px;">
+					<?php echo $send_count;?></span>张
+			</p>
 		</thead>
 
 		<form class="well form-search" method="post" action="{:U('order/C_orderList')}">
 			<!--关键字： -->
 			<input type="text" name="card_no" style="width: 190px; height:34px;" value="" placeholder="请输入要查询的油卡...">
-			<a href="javascript:;" class="import-many btn btn-danger" style="float: right">批量导入</a>
+			<!--<a href="javascript:;" class="import-many btn btn-danger" style="float: right">批量导入</a>-->
+			<button data-toggle="modal" id="import-many" data-target="#ImportMany" style="background: #2c3e50;border:2px; width: 70px; height: 40px;color: white">消费记录</button>
+
 			<input type="submit" class="btn btn-primary CardKeyword " value="搜索">
 			<br>
 			<br>
 			发货状态:&nbsp;<select class="select_list" name="deliver_status">
 				<option value="">所有</option>
-			<option value="2">未发放</option>
-			<option value="1">已发放</option>
+				<option value="2">未发放</option>
+				<option value="1">已发放</option>
 			</select> &nbsp;
 
 			激活状态:&nbsp;<select class="select_list" name="activation_status">
@@ -72,11 +96,11 @@
 			</select> &nbsp;&nbsp;
 
 			油卡状态:&nbsp;<select class="select_list" name="oil_status">
-			<option value="">所有</option>
-			<option value="1">正常使用</option>
-			<option value="2">冻结使用</option>
-			<option value="3">注销油卡</option>
-		</select> &nbsp;&nbsp;
+				<option value="">所有</option>
+				<option value="1">正常使用</option>
+				<option value="2">冻结使用</option>
+				<option value="3">注销油卡</option>
+			</select> &nbsp;&nbsp;
 
 			<!-- <a href="javascript:;" class="discount-many btn">批量折扣</a> -->
 		</form>
@@ -88,7 +112,7 @@
 					<th>用户</th>
 					<th style="text-align:center;">卡号</th>
 					<if condition="$_isAdmin === true">
-					<th style="text-align:center;">优惠折扣</th>
+						<th style="text-align:center;">优惠折扣</th>
 					</if>
 					<th style="text-align:center;">入库时间</th>
 					<th style="text-align:center;">申领时间</th>
@@ -102,26 +126,26 @@
 			<tbody id="show">
 
 				<?php foreach ($data as $k => $v) { ?>
-					<tr>
-						<td style="width:40px;text-align:center;">
-							<?php echo $v['id']; ?>
-						</td>
-						<td style="text-align:center;">
-							<?php echo empty($v['nickname'])?'未绑定':'<img src="'.$v['user_img'].'" width="35" hight="35">'.'&nbsp;&nbsp;'.$v['nickname']; ?>
-						</td>
-						<td class="oil-card" style="text-align:center;">
-							<?php echo $v['card_no']; ?>
-						</td>
-						<td style="text-align:center;">
-							{$v['scale']}折
-						</td>
-						<td style="text-align:center;" title="">
-							<?php echo $v['createtime'];?>
-						</td>
-						<td style="text-align:center;">	
-							<?php echo $v['apply_fo_time']; ?>
-						</td>
-						<td style="text-align:center;">
+				<tr>
+					<td style="width:40px;text-align:center;">
+						<?php echo $v['id']; ?>
+					</td>
+					<td style="text-align:center;">
+						<?php echo empty($v['nickname'])?'未绑定':'<img src="'.$v['user_img'].'" width="35" hight="35">'.'&nbsp;&nbsp;'.$v['nickname']; ?>
+					</td>
+					<td class="oil-card" style="text-align:center;">
+						<?php echo $v['card_no']; ?>
+					</td>
+					<td style="text-align:center;">
+						{$v['scale']}折
+					</td>
+					<td style="text-align:center;" title="">
+						<?php echo $v['createtime'];?>
+					</td>
+					<td style="text-align:center;">
+						<?php echo $v['apply_fo_time']; ?>
+					</td>
+					<td style="text-align:center;">
 						<?php 
 							if($v['agent_id'] ==0 ){
 								echo "总部卡";
@@ -129,8 +153,8 @@
 								echo GetAgentInfo($v['agent_id']);
 							}
 						?>
-						</td>
-						<td style="text-align:center;">
+					</td>
+					<td style="text-align:center;">
 						<?php 
 							switch ($v['chomd']) {
 								case '1':
@@ -141,8 +165,8 @@
 									break;
 							}
 						?>
-						</td>
-						<td style="text-align:center;">
+					</td>
+					<td style="text-align:center;">
 						<?php 
 							switch ($v['activate']) {
 								case '1':
@@ -153,8 +177,8 @@
 									break;
 							}
 						?>
-						</td>
-						<td style="text-align:center;">
+					</td>
+					<td style="text-align:center;">
 						<?php 
 							switch ($v['is_notmal']) {
 								case '1':
@@ -171,31 +195,35 @@
 									break;
 							}
 						?>
-						</td>
-						<td style="width:300px; height: 53px; text-align:center;">
-							<?php if ($v['is_notmal'] == 2){?>
-							<button style="background: #1dccaa;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="depro"><span style="color: white; font-size: 8px;">启用</span></button>
-							<?php }else{?>
-								<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="edpro"><span style="color: white; font-size: 8px;">禁用</span></button>
-							<?php }?>
-							<button id="order-info" style="background: #2c3e50;border:2px; width: 70px; height: 40px;color: white" class="edpro">消费记录</button>
-							<!-- <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="chongzhi"><span style="color: white; font-size: 8px;">充值</span></button>
-							<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $v['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button> -->
-						</td>
-					</tr>
+					</td>
+					<td style="width:300px; height: 53px; text-align:center;">
+						<?php if ($v['is_notmal'] == 2){?>
+						<button style="background: #1dccaa;border:2px; width: 70px; height: 40px;" value="<?php echo $v['id']; ?>" class="depro"><span
+							 style="color: white; font-size: 8px;">启用</span></button>
+						<?php }else{?>
+						<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;" value="<?php echo $v['id']; ?>" class="edpro" id="edpro"><span
+							 style="color: white; font-size: 8px;">禁用</span></button>
+						<?php }?>
+						<!--<a href="javascript:;" id="order-info" style="display: inline-block; background: #2c3e50;border:2px; width: 70px; height: 40px;color: white">消费记录</a>-->
+
+						<button data-toggle="modal" data-target="#myModalInfoList" id="order-info" style="background: #2c3e50;border:2px; width: 70px; height: 40px;color: white">消费记录</button>
+					</td>
+				</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 		<if condition="$page neq ''">
-			<div id="page" class="pagination"><span class="page"><?php echo $page; ?></span></div>
+			<div id="page" class="pagination"><span class="page">
+					<?php echo $page; ?></span></div>
 		</if>
 	</div>
 
-		
+
 	<!-- 批量导入弹出层 -->
 	<div class="modal-dialog">
 		<!-- <div class="modal-content"> -->
-		<div class="modal fade" id="ImportMany" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;padding-right: 0px;margin-left:500px;height:340px;">
+		<div class="modal fade" id="ImportMany" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+		 style="display: block;padding-right: 0px;margin-left:500px;height:340px;">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 					&times;
@@ -207,20 +235,23 @@
 			<div class="modal-body">
 				<table>
 					<tr>
-						<th>起始卡号&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" placeholder="请输入起始卡号" value="" style="height:30px; width: 200px;" maxlength="16" class="start_card_no"></th>
+						<th>起始卡号&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" placeholder="请输入起始卡号" value="" style="height:30px; width: 200px;"
+							 maxlength="16" class="start_card_no"></th>
 					</tr>
 					<tr>
-						<th>结尾卡号&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" placeholder="请输入结尾卡号" value="" style="height:30px; width: 200px;" maxlength="16" class="end_card_no"></th>
+						<th>结尾卡号&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" placeholder="请输入结尾卡号" value="" style="height:30px; width: 200px;"
+							 maxlength="16" class="end_card_no"></th>
 					</tr>
 					<tr>
-						<th>备注&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="text" value="" placeholder="填写备注吧" style="height:60px; width: 200px;" class="card_note"></th>
+						<th>备注&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="text" value="" placeholder="填写备注吧"
+							 style="height:60px; width: 200px;" class="card_note"></th>
 					</tr>
 				</table>
 			</div>
 			<div class="modal-footer" style="text-align:center">
 				<button type="button" style="width:100px;" class="btn btn-default" data-dismiss="modal">返回
 				</button>
-				<button type="button" style="width:100px;" class="btn btn-primary keep" data-dismiss="modal" >
+				<button type="button" style="width:100px;" class="btn btn-primary keep" data-dismiss="modal">
 					立即导入
 				</button>
 			</div>
@@ -228,28 +259,30 @@
 	</div>
 
 	<!-- 消费记录弹出层 -->
-<div class="modal-dialog">
-	<!-- <div class="modal-content"> -->
-	<div class="modal fade" id="myModalInfoList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;padding-right: 0px;margin-left:500px;height:340px;">
-		<div style="height: 40px;width: 100%;line-height: 40px;">
-			<span style="display: inline-block;width: 88%; text-align:center;font-size: 20px;font-weight: bolder">消费记录</span>
-			<span style="display: inline-block;width: 10%;	text-align: center;cursor: pointer" data-dismiss="modal">返回</span>
-		</div>
-		<table id="orderInfoList" border="1" style="width: 100%;text-align: center;">
-			<tr style="width: 100%;height: 40px;line-height: 40px;">
-				<th style="width:20%;text-align: center !important;">类型</th>
-				<th style="width:20%;text-align: center !important;">消费额度</th>
-				<th style="width:20%;text-align: center !important;">折扣</th>
-				<th style="width:20%;text-align: center !important;">实际支付</th>
-				<th style="width:20%;text-align: center !important;">操作时间</th>
-			</tr>
+	<div class="modal-dialog2">
+		<!-- <div class="modal-content"> -->
+		<div class="modal fade" id="myModalInfoList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+		 style="display: block;padding-right: 0px;margin-left:500px;height:340px;">
+			<div style="height: 40px;width: 100%;line-height: 40px;">
+				<span style="display: inline-block;width: 88%; text-align:center;font-size: 20px;font-weight: bolder">消费记录</span>
+				<span style="display: inline-block;width: 10%;	text-align: center;cursor: pointer" data-dismiss="modal">返回</span>
+			</div>
+			<table id="orderInfoList" border="1" style="width: 100%;text-align: center;">
+				<tr style="width: 100%;height: 40px;line-height: 40px;">
+					<th style="width:20%;text-align: center !important;">类型</th>
+					<th style="width:20%;text-align: center !important;">消费额度</th>
+					<th style="width:20%;text-align: center !important;">折扣</th>
+					<th style="width:20%;text-align: center !important;">实际支付</th>
+					<th style="width:20%;text-align: center !important;">操作时间</th>
+				</tr>
 
-		</table>
+			</table>
+		</div>
 	</div>
-</div>
 
 
 </body>
+
 </html>
 
 <!-- <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script> -->
@@ -257,49 +290,47 @@
 <script src="__PUBLIC__/js/bootstrap.min.js"></script>
 
 <script>
-
-	//消费记录
-	$(document).on('click','#order-info',function(){
+	// 查询消费记录
+	$(document).on('click', '#order-info', function () {
 		// let this_info = $(this).parent
-		let oilCard=$(this).parent().parent().find(".oil-card")['0'].innerText;
-		let hostUrl=window.location.href;
-		console.log("hostUrl",hostUrl);
+		let oilCard = $(this).parent().parent().find(".oil-card")['0'].innerText;
+		let hostUrl = window.location.href;
+		console.log("hostUrl", hostUrl);
 		$.ajax({
-			type:"post",//规定传输方式
-			dataType:"json",
-			// contentType:"jsonp",
-			url:hostUrl+"/index.php?g=admin&m=order&a=getCard",//提交URL
-			// url:"http://ypw.com/index.php?g=Admin&m=Order&a=cardOrder",//提交URL
-			data:{card_no:oilCard},
-			success:function(data){
-				console.log("dataaaa",data);
-				if(!data.data){
+			type: "post", //规定传输方式
+			dataType: "json",
+			url: hostUrl + "/index.php?g=Admin&m=Order&a=cardOrder",
+			data: {
+				card_no: oilCard
+			},
+			success: function (data) {
+				console.log("dataaaa", data);
+				if (!data.data) {
 					alert("此卡还未产生消费！");
 					return;
 				}
-				let orderData=increaseOrderInfo(data.data);
-				console.log("orderData",orderData);
+				let orderData = increaseOrderInfo(data.data);
+				console.log("orderData", orderData);
 				card_input(orderData);
 			}
 		});
 	});
 
 	// 将订单详情进行分类
-	function increaseOrderInfo(info){
-		info.forEach(item=>{
-			if(item.order_type==1){
-				item["order"]="申领"
-			}else if(item.order_type==2){
-				item["order"]="绑定"
-			}else if(item.order_type==3){
-				item["order"]="充值"
-			}else if(item.order_type==4){
-				item["order"]="绑定"
-			}
-			else if(item.order_type==5){
-				item["order"]="续费"
-			}else if(item.order_type==6){
-				item["order"]="降级"
+	function increaseOrderInfo(info) {
+		info.forEach(item => {
+			if (item.order_type == 1) {
+				item["order"] = "申领"
+			} else if (item.order_type == 2) {
+				item["order"] = "绑定"
+			} else if (item.order_type == 3) {
+				item["order"] = "充值"
+			} else if (item.order_type == 4) {
+				item["order"] = "绑定"
+			} else if (item.order_type == 5) {
+				item["order"] = "续费"
+			} else if (item.order_type == 6) {
+				item["order"] = "降级"
 			}
 		});
 		return info;
@@ -307,21 +338,21 @@
 	}
 
 	//点击后将卡号回显到页面
-	function card_input(data){
-		console.log("card_on_input",data);
+	function card_input(data) {
+		console.log("card_on_input", data);
 		var str = '';
 		data.forEach(function (item) {
-			str+='<tr id="orderInfoList">'+
-					'<td>'+item.order+'</td>'+
-					'<td>'+item.recharge_money+'</td>'+
-					'<td>'+item.discount_money+'</td>'+
-					'<td>'+ item.real_pay +'</td>'+
-					'<td>'+item.createtime+'</td>'+
-					'</tr>'
+			str += '<tr id="orderInfoList">' +
+				'<td>' + item.order + '</td>' +
+				'<td>' + item.recharge_money + '</td>' +
+				'<td>' + item.discount_money + '</td>' +
+				'<td>' + item.real_pay + '</td>' +
+				'<td>' + item.createtime + '</td>' +
+				'</tr>'
 		});
 		$('#orderInfoList').append(str);
 
-		$('#myModalInfoList').modal('show');
+		// $('#myModalInfoList').modal('show');
 
 	}
 
@@ -341,28 +372,33 @@
 	// });
 
 	/** 批量导入 */
-	$(document).on('click','.import-many',function(){
-		$('#ImportMany').modal('show');
-		$(document).on('click','.keep',function(){
+	$(document).on('click', '#import-many', function () {
+		// $('#ImportMany').modal('show');
+		$(document).on('click', '.keep', function () {
 			var start_card_no = $('.start_card_no').val();
 			var end_card_no = $('.end_card_no').val();
-			var discount=$('.ImportMany').val();
-			var card_note=$('.card_note').val();
+			var discount = $('.ImportMany').val();
+			var card_note = $('.card_note').val();
 			$.ajax({
-				type:'post',
-				url:"{:U('order/addCard')}",
-				dataType:'json',
-				data:{start_card_no:start_card_no,end_card_no:end_card_no,discount:discount,card_note:card_note},
-				async:false,
-				success:function(res){
+				type: 'post',
+				url: "{:U('order/addCard')}",
+				dataType: 'json',
+				data: {
+					start_card_no: start_card_no,
+					end_card_no: end_card_no,
+					discount: discount,
+					card_note: card_note
+				},
+				async: false,
+				success: function (res) {
 					layer.msg(res.status);
 					var url = "{:U('order/C_orderList')}";
-					setTimeout(function(){
+					setTimeout(function () {
 
-						location.href=url;
+						location.href = url;
 					}, 2000);
 
-			     	// if (res.status==500) {
+					// if (res.status==500) {
 					// 	$('.alert').text('导入失败啦');
 					// 	$('.alert').show().delay (1000).fadeOut();
 					// 	$('.alert').show().delay (1000).fadeOut();
@@ -377,42 +413,48 @@
 	});
 
 	/** 下架 */
-	$(document).on('click','.edpro',function(){
+	$(document).on('click', '#edpro', function () {
 		var id = $(this).val();
 		$.ajax({
-			type:'post',
-			url:"{:U('order/ProhibitCard')}",
-			dataType:'json',
-			data:{id:id},
+			type: 'post',
+			url: "{:U('order/ProhibitCard')}",
+			dataType: 'json',
+			data: {
+				id: id
+			},
 			// async:false,
-			success:function(res){
-				if(res.msg == 'success'){
-                    window.location.reload();
-				}else{
-                    $('.alert').text('禁用失败');
-                    $('.alert').show().delay (1000).fadeOut();
-                    $('.alert').show().delay (1000).fadeOut();
+			success: function (res) {
+				if (res.msg == 'success') {
+					window.location.reload();
+				} else {
+					$('.alert').text('禁用失败');
+					$('.alert').show().delay(1000).fadeOut();
+					$('.alert').show().delay(1000).fadeOut();
 				}
 
 			}
 		});
 	});
 
-	$(document).on('click','.depro',function(){
+	
+
+	$(document).on('click', '.depro', function () {
 		var id = $(this).val();
 		$.ajax({
-			type:'post',
-			url:"{:U('order/deProhibitCard')}",
-			dataType:'json',
-			data:{id:id},
+			type: 'post',
+			url: "{:U('order/deProhibitCard')}",
+			dataType: 'json',
+			data: {
+				id: id
+			},
 			// async:false,
-			success:function(res){
-				if(res.msg == 'success'){
-                    window.location.reload();
-				}else{
-                    $('.alert').text('启用失败');
-                    $('.alert').show().delay (1000).fadeOut();
-                    $('.alert').show().delay (1000).fadeOut();
+			success: function (res) {
+				if (res.msg == 'success') {
+					window.location.reload();
+				} else {
+					$('.alert').text('启用失败');
+					$('.alert').show().delay(1000).fadeOut();
+					$('.alert').show().delay(1000).fadeOut();
 				}
 
 			}
@@ -420,11 +462,11 @@
 	});
 
 	/** 点击后将卡号回显到页面 */
-	function card_on_input(data){
+	function card_on_input(data) {
 		$("#sp").val(data.card_no);
 		$("#discount").val(data.discount);
 		$('#myModal').modal('show');
-		$(document).on('click','.clickmoney',function(){
+		$(document).on('click', '.clickmoney', function () {
 			var clickmoney = $(this).val();
 			$('#shr').val(clickmoney);
 		});
@@ -432,59 +474,59 @@
 
 
 	/** 退卡 */
-	$(document).on('click','.tuika',function(){
+	$(document).on('click', '.tuika', function () {
 		var discountid = $(this).val();
 		$.ajax({
-			type:'post',
-			url:"{:U('order/withdrawCard')}",
-			dataType:'json',
-			data:{discountid:discountid},
-			success:function(res){
-                if(res.msg == 'success'){
-                    $('.alert').text(res.data);
-                    $('.alert').show().delay (1000).fadeOut();
-                    $('.alert').show().delay (1000).fadeOut();
-                }else{
-                    $('.alert').text(res.data);
-                    $('.alert').show().delay (1000).fadeOut();
-                    $('.alert').show().delay (1000).fadeOut();
-                }
+			type: 'post',
+			url: "{:U('order/withdrawCard')}",
+			dataType: 'json',
+			data: {
+				discountid: discountid
+			},
+			success: function (res) {
+				if (res.msg == 'success') {
+					$('.alert').text(res.data);
+					$('.alert').show().delay(1000).fadeOut();
+					$('.alert').show().delay(1000).fadeOut();
+				} else {
+					$('.alert').text(res.data);
+					$('.alert').show().delay(1000).fadeOut();
+					$('.alert').show().delay(1000).fadeOut();
+				}
 			}
 		});
 	});
-
-
 </script>
 <script type="text/javascript">
-    // partial
-var w,h,className;
-function getSrceenWH(){
-	w = $(window).width();
-	h = $(window).height();
-	$('#dialogBg').width(w).height(h);
-}
+	// partial
+	var w, h, className;
 
-window.onresize = function(){  
-	getSrceenWH();
-}
-$(window).resize();
+	function getSrceenWH() {
+		w = $(window).width();
+		h = $(window).height();
+		$('#dialogBg').width(w).height(h);
+	}
 
-$(function(){
-	getSrceenWH();
+	window.onresize = function () {
+		getSrceenWH();
+	}
+	$(window).resize();
 
-	//显示弹框
-	$('.partial').click(function(){
-		className = $(this).attr('class');
-		$('#dialogBg').fadeIn(300);
-		$('#dialog').removeAttr('class').addClass('animated '+className+'').fadeIn();
-	});
+	$(function () {
+		getSrceenWH();
 
-	//关闭弹窗
-	$('.claseDialogBtn').click(function(){
-		$('#dialogBg').fadeOut(300,function(){
-			$('#dialog').addClass('bounceOutUp').fadeOut();
+		//显示弹框
+		$('.partial').click(function () {
+			className = $(this).attr('class');
+			$('#dialogBg').fadeIn(300);
+			$('#dialog').removeAttr('class').addClass('animated ' + className + '').fadeIn();
+		});
+
+		//关闭弹窗
+		$('.claseDialogBtn').click(function () {
+			$('#dialogBg').fadeOut(300, function () {
+				$('#dialog').addClass('bounceOutUp').fadeOut();
+			});
 		});
 	});
-});
 </script>
-
