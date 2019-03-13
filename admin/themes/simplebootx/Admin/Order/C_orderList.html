@@ -77,8 +77,9 @@
 		<form class="well form-search" method="post" action="{:U('order/C_orderList')}">
 			<!--关键字： -->
 			<input type="text" name="card_no" style="width: 190px; height:34px;" value="" placeholder="请输入要查询的油卡...">
-			<!--<a href="javascript:;" class="import-many btn btn-danger" style="float: right">批量导入</a>-->
-			<button data-toggle="modal" id="import-many" data-target="#ImportMany" style="background: #2c3e50;border:2px; width: 70px; height: 40px;color: white">消费记录</button>
+			<!--<a href="javascript:;" id="import-many " style="btnbtn-danger: float: right">批量导入</a>-->
+			<button type="button" style="float: right" class="btn btn-danger" id="import-many">批量导入</button>
+			<!--<button data-toggle="modal" id="import-many" style="background: #2c3e50;border:2px; width: 70px; height: 40px;color: white">批量导入</button>-->
 
 			<input type="submit" class="btn btn-primary CardKeyword " value="搜索">
 			<br>
@@ -196,17 +197,17 @@
 							}
 						?>
 					</td>
+
 					<td style="width:300px; height: 53px; text-align:center;">
 						<?php if ($v['is_notmal'] == 2){?>
-						<button style="background: #1dccaa;border:2px; width: 70px; height: 40px;" value="<?php echo $v['id']; ?>" class="depro"><span
+						<button style="background: #1dccaa;border:2px; width: 70px; height: 40px;" value="<?php echo $v['id']; ?>" class="depro" ><span
 							 style="color: white; font-size: 8px;">启用</span></button>
 						<?php }else{?>
-						<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;" value="<?php echo $v['id']; ?>" class="edpro" id="edpro"><span
+						<button style="background: #2c3e50;border:2px; width: 70px; height: 40px;" value="<?php echo $v['id']; ?>" class="edpro"><span
 							 style="color: white; font-size: 8px;">禁用</span></button>
 						<?php }?>
 						<!--<a href="javascript:;" id="order-info" style="display: inline-block; background: #2c3e50;border:2px; width: 70px; height: 40px;color: white">消费记录</a>-->
-
-						<button data-toggle="modal" data-target="#myModalInfoList" id="order-info" style="background: #2c3e50;border:2px; width: 70px; height: 40px;color: white">消费记录</button>
+						<button data-toggle="modal" id="order-info" style="background: #2c3e50;border:2px; width: 70px; height: 40px;color: white">消费记录</button>
 					</td>
 				</tr>
 				<?php } ?>
@@ -221,7 +222,6 @@
 
 	<!-- 批量导入弹出层 -->
 	<div class="modal-dialog">
-		<!-- <div class="modal-content"> -->
 		<div class="modal fade" id="ImportMany" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
 		 style="display: block;padding-right: 0px;margin-left:500px;height:340px;">
 			<div class="modal-header">
@@ -259,13 +259,14 @@
 	</div>
 
 	<!-- 消费记录弹出层 -->
-	<div class="modal-dialog2">
+	<div class="modal-dialog">
 		<!-- <div class="modal-content"> -->
-		<div class="modal fade" id="myModalInfoList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-		 style="display: block;padding-right: 0px;margin-left:500px;height:340px;">
-			<div style="height: 40px;width: 100%;line-height: 40px;">
+		<div class="modal" id="myModalInfoList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+		 style="margin-left:500px;height:340px;">
+			<div style="height:40px;width: 100%;line-height: 40px;">
 				<span style="display: inline-block;width: 88%; text-align:center;font-size: 20px;font-weight: bolder">消费记录</span>
-				<span style="display: inline-block;width: 10%;	text-align: center;cursor: pointer" data-dismiss="modal">返回</span>
+				<button type="button" class="btn btn-warning" data-dismiss="modal">X</button>
+				<!--<span style="display: inline-block;width: 10%;	text-align: center;cursor: pointer" data-dismiss="modal">返回</span>-->
 			</div>
 			<table id="orderInfoList" border="1" style="width: 100%;text-align: center;">
 				<tr style="width: 100%;height: 40px;line-height: 40px;">
@@ -308,10 +309,12 @@
 				if (!data.data) {
 					alert("此卡还未产生消费！");
 					return;
+				}else {
+					let orderData = increaseOrderInfo(data.data);
+					console.log("orderData", orderData);
+					card_input(orderData);
 				}
-				let orderData = increaseOrderInfo(data.data);
-				console.log("orderData", orderData);
-				card_input(orderData);
+
 			}
 		});
 	});
@@ -352,7 +355,7 @@
 		});
 		$('#orderInfoList').append(str);
 
-		// $('#myModalInfoList').modal('show');
+		$('#myModalInfoList').modal('show');
 
 	}
 
@@ -373,7 +376,7 @@
 
 	/** 批量导入 */
 	$(document).on('click', '#import-many', function () {
-		// $('#ImportMany').modal('show');
+		$('#ImportMany').modal('show');
 		$(document).on('click', '.keep', function () {
 			var start_card_no = $('.start_card_no').val();
 			var end_card_no = $('.end_card_no').val();
@@ -413,7 +416,7 @@
 	});
 
 	/** 下架 */
-	$(document).on('click', '#edpro', function () {
+	$(document).on('click', '.edpro', function () {
 		var id = $(this).val();
 		$.ajax({
 			type: 'post',
