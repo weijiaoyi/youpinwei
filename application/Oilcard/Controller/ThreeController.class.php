@@ -245,85 +245,7 @@ class ThreeController extends CommentoilcardController
         }
 
     }
-    /**
-     * @desc 第三方绑定油卡
-     * @author langzhiyao
-     * @time 20190219
-     */
-    public function bindCards(){
-        //获取第三方传过来的信息
-        if(!empty($_POST)){
-            $from = trim(I('post.from'));//如：wxwt
-            $phone = trim(I('post.phone'));
-            $card_no = trim(I('post.card_no'));
-            if(empty($from)){echo json_encode(array('status'=>100,'message'=>'第三方标识不能为空'));exit;}
-            if(empty($phone)){echo json_encode(array('status'=>100,'message'=>'用户手机号不能为空'));exit;}
-            if(!preg_match("/^1[345678]\d{9}$/", $phone)){echo json_encode(array('status'=>100,'message'=>'手机号格式错误'));exit;}
-            if(empty($card_no)){echo json_encode(array('status'=>100,'message'=>'卡号不能为空'));exit;}
-            //开启事务
-            M()->startTrans();
-            //判断是否具有第三方标识
-            $is_three = M('three_scale')->where(array('from'=>$from))->find();
-            if(!empty($is_three)){
-                //判断手机号是否已注册
-                $is_phone = M('user')->where(array('phone'=>$phone))->find();
-                //判断卡号是否存在
-                $is_card = M('oil_card')->where(array('card_no'=>$card_no))->find();
-                if(!empty($is_card)){
-                    //判断卡的代理商是否为网信网通
-                    if($is_card['agent_id'] == 0){echo json_encode(array('status'=>100,'message'=>'卡号不属于该第三方卡号，无法进行绑定'));exit;}else{
-                        //获取代理商来源ID
-                        $fromId = M('user')->where(array('id'=>$is_card['agent_id']))->getField('fromId');
-                        //判断是否为第三方
-                        if($is_three['id'] != $fromId){
-                            echo json_encode(array('status'=>100,'message'=>'卡号不属于该第三方卡号，无法进行绑定’，无法进行绑定'));exit;
-                        }
-                    }
-                    //判断卡号是否已被申领
-                    if($is_card['status'] == 1){
-                        //判断卡号是否已被其他第三方绑定
-                        if($is_card['is_threeBind'] == 0){
-                            //插入用户信息
-                           if(!empty($is_phone)){
-                               $result = $is_phone['id'];
-                           }else{
-                               $sign = MD5($phone.$card_no);
-                               $user = array(
-                                   'fromId'=>$is_three['id'],
-                                   'phone'=>$phone,
-                                   'sign'=>$sign,
-                               );
-                               $result = M('user')->add($user);
-                           }
-                            if($result){
-                                $res = M('oil_card')->where(array('card_no'=>$card_no))->save(array('is_threeBind'=>$is_three['id'],'user_id'=>$result,'status'=>2));
-                                if($res){
-                                    M()->commit();
-                                    echo json_encode(array('status'=>200,'message'=>'绑定成功'));exit;
-                                }else{
-                                    M()->rollback();
-                                    echo json_encode(array('status'=>100,'message'=>'油卡状态修改失败'));exit;
-                                }
-                            }else{
-                                M()->rollback();
-                                echo json_encode(array('status'=>100,'message'=>'用户信息插入失败'));exit;
-                            }
-                        }else{
-                            echo json_encode(array('status'=>100,'message'=>'卡号已被绑定，无法重复操作'));exit;
-                        }
-                    }else{
-                        echo json_encode(array('status'=>100,'message'=>'卡号已被其他用户申领，无法绑定'));exit;
-                    }
-                }else{
-                    echo json_encode(array('status'=>100,'message'=>'卡号不存在'));exit;
-                }
-            }else{
-                echo json_encode(array('status'=>100,'message'=>'第三方标识错误'));exit;
-            }
-        }else{
-            echo json_encode(array('status'=>100,'message'=>'未获取到用户信息'));exit;
-        }
-    }
+
 
     /**
      * @desc 第三方充值
@@ -408,6 +330,10 @@ class ThreeController extends CommentoilcardController
                 case '3': //钱方支付
                     $data = $PayMent->_QFPay($Order,$Member,$PayCon);
                     $OrderAdd['pay_type'] = 3;
+                    break;
+                case '4': //易支付
+                    $data = $PayMent->_YZPay($Order,$Member,$PayCon);
+                    $OrderAdd['pay_type'] = 4;
                     break;
             }
 

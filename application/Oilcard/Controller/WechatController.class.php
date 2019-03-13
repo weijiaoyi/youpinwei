@@ -13,12 +13,14 @@ use Endroid\QrCode\QrCode;
 use Oilcard\Conf\CardConfig;
 use Oilcard\Conf\HJCloudConfig;
 use Oilcard\Conf\QFPayConfig;
+use Oilcard\Conf\YZPayconfig;
 use YopRequest;
 use Think\Controller;
 use Think\Log;
 use Org\Util\phpqrcode;
 use Comment\Controller\CommentoilcardController;
 use YopClient3;
+
 //include './phpqrcode.class.php';
 
 class WechatController extends CommentoilcardController
@@ -419,9 +421,13 @@ class WechatController extends CommentoilcardController
                 $data = $this->_QFPay($Order,$Member,$PayCon);
                 $Order['payment_code'] = 'qfpay';
                 break;
-            case '4': //易宝支付
+            case '9': //易宝支付
                 $data = $this->_YEEPay($Order,$Member,$PayCon);
-                $OrderInfo['payment_code'] = 'yeepay';
+                $Order['payment_code'] = 'yeepay';
+                break;
+            case '4': //易支付
+                $data = $this->_YZPay($Order,$Member,$PayCon);
+                $Order['payment_code'] = 'yzpay';
                 break;
         }
         
@@ -2322,6 +2328,16 @@ class WechatController extends CommentoilcardController
     public function _GetRedirectUrl($type){
 
     }
+    public function object_array($array) {
+        if(is_object($array)) {
+            $array = (array)$array;
+        } if(is_array($array)) {
+            foreach($array as $key=>$value) {
+                $array[$key] = $this->object_array($value);
+            }
+        }
+        return $array;
+    }
     /**
      * 微信支付
      * @Author 老王
@@ -2447,9 +2463,7 @@ class WechatController extends CommentoilcardController
         $insert = array(
             'content'=>json_encode(array(
                 'InsertTime'=>date('Y-m-d H:i:s',time()),
-
                 'data' =>$data,
-
             ))
         );
         M('testt')->add($insert);
@@ -2553,16 +2567,7 @@ class WechatController extends CommentoilcardController
 
         // exit(json_encode(['data'=>$data,'result'=>$result]));
     }
-    public function object_array($array) {
-        if(is_object($array)) {
-            $array = (array)$array;
-        } if(is_array($array)) {
-            foreach($array as $key=>$value) {
-                $array[$key] = $this->object_array($value);
-            }
-        }
-        return $array;
-    }
+
     //易宝支付
     public function _YEEPay($Order,$Member,$PayCon){
         $config = [];
@@ -2572,7 +2577,9 @@ class WechatController extends CommentoilcardController
         $config['private_key']   = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDKLgI+64mmJdNg1TwlCPBnNH3b3qfw2TdHVc2uDd4LTyQI8nRr0heFhhdj0OZi6agqekIyzAH/XmO9PdLrTi4YXJXOfiO/dYwKA6gSktRe6FKY4C2WzX1yA4fGfqJMV7RYVoL6In50Hur6rGnavNSQZqbiDJOgy5yokJ14Mey1iMqqqWvADtKN9SqxtbyIxYD/jj/6qLWwmu88wSwSaGdO3wNFgzajsHgRJe9G9IhD0zr5d72HvJGoedq7VaPn3jhIszcPQE6oqbXAddZRGKBehA4WSCjLEl87XH33zZPrxrQlBTHVVGzfxjbB4QvYz0hlEoWh1ntxeDHTfgyhdPQpAgMBAAECggEATmxMSLW6Xe08McpkmwT9ozq0Oy4BvKW1EIGS15nfcEmRc7sAN7Z1k0BxIDGuu91gcqGbvfJuL+0gCQ7LGqTnsmFvZnp9SU3CNTw33ISBxhKdv1jtthodN7Vw3CjQsYYvmThtc7Mfk9FOWk+4e7VVSnHW98XjGbMBIE2AF1heNgeZ40ubdgzuz9+4g4pphjWncPpwcaMfsDZm3JtFyvUp0+LME0CmUqrxvONZAkpFR/PyejGHnIh3ptHzhe/VjNcuIC4PphkCNBakCBCrtohTy0YeeWfDAUTAO4tPXF/JUhlxjPuqR6rpQY/0uQdMAtTpiWHVJar7eGdK81QnuuOFRQKBgQDrklUPM0pkvGG/wREa0bgUI+ki+1/wv7O8X94/8onomJqPpkD8z4hv/Lev/wD5gDcgmgLC36u/XDuhFfVNOmw4eUWenU6pzonroEjhi91AKcRRfzDfOfWg3wPm1J9WQOn5A033tNRydCpVcX/Ot4qDbKcAwLiPNPXXMTn4LUQE/wKBgQDbtmE0KS/kSfjscWJOqwv1XbxckipkxncqIbdiSdU+DzaLd+Vuaco7TLQJRFp7S7WJW4Tz6KBX2UiA7O7ezXY9PwlgXxXiZDDtneXNAqk7DNxmTTZHrF2C7qdU98klppCFiFx9bysGY6lFWofWmg3Pu5IiPqO3iLRPTvZgQOE+1wKBgQC9SCgmfYzyIlfcjtIinY5uSGiEnjz5od9WpiVbdpOPHEdc0zZ2rH6xlPs3ZAuxbm9dN8KuOLC0ovSau50Nv7rDKdZh234gfP9fH7xP1mUhsC25Why30MdnyqpE6GVbFe+qERitx1PI30RAwWDzhZC7hystNK1XDDPZBAnTOvPjmwKBgDFuujX7IkxRnFDOPdkHQNyGp2+Ib0NXJ85x4YmapQCeeZ4tbpBF+vsWidcf6t+crA5oaeRarWC2gUqIhEHapkSnXxuwqQLTmfKMOPzEIYEoppnZu2Gq1Ss1OK60RSxUamWwxWZvUZXRbG8vLCrLZFodkIZl433SowbI9EO5tTPnAoGAJRsy1z95Q1GPkKrFtKivkxZy1k7zJXjM0VWDc7lT9fBnoeGUyt+vuq+lC5i2aiWKJK7pe8MM9QFDGlWPnly+J8jbyMfm99k5oJtCWDfF0or1pAQ4mw0kjL9TvDVXdojgYA+rxSMQ09hwsYukQ4bblrwfBUmRjLN5WibcRzIW5ZA=";
 
 
-        $token=$this->order($config,$Order,$Member,$PayCon);
+        $token=$this->order($config,$Order,$PayCon);
+
+
         $request = new YopRequest("OPR:10000466938", $config['private_key'], "https://open.yeepay.com/yop-center",$config['yop_public_key']);
         $request->addParam("token", $token);
         $request->addParam("payTool", 'MINI_PROGRAM');
@@ -2585,17 +2592,19 @@ class WechatController extends CommentoilcardController
         //var_dump($request);
 
         $response = YopClient3::post("/rest/v1.0/nccashierapi/api/pay", $request);
-        if($response->validSign==1){
-            echo "返回结果签名验证成功!\n";
+        $res['content']  = json_encode($request);
+        M('testt')->add($res);
+        if($response->validSign != 1){
+            exit(json_encode(['msg'=>'支付异常：','status'=>500]));
         }
         //取得返回结果
         $data=$this->object_array($response);
-        return $data ;
+        return $data['resultData'] ;
     }
 
 
-
-    public function order($config,$Order,$Member,$PayCon){
+    //易宝支付
+    public function order($config,$Order,$PayCon){
         if ($Order['real_pay']<0)exit(json_encode(['msg'=>'支付金额不正确！','status'=>500]));
         switch ($PayCon['paymoney']) {
             case '2':
@@ -2614,29 +2623,64 @@ class WechatController extends CommentoilcardController
         $request->addParam("merchantNo", $config['merchantNo']);
         $request->addParam("orderId", $orderSn);
         $request->addParam("orderAmount", $payMoney);
-
 //        $request->addParam("redirectUrl", $redirect_url);//支付成功后的回调页面
         $request->addParam("notifyUrl", $notify_url);
         $request->addParam("goodsParamExt", $goods);
-
-
-
-
         $request->addParam("fundProcessType", 'REAL_TIME');
-
-
-
-
-        //     var_dump($request);
 
         $response = YopClient3::post("/rest/v1.0/std/trade/order", $request);
         if($response->validSign==1){
 
-
-            //取得返回结果
-            $data=$this->object_array($response);}
+       //取得返回结果
+        $data=$this->object_array($response);}
         $token=$data['result']['token'];
         return $token ;
+
+    }
+
+
+    //易支付
+    public function _YZPay($Order,$Member,$PayCon)
+    {
+        if ($Order['real_pay'] < 0) exit(json_encode(['msg' => '支付金额不正确！', 'status' => 500]));
+        switch ($PayCon['paymoney']) {
+            case '2':
+                $payMoney = 1;
+                break;
+            default:
+                $payMoney = $Order['real_pay'] * 100;
+                break;
+        }
+        $orderSn = isset($Order['serial_number']) ? $Order['serial_number'] : $Order['order_no'];
+        $notify_url = $this->_GetNotifyUrl($Order['order_type']);
+        if (empty($notify_url)) exit(json_encode(['msg' => '创建订单失败！', 'status' => 500]));
+
+        //商品信息
+        $productDetail = ['name'=>'油品味','quantity'=>1,'amount'=>$payMoney];
+
+        $json_arr = array();
+        $json_arr["merchantId"] = '890000595';//商户号
+        $json_arr["orderAmount"] = $payMoney;//订单金额
+        $json_arr["orderCurrency"] = 'CNY';
+        $json_arr["requestId"] = $orderSn;//订单号
+        $json_arr["notifyUrl"] = $notify_url;//回调地址
+        $json_arr['payer'] = '{}';
+        $json_arr["paymentModeCode"] = 'MINIAPPS-WEIXIN_PAY-P2P';//微信小程序支付
+        $json_arr['appId'] = CardConfig::$wxconf['appid'];
+        $json_arr['openId'] = $Member['openid'];
+        $json_arr['productDetail'] = json_encode($productDetail);//商品信息
+        $yzpay = new YZPayconfig();
+        $result = $yzpay->request($json_arr);
+        $res['content']  = json_encode($json_arr);
+        M('testt')->add($res);
+        if($result){
+            $result = json_decode($result,TRUE);
+        }
+        if ($result["status"] != 'SUCCESS'){
+            exit(json_encode(['msg'=>'支付异常：','status'=>500]));
+
+        }
+        return $result['jsString'];
 
     }
 
