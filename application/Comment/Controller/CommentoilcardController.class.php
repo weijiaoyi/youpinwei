@@ -161,9 +161,11 @@ class CommentoilcardController extends Controller
         }
         
         $user_data=M('user')->where("openid='$openid'")->find();
+
         if (empty($user_data['nickname']) && empty($user_data['user_img']) ) {
             $this->error('请先授权登录');
         }else{
+            $user_data['nickname'] = base64_decode($user_data['nickname']);
             $this->success($user_data);
         }
     }

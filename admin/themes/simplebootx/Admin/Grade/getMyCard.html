@@ -78,7 +78,7 @@
                     <a href="{:U('del',['id'=>$val['id']])}">删除</a>
                     <a href="{:U('del',['id'=>$val['id'],'flag'=>1])}">冻结</a>
                     <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="xiajia"><span style="color: white; font-size: 8px;">下架</span></button>
-                    <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" id="chongzhi"><span style="color: white; font-size: 8px;">消费记录</span></button>
+                    <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" id="orderInfo"><span style="color: white; font-size: 8px;">消费记录</span></button>
                     <button style="background: #2c3e50;border:2px; width: 70px; height: 40px;"  value="<?php echo $val['id']; ?>" class="tuika"><span style="color: white; font-size: 8px;">退卡</span></button>
                 </td>
             </tr>
@@ -97,13 +97,13 @@
             <!--<div id="orderList">-->
             <!--</div>-->
             <table id="order-info" border="1" style="width: 100%">
-                <tr style="width: 100%;height: 40px;line-height: 40px">
-                    <th style="width:20%;">类型</th>
-                    <th style="width:20%;">消费额度</th>
-                    <th style="width:20%;">折扣</th>
-                    <th style="width:20%;">实际支付</th>
-                    <th style="width:20%;">操作时间</th>
-                </tr>
+                <!--<tr style="width: 100%;height: 40px;line-height: 40px">-->
+                    <!--<th style="width:20%;">类型</th>-->
+                    <!--<th style="width:20%;">消费额度</th>-->
+                    <!--<th style="width:20%;">折扣</th>-->
+                    <!--<th style="width:20%;">实际支付</th>-->
+                    <!--<th style="width:20%;">操作时间</th>-->
+                <!--</tr>-->
 
             </table>
 
@@ -183,7 +183,13 @@
 
     //点击后将卡号回显到页面
     function card_on_input(data){
-        var str = '';
+        var str = "<tr style='width: 100%;height: 40px;line-height: 40px;'>"+
+            "<th style='width:20%;text-align: center !important;'>类型</th>"+
+            "<th style='width:20%;text-align: center !important;'>消费额度</th>"+
+            "<th style='width:20%;text-align: center !important;'>折扣</th>"+
+            "<th style='width:20%;text-align: center !important;'>实际支付</th>"+
+            "<th style='width:20%;text-align: center !important;'>操作时间</th>"+
+            "</tr>";
         data.forEach(function (item) {
             str+='<tr id="order-info">'+
                 '<td>'+item.order+'</td>'+
@@ -193,7 +199,7 @@
             '<td>'+item.createtime+'</td>'+
                 '</tr>'
         });
-        $('#order-info').append(str);
+        $('#order-info').html(str);
 
         $('#myModal').modal('show');
 
@@ -210,7 +216,7 @@
             }else if(item.order_type==3){
                 item["order"]="充值"
             }else if(item.order_type==4){
-                item["order"]="绑定"
+                item["order"]="升级"
             }
             else if(item.order_type==5){
                 item["order"]="续费"
@@ -223,7 +229,7 @@
     }
 
     //查看消费记录
-    $(document).on('click','#chongzhi',function(){
+    $(document).on('click','#orderInfo',function(){
         // let this_info = $(this).parent
         // let oilCard=$(this).parentsUntil("td").find(".oil-card")['0'].innerText;
         let oilCard=$(this).parent().parent().find(".oil-card")['0'].innerText;
@@ -240,10 +246,11 @@
                 if (!data.data) {
                     alert("此卡还未产生消费！");
                     return;
+                }else {
+                    let orderData=increaseOrderInfo(data.data);
+                    card_on_input(orderData);
                 }
-                console.log("data",data);
-                let orderData=increaseOrderInfo(data.data);
-                card_on_input(orderData);
+
             }
         });
     });
