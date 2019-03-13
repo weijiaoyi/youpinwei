@@ -53,6 +53,7 @@ class AgentController extends CommentoilcardController
             if (isset($v['earn_money']))$Earnings[$key]['earn_money'] =ncPriceFormatb($v['earn_money']);
             if (isset($v['money']))$Earnings[$key]['money'] =ncPriceFormatb($v['money']);
             if (isset($v['earnings']))$Earnings[$key]['earnings'] =ncPriceFormatb($v['earnings']);
+            if (isset($v['nickname']))$Earnings[$key]['nickname'] =base64_decode($v['nickname']);
             if (isset($v['time'])) {
                 $time = strtotime($v['time']);
                 $Earnings[$key]['time'] = date('Y-m-d',$time);
@@ -168,7 +169,10 @@ class AgentController extends CommentoilcardController
                    ->join('__USER__ u ON a.user_id=u.id')
                    ->join('__ORDER_RECORD__ o ON o.serial_number=a.serial_number')
                    ->where($where)
-                   ->count();          
+                   ->count();
+        foreach ($Order as $k=>$v){
+            $Order[$k]['nickname'] = base64_decode($v['nickname']);
+        }
         $this->success($Order);
     }
 
@@ -196,6 +200,9 @@ class AgentController extends CommentoilcardController
                     ->where($UWhere)
                     ->page($p,$l)
                     ->select();
+        foreach ($MemberList as $k=>$v){
+            $MemberList[$k]['nickname'] = base64_decode($v['nickname']);
+        }
         $count=$User
                 ->alias('a')
                 ->join('__AGENT__ b ON a.id=b.id')

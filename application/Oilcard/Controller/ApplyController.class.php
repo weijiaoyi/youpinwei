@@ -330,7 +330,7 @@ class ApplyController extends CommentoilcardController
 // 给代理商发卡
    public function confirmSendCard(){
         $data = I('post.');
-        if( empty($data['openId']) || empty('user_id') ){
+        if( empty($data['openId']) || empty($data['user_id']) ){
             echo '请求失败';exit;
         }
         if( empty($data['end']) ){
