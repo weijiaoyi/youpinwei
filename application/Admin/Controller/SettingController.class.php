@@ -121,19 +121,28 @@ class SettingController extends AdminbaseController{
 	}
 	//支付设置
     public function pay(){
-	    $payway = I('post.payway');
-	    $paytype = I('post.paytype');
-	    if($payway == 1){
-	        $res = M('setting')->where(['id'=>1])->setField('paytype',$paytype);
-        }elseif($payway == 2){
-            $res = M('three_setting')->where(['id'=>1])->setField('paytype',$paytype);
-        }
-        if($res){
-            echo json_encode(['status'=>200,'msg'=>'修改成功']);
+	    if($_POST){
+            $payway = I('post.payway');
+            $paytype = I('post.paytype');
+            if($payway == 1){
+                $res = M('setting')->where(['id'=>1])->setField('paytype',$paytype);
+            }elseif($payway == 2){
+                $res = M('three_setting')->where(['id'=>1])->setField('paytype',$paytype);
+            }
+            if($res){
+                echo json_encode(['status'=>200,'msg'=>'修改成功']);
+            }else{
+                echo json_encode(['status'=>100,'msg'=>'修改失败']);
+            }
         }else{
-            echo json_encode(['status'=>100,'msg'=>'修改失败']);
+	        $data['wxxiao'] = M('setting')->where(['id'=>1])->getField('paytype');
+	        $data['wxgong'] = M('three_setting')->where(['id'=>1])->getField('paytype');
+            echo json_encode(['status'=>200,'msg'=>'获取成功','data'=>$data]);
         }
+
     }
+
+
 	
 	// 密码修改
 	public function password(){
