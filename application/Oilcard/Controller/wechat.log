@@ -1,12 +1,11 @@
 Array
 (
-    [url] => yvette6827.top/notily.php
+    [url] => 
     [param] => Array
         (
-            [order_sn] => 20190308144321725177
-            [pay_money] => 190.00
-            [return_code] => 0
+            [return_msg] => 支付失败
+            [return_code] => 300
         )
 
-    [response] => 1111
+    [response] => 
 )
