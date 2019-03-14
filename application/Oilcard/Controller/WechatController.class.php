@@ -524,11 +524,6 @@ class WechatController extends CommentoilcardController
             $obj_arr= json_decode($data,TRUE);
         }
         
-        
-        // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
-        // $RAW = json_decode($RAW);
-        // $obj_arr = object_to_array($RAW);
-        
         Log::record('微信回调data:'.json_encode($obj_arr));
         $insert = [];
         $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
@@ -557,8 +552,7 @@ class WechatController extends CommentoilcardController
             $obj_arr['paymentType']    = 'QFPay';
 
         }
-        
-//        $openId=$obj_arr['openid'];
+
 
         if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' )) {
             $insert['content']['signs'] = '签名正确';
@@ -726,7 +720,7 @@ class WechatController extends CommentoilcardController
                 //是否存在上级代理 
                 //当用户身份为代理时不做操作
                 //当上级代理未绑定时不做操作
-                //当上级代理为空 或者上级 代理身份是总部时 不做操作 ，如果上级为外部 如 网信 网通 则不处理
+                //当上级代理为空 或者上级 代理身份是总部时 不做操作
                 if (  $Member['role'] !=3 && $Member['agent_bind'] == 1 && $Member['agentid'] !=0 && !empty($Member['agentid'])) {
                     $Agent=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.id'=>$Member['agentid'],'b.role'=>3])->find();
                     // vip_direct_scale  VIP直属会员充值分成
@@ -996,7 +990,7 @@ class WechatController extends CommentoilcardController
                         break;
                 }
                 //获取一张 应发卡
-                $SendCard = M('oil_card')->where($cardCondition)->find();
+                $SendCard = M('oil_card')->where($cardCondition)->order('id desc')->find();
                 if ($SendCard) {
                     $OrderSave['send_card_no'] =$SendCard['card_no'];
                     //把应发卡号状态改为 已申领状态

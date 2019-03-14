@@ -46,20 +46,20 @@ class UserController extends CommentoilcardController
                     ->join('__AGENT__ a ON a.openid=u.openid',LEFT)
                     ->where('u.openid="'.$scene.'"')
                     ->find();
-                if($parent['role'] == 3){
+                if($parent['role'] == 3){//邀请人是一级代理商
                     $parent_data=array(
                         'parentid'=>$parent['id'],//邀请人ID
                         'agentid'=>$parent['id'],//邀请人代理商ID
                         'agent_relation'=>1//直接关系
                     );
                 }else{
-                    if(empty($parent['agentid'])){
+                    if(empty($parent['agentid'])){//邀请人不是代理商，邀请人没有上级代理商
                         $parent_data=array(
                             'parentid'=>$parent['id'],//邀请人ID
                             'agentid'=>$parent['agentid'],//邀请人代理商ID
                             'agent_relation'=>3//关系
                         );
-                    }else{
+                    }else{//邀请人不是代理商，邀请人有上级代理商
                         $parent_data=array(
                             'parentid'=>$parent['id'],//邀请人ID
                             'agentid'=>$parent['agentid'],//邀请人代理商ID
@@ -72,7 +72,7 @@ class UserController extends CommentoilcardController
                 $parent_data['parent_bind'] = 1;//锁定邀请人
 
                 M('user')->where("openid='$openid'")->save($parent_data);
-            }else{
+            }else{//没有邀请人
                 $parent_data=array(
                     'parentid'=>0,//邀请人ID
                     'agentid'=>0,//邀请人代理商ID

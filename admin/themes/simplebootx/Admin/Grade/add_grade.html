@@ -29,17 +29,16 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>开始卡号：</th>
-                        <td style="font-size: 16px;line-height: 39px;">
-                            <span style="color: red;">{$start_card}</span>
-                            <!--<input type="text" name="start_card" id="start_card"  disabled="disabled"  placeholder="开始卡号">-->
+                        <th>开始卡号<span class="true">*</span>：</th>
+                        <td>
+                            <input type="text" maxlength="16" name="start_card" id="start_card"  placeholder="请输入开始卡号">
                         </td>
                     </tr>
                     <tr>
                         <th>结尾卡号<span class="true">*</span>：</th>
                         <td>
-                            <input type="text" maxlength="16" name="end_card" id="end_card"  placeholder="请输入结束卡号">
-                        </td>
+                        <input type="text" maxlength="16" name="end_card" id="end_card"  placeholder="请输入结束卡号">
+                    </td>
                     </tr>
                     <tr>
                         <th>拿卡状态<span class="true">*</span>：</th>
@@ -139,7 +138,7 @@
         $('#sendCard').attr('disabled','disabled');
         var openid = '<?php echo $user["openid"];?>';
         var user_id = '<?php echo $user["id"];?>';
-        var start_card = '<?php echo $start_card;?>';
+        var start_card = $('#start_card').val();
         var end_card = $('#end_card').val();
         var mode = $('.mode').find('option:selected').val();
         var each_price = $('.each_price').val();

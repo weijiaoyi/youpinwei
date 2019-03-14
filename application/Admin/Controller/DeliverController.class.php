@@ -374,19 +374,20 @@ class DeliverController extends AdminbaseController{
 //	    $data = I('post.');
 //	    $data1['card_no'] = I('post.card_no');
 //	    $data1['user_id'] = I('post.user_id');
-        $order_id = I('post.order_id');
+//        $order_id = I('post.order_id');
         $express_number = I('post.express_number');
-        $serial_number = I('post.serial_number');
+        $serial_number = I('post.serial_number');//订单号
         # 查询订单信息（确认发货）
         $orderRecordModel=M('order_record');
         $userApplyModel = M('user_apply');
 
-        $res = $orderRecordModel->where('id="'.$order_id.'" AND serial_number="'.$serial_number.'"')->find();
+        $res = $orderRecordModel->where(['serial_number'=>$serial_number])->find();
         if($res){
-            $result = $userApplyModel->where('serial_number="'.$serial_number.'" AND status=1')->find();
-            p($result);exit;
+            $result = $userApplyModel->where(['serial_number'=>$serial_number,'status'=>1])->find();
+//            p($result);exit;
             if($result){
-                    $update_apply = $userApplyModel->where('id="'.$order_id.'" AND serial_number="'.$serial_number.'"')->save(array('express_number'=>$express_number,'status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
+                    $update_apply = $userApplyModel->where(['serial_number'=>$serial_number])->save(array('express_number'=>$express_number,'status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
+
                     if($update_apply){
                         echo json_encode(array('status'=>200,'message'=>'发货成功'));exit;
                     }else{
