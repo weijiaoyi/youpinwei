@@ -22,7 +22,7 @@
     <table class="table table-hover table-bordered">
         <thead>
         <p style="text-align:center;font-size: 20px;font-weight: bold;margin-top: 20px;">
-            代理商：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;">{$user['nickname']}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            代理商：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;"><?php echo base64_decode($user['nickname']) ?></span>&nbsp;&nbsp;&nbsp;&nbsp;
             已付押金总额：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($already_pay)){echo $already_pay;}else{echo 0.00;};?></span>元&nbsp;&nbsp;&nbsp;&nbsp;
             赊销押金总额：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($no_already_pay)){echo $no_already_pay;}else{echo 0.00;};?></span>元&nbsp;&nbsp;&nbsp;&nbsp;
             购买油卡总张数：<span style="color: red;font-weight: bold;font-size: 28px;"><?php if(!empty($number)){echo $number;}else{echo 0.00;};?></span>张&nbsp;&nbsp;&nbsp;&nbsp;
