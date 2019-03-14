@@ -85,7 +85,66 @@
 									充值奖励：只有代理人会获取此奖励</label></div> -->
 							<fieldset>
 								<h3>支付渠道设置：</h3>
+								<div style="display: flex;flex-direction: row;align-items: center;justify-content: space-around;width: 800px;margin-top: 20px">
+									<!--<label class="checkbox-inline">-->
+										<!--<input type="checkbox" id="inlineCheckbox1" value="option1"> 选项 1-->
+									<!--</label>-->
+									<!--<label class="checkbox-inline">-->
+										<!--<input type="checkbox" id="inlineCheckbox2" value="option2"> 选项 2-->
+									<!--</label>-->
+									<!--<label class="checkbox-inline">-->
+										<!--<input type="checkbox" id="inlineCheckbox3" value="option3"> 选项 3-->
+									<!--</label>-->
+									<!--<label for="name">小程序支付渠道：-->
+									<!--<div>-->
+										<!--<label class="radio-inline">-->
+											<!--<input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="option1" checked>微信支付-->
+										<!--</label>-->
+										<!--<label class="radio-inline">-->
+											<!--<input type="radio" name="optionsRadiosinline" id="optionsRadios4"  value="option2"> 汇聚云支付-->
+										<!--</label>-->
+										<!--<label class="radio-inline">-->
+											<!--<input type="radio" name="optionsRadiosinline" id="optionsRadios5"  value="option3"> 钱方支付-->
+										<!--</label>-->
+									<!--</div>-->
+									<!--</label>-->
+									<!--<label for="name">公总号支付渠道：-->
+									<!--<div>-->
+										<!--<label class="radio-inline">-->
+											<!--<input type="radio" name="optionsRadiosinline" id="optionsRadios6" value="option1" checked> 微信支付-->
+										<!--</label>-->
+										<!--<label class="radio-inline">-->
+											<!--<input type="radio" name="optionsRadiosinline" id="optionsRadios7"  value="option2"> 汇聚云支付-->
+										<!--</label>-->
+										<!--<label class="radio-inline">-->
+											<!--<input type="radio" name="optionsRadiosinline" id="optionsRadios8"  value="option3"> 钱方支付-->
+										<!--</label>-->
+									<!--</div>-->
+									<!--</label>-->
+									<form role="form">
+										<div class="form-group">
+											<label for="name" style="font-size: 20px">小程序支付渠道：</label>
+											<select class="micro-program">
+												<option value="1">微信支付</option>
+												<option value="2">汇聚云支付</option>
+												<option value="3">钱方支付</option>
+											</select>
+											<!--<br>-->
+											<button id="microProgram" style="display: block; margin-top: 40px;width: 100%;" type="button" class="btn btn-primary">提交</button>
+										</div>
+										<div class="form-group">
+											<label for="name" style="font-size: 20px">公总号支付渠道</label>
+											<select class="public-number">
+												<option value="1">微信支付</option>
+												<option value="2">汇聚云支付</option>
+												<option value="3">钱方支付</option>
+											</select>
+											<!--<br>-->
+											<button id="publicNumber" style="display: block; margin-top: 40px;width: 100%;" type="button" class="btn btn-primary">提交</button>
+										</div>
+									</form>
 
+								</div>
 							</fieldset>
 						</div>
 
@@ -277,9 +336,13 @@
 				</div> -->
 			</fieldset>
 		</form>
-		<div style="text-align: center;" id="profit">
-			<button class="btn btn-primary" id="saveProfit">{:L("SAVE")}</button>
-		</div>
+
+		<!--保存按钮-->
+
+		<!--<div style="text-align: center;" id="profit">-->
+			<!--<button class="btn btn-primary" id="saveProfit">{:L("SAVE")}</button>-->
+		<!--</div>-->
+
 		<script type="text/javascript">
 			$(function () {
 				$('.nav-tabs>li').click(function (event) {
@@ -288,7 +351,7 @@
 						$('#profit').hide();
 					}
 				});
-			})
+			});
 			$('#saveProfit').click(function (event) {
 				var scroll = $('#scroll').val();
 				var postage = $('#postage').val();
@@ -326,6 +389,11 @@
 	<script>
 		/////---------------------
 		$(function () {
+			// var aaa=$('.micro-program').find("option:selected").attr("value");
+			// var bbb=$('.public-number').find("option:selected").attr("value");
+			// $('.micro-program').val(2);
+			// $('.public-number').val(2);
+
 			var hostUrl = window.location.href;
 			$.ajax({
 				type: 'get',
@@ -333,9 +401,46 @@
 				dataType: 'json',
 				success: function (res) {
 					console.log("pay-ways-res",res);
+					$('.micro-program').val(res.data.wxxiao);
+					$('.public-number').val(res.data.wxgong);
 				}
 			});
-		})
+			$("#microProgram").click(function () {
+				var mpWay=$('.micro-program').val();
+				$.ajax({
+					type: 'post',
+					url: hostUrl+'/index.php?g=admin&m=setting&a=pay',
+					dataType: 'json',
+					data:{
+						payway:1,
+						paytype:mpWay
+					},
+					success: function (res) {
+						if(res.status==200){
+							alert("小程序支付渠道修改成功！")
+						}
+					}
+				});
+			});
+			$("#publicNumber").click(function () {
+				var pnWay=$('.public-number').val();
+				$.ajax({
+					type: 'post',
+					url: hostUrl+'/index.php?g=admin&m=setting&a=pay',
+					dataType: 'json',
+					data:{
+						payway:1,
+						paytype:pnWay
+					},
+					success: function (res) {
+						if(res.status==200){
+							alert("公众号支付渠道修改成功！")
+						}
+					}
+				});
+			})
+		});
+
 
 		$(function () {
 			$("#urlmode-select").change(function () {
