@@ -91,7 +91,7 @@ function p($arr){
 
 function GetAgentInfo($agentid){
 	$info = M('user')->field('nickname,user_img')->where(['id'=>$agentid])->find();
-	return $info['nickname'].'&nbsp;&nbsp;&nbsp;'.'<img src="'.$info['user_img'].'" width="40" height="40">';
+	return base64_decode($info['nickname']).'&nbsp;&nbsp;&nbsp;'.'<img src="'.$info['user_img'].'" width="40" height="40">';
 }
 
 function dateFomat($time){

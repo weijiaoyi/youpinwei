@@ -365,7 +365,7 @@ class OrderController extends AdminbaseController{
           $condition = ['card_no'=>$card_no];
         }
         if(!empty($deliver_status)){
-            $where['o.agent_status']=$deliver_status ;
+            $where['o.chomd']=$deliver_status ;
         }
         if(!empty($activation_status)){
             $where['o.activate']=$activation_status ;
