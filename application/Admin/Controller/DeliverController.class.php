@@ -384,7 +384,6 @@ class DeliverController extends AdminbaseController{
         $res = $orderRecordModel->where('id="'.$order_id.'" AND serial_number="'.$serial_number.'"')->find();
         if($res){
             $result = $userApplyModel->where('serial_number="'.$serial_number.'" AND status=1')->find();
-            p($result);exit;
             if($result){
                     $update_apply = $userApplyModel->where('id="'.$order_id.'" AND serial_number="'.$serial_number.'"')->save(array('express_number'=>$express_number,'status'=>2,'updatetime'=>date('Y-m-d H:i:s',time())));
                     if($update_apply){
