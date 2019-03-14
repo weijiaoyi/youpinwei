@@ -424,39 +424,39 @@ class GradeController extends AdminbaseController
         $card_id = $card_id+1;
         $start_card = $OilCardModel -> where(['status' => 1,'id'=>$card_id]) -> getField('card_no');*/
         //
-        $card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
-        if(!empty($card_id)){
-            $start_card_id = $OilCardModel -> where(' id>"'.$card_id.'" AND status=2')->order('id desc')->getField('id');
-            if(!empty($start_card_id)){
-                $start_card_id = $start_card_id+1;
-                $start_card = $OilCardModel -> where(' id="'.$start_card_id.'" ') ->getField('card_no');
-            }else{
-                $card_id = $card_id+1;
-                $start_card = $OilCardModel -> where(' id="'.$card_id.'" ') ->getField('card_no');
-            }
-        }else{
-            //未分配代理商
-            $start_card_id = $OilCardModel -> where(' id>0 AND AND status=2')->order('id desc') ->getField('id');
-            if(!empty($start_card_id)){
-                $start_card_id = $start_card_id+1;
-                $start_card = $OilCardModel -> where(' id="'.$start_card_id.'" ') ->getField('card_no');
-            }else{
-                $start_card = $OilCardModel -> where(' id=1 ') ->getField('card_no');
-            }
-        }
+//        $card_id=$OilCardModel -> where('agent_id != 0')->order('id desc') -> getField('id');
+//        if(!empty($card_id)){
+//            $start_card_id = $OilCardModel -> where(' id>"'.$card_id.'" AND status=2')->order('id desc')->getField('id');
+//            if(!empty($start_card_id)){
+//                $start_card_id = $start_card_id+1;
+//                $start_card = $OilCardModel -> where(' id="'.$start_card_id.'" ') ->getField('card_no');
+//            }else{
+//                $card_id = $card_id+1;
+//                $start_card = $OilCardModel -> where(' id="'.$card_id.'" ') ->getField('card_no');
+//            }
+//        }else{
+//            //未分配代理商
+//            $start_card_id = $OilCardModel -> where(' id>0 AND AND status=2')->order('id desc') ->getField('id');
+//            if(!empty($start_card_id)){
+//                $start_card_id = $start_card_id+1;
+//                $start_card = $OilCardModel -> where(' id="'.$start_card_id.'" ') ->getField('card_no');
+//            }else{
+//                $start_card = $OilCardModel -> where(' id=1 ') ->getField('card_no');
+//            }
+//        }
+//
+//
+//
+//        if(!empty($start_card)){
+//            $sendCardData['card_no'] = $start_card;
+//        }else{
+//            $sendCardData['card_no'] = '总部已无卡发布，请及时补充';
+//        }
+
         $AgentModel = M('agent');
         $agent_info = $AgentModel -> where( ['id' => $id,'role'=>3] ) -> find();
         $user = M('user')->where('id="'.$id.'" AND openid="'.$agent_info['openid'].'"')->find();
-
-
-
-        if(!empty($start_card)){
-            $sendCardData['card_no'] = $start_card;
-        }else{
-            $sendCardData['card_no'] = '总部已无卡发布，请及时补充';
-        }
-
-
+//
         $sendCardData['uid'] = $agent_info['id'];
         $sendCardData['openid'] = $agent_info['openid'];
 
@@ -479,24 +479,31 @@ class GradeController extends AdminbaseController
             echo json_encode(['msg' => '代理不存在，无法分配','status' => 100]);
         }
         $OilCardModel = M('oil_card');
-        $save_oilcard_where =' card_no <= "'.$data["end"].'" AND card_no >= "'.$data["start"].'"';
+        $where['card_no'] = array('BETWEEN',array($data['start'],$data['end']));
+        $where['status'] = 2;
 
-        $res =$OilCardModel->where('card_no >= "'.$data["end"].'"')->getField('id');
-        if(!$res){
-            echo json_encode(['msg' => '结束卡号超出，请重新分配','status' => 100]);exit;
-        }
-        $res2 =$OilCardModel->where('card_no = "'.$data["start"].'"')->getField('agent_id');
-        if($res2['agent_id']){
-            echo json_encode(['msg' => '开始卡号已被分配，请重新分配','status' => 100]);exit;
-        }
+//        $res =$OilCardModel->where('card_no >= "'.$data["end"].'"')->getField('id');
+//        if(!$res){
+//            echo json_encode(['msg' => '结束卡号超出，请重新分配','status' => 100]);exit;
+//        }
+//        $res2 =$OilCardModel->where('card_no = "'.$data["start"].'"')->getField('agent_id');
+//        if($res2['agent_id']){
+//            echo json_encode(['msg' => '开始卡号已被分配，请重新分配','status' => 100]);exit;
+//        }
 
+        $is_card = $OilCardModel -> where( $where )->select();
+//            print_r($OilCardModel->getLastSql());die;
+        if($is_card){
+            echo json_encode(['msg' => '卡号中有已启用的卡，请查验','status' => 100]);exit;
+        }
         $save_oilcard_data = [
             'agent_create_time' => time(),
             'agent_id' => $data['user_id'],
             'agent_status' => 1,
         ];
+        $where1['card_no'] = array('BETWEEN',array($data['start'],$data['end']));
         # 将此区间的卡状态更改为启用
-        $result1 = $OilCardModel -> where( $save_oilcard_where ) -> save( $save_oilcard_data );
+        $result1 = $OilCardModel -> where( $where1 ) -> save( $save_oilcard_data );
         if($result1){
             //添加卡附属信息（记录该代理拿卡区间）
             $card_no_num = $data['end']-$data['start']+1;
