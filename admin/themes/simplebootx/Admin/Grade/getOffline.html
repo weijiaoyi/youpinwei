@@ -28,7 +28,7 @@
     <table class="table table-hover table-bordered">
         <thead>
         <p style="text-align:center;font-size: 20px;font-weight: bold;margin-top: 20px;">
-        用户名称：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;">{$user['nickname']}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        用户名称：<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 40px;" /><span style="margin-left: 10px;font-size: 16px;"><?php echo base64_decode($user['nickname']) ?></span>&nbsp;&nbsp;&nbsp;&nbsp;
         下线成员：<span style="color: red;font-weight: bold;font-size: 28px;"><?php echo $count;?></span>人
         </p>
         </thead>
@@ -49,7 +49,7 @@
                 {$key+1}
             </td>
             <td style="text-align:center;">
-                {$val['nickname']}
+                <?php echo base64_decode($val['nickname']) ?>
             </td>
             <td style="width:40px;text-align:center;">
                 <img src="{$val['user_img']}" alt="{$val['user_img']}" />

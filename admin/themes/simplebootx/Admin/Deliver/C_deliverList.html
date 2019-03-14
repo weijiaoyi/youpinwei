@@ -89,7 +89,7 @@
 							<td style="text-align:center;"><?php echo $v['id']; ?></td>
 							<td style="text-align:center;"><?php echo $v['serial_number']; ?></td>
 							<td style="text-align:center;">
-								{$v['nickname']}<img src="{$v['user_img']}" alt="{$v['user_img']}" style="width: 40px;height: 40px;" />
+								<?php echo base64_decode($v['nickname']) ?><img src="{$v['user_img']}" alt="{$v['user_img']}" style="width: 40px;height: 40px;" />
 							</td>
 							<td style="text-align:center;">
 								<?php if($v['send_card_no'] == ''){ ?>
@@ -107,9 +107,9 @@
 							</td>
 							<td style="text-align:center;">
 								<?php if($v['agent_id'] == 0){ ?>
-								<span style="font-size: 14px;color: #9a161a;font-weight: bold;"><?php echo $v['agent_id_message']; ?></span>
+								<span style="font-size: 14px;color: #9a161a;font-weight: bold;"><?php echo base64_decode($v['agent_id_message']); ?></span>
 								<?php }else{?>
-									<?php echo $v['agent_id_message']; ?>
+									<?php echo base64_decode($v['agent_id_message']); ?>
 								<img src="<?php echo $v['agent_img']; ?>" alt="<?php echo $v['agent_img']; ?>" style="width: 40px;height: 40px;" />
 								<?php }?>
 							</td>

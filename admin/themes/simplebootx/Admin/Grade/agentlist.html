@@ -63,7 +63,7 @@
                 {$key+1}
             </td>
             <td style="text-align:center;">
-                {$val['nickname']}<img src="{$val['user_img']}" alt="{$val['user_img']}" style="width:40px;" />
+                <?php echo base64_decode($val['nickname']) ?><img src="{$val['user_img']}" alt="{$val['user_img']}" style="width:40px;" />
             </td>
             <td style="text-align:center;">
                 <input type="text" name="remarks" class="remarks" value="{$val['remarks']}" data-id="{$val['id']}"/>

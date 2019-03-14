@@ -55,11 +55,7 @@
                     {$key+1}
                 </td>
                 <td style="text-align:center;">
-                    <if condition="$val['nickname'] eq ''">
-                        {$val['openid']}
-                    <else/>
-                        {$val['nickname']}
-                    </if>
+                    <?php if($val['nickname'] ==''){ echo $val['openid']; } else { echo base64_decode($val['nickname']);} ?>
                 </td>
                 <td style="width:40px;text-align:center;">
                     <img src="{$val['user_img']}" alt="{$val['user_img']}" />
@@ -74,7 +70,7 @@
                 </td>
                 <td style="text-align:center;">
                     <if condition="$val['parentid'] neq ''">
-                        {$val['parent_nickname']}
+                        <?php echo base64_decode($val['parent_nickname']) ?>
                         <img src="{$val['parent_img']}" alt="{$val['parent_img']}" style="width: 40px;height: 40px;" />
                         <else/>
                         <span style="font-size: 14px;color: #999999;font-weight: bold;">无上级</span>

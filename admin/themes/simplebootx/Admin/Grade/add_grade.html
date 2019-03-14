@@ -23,7 +23,7 @@
                     <tr>
                         <th>代理商名称：</th>
                         <td style="font-size: 16px;line-height: 39px;">
-                            <span>{$user['nickname']}&nbsp;&nbsp;&nbsp;&nbsp;<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 39px;" /></span>
+                            <span><?php echo base64_decode($user['nickname']) ?>&nbsp;&nbsp;&nbsp;&nbsp;<img src="{$user['user_img']}" alt="{$user['user_img']}" style="height: 39px;" /></span>
                             <!--<input type="text" name="nickname" class="nickname" value="" style="width:150px" disabled="disabled" placeholder="请输入代理商名称">-->
                             <!--<input type="button" value="搜索" style="width:60px;height: 36px; margin-bottom:10px;" class="server-keyword">-->
                         </td>
