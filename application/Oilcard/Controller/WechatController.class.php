@@ -547,7 +547,7 @@ class WechatController extends CommentoilcardController
             $obj_arr['openid']         = $obj_arr['payDetailInfo']['wxSubOpenId'];
             $obj_arr['paymentType']    = 'HjPay';
         }elseif(isset($obj_arr['syssn'])){
-            $obj_arr['transaction_id'] = $obj_arr['out_trade_no'];
+            $obj_arr['transaction_id'] = $obj_arr['syssn'];
             $obj_arr['result_code']    = $obj_arr['status']==1?'SUCCESS':'FAIL';
             $obj_arr['paymentType']    = 'QFPay';
 
@@ -903,7 +903,7 @@ class WechatController extends CommentoilcardController
             $obj_arr['openid']         = $obj_arr['payDetailInfo']['wxSubOpenId'];
             $obj_arr['paymentType']    = 'HjPay';
         }elseif(isset($obj_arr['syssn'])){
-            $obj_arr['transaction_id'] = $obj_arr['out_trade_no'];
+            $obj_arr['transaction_id'] = $obj_arr['syssn'];
             $obj_arr['result_code']    = $obj_arr['status']==1?'SUCCESS':'FAIL';
             $obj_arr['paymentType']    = 'QFPay';
 

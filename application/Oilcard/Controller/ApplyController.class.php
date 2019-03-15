@@ -205,6 +205,7 @@ class ApplyController extends CommentoilcardController
         $address_res=M('address')->where($address_data)->find();
         if (empty($address_res)){
             $address_data['address']=$data['address'];
+
             $OrderInfo['addressid']=M('address')->add($address_data);
         }else{
             $OrderInfo['addressid'] =$address_res['id'];
@@ -214,6 +215,7 @@ class ApplyController extends CommentoilcardController
              $user_applu_data['card_no']=$checked_card;
         }
 
+        M('user')->where(['openid'=>$openid])->setField('phone',$data['phone']);
         $user_data=M('user')->where("openid='$openid'")->find();
         $user_applu_data['user_id']        =$Member['id'];
         $user_applu_data['status']         ='1';
