@@ -12,6 +12,7 @@ class DeliverController extends AdminbaseController{
         $is_ypw_admin  =  $this->check_ypw_admin();
         $p = trim(I('get.p','1'));
         $keyword = trim(I('post.keyword'));
+        $agentid = trim(I('post.agentid'));
         $Order = M('order_record');
         $Apply = M('user_apply');
         $where = [
@@ -25,6 +26,9 @@ class DeliverController extends AdminbaseController{
         }
         if (!empty($keyword)) {
             $where['R.serial_number'] = ['like','%'.$keyword.'%'];
+        }
+        if(!empty($agentid)){
+            $where['R.agent_id'] = $agentid;
         }
         if(!$is_ypw_admin){
             $agentID = session('agent_id');
@@ -108,7 +112,7 @@ class DeliverController extends AdminbaseController{
     //查询代理商的申请列表
     public function agentApply(){
 	    $id = I('id');
-        $p = trim(I('get.p','1'));
+        $p = trim(I('p','1'));
         $order_info = M('user_apply')
             ->alias('A')
             ->field('R.*,A.id as apply_id,A.status,U.nickname,U.user_img')
