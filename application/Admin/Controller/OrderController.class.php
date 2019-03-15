@@ -650,6 +650,7 @@ class OrderController extends AdminbaseController{
             ->select();
 
         if($order_info)foreach ($order_info as $key => $value) {
+            $order_info[$key]['nickname']=base64_decode($order_info[$key]['nickname']);
             if(empty($order_info[$key]['agent_name'])){
                 $order_info[$key]['agent_name']='总部';
             }else{

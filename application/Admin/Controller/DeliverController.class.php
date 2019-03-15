@@ -617,6 +617,7 @@ class DeliverController extends AdminbaseController{
         $aids = '';
         $rids = '';
         if($data)foreach ($data as $key => $value) {
+            $data[$key]['nickname']= base64_decode( $data[$key]['nickname']);
             if(empty($data[$key]['agent_nickname'])){
                 $data[$key]['agent_nickname']='总部发卡';
             }else {
