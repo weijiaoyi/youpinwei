@@ -105,6 +105,30 @@ class DeliverController extends AdminbaseController{
         }
     }
 
+    //查询代理商的申请列表
+    public function agentApply(){
+	    $id = I('id');
+        $p = trim(I('get.p','1'));
+        $order_info = M('user_apply')
+            ->alias('A')
+            ->field('R.*,A.id as apply_id,A.status,U.nickname,U.user_img')
+            ->join('__ORDER_RECORD__ R ON A.serial_number=R.serial_number',LEFT)
+            ->join('user U ON U.id=R.user_id',LEFT)
+            ->where(['A.agentid'=>$id])
+            ->order('R.id DESC')
+            ->page($p,'10')
+            ->select();
+
+        if($order_info){
+            foreach ($order_info as $k=>$v){
+                $agent[$k]['nickname'] = base64_decode($v['nickname']);
+            }
+            echo json_encode(['msg' => 'success', 'status' => 200, 'data' => $order_info]);
+        }else{
+            echo json_encode(['msg' => '暂无发货订单', 'status' => 100]);
+        }
+    }
+
 
     public function cardOrder(){
         header("Access-Control-Allow-Origin: *");
