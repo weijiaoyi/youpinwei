@@ -265,6 +265,7 @@ class AgentController extends CommentoilcardController
         $openid=I('post.openid','');
         $id=I('post.user_apply_id','');
         $from_id=I('post.from_id','');
+        $express_number = I('post.express_number');
         $data = M('user_apply')
                 ->alias('A')
                 ->join('order_record R ON R.serial_number = A.serial_number')
@@ -276,7 +277,8 @@ class AgentController extends CommentoilcardController
         M('')->startTrans();
         $ApplySave = [
             'status' =>2,
-            'updatetime' =>date('Y-m-d H:i:s')
+            'updatetime' =>date('Y-m-d H:i:s'),
+            'express_number' => $express_number
         ];
         $user_res=M('user_apply')->where(['id'=>$id])->save($ApplySave);
         if ($user_res!==false && $card_res!==false){

@@ -29,10 +29,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>开始卡号：</th>
-                    <td style="font-size: 16px;line-height: 39px;">
-                        <span style="color: red;">{$data['card_no']}</span>
-                        <!--<input type="text" name="start_card" id="start_card" value="<?php echo $data['card_no'];?>"  disabled="disabled"  placeholder="开始卡号">-->
+                    <th>开始卡号<span class="true">*</span>：</th>
+                    <td>
+                        <input type="text" maxlength="16" name="start_card" id="start_card"  placeholder="请输入结束卡号">
                     </td>
                 </tr>
                 <tr>
@@ -96,7 +95,7 @@
     $(document).on('click','#sendCard',function(){
 
         $('#sendCard').attr('disabled','disabled');
-        var start_card = "<?php echo $data['card_no'] ?>";
+        var start_card = $('#start_card').val();
         var openid = "<?php echo $data['openid'] ?>";
         var user_id = "<?php echo $data['uid'] ?>";
         var end_card = $('#end_card').val();
