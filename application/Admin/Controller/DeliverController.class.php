@@ -585,8 +585,6 @@ class DeliverController extends AdminbaseController{
         $res = M('order_record')->where(['id'=>['in',$rids]])->save(['is_import'=>2]);
         if($data)inportExcelLog($data,1,'发货记录导出');
         createExcel($title,$data,'订单Excel');
-        echo 1;
         exit;
-        echo 111;exit;
     }
 }
