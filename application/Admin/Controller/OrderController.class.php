@@ -83,7 +83,52 @@ class OrderController extends AdminbaseController{
         $OrderRecordModel = M('order_record');
         $p = trim(I('get.p','1'));
         $keyword = trim(I('post.keyword'));
-        $where='o.order_type = 3 AND o.order_status = 2 ';
+        $where='o.order_type = 3 AND o.order_status = 2 AND o.is_import = 1 ';
+        if(!empty($keyword)){
+            $where.=' AND (a.card_no LIKE "%'.$keyword.'%" OR o.serial_number LIKE "%'.$keyword.'%")';
+        }
+        $is_ypw_admin  =  $this->check_ypw_admin();
+        if(!$is_ypw_admin){
+            $agentID = session('agent_id');
+            $where.= ' AND o.agent_id = '.$agentID.' AND o.card_from = 2';
+        }
+        $order_info=$OrderRecordModel
+            ->alias('o')
+            ->join('add_money a ON a.order_no=o.serial_number',LEFT)
+            ->join('user u ON u.id=o.user_id',LEFT)
+            ->join('agent_earnings e ON e.sn=o.serial_number AND e.log_type=1',LEFT)
+            ->join('user us ON us.id=o.agent_id',LEFT)
+            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,o.coupon_money,o.discount_money as zk_money,o.is_import,a.*,e.earnings,u.nickname,u.user_img,us.nickname as agent_name,us.user_img as agent_img')
+            ->where($where)
+            ->order('o.id DESC')
+            -> page($p,'10')
+            ->select();
+        $count = $OrderRecordModel
+            ->alias('o')
+            ->join('add_money a ON a.order_no=o.serial_number',LEFT)
+            ->join('user u ON u.id=o.user_id',LEFT)
+            ->join('agent_earnings e ON e.sn=o.serial_number AND e.log_type=1',LEFT)
+            ->join('user us ON us.id=o.agent_id',LEFT)
+            ->field('o.id,o.user_id,o.serial_number,o.order_type,o.order_status,o.coupon_money,o.discount_money as zk_money,a.*,u.nickname,u.user_img,us.nickname as agent_name,us.user_img as agent_img')
+            ->where($where)
+            -> count();
+        $page = new \Think\Page($count,10);
+        $show = $page -> show();
+        $this->assign('keyword',$keyword);
+        $this -> assign('page',$show);
+        $this -> assign('data',$order_info);
+        $this -> assign('is_ypw_admin',$is_ypw_admin);
+        $this -> display();
+    }
+
+    /*
+     * 已导支付订单列表
+     */
+    public function orderAlready(){
+        $OrderRecordModel = M('order_record');
+        $p = trim(I('get.p','1'));
+        $keyword = trim(I('post.keyword'));
+        $where='o.order_type = 3 AND o.order_status = 2  AND o.is_import = 2';
         if(!empty($keyword)){
             $where.=' AND (a.card_no LIKE "%'.$keyword.'%" OR o.serial_number LIKE "%'.$keyword.'%")';
         }
@@ -605,7 +650,11 @@ class OrderController extends AdminbaseController{
             ->select();
 
         if($order_info)foreach ($order_info as $key => $value) {
-            if(empty($order_info[$key]['agent_name']))$order_info[$key]['agent_name']='总部';
+            if(empty($order_info[$key]['agent_name'])){
+                $order_info[$key]['agent_name']='总部';
+            }else{
+                $order_info[$key]['agent_name']=base64_decode($order_info[$key]['agent_name']);
+            }
             if(empty($order_info[$key]['earnings']))$order_info[$key]['earnings']='0.00';
         }
 
