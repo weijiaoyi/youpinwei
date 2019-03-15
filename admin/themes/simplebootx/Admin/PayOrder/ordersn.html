@@ -95,7 +95,6 @@
 </script>
 <script>
     $(document).on('click','#orderSubmit',function(){
-        console.log("asdasdasd");
         var ordersn=$("#ordersn").val();
         var payCode=$("#payCode").val();
         console.log("ttttttttlll",ordersn,payCode);
@@ -109,7 +108,8 @@
                 code:payCode
             },
             success:function (res) {
-                console.log("res",res)
+                console.log("res",res);
+                alert(res.msg.msg);
             }
         })
     })
