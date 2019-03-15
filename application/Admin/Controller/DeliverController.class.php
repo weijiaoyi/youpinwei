@@ -24,7 +24,7 @@ class DeliverController extends AdminbaseController{
             $where['R.createtime'] = ['between',[$timeRange[0],$timeRange[1]]];
         }
         if (!empty($keyword)) {
-            $where['R.card_no'] = ['like','%'.$keyword.'%'];
+            $where['R.serial_number'] = ['like','%'.$keyword.'%'];
         }
         if(!$is_ypw_admin){
             $agentID = session('agent_id');
@@ -86,6 +86,24 @@ class DeliverController extends AdminbaseController{
         $this -> display();
 
 	}
+
+	//代理商信息
+    public function agentList(){
+	    $agent = M('agent')
+            ->alias('A')
+            ->join('__USER__ U ON U.id=A.id',LEFT)
+            ->where(['A.role'=>3])
+            ->field('U.nickname,U.user_img,A.id')
+            ->select();
+	    if($agent){
+	        foreach ($agent as $k=>$v){
+	            $agent[$k]['nickname'] = base64_decode($v['nickname']);
+            }
+            echo json_encode(['msg' => 'success', 'status' => 200, 'data' => $agent]);
+        }else{
+            echo json_encode(['msg' => '暂时没有代理商', 'status' => 100]);
+        }
+    }
 
 
     public function cardOrder(){
