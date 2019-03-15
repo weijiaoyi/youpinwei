@@ -15,25 +15,16 @@
         <li><a href="<?php echo U('Admin/Deliver/CardBindList'); ?>">绑卡订单</a></li>
         <li><a href="<?php echo U('Admin/Deliver/UpGradeList'); ?>">升级订单</a></li>
         <li><a href="<?php echo U('Admin/Deliver/RenewalsList'); ?>">续费订单</a></li>
-        <li class="active"><a href="<?php echo U('Admin/Order/orderListing'); ?>">充值订单</a></li>
-        <li><a href="<?php echo U('Admin/Order/orderAlready'); ?>">已导出充值记录</a></li>
+        <li><a href="<?php echo U('Admin/Order/orderListing'); ?>">充值订单</a></li>
+        <li class="active"><a href="<?php echo U('Admin/Order/orderAlready'); ?>">已导出充值记录</a></li>
     </ul>
-        <!-- 搜索 start by LEE  -->
-        <form class="well form-search" method="post" action="<?php echo U('Admin/Order/orderListing'); ?>">
-            关键字： 
-            <input type="text" name="keyword" style="width: 300px;height: 40px;" value="{$keyword}" placeholder="请输入查询订单的订单ID或卡号">
-            &nbsp;&nbsp;
-            时间范围：
-            <div class="layui-inline">
-                <div class="layui-input-inline">
-                    <input type="text" class="layui-input" id="timeRange" placeholder=" - " style="height:34px; width: 180px;" name="timeRange">
-                </div>
-            </div>
-            <input type="submit" id="selectUser" class="btn btn-primary order-number-pay-keyword" value="搜索">
-            <?php if($is_ypw_admin){?>
-            <a class="btn btn-primary " id="import">导出充值记录</a>
-            <?php }?>
-        </form>
+    <!-- 搜索 start by LEE  -->
+    <form class="well form-search" method="post" action="<?php echo U('Admin/Order/orderListing'); ?>">
+        关键字：
+        <input type="text" name="keyword" style="width: 300px;height: 40px;" value="{$keyword}" placeholder="请输入查询订单的订单ID或卡号">
+        &nbsp;&nbsp
+        <input type="submit" id="selectUser" class="btn btn-primary order-number-pay-keyword" value="搜索">
+    </form>
     <table class="table table-hover table-bordered">
         <thead>
         <tr>
@@ -116,42 +107,3 @@
 <script src="__PUBLIC__/js/common.js"></script>
 </body>
 </html>
-
-<script type="text/javascript">
-    layui.use('laydate', function(){
-        var laydate = layui.laydate;
-        //日期时间范围
-        laydate.render({
-            elem: '#timeRange'
-            ,range: true
-        });
-    });
-    $('#import').click(function(){
-        var timeRange = $('#timeRange').val();
-        if(!timeRange){
-            layer.msg('请选择时间范围!');
-            return false;
-        }
-        layer.confirm('确定导出'+timeRange+'的用户的充值记录吗？',['确定','取消'],function(){
-            window.location.href='{:U("Order/rechargeImportExcel")}&timeRange='+timeRange;
-            layer.msg('导出成功',{icon:1},function(){
-                window.location.reload();//页面刷新
-            });
-        })
-    });
-    /** 订单编号(关键字搜索) */
-    $(document).on('click','.order-number-pay-keyword',function(){
-        var keyword = $('input[name=keyword]').val();
-        $.ajax({
-            type:'post',
-            url:'http://ysy.xiangjianhai.com/index.php?g=admin&m=order&a=R_orderNumberKeyword',
-            data:{keyword:keyword},
-            dataType:'json',
-            success:function(result){
-                $('#show').html(result.str);
-                $('#page').html(result.page);
-            }
-        })
-
-    })
-</script>

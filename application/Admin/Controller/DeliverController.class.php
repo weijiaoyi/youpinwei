@@ -617,7 +617,11 @@ class DeliverController extends AdminbaseController{
         $aids = '';
         $rids = '';
         if($data)foreach ($data as $key => $value) {
-            if(empty($data[$key]['agent_nickname']))$data[$key]['agent_nickname']='总部发卡';
+            if(empty($data[$key]['agent_nickname'])){
+                $data[$key]['agent_nickname']='总部发卡';
+            }else {
+                $data[$key]['agent_nickname']= base64_decode( $data[$key]['agent_nickname']);
+            }
             $aids .= $value['aid'].',';
             $rids .= $value['rid'].',';
             unset($data[$key]['aid']);
