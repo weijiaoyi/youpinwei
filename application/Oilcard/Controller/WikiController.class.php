@@ -14,7 +14,7 @@ class WikiController extends CommentoilcardController
 {
     private $appId = 'C9q255qIg1Zp72yI';
     private $merchantSn='PHT2017000000002';
-    private $my_uri = 'http://ysy.xiangjianhai.com/TestWxNotify.php';
+    private $my_uri = 'http://ypw.upinwe.com/TestWxNotify.php';
     private $pay_uri = 'https://open.smart4s.com/Api/Service/Pay/Mode/JSApi/tradePayJSApi';
     private  $private_key = 'MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALqZX4pzN6jxJbNbXhuz+Drh8Obt7ekDrEPz2SK0IKoay6SDPiJMJXLqh69doiWjP2pim6/JrrsuBr3QFMjGIx0EnBSf354qorWNhkj+lkAcQnQ98NlziTgTg7vx2o3piCcJAa7i2WhbLegs1xtatwSeEY/weqJwZh7dOxmelEsJAgMBAAECgYAxNW9HsLjV+bpKgWbhAWYOCTWhgM+D6q8MQItbposSsPxRRzckjlY15vmfWp7/M/zuTlDmW9aTkEDA39YLWI07jsmaGOA8RbPinswzIWnowNVFQag/n21tpAL2/CGNkpe+7F667nZyD7htCYwz6ARBMUM+eH52MNEMcPSbOBM9PQJBAPUav3oCgnYx/F8nLzlW9+gSOD1oCK5GQUC1+TTwaPUfZeCl8CeHT/7DgdvyUUMm9CyEzhacl4xZPzWN+ijZIF8CQQDC5NfMtDHSCGknwMnZb4mxTpzrby+pnwVvxmJeOg+QTafAwHqIhh9wVLQNEJy0PojYOMpjA9GE1Wms537Pnq2XAkEArCkij3/NxVms6+UpHXyB2ydZC4DUgBzm3p4zMkUfY/Wu6JGF0y4POWJ4B1b4T1PANLj/zRAmvrU9Wc+lBCYmvwJBALv94esjJatjUYt2+z0xya+uFM9EwMTtD2FyCxC5EKoxPc8/2vI17b189vBjRcTXTUjD/vTjigaHlRejdT7v4KECQA2DEOHgZv39PmNIZJekcfNGXPrdHPU0eAEtanMCr6hTiN+jO4x66rrGXIa4aoZ3ezXq/sASLm4zuGuF65m9bnc=';
     private $public_key = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1BjaenGX21GHyjopCrNW8mLrZCG1uNMTSbgHjV9uwywPHJ1SaV/FInbgWGvQ9MTlRTRBE4+XMJEx4hlHMG87BnrQFjGV9EH7QK5Fi651908q5WhDLXDLrWAn19ZpVbLbwZuzY+xICGCLjoQxFi0lHk0eU9h8QZOS0WnplnC0L1r/y3PTn5R4+W9pD/Diibh+hGmELmQaS3lHVWEvuYQLEepuT0U32kiHzty66bGaT7za6CiUtQKBx8khwdpeKwaX+c2kgKJ6QbhitSxrHD9eG5RHKdGipyhvEzT/ba3sQvEZwipePc0y6i/lPPoBwNULiICQjS0a3w6+D11YXdutsQIDAQAB';
