@@ -13,14 +13,16 @@
     <!-- 搜索 start by LEE  -->
     <form class="well form-search" method="post" action="<?php echo U('Admin/PayOrder/ordersn'); ?>">
         充值填卡号：
-        <input type="text" name="card_no" style="width: 200px;" value="" placeholder="请输入要查询的手机号">
+        <input type="text" name="card_no" style="width: 200px;" value="" placeholder="请输入要查询的卡号">
         申领填手机号：
-        <input type="text" name="phone" style="width: 200px;" value="" placeholder="请输入要查询的卡号">
+        <input type="text" name="phone" style="width: 200px;" value="" placeholder="请输入要查询的手机号">
         <input type="submit" id="selectUser" class="btn btn-primary" value="搜索">
     </form>
-    <input type="text" name="ordersn" style="width: 200px;" value="" placeholder="请输入订单号">
-    <input type="text" name="code" style="width: 200px;" value="" placeholder="请输入支付码">
-    <input type="submit" id="order" class="btn btn-primary" value="订单查询">
+    <input id="ordersn" type="text" name="ordersn" style="width: 200px;" value="" placeholder="请输入订单号">
+    <input id="payCode" type="text" name="code" style="width: 200px;" value="" placeholder="请输入支付码">
+    <!--<input type="submit" id="order" class="btn btn-primary" value="订单查询">-->
+    <button type="button" class="btn btn-primary" style="margin-bottom: 10px" id="orderSubmit">订单查询</button>
+
     <table class="table table-hover table-bordered">
         <thead>
         <tr>
@@ -88,7 +90,30 @@
 
 
 </div>
-<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/common.js">
+
+</script>
+<script>
+    $(document).on('click','#orderSubmit',function(){
+        console.log("asdasdasd");
+        var ordersn=$("#ordersn").val();
+        var payCode=$("#payCode").val();
+        console.log("ttttttttlll",ordersn,payCode);
+        var hostUrl=window.location.href;
+        $.ajax({
+            type:"post",
+            url:hostUrl+"/index.php?g=admin&m=PayOrder&a=payOrder",
+            dataType:"json",
+            data:{
+                ordersn:ordersn,
+                code:payCode
+            },
+            success:function (res) {
+                console.log("res",res)
+            }
+        })
+    })
+</script>
 </body>
 </html>
 
