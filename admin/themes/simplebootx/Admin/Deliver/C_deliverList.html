@@ -21,15 +21,16 @@
 			
 			关键字： 
 			<input type="text" name="keyword"  style="height:34px; width: 150px;" value="{$keyword}" placeholder="请输入查询的订单ID或卡号">
-			&nbsp;&nbsp;
+			代理人
+			<select id="agentList" name="agentid">
+			</select>
+
 			时间范围： 
 			 <div class="layui-inline">
 		      <div class="layui-input-inline">
 		        <input type="text" class="layui-input" id="timeRange" placeholder=" - " style="height:34px; width: 180px;" name="timeRange">
 		      </div>
 		    </div>
-
-			&nbsp;&nbsp;
 			<input type="submit" class="btn btn-primary order-number-keyword" value="搜索">
 			&nbsp;&nbsp;
 			<a class="btn btn-primary " id="import" >导出待发货记录</a>
@@ -258,6 +259,31 @@
 </body>
 <script type="text/javascript">
 
+	// 获取所有代理人
+	$(function () {
+		var hostUrl=window.location.href;
+		console.log("asdasdasd",hostUrl);
+		$.ajax({
+			type:"get",
+			url:hostUrl+"/index.php?g=admin&m=Deliver&a=agentList",
+			dataType:"json",
+			success:function (res) {
+				var agentData=res.data;
+				console.log("hostUrlaaa",agentData);
+				var str="";
+				str+="<option value=''>所有</option>"+
+						"<option value='0'>总部</option>"
+				agentData.forEach(function(item){
+					str+="<option value='"+item.id+"'>"+item.nickname+"</option>"
+				});
+				$("#agentList").append(str);
+			},
+			fail:function () {
+				console.log("fail");
+			}
+		})
+	});
+
 	//推送消息
 	$(document).on('click','.push-message',function(){
 		card_no = $('.card_number').html();
@@ -268,7 +294,7 @@
 			data:{card_no:card_no,user_id:user_id},
 	        success:function(result){
 				//判断推送成功
-	            console.log(result);
+	//             console.log(result);
 	        }
 	    });
 	});
