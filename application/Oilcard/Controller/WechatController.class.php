@@ -722,6 +722,7 @@ class WechatController extends CommentoilcardController
                 //当上级代理未绑定时不做操作
                 //当上级代理为空 或者上级 代理身份是总部时 不做操作
                 if (  $Member['role'] !=3 && $Member['agent_bind'] == 1 && $Member['agentid'] !=0 && !empty($Member['agentid'])) {
+
                     $Agent=M('user')->alias('a')->join('__AGENT__ b ON a.id=b.id')->where(['a.id'=>$Member['agentid'],'b.role'=>3])->find();
                     // vip_direct_scale  VIP直属会员充值分成
                     // user_direct_scale  普通直属会员充值分成
@@ -735,6 +736,7 @@ class WechatController extends CommentoilcardController
                     //判断是直属下级还是间接下级身份 /// 此流程不适用
                     switch ($CardInfo['pkgid']) {
                         case '1':
+
                             $Calculation = $RechageMoney* ($config['user_profit']/100);
                             $rewardMoney  = number_format($Calculation, 4, ".", "");
                             $earning_body = 5; //普通卡充值

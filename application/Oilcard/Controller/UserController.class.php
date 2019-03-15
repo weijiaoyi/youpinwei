@@ -29,14 +29,6 @@ class UserController extends CommentoilcardController
         //总人数
         $user_count = M('user')->count();
         $num_count = 11118+intval($user_count);
-//        if (!$userInfo)
-//        {
-//            //跳转到微信登录url
-//            redirect(U('oilcard/wechat/getCode'));
-//        }
-        //判断是否申领过
-//        $user_apply = M('user_apply')->where("openid='$openid'")->find();
-//        if(empty($user_apply)){
 
         if($userInfo['agent_bind'] == 0 && $userInfo['parent_bind'] == 0){
             if (!empty($scene)){
@@ -72,10 +64,68 @@ class UserController extends CommentoilcardController
                 $parent_data['parent_bind'] = 1;//锁定邀请人
 
                 M('user')->where("openid='$openid'")->save($parent_data);
+
+
+
+//                $parent=M('user')
+//                    ->alias('u')
+//                    ->join('__AGENT__ a ON a.openid=u.openid',LEFT)
+//                    ->where('u.openid="'.$scene.'"')
+//                    ->field('role，agentid,agent_parent_id')
+//                    ->find();
+//
+//                if($parent['role'] == 3){//邀请人是一级代理商
+//                    $parent_data=array(
+//                        'parentid'=>$parent['id'],//邀请人ID
+//                        'agentid'=>$parent['id'],//邀请人代理商ID
+//                        'agent_parent_id'=>0,
+//                        'agent_relation'=>1//直接关系
+//                    );
+//                }elseif($parent['role'] == 4){//邀请人是二级代理商
+//                    $parent_data=array(
+//                        'parentid'=>$parent['id'],//邀请人ID
+//                        'agentid'=>$parent['agentid'],
+//                        'agent_parent_id'=>$parent['id'],
+//                        'agent_relation'=>2//间接关系
+//                    );
+//                }else{//邀请人不是代理商
+//                    //邀请人有没有上级代理
+//                    if($parent['agentid'] != 0){//有一级代理商
+//                        if($parent['agrnt_parent_id'] != 0){//有二级代理商
+//                            $parent_data=array(
+//                                'parentid'=>$parent['id'],//邀请人ID
+//                                'agentid'=>$parent['agentid'],
+//                                'agent_parent_id'=>$parent['agent_parent_id'],
+//                                'agent_relation'=>2//间接关系
+//                            );
+//                        }else{//没有二级代理，只有一级代理
+//                            $parent_data=array(
+//                                'parentid'=>$parent['id'],//邀请人ID
+//                                'agentid'=>$parent['agentid'],
+//                                'agent_parent_id'=>0,
+//                                'agent_relation'=>2//间接关系
+//                            );
+//                        }
+//                    }else{
+//                        //没有代理商
+//                        $parent_data=array(
+//                            'parentid'=>$parent['id'],//邀请人ID
+//                            'agentid'=>0,
+//                            'agent_parent_id'=>0,
+//                            'agent_relation'=>3//没关系
+//                        );
+//                    }
+//
+//                }
+//                $parent_data['agent_bind'] = 1;//锁定上级代理人
+//                $parent_data['parent_bind'] = 1;//锁定邀请人
+//
+//                M('user')->where("openid='$openid'")->save($parent_data);
             }else{//没有邀请人
                 $parent_data=array(
                     'parentid'=>0,//邀请人ID
                     'agentid'=>0,//邀请人代理商ID
+//                    'agent_parent_id'=>0,
                     'agent_relation'=>3//关系
                 );
                 $parent_data['agent_bind'] = 1;//锁定上级代理人
