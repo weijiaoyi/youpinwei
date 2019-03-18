@@ -13,9 +13,9 @@
     <!-- 搜索 start by LEE  -->
     <form class="well form-search" method="post" action="<?php echo U('Admin/PayOrder/ordersn'); ?>">
         充值填卡号：
-        <input type="text" name="card_no" style="width: 200px;" value="" placeholder="请输入要查询的卡号">
+        <input type="text" name="card_no" style="width: 200px;" value="{:I('request.card_no/s','')}" placeholder="请输入要查询的卡号">
         申领填手机号：
-        <input type="text" name="phone" style="width: 200px;" value="" placeholder="请输入要查询的手机号">
+        <input type="text" name="phone" style="width: 200px;" value="{:I('request.phone/s','')}" placeholder="请输入要查询的手机号">
         <input type="submit" id="selectUser" class="btn btn-primary" value="搜索">
     </form>
     <input id="ordersn" type="text" name="ordersn" style="width: 200px;" value="" placeholder="请输入订单号">
@@ -77,9 +77,7 @@
         </volist>
         </tbody>
     </table>
-    <if condition="$page neq ''">
-        <div id="page" class="pagination"><span class="page"><?php echo $page; ?></span></div>
-    </if>
+    <div class="pagination">{$page}</div>
 
 
 </div>
