@@ -27,7 +27,7 @@ class GradeController extends AdminbaseController
             $where .= ' AND user.is_notmal = "'.$status.'"';
         }
         if(!empty($keywords)){
-            $where .= ' AND user.nickname LIKE "%'.$keywords.'%"';
+            $where .= ' AND user.phone = "'.$keywords.'"';
         }
         $ordinary_info = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
@@ -75,7 +75,7 @@ class GradeController extends AdminbaseController
             $where .= ' AND user.is_notmal = "'.$status.'"';
         }
         if(!empty($keywords)){
-            $where .= ' AND  user.nickname LIKE "%'.$keywords.'%" ';
+            $where .= ' AND user.phone = "'.$keywords.'"';
         }
         $vip_info = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)
@@ -129,7 +129,7 @@ class GradeController extends AdminbaseController
             $where .= ' AND is_notmal = "'.$status.'"';
         }
         if(!empty($keywords)){
-            $where .= ' AND ( user.nickname LIKE "%'.$keywords.'%" OR user.remarks LIKE "%'.$keywords.'%" )';
+            $where .= ' AND user.phone = "'.$keywords.'"';
         }
         $agent_info = $AgentModel
             -> join('user ON user.openid=agent.openid',LEFT)

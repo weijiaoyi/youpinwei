@@ -99,7 +99,7 @@
 			/////---------------------
 			Wind.use('validate', 'ajaxForm', 'artDialog', function() {
 				//javascript
-	
+
 				var form = $('form.js-ajax-forms');
 				//ie处理placeholder提交问题
 				if ($.browser && $.browser.msie) {
@@ -162,7 +162,7 @@
 							url : form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
 							dataType : 'json',
 							beforeSubmit : function(arr, $form, options) {
-	
+
 							},
 							success : function(data, statusText, xhr, $form) {
 								if (data.status) {

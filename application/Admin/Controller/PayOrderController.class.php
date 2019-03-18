@@ -46,6 +46,7 @@ class PayOrderController extends AdminbaseController
                 ->join('__USER__ U ON U.id=R.user_id',LEFT)
                 ->where($where)
                 ->count();
+
             $page = new \Think\Page($count,10);
             $show = $page -> show();
             $this -> assign('page',$show);
@@ -114,9 +115,7 @@ class PayOrderController extends AdminbaseController
 
         if($result){
             $result = json_decode($result,TRUE);
-        }
-        if ($result['respcd'] =='0000') {
-            $msg['msg'] = $result['cancel'];
+            $msg['msg'] = $result['respcd'];
         }
         return $msg;
     }

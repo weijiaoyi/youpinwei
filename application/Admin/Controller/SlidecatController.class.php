@@ -49,6 +49,7 @@ class SlidecatController extends AdminbaseController{
 	// 幻灯片分类编辑提交
 	public function edit_post(){
 		if (IS_POST) {
+		    print_r($_POST);die;
 			if ($this->slidecat_model->create()!==false) {
 				if ($this->slidecat_model->save()!==false) {
 					$this->success("保存成功！", U("slidecat/index"));

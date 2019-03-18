@@ -33,7 +33,7 @@
             <th style="text-align:center;">充值卡号</th>
             <th style="text-align:center;">充值金额</th>
             <th style="text-align:center;">支付金额</th>
-            <th style="text-align:center;">上级代理商</th>
+
             <th style="text-align:center;">支付码</th>
             <th style="text-align:center;">充值时间</th>
 
@@ -65,14 +65,7 @@
                     <span style="font-size: 20px;color: red;font-weight: bold;">{$val['real_pay']}</span>元
                 </td>
 
-                <td style="text-align:center;">
-                    <if condition="$val['agent_name'] eq ''">
-                        <span style="font-size: 20px;color: red;font-weight: bold;">总部</span>
-                        <else/>
-                        <img src="{$val['agent_img']}" alt="{$val['agent_img']}" style="width: 40px;height: 40px;" />{$val['agent_name']}
-                    </if>
 
-                </td>
                 <td style="text-align:center;">
                     {$val['payment_code']}
                 </td>
