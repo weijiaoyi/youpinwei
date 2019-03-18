@@ -22,6 +22,19 @@
 					</div>
 				</div>
 				<div class="control-group">
+					<label class="control-label">{:L('小程序用户')}</label>
+					<div class="controls">
+						<select name="user_id" id="">
+							<option value="">请选择小程序用户</option>
+							<?php
+								foreach($users as $key =>$val){
+								echo '<option value="'.$val['id'].'">'.$val['nickname'].'手机号： '.$val['phone'].'</option>';
+								}
+							?>
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
 					<label class="control-label">{:L('EMAIL')}</label>
 					<div class="controls">
 						<input type="text" name="user_email">

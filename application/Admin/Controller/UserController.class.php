@@ -50,7 +50,18 @@ class UserController extends AdminbaseController{
 	public function add(){
 		$where = array('status' => 1);
 		$where['only_admin'] = $_SESSION['CONFIG_ID'] == 0 ? 1 : 0;
-		$roles=$this->role_model->where($where)->order("id DESC")->select();
+        $roles=$this->role_model->where($where)->order("id DESC")->select();
+		$users=M('user')->field('id,nickname,user_img,phone,openid')->where('is_notmal = 1')->order("id DESC")->select();
+		if(!empty($users)){
+		    foreach ($users as $key=>$val){
+		        if(empty($val['nickname'])){
+		           unset($users[$key]);
+                }else{
+		            $users[$key]['nickname'] = base64_decode($users[$key]['nickname']);
+                }
+            }
+        }
+		$this->assign("users",$users);//小程序用户
 		$this->assign("roles",$roles);
 		$this->display();
 	}
@@ -59,6 +70,13 @@ class UserController extends AdminbaseController{
 	public function add_post(){
 		if(IS_POST){
 			if(!empty($_POST['role_id']) && is_array($_POST['role_id'])){
+                $user_id = $_POST['user_id'];//小程序用户id
+                if(empty($user_id)) $this->error("请选择小程序对应的用户！");
+                $user_info = M('user')->where("id = $user_id")->select();
+                $_POST['agent_id'] = $user_id;
+                $_POST['openid'] = $user_info[0]['openid'];
+                $role_ids=$_POST['role_id'];
+                $_POST['user_pass'] = sp_password($_POST['user_pass']);
 				$role_ids=$_POST['role_id'];
 				unset($_POST['role_id']);
 				if ($this->users_model->create()!==false) {
@@ -95,7 +113,17 @@ class UserController extends AdminbaseController{
 		$role_user_model=M("RoleUser");
 		$role_ids=$role_user_model->where(array("user_id"=>$id))->getField("role_id",true);
 		$this->assign("role_ids",$role_ids);
-
+        $users=M('user')->field('id,nickname,user_img,phone,openid')->where('is_notmal = 1')->order("id DESC")->select();
+        if(!empty($users)){
+            foreach ($users as $key=>$val){
+                if(empty($val['nickname'])){
+                    unset($users[$key]);
+                }else{
+                    $users[$key]['nickname'] = base64_decode($users[$key]['nickname']);
+                }
+            }
+        }
+        $this->assign("users",$users);//小程序用户
 		$user=$this->users_model->where(array("id"=>$id))->find();
 		$this->assign($user);
 		$this->display();
@@ -105,6 +133,13 @@ class UserController extends AdminbaseController{
 	public function edit_post(){
 		if (IS_POST) {
 			if(!empty($_POST['role_id']) && is_array($_POST['role_id'])){
+                $user_id = $_POST['user_id'];//小程序用户id
+                if(empty($user_id)) $this->error("请选择小程序对应的用户！");
+                $user_info = M('user')->where("id = $user_id")->select();
+                $_POST['agent_id'] = $user_id;
+                $_POST['openid'] = $user_info[0]['openid'];
+                $role_ids=$_POST['role_id'];
+                $_POST['user_pass'] = sp_password($_POST['user_pass']);
 				if(empty($_POST['user_pass'])){
 					unset($_POST['user_pass']);
 				}
