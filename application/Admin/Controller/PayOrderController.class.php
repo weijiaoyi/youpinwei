@@ -21,7 +21,8 @@ class PayOrderController extends AdminbaseController
 
     //查询支付订单页
     public function ordersn(){
-        if($_POST){
+        $is_first = I('request.fir',0);
+        if(!$is_first){
             $phone = I('phone');
             $card_no = I('card_no');
             $p = trim(I('get.p','1'));
@@ -46,10 +47,8 @@ class PayOrderController extends AdminbaseController
                 ->join('__USER__ U ON U.id=R.user_id',LEFT)
                 ->where($where)
                 ->count();
-
-            $page = new \Think\Page($count,10);
-            $show = $page -> show();
-            $this -> assign('page',$show);
+            $page = $this->page($count, 10);
+            $this->assign("page", $page->show('Admin'));
             $this->assign('order',$order);
         }
 
