@@ -19,7 +19,7 @@ class PayOrderController extends AdminbaseController
 
 
 
-    //查询订单编号
+    //查询支付订单页
     public function ordersn(){
         if($_POST){
             $phone = I('phone');
@@ -57,6 +57,7 @@ class PayOrderController extends AdminbaseController
         $this->display();
 
     }
+   
     //查询
     public function payOrder(){
         $ordersn = I('ordersn');
