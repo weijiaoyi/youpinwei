@@ -50,7 +50,7 @@ abstract class HTTPRequest{
         }
         $TLS = substr($url, 0, 8) == "https://" ? true : false;
         if($TLS) {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
         }
 
