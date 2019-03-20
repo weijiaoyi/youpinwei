@@ -2615,7 +2615,7 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
         $request->addParam("userIp", '114.116.142.79');
         $request->addParam("version", '1.0');
 
-        var_dump($request);
+        print_r($request);
 
         $response = YopClient3::post("/rest/v1.0/nccashierapi/api/pay", $request);
         $res['content']  = json_encode($request);
