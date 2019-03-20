@@ -2653,7 +2653,8 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
         $request->addParam("notifyUrl", $notify_url);
         $request->addParam("goodsParamExt", $goods);
         $request->addParam("fundProcessType", 'REAL_TIME');
-
+        $res['content']  = json_encode($request);
+        M('testt')->add($res);
         $response = YopClient3::post("/rest/v1.0/std/trade/order", $request);
         if($response->validSign==1){
 
