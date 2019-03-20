@@ -9,7 +9,7 @@ namespace Oilcard\Conf\lib;
 class YopConfig{
     //app config
     
-    public $serverRoot = "https://open.yeepay.com/yop-center";
+    public $serverRoot = "https://openapi.yeepay.com/yop-center";
     public $appKey;
     public $aesSecretKey;
     public $hmacSecretKey;
