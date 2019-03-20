@@ -2605,7 +2605,7 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
 
         $token=$this->order($config,$Order,$PayCon);
 
-print_r($token);die;
+
         $request = new YopRequest("OPR:10027258251", $config['private_key'], "https://open.yeepay.com/yop-center",$config['yop_public_key']);
         $request->addParam("token", $token);
         $request->addParam("payTool", 'MINI_PROGRAM');
@@ -2615,7 +2615,7 @@ print_r($token);die;
         $request->addParam("userIp", '114.116.142.79');
         $request->addParam("version", '1.0');
 
-        //var_dump($request);
+        var_dump($request);
 
         $response = YopClient3::post("/rest/v1.0/nccashierapi/api/pay", $request);
         $res['content']  = json_encode($request);
