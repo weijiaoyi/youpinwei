@@ -1,5 +1,13 @@
 <?php
 namespace Oilcard\Conf\lib;
+use Oilcard\Conf\lib\Util\StringUtils;
+use Oilcard\Conf\lib\Util\HttpUtils;
+use Oilcard\Conf\lib\Util\BlowfishEncrypter;
+use Oilcard\Conf\lib\Util\Base64Url;
+use Oilcard\Conf\lib\Util\HttpRequest;
+use Oilcard\Conf\lib\Util\YopSignUtils;
+use Oilcard\Conf\lib\Util\AESEncrypter;
+
 /**
  * Created by PhpStorm.
  * User: wilson
@@ -7,15 +15,6 @@ namespace Oilcard\Conf\lib;
  * Time: 16:29
  */
 
-require_once("YopRequest.class.php");
-require_once("YopResponse.class.php");
-require_once("Util/YopSignUtils.class.php");
-require_once("Util/HttpRequest.class.php");
-require_once("Util/BlowfishEncrypter.class.php");
-require_once("Util/AESEncrypter.class.php");
-require_once("Util/StringUtils.class.php");
-require_once("Util/HttpUtils.class.php");
-require_once("Util/Base64Url.class.php");
 
 
 class YopClient3
