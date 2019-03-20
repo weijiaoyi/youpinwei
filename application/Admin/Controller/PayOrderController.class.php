@@ -52,7 +52,7 @@ class PayOrderController extends AdminbaseController
             $this->assign('order',$order);
         }
 
-        echo  11;die;
+
         $this->display();
 
     }

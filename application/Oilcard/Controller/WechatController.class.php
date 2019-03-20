@@ -2567,16 +2567,46 @@ class WechatController extends CommentoilcardController
     //易宝支付
     public function _YEEPay($Order,$Member,$PayCon){
         $config = [];
-        $config['merchantNo']="10000466938";
-        $config['parentMerchantNo']="10000466938";
-        $config['yop_public_key']   = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6p0XWjscY+gsyqKRhw9MeLsEmhFdBRhT2emOck/F1Omw38ZWhJxh9kDfs5HzFJMrVozgU+SJFDONxs8UB0wMILKRmqfLcfClG9MyCNuJkkfm0HFQv1hRGdOvZPXj3Bckuwa7FrEXBRYUhK7vJ40afumspthmse6bs6mZxNn/mALZ2X07uznOrrc2rk41Y2HftduxZw6T4EmtWuN2x4CZ8gwSyPAW5ZzZJLQ6tZDojBK4GZTAGhnn3bg5bBsBlw2+FLkCQBuDsJVsFPiGh/b6K/+zGTvWyUcu+LUj2MejYQELDO3i2vQXVDk7lVi2/TcUYefvIcssnzsfCfjaorxsuwIDAQAB";
-        $config['private_key']   = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDKLgI+64mmJdNg1TwlCPBnNH3b3qfw2TdHVc2uDd4LTyQI8nRr0heFhhdj0OZi6agqekIyzAH/XmO9PdLrTi4YXJXOfiO/dYwKA6gSktRe6FKY4C2WzX1yA4fGfqJMV7RYVoL6In50Hur6rGnavNSQZqbiDJOgy5yokJ14Mey1iMqqqWvADtKN9SqxtbyIxYD/jj/6qLWwmu88wSwSaGdO3wNFgzajsHgRJe9G9IhD0zr5d72HvJGoedq7VaPn3jhIszcPQE6oqbXAddZRGKBehA4WSCjLEl87XH33zZPrxrQlBTHVVGzfxjbB4QvYz0hlEoWh1ntxeDHTfgyhdPQpAgMBAAECggEATmxMSLW6Xe08McpkmwT9ozq0Oy4BvKW1EIGS15nfcEmRc7sAN7Z1k0BxIDGuu91gcqGbvfJuL+0gCQ7LGqTnsmFvZnp9SU3CNTw33ISBxhKdv1jtthodN7Vw3CjQsYYvmThtc7Mfk9FOWk+4e7VVSnHW98XjGbMBIE2AF1heNgeZ40ubdgzuz9+4g4pphjWncPpwcaMfsDZm3JtFyvUp0+LME0CmUqrxvONZAkpFR/PyejGHnIh3ptHzhe/VjNcuIC4PphkCNBakCBCrtohTy0YeeWfDAUTAO4tPXF/JUhlxjPuqR6rpQY/0uQdMAtTpiWHVJar7eGdK81QnuuOFRQKBgQDrklUPM0pkvGG/wREa0bgUI+ki+1/wv7O8X94/8onomJqPpkD8z4hv/Lev/wD5gDcgmgLC36u/XDuhFfVNOmw4eUWenU6pzonroEjhi91AKcRRfzDfOfWg3wPm1J9WQOn5A033tNRydCpVcX/Ot4qDbKcAwLiPNPXXMTn4LUQE/wKBgQDbtmE0KS/kSfjscWJOqwv1XbxckipkxncqIbdiSdU+DzaLd+Vuaco7TLQJRFp7S7WJW4Tz6KBX2UiA7O7ezXY9PwlgXxXiZDDtneXNAqk7DNxmTTZHrF2C7qdU98klppCFiFx9bysGY6lFWofWmg3Pu5IiPqO3iLRPTvZgQOE+1wKBgQC9SCgmfYzyIlfcjtIinY5uSGiEnjz5od9WpiVbdpOPHEdc0zZ2rH6xlPs3ZAuxbm9dN8KuOLC0ovSau50Nv7rDKdZh234gfP9fH7xP1mUhsC25Why30MdnyqpE6GVbFe+qERitx1PI30RAwWDzhZC7hystNK1XDDPZBAnTOvPjmwKBgDFuujX7IkxRnFDOPdkHQNyGp2+Ib0NXJ85x4YmapQCeeZ4tbpBF+vsWidcf6t+crA5oaeRarWC2gUqIhEHapkSnXxuwqQLTmfKMOPzEIYEoppnZu2Gq1Ss1OK60RSxUamWwxWZvUZXRbG8vLCrLZFodkIZl433SowbI9EO5tTPnAoGAJRsy1z95Q1GPkKrFtKivkxZy1k7zJXjM0VWDc7lT9fBnoeGUyt+vuq+lC5i2aiWKJK7pe8MM9QFDGlWPnly+J8jbyMfm99k5oJtCWDfF0or1pAQ4mw0kjL9TvDVXdojgYA+rxSMQ09hwsYukQ4bblrwfBUmRjLN5WibcRzIW5ZA=";
+        $config['merchantNo']="10027258251";
+        $config['parentMerchantNo']="10027258251";
+        $config['yop_public_key']   = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjmVT4dbcz5EbkcymShWK
+1RoFD9kr6b29oeUNXmcgNyWOF+fF4zmqR/DdKZ+nnWuvzRe9hyjKFgHWJb7RUeeu
+icX6PSJlSf4XWTkMkcM2W9n/CZleND5V7T2S9NcSagWwfed621tYQkW0iM5gS5gs
+NkUpsw6LWqnZ5wKrdKMvD8yEBU364rfZ/vBgAxhi598QczkJ+FL9xtBYO7K9AzcQ
+ChtzyFWUGrxDp3E9UuGs4I5IpDt1pUjF4jXgQB0wvKCR3GZzVdFYL2LHu9+aPO/0
+RXXCYm+MeK1pI6J2fIBNRXo1bueOwQxBcVCuZk448Sss/XXq2WR74605FwAXBB5i
+rQIDAQAB";
+        $config['private_key']   = "MIIEpgIBAAKCAQEAjmVT4dbcz5EbkcymShWK1RoFD9kr6b29oeUNXmcgNyWOF+fF
+4zmqR/DdKZ+nnWuvzRe9hyjKFgHWJb7RUeeuicX6PSJlSf4XWTkMkcM2W9n/CZle
+ND5V7T2S9NcSagWwfed621tYQkW0iM5gS5gsNkUpsw6LWqnZ5wKrdKMvD8yEBU36
+4rfZ/vBgAxhi598QczkJ+FL9xtBYO7K9AzcQChtzyFWUGrxDp3E9UuGs4I5IpDt1
+pUjF4jXgQB0wvKCR3GZzVdFYL2LHu9+aPO/0RXXCYm+MeK1pI6J2fIBNRXo1bueO
+wQxBcVCuZk448Sss/XXq2WR74605FwAXBB5irQIDAQABAoIBAQCLWysumGLdWLvM
+gqYzVsXaLG7LxdQuGx1dNZdRzkc+8SgQySlnaWX2pgkr1S3q6BrS8urvPcIYq49y
+vT6Jk93Cw9hUwDa0pVEgZq6gcJXgaoYoVMpXArKBTYNmzp0c2ZiSf1pDFzBXG3TF
+doPTN4f9TM60iAVlo1i3tmsp6RIDuMAcLKZSLUp7gAkfeb9nTqno32yDrigXADOc
+LS1y/BObvDux4YUammkOp2vIWN+zCyofyqjngZdxLYZlrBIKwSjo8n6GZrTA+s7h
+kHIGCkNjXp8k+jsWDmnc/BeRpVBHDvcSqTzMarsqP+6D7RZdU0u7EOflktIre4Ur
+ySWbOvZZAoGBANt3gaR9dJEJlIpaJ6e+MeWnHdajGeaiTB2uVTzEv+avZA/oj8rJ
+WujXJ5EiUiehL6x88eZfO2lRRPgGgsMBbiP5p73oMnKk6hQRfFhmjPqhA0zVMk+D
+zhjtPL+BS/hVF1U8qYd9bIIRKygVFY5chZJgI32egXggaHrS3RNdjat3AoGBAKYZ
+eFERV2INm74IZy0a2iU0BVaOeQ6xNkQxo86N87Tk7ElOk6qhrlup3V5Pf9FzmPWg
+8yrLK9HzMoLpIoc/uPDHcC8jYDgbrh197SEpdlwSVIOB2asmV/k14vhw8GP+OTJ1
+2vK72so4Y07zAInHGXZAYkK8WUfc2sbwMEKX6iP7AoGBAJS8DilrOJee1YNaDCv7
+kxdfxbIUAVazwUAQSQYRFTkCvp6lbuXwxmKshc0vZFwlOgj8+He3LK14fXRV/UKp
+cnqBFLR4a9AUgest2oaSoZKtkm38wsbuvbtY9GWY++KF0HVc0kvXrbUMa6ITf/Nm
+MsP70bGtvXKrDAPJajhYm82LAoGBAJq0ZGUVgs84H5RLHVZciUxXfJVXFBgEJKg1
+l/2+J3yYMCBDSLSH7O9BcobyAvoh8hjt9S8pl0Hwg159KITSbD4PdETjbS41UeH0
+NRZLGQu+ourt2cBYcV4Tu7hs8OohkkKWlPy6zZjGFnElUp4BTIzggOTpqzqM0VSz
+yC9ucU1bAoGBAI/rtdccLatCPEX71lhwpJkfpETIX7mW8MyWOQ504l/uILvHtd/V
+Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
+2Byg3LIGQQbfcPOSnsT95luEHpMoU+BTx6IX1BaB69Tp/3LQY5BzCt5g";
 
 
         $token=$this->order($config,$Order,$PayCon);
 
 
-        $request = new YopRequest("OPR:10000466938", $config['private_key'], "https://open.yeepay.com/yop-center",$config['yop_public_key']);
+        $request = new YopRequest("OPR:10027258251", $config['private_key'], "https://open.yeepay.com/yop-center",$config['yop_public_key']);
         $request->addParam("token", $token);
         $request->addParam("payTool", 'MINI_PROGRAM');
         $request->addParam("payType", 'WECHAT');
@@ -2614,7 +2644,7 @@ class WechatController extends CommentoilcardController
         $notify_url =$this->_GetNotifyUrl($Order['order_type']);
         $redirect_url =$this->_GetRedirectUrl($Order['order_type']);
         $orderSn = isset($Order['serial_number'])?$Order['serial_number']:$Order['order_no'];
-        $request = new YopRequest("OPR:10000466938", $config['private_key'], "https://open.yeepay.com/yop-center",$config['yop_public_key']);
+        $request = new YopRequest("OPR:10027258251", $config['private_key'], "https://open.yeepay.com/yop-center",$config['yop_public_key']);
         $request->addParam("parentMerchantNo", $config['parentMerchantNo']);
         $request->addParam("merchantNo", $config['merchantNo']);
         $request->addParam("orderId", $orderSn);
