@@ -7,7 +7,7 @@ namespace Oilcard\Conf\lib;
  * Time: 16:29
  */
 
-require_once("YopRequest.php");
+require_once("YopRequest.class.php");
 require_once("YopResponse.php");
 require_once("Util/YopSignUtils.php");
 require_once("Util/HttpRequest.php");
