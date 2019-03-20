@@ -98,7 +98,7 @@ class YopClient3
 //        //$timestamp=$dataTime->format('c'); // Returns ISO8601 in proper format
 //        $timestamp = $dataTime->format(DateTime::ISO8601); // Works the same since const ISO8601 = "Y-m-d\TH:i:sO"
         //$timestamp = "2016-02-25T08:57:48Z";
-        $timestamp = date('c',time());
+        $timestamp = time();
         $requestId = YopClient3::uuid();//Returns like ‘1225c695-cfb8-4ebb-aaaa-80da344e8352′
         //$requestId="123456";
 
