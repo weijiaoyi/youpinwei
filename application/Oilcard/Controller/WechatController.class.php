@@ -2599,7 +2599,7 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
 
         $token=$this->order($config,$Order,$PayCon);
 
-print_r($token);die;
+
         $request = new YopRequest("OPR:10027258251", $config['private_key'], "https://openapi.yeepay.com/yop-center",$config['yop_public_key']);
         $request->addParam("token", $token);
         $request->addParam("payTool", 'MINI_PROGRAM');
@@ -2609,7 +2609,7 @@ print_r($token);die;
         $request->addParam("userIp", '114.116.142.79');
         $request->addParam("version", '1.0');
 
-        print_r($request);
+
 
         $response = YopClient3::post("/rest/v1.0/nccashierapi/api/pay", $request);
         $res['content']  = json_encode($request);
@@ -2651,7 +2651,7 @@ print_r($token);die;
         $res['content']  = json_encode($request);
         M('testt')->add($res);
         $response = YopClient3::post("/rest/v1.0/std/trade/order", $request);
-        var_dump($response);
+
         if($response->validSign==1){
 
        //取得返回结果
