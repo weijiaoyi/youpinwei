@@ -2644,7 +2644,7 @@ print_r($token);die;
         $notify_url =$this->_GetNotifyUrl($Order['order_type']);
         $redirect_url =$this->_GetRedirectUrl($Order['order_type']);
         $orderSn = isset($Order['serial_number'])?$Order['serial_number']:$Order['order_no'];
-        $request = new YopRequest("OPR:10027258251", $config['private_key'], "https://open.yeepay.com/yop-center",$config['yop_public_key']);
+        $request = new YopRequest("OPR:10027258251", $config['private_key'], "https://openapi.yeepay.com/yop-center",$config['yop_public_key']);
         $request->addParam("parentMerchantNo", $config['parentMerchantNo']);
         $request->addParam("merchantNo", $config['merchantNo']);
         $request->addParam("orderId", $orderSn);
