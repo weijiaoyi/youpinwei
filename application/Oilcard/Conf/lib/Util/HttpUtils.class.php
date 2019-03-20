@@ -6,7 +6,7 @@
  * Time: 20:28
  */
 namespace Oilcard\Conf\lib\Util;
-require_once("StringBuilder.php");
+require_once("StringBuilder.class.php");
 
 
 abstract class HttpUtils

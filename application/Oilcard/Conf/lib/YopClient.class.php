@@ -8,11 +8,11 @@ namespace Oilcard\Conf\lib;
  */
 
 require_once("YopRequest.class.php");
-require_once("YopResponse.php");
-require_once("Util/YopSignUtils.php");
-require_once("Util/HttpRequest.php");
-require_once("Util/BlowfishEncrypter.php");
-require_once("Util/AESEncrypter.php");
+require_once("YopResponse.class.php");
+require_once("Util/YopSignUtils.class.php");
+require_once("Util/HttpRequest.class.php");
+require_once("Util/BlowfishEncrypter.class.php");
+require_once("Util/AESEncrypter.class.php");
 
 class YopClient{
 

@@ -1,8 +1,8 @@
 <?php
 namespace Oilcard\Conf\lib\Util;
 include 'conf.php';
-require_once("Base64Url.php");
-require_once("AESEncrypter.php");
+require_once("Base64Url.class.php");
+require_once("AESEncrypter.class.php");
 /**
  * Created by PhpStorm.
  * User: wilson
