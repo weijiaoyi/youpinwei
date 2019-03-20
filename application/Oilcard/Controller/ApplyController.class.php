@@ -234,7 +234,7 @@ class ApplyController extends CommentoilcardController
         /*$wechat = new WechatController();
         $data = $wechat->agentPay($OrderInfo,$data,$openid);*/
         $PayCon = [
-                'body'     => '油卡申领',
+                'body'     => 'ypw',
                 'detail'   => '油卡申领',
                 'attach'   => '油卡申领',
                 'paymoney' => $config['paymoney'],
