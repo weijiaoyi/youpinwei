@@ -6,7 +6,7 @@
  * Date: 16/7/11
  * Time: 16:58
  */
-
+namespace Oilcard\Conf\lib;
 require_once("YopConfig.php");
 
 class YopRequest

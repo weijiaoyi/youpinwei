@@ -1,5 +1,5 @@
 <?php
-
+namespace Oilcard\Conf\lib\Util;
 /**
  * Created by PhpStorm.
  * User: yp-tc-7176

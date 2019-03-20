@@ -1,4 +1,5 @@
 <?php
+namespace Oilcard\Conf\lib\Util;
 include 'conf.php';
 require_once("Base64Url.php");
 require_once("AESEncrypter.php");

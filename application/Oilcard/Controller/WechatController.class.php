@@ -14,12 +14,12 @@ use Oilcard\Conf\CardConfig;
 use Oilcard\Conf\HJCloudConfig;
 use Oilcard\Conf\QFPayConfig;
 use Oilcard\Conf\YZPayconfig;
-use YopRequest;
+use Oilcard\Conf\lib\YopRequest;
 use Think\Controller;
 use Think\Log;
 use Org\Util\phpqrcode;
 use Comment\Controller\CommentoilcardController;
-use YopClient3;
+use Oilcard\Conf\lib\YopClient3;
 
 //include './phpqrcode.class.php';
 

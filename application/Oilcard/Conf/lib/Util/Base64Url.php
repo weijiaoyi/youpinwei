@@ -1,5 +1,5 @@
 <?php
-
+namespace Oilcard\Conf\lib\Util;
 /*
  * The MIT License (MIT)
  *

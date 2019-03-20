@@ -6,7 +6,7 @@
  * Time: 16:21
  */
 
-
+namespace Oilcard\Conf\lib\Util;
 abstract class BlowfishEncrypter{
     /**
      * 算法,另外还有192和256两种长度

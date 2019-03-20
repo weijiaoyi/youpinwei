@@ -5,7 +5,7 @@
  * Date: 17/7/16
  * Time: 20:28
  */
-
+namespace Oilcard\Conf\lib\Util;
 require_once("StringBuilder.php");
 
 
