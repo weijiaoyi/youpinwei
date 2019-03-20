@@ -2569,13 +2569,7 @@ class WechatController extends CommentoilcardController
         $config = [];
         $config['merchantNo']="10027258251";
         $config['parentMerchantNo']="10027258251";
-        $config['yop_public_key']   = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjmVT4dbcz5EbkcymShWK
-1RoFD9kr6b29oeUNXmcgNyWOF+fF4zmqR/DdKZ+nnWuvzRe9hyjKFgHWJb7RUeeu
-icX6PSJlSf4XWTkMkcM2W9n/CZleND5V7T2S9NcSagWwfed621tYQkW0iM5gS5gs
-NkUpsw6LWqnZ5wKrdKMvD8yEBU364rfZ/vBgAxhi598QczkJ+FL9xtBYO7K9AzcQ
-ChtzyFWUGrxDp3E9UuGs4I5IpDt1pUjF4jXgQB0wvKCR3GZzVdFYL2LHu9+aPO/0
-RXXCYm+MeK1pI6J2fIBNRXo1bueOwQxBcVCuZk448Sss/XXq2WR74605FwAXBB5i
-rQIDAQAB";
+        $config['yop_public_key']   = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6p0XWjscY+gsyqKRhw9MeLsEmhFdBRhT2emOck/F1Omw38ZWhJxh9kDfs5HzFJMrVozgU+SJFDONxs8UB0wMILKRmqfLcfClG9MyCNuJkkfm0HFQv1hRGdOvZPXj3Bckuwa7FrEXBRYUhK7vJ40afumspthmse6bs6mZxNn/mALZ2X07uznOrrc2rk41Y2HftduxZw6T4EmtWuN2x4CZ8gwSyPAW5ZzZJLQ6tZDojBK4GZTAGhnn3bg5bBsBlw2+FLkCQBuDsJVsFPiGh/b6K/+zGTvWyUcu+LUj2MejYQELDO3i2vQXVDk7lVi2/TcUYefvIcssnzsfCfjaorxsuwIDAQAB";
         $config['private_key']   = "MIIEpgIBAAKCAQEAjmVT4dbcz5EbkcymShWK1RoFD9kr6b29oeUNXmcgNyWOF+fF
 4zmqR/DdKZ+nnWuvzRe9hyjKFgHWJb7RUeeuicX6PSJlSf4XWTkMkcM2W9n/CZle
 ND5V7T2S9NcSagWwfed621tYQkW0iM5gS5gsNkUpsw6LWqnZ5wKrdKMvD8yEBU36
