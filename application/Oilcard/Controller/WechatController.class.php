@@ -2657,7 +2657,7 @@ print_r($token);die;
         $res['content']  = json_encode($request);
         M('testt')->add($res);
         $response = YopClient3::post("/rest/v1.0/std/trade/order", $request);
-        print_r($response);
+        var_dump($response);
         if($response->validSign==1){
 
        //取得返回结果
