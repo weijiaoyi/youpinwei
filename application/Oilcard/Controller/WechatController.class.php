@@ -2605,7 +2605,7 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
 
         $token=$this->order($config,$Order,$PayCon);
 
-
+print_r($token);die;
         $request = new YopRequest("OPR:10027258251", $config['private_key'], "https://openapi.yeepay.com/yop-center",$config['yop_public_key']);
         $request->addParam("token", $token);
         $request->addParam("payTool", 'MINI_PROGRAM');
