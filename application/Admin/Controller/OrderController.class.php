@@ -431,11 +431,14 @@ class OrderController extends AdminbaseController{
         $count = $Card ->where($condition)-> count();
         $page = new \Think\Page($count,10);
         $show = $page -> show();
-        //查询总部或者代理可发油卡数量
-        $card_id=$Card -> where($card_id_where)->order('id desc') -> getField('id');
-        $send_count_where = 'id>="'.$card_id.'" AND status=1';
+        //查询总部或者代理可发油卡数量 TODO 以下两行为以前统计数据
+//        $card_id=$Card -> where($card_id_where)->order('id desc') -> getField('id');
+//        $send_count_where = 'id>="'.$card_id.'" AND status=1';
+        $send_count_where = 'status=1';
         if(!$is_ypw_admin){
             $send_count_where.= '  AND agent_id = '.$agentID;
+        }else{
+            $send_count_where.= '  AND agent_id = 0';
         }
         $send_count = $Card -> where($send_count_where) -> count();
         $this -> assign('send_count',$send_count);
