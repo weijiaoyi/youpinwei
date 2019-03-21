@@ -2619,8 +2619,9 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
         }
         //取得返回结果
         $data=$this->object_array($response);
-
-        return $data['resultData'] ;
+print_r($data);
+//        return $data['resultData'] ;
+        return $data;
     }
 
 
