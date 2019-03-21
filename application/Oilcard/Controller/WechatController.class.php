@@ -917,7 +917,7 @@ class WechatController extends CommentoilcardController
             $obj_arr['paymentType']    = 'QFPay';
 
         }elseif(!is_array($data)){
-            $tt['content'] = 1;
+            $tt['content'] = $data;
             M('testt')->add($tt);
             $obj_arr = $this->callback($data);
             $insert['content']['yee'] = $obj_arr;
