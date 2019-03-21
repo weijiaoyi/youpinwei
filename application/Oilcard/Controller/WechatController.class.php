@@ -916,9 +916,14 @@ class WechatController extends CommentoilcardController
 
         }elseif(!is_array($data)){
             $yee = $this->callback(urldecode(substr($data,8)));
+            $bb['content'] = $yee;
+            M('testt')->add($bb);
+             $yee2 = json_decode($yee);
 
-            $yee = json_decode($yee);
-            $aa['content'] = $yee['orderId'];
+
+              $test['aaa'] = 1;
+              $test['orderId'] = $yee2['orderId'];
+            $aa['content'] = json_encode($test);
             M('testt')->add($aa);
 //            $obj_arr = [];
 //            $obj_arr['out_trade_no'] = $yee['orderId'];
@@ -1123,9 +1128,9 @@ class WechatController extends CommentoilcardController
             // return log::record(XML::build($data));
 
         } else {
-            $insert['content']['signs'] = '签名验证失败';
-            $insert['content'] = json_encode($insert['content']);
-            M('testt')->add($insert);
+            //$insert['content']['signs'] = '签名验证失败';
+            //$insert['content'] = json_encode($insert['content']);
+            //M('testt')->add($insert);
             if ($obj_arr['paymentType'] == 'WxPay') {
                 echo 'FALI';exit;
             }elseif($obj_arr['paymentType'] == 'HjPay'){
