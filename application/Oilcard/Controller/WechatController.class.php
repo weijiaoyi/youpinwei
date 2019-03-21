@@ -941,8 +941,8 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
             $obj_arr['paymentType']    = 'QFPay';
 
         }elseif(!is_array($data)){
-            $insert['content'] = json_encode($insert['content']);
-            M('testt')->add($insert);
+            $tt['content'] = 1;
+            M('testt')->add($tt);
             $obj_arr = $this->callback($data);
             $insert['content']['yee'] = $obj_arr;
 

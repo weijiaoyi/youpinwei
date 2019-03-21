@@ -105,6 +105,8 @@ abstract class YopSignUtils{
   
    static function decrypt($source,$private_Key, $public_Key)
    {
+       $tt['content'] = 2;
+       M('testt')->add($tt);
 
        $private_key = "-----BEGIN RSA PRIVATE KEY-----\n" .
            wordwrap($private_Key, 64, "\n", true) .
