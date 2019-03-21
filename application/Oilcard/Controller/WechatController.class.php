@@ -921,8 +921,8 @@ class WechatController extends CommentoilcardController
             $obj_arr['result_code']    = $obj_arr['status'];
             $obj_arr['openid']         = $obj_arr['openID'];
             $obj_arr['paymentType']    = 'YEEPay';
-            $insert['content'] = $obj_arr;
-            M('testt')->add($insert);
+            $res['content'] = 1;
+            M('testt')->add($res);
         }
 //        $openId=$obj_arr['openid'];
 
