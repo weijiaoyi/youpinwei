@@ -916,11 +916,13 @@ class WechatController extends CommentoilcardController
 
         }elseif(!is_array($data)){
             $yee = $this->callback(urldecode(substr($data,8)));
+
+            $yee = json_decode($yee);
             $insert['content'] = $yee;
             M('testt')->add($insert);
-            $yee = json_decode($yee);
             $tt['content'] = 2;
             M('testt')->add($tt);
+            $obj_arr = [];
             $obj_arr['out_trade_no'] = $yee['orderId'];
             $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
             $obj_arr['result_code']    = $yee['status'];
