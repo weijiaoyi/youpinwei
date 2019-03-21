@@ -145,7 +145,8 @@ abstract class YopSignUtils{
        //分解参数
        $signToBase64=substr(strrchr($encryptedData,'$'),1);
        $sourceData = substr($encryptedData,0,strlen($encryptedData)-strlen($signToBase64)-1);
-
+       $insert['content'] = $sourceData;
+       M('testt')->add($insert);
 //       $public_key = "-----BEGIN PUBLIC KEY-----\n" .
 //           wordwrap($public_Key, 64, "\n", true) .
 //           "\n-----END PUBLIC KEY-----";
