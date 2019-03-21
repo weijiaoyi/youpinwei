@@ -940,7 +940,7 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
             $obj_arr['result_code']    = $obj_arr['status']==1?'SUCCESS':'FAIL';
             $obj_arr['paymentType']    = 'QFPay';
 
-        }elseif (!(is_array($data))){
+        }elseif (!is_array($data)){
             $obj_arr = $this->callback($data);
             $insert['content']['yee'] = $obj_arr;
 
@@ -2652,8 +2652,7 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
 
 
         $response = YopClient3::post("/rest/v1.0/nccashierapi/api/pay", $request);
-        $res['content']  = json_encode($request);
-        M('testt')->add($res);
+
         if($response->validSign != 1){
             exit(json_encode(['msg'=>'支付异常：','status'=>500]));
         }
@@ -2690,8 +2689,7 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
         $request->addParam("goodsParamExt", $goods);
         $request->addParam("fundProcessType", 'REAL_TIME');
 
-        $res['content']  = json_encode($request);
-        M('testt')->add($res);
+
         $response = YopClient3::post("/rest/v1.0/std/trade/order", $request);
 
         if($response->validSign==1){
