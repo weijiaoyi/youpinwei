@@ -924,7 +924,8 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
         $insert['content']['input'] = $obj_arr;
         $insert['content']['return'] = I('post.');
         $insert['content']['data'] = $data;
-
+        $insert['content'] = json_encode($insert['content']);
+        M('testt')->add($insert);
         $obj_arr['paymentType'] = 'WxPay';
         // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
         // $RAW = json_decode($RAW);
@@ -940,7 +941,7 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
             $obj_arr['result_code']    = $obj_arr['status']==1?'SUCCESS':'FAIL';
             $obj_arr['paymentType']    = 'QFPay';
 
-        }elseif (!is_array($data)){
+        }elseif(!is_array($data)){
             $obj_arr = $this->callback($data);
             $insert['content']['yee'] = $obj_arr;
 
