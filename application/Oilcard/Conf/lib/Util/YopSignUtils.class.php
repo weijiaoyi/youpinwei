@@ -146,26 +146,25 @@ abstract class YopSignUtils{
        $signToBase64=substr(strrchr($encryptedData,'$'),1);
        $sourceData = substr($encryptedData,0,strlen($encryptedData)-strlen($signToBase64)-1);
 
-       $public_key = "-----BEGIN PUBLIC KEY-----\n" .
-           wordwrap($public_Key, 64, "\n", true) .
-           "\n-----END PUBLIC KEY-----";
+//       $public_key = "-----BEGIN PUBLIC KEY-----\n" .
+//           wordwrap($public_Key, 64, "\n", true) .
+//           "\n-----END PUBLIC KEY-----";
+//
+//
+//
+//       $publicKey = openssl_pkey_get_public($public_key);
 
+//       $res = openssl_verify($sourceData,Base64Url::decode($signToBase64), $publicKey,$digestAlg); //验证
 
-
-       $publicKey = openssl_pkey_get_public($public_key);
-
-       $res = openssl_verify($sourceData,Base64Url::decode($signToBase64), $publicKey,$digestAlg); //验证
-       $tt['content'] = 7;
-       M('testt')->add($tt);
-       openssl_free_key($publicKey);
-       $tt['content'] = $res;
-        M('testt')->add($tt);
-       //输出验证结果，1：验证成功，0：验证失败
-       if ($res == 1) {
+//       openssl_free_key($publicKey);
+//       $tt['content'] = $res;
+//        M('testt')->add($tt);
+//       //输出验证结果，1：验证成功，0：验证失败
+//       if ($res == 1) {
            return $sourceData;
-       } else {
-           Die("verifySign fail!");
-       }
+//       } else {
+//           Die("verifySign fail!");
+//       }
    }
 
     static function signRsa($source,$private_Key)
