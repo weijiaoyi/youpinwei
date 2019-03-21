@@ -919,6 +919,8 @@ class WechatController extends CommentoilcardController
             $insert['content'] = $yee;
             M('testt')->add($insert);
             $yee = json_decode($yee);
+            $tt['content'] = 2;
+            M('testt')->add($tt);
             $obj_arr['out_trade_no'] = $yee['orderId'];
             $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
             $obj_arr['result_code']    = $yee['status'];
