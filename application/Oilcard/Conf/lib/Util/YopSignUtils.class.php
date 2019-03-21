@@ -159,7 +159,8 @@ abstract class YopSignUtils{
        $res = openssl_verify($sourceData,Base64Url::decode($signToBase64), $publicKey,$digestAlg); //验证
 
        openssl_free_key($publicKey);
-
+       $tt['content'] = $res;
+        M('testt')->add($tt);
        //输出验证结果，1：验证成功，0：验证失败
        if ($res == 1) {
            return $sourceData;

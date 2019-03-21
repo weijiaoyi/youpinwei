@@ -924,7 +924,7 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
         $insert['content']['input'] = $obj_arr;
         $insert['content']['return'] = I('post.');
         $insert['content']['data'] = $data;
-     
+
         $obj_arr['paymentType'] = 'WxPay';
         // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
         // $RAW = json_decode($RAW);
@@ -2611,37 +2611,9 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
         $config = [];
         $config['merchantNo']="10027258251";
         $config['parentMerchantNo']="10027258251";
-        $config['yop_public_key']   = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6p0XWjscY+gsyqKRhw9MeLsEmhFdBRhT2emOck/F1Omw38ZWhJxh9kDfs5HzFJMrVozgU+SJFDONxs8UB0wMILKRmqfLcfClG9MyCNuJkkfm0HFQv1hRGdOvZPXj3Bckuwa7FrEXBRYUhK7vJ40afumspthmse6bs6mZxNn/mALZ2X07uznOrrc2rk41Y2HftduxZw6T4EmtWuN2x4CZ8gwSyPAW5ZzZJLQ6tZDojBK4GZTAGhnn3bg5bBsBlw2+FLkCQBuDsJVsFPiGh/b6K/+zGTvWyUcu+LUj2MejYQELDO3i2vQXVDk7lVi2/TcUYefvIcssnzsfCfjaorxsuwIDAQAB";
-        $config['private_key']   = "MIIEpgIBAAKCAQEAjmVT4dbcz5EbkcymShWK1RoFD9kr6b29oeUNXmcgNyWOF+fF
-4zmqR/DdKZ+nnWuvzRe9hyjKFgHWJb7RUeeuicX6PSJlSf4XWTkMkcM2W9n/CZle
-ND5V7T2S9NcSagWwfed621tYQkW0iM5gS5gsNkUpsw6LWqnZ5wKrdKMvD8yEBU36
-4rfZ/vBgAxhi598QczkJ+FL9xtBYO7K9AzcQChtzyFWUGrxDp3E9UuGs4I5IpDt1
-pUjF4jXgQB0wvKCR3GZzVdFYL2LHu9+aPO/0RXXCYm+MeK1pI6J2fIBNRXo1bueO
-wQxBcVCuZk448Sss/XXq2WR74605FwAXBB5irQIDAQABAoIBAQCLWysumGLdWLvM
-gqYzVsXaLG7LxdQuGx1dNZdRzkc+8SgQySlnaWX2pgkr1S3q6BrS8urvPcIYq49y
-vT6Jk93Cw9hUwDa0pVEgZq6gcJXgaoYoVMpXArKBTYNmzp0c2ZiSf1pDFzBXG3TF
-doPTN4f9TM60iAVlo1i3tmsp6RIDuMAcLKZSLUp7gAkfeb9nTqno32yDrigXADOc
-LS1y/BObvDux4YUammkOp2vIWN+zCyofyqjngZdxLYZlrBIKwSjo8n6GZrTA+s7h
-kHIGCkNjXp8k+jsWDmnc/BeRpVBHDvcSqTzMarsqP+6D7RZdU0u7EOflktIre4Ur
-ySWbOvZZAoGBANt3gaR9dJEJlIpaJ6e+MeWnHdajGeaiTB2uVTzEv+avZA/oj8rJ
-WujXJ5EiUiehL6x88eZfO2lRRPgGgsMBbiP5p73oMnKk6hQRfFhmjPqhA0zVMk+D
-zhjtPL+BS/hVF1U8qYd9bIIRKygVFY5chZJgI32egXggaHrS3RNdjat3AoGBAKYZ
-eFERV2INm74IZy0a2iU0BVaOeQ6xNkQxo86N87Tk7ElOk6qhrlup3V5Pf9FzmPWg
-8yrLK9HzMoLpIoc/uPDHcC8jYDgbrh197SEpdlwSVIOB2asmV/k14vhw8GP+OTJ1
-2vK72so4Y07zAInHGXZAYkK8WUfc2sbwMEKX6iP7AoGBAJS8DilrOJee1YNaDCv7
-kxdfxbIUAVazwUAQSQYRFTkCvp6lbuXwxmKshc0vZFwlOgj8+He3LK14fXRV/UKp
-cnqBFLR4a9AUgest2oaSoZKtkm38wsbuvbtY9GWY++KF0HVc0kvXrbUMa6ITf/Nm
-MsP70bGtvXKrDAPJajhYm82LAoGBAJq0ZGUVgs84H5RLHVZciUxXfJVXFBgEJKg1
-l/2+J3yYMCBDSLSH7O9BcobyAvoh8hjt9S8pl0Hwg159KITSbD4PdETjbS41UeH0
-NRZLGQu+ourt2cBYcV4Tu7hs8OohkkKWlPy6zZjGFnElUp4BTIzggOTpqzqM0VSz
-yC9ucU1bAoGBAI/rtdccLatCPEX71lhwpJkfpETIX7mW8MyWOQ504l/uILvHtd/V
-Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
-2Byg3LIGQQbfcPOSnsT95luEHpMoU+BTx6IX1BaB69Tp/3LQY5BzCt5g";
-
-
+        $config['yop_public_key']   = $this->yop_public_key;
+        $config['private_key']   = $this->private_key;
         $token=$this->order($config,$Order,$PayCon);
-
-
         $request = new YopRequest("OPR:10027258251", $config['private_key'], "https://openapi.yeepay.com/yop-center",$config['yop_public_key']);
         $request->addParam("token", $token);
         $request->addParam("payTool", 'MINI_PROGRAM');
