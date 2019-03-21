@@ -895,11 +895,11 @@ class WechatController extends CommentoilcardController
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
         $insert = [];
-//        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
-//        $insert['content']['InsertNote'] = '油卡申领';
-//        $insert['content']['input'] = $obj_arr;
-//        $insert['content']['return'] = I('post.');
-//        $insert['content']['data'] = $data;
+        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
+        $insert['content']['InsertNote'] = '油卡申领';
+        $insert['content']['input'] = $obj_arr;
+        $insert['content']['return'] = I('post.');
+        $insert['content']['data'] = $data;
 
         $obj_arr['paymentType'] = 'WxPay';
 
