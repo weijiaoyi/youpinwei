@@ -121,8 +121,7 @@ abstract class YopSignUtils{
        M('testt')->add($tt);
        //分解参数
        $args = explode('$', $source);
-       $tt['content'] = json_encode($args);
-       M('testt')->add($tt);
+      
 
        if (count($args) != 4) {
            die('source invalid : ');
