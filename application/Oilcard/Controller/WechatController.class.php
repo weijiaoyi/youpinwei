@@ -916,18 +916,18 @@ class WechatController extends CommentoilcardController
 
         }elseif(!is_array($data)){
             $yee = $this->callback(urldecode(substr($data,8)));
-            $aa['content'] = $yee;
-            M('testt')->add($aa);
+
             $yee = json_decode($yee);
-           
-            $obj_arr = [];
-            $obj_arr['out_trade_no'] = $yee['orderId'];
-            $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
-            $obj_arr['result_code']    = $yee['status'];
-            $obj_arr['openid']         = $yee['openID'];
-            $obj_arr['paymentType']    = 'YEEPay';
-            $tt['content'] = json_encode($obj_arr);
-            M('testt')->add($tt);
+            $aa['content'] = $yee['orderId'];
+            M('testt')->add($aa);
+//            $obj_arr = [];
+//            $obj_arr['out_trade_no'] = $yee['orderId'];
+//            $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
+//            $obj_arr['result_code']    = $yee['status'];
+//            $obj_arr['openid']         = $yee['openID'];
+//            $obj_arr['paymentType']    = 'YEEPay';
+//            $tt['content'] = json_encode($obj_arr);
+//            M('testt')->add($tt);
 
         }
 
