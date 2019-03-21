@@ -260,7 +260,7 @@ class ApplyController extends CommentoilcardController
                 $data = $PayMent->_YEEPay($OrderInfo,$Member,$PayCon);
 //                echo 1111;
 //                print_r($data);
-                $data = $data->data;
+                
                 print_r($data);
                 $OrderInfo['payment_code'] = 'yeepay';
                 break;
