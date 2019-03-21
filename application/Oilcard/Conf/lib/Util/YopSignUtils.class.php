@@ -124,8 +124,7 @@ abstract class YopSignUtils{
        if (count($args) != 4) {
            die('source invalid : ');
        }
-       $tt['content'] = 6;
-       M('testt')->add($tt);
+
        $encryptedRandomKeyToBase64 = $args[0];
        $encryptedDataToBase64 = $args[1];
        $symmetricEncryptAlg = $args[2];
@@ -142,8 +141,7 @@ abstract class YopSignUtils{
 
        $encryptedData = openssl_decrypt(Base64Url::decode($encryptedDataToBase64), "AES-128-ECB", $randomKey, OPENSSL_RAW_DATA);
 
-       $tt['content'] = 8;
-       M('testt')->add($tt);
+
        //分解参数
        $signToBase64=substr(strrchr($encryptedData,'$'),1);
        $sourceData = substr($encryptedData,0,strlen($encryptedData)-strlen($signToBase64)-1);
@@ -155,10 +153,10 @@ abstract class YopSignUtils{
 
 
        $publicKey = openssl_pkey_get_public($public_key);
+
+       $res = openssl_verify($sourceData,Base64Url::decode($signToBase64), $publicKey,$digestAlg); //验证
        $tt['content'] = 7;
        M('testt')->add($tt);
-       $res = openssl_verify($sourceData,Base64Url::decode($signToBase64), $publicKey,$digestAlg); //验证
-
        openssl_free_key($publicKey);
        $tt['content'] = $res;
         M('testt')->add($tt);
