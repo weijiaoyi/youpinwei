@@ -258,6 +258,8 @@ class ApplyController extends CommentoilcardController
                 break;
             case '9': //易宝支付
                 $data = $PayMent->_YEEPay($OrderInfo,$Member,$PayCon);
+                echo 1111;
+                print_r($data);
                 $OrderInfo['payment_code'] = 'yeepay';
                 break;
             case '4': //易支付
@@ -268,7 +270,7 @@ class ApplyController extends CommentoilcardController
 
         // $Wiki = new WikiController();
         // $data = $Wiki->agentPay($OrderInfo,$data,$openid);
-print_r($data);
+
         if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
         $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
         $OrderInfo= M('order_record')->add($OrderInfo);   //添加订单
