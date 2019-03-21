@@ -916,23 +916,14 @@ class WechatController extends CommentoilcardController
 
         }elseif(!is_array($data)){
             $yee = $this->callback(urldecode(substr($data,8)));
-            $bb['content'] = $yee;
-            M('testt')->add($bb);
-             $yee2 = json_decode($yee,TRUE);
-
-
-              $test['aaa'] = 1;
-              $test['orderId'] = $yee2['orderId'];
-            $aa['content'] = json_encode($test);
-            M('testt')->add($aa);
-//            $obj_arr = [];
-//            $obj_arr['out_trade_no'] = $yee['orderId'];
-//            $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
-//            $obj_arr['result_code']    = $yee['status'];
-//            $obj_arr['openid']         = $yee['openID'];
-//            $obj_arr['paymentType']    = 'YEEPay';
-//            $tt['content'] = json_encode($obj_arr);
-//            M('testt')->add($tt);
+             $yee = json_decode($yee,TRUE);
+            $obj_arr['out_trade_no'] = $yee['orderId'];
+            $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
+            $obj_arr['result_code']    = $yee['status'];
+            $obj_arr['openid']         = $yee['openID'];
+            $obj_arr['paymentType']    = 'YEEPay';
+            $tt['content'] = json_encode($obj_arr);
+            M('testt')->add($tt);
 
         }
 
