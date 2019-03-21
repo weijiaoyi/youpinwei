@@ -925,10 +925,10 @@ class WechatController extends CommentoilcardController
 //        $openId=$obj_arr['openid'];
 
         //签名验证
-        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' ) || ($obj_arr['status']=='SUCCESS' && $obj_arr['paymentType'] == 'YEEPay' )) {
-//            $insert['content']['signs'] = '签名正确';
-//            $insert['content'] = json_encode($insert['content']);
-//            M('testt')->add($insert);
+        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' ) || ($obj_arr['result_code']=='SUCCESS' && $obj_arr['paymentType'] == 'YEEPay' )) {
+            $insert['content']['signs'] = '签名正确';
+            $insert['content'] = json_encode($insert['content']);
+            M('testt')->add($insert);
             //获取用户信息 根据微信openid查询对应的用户
             //获取订单信息
             $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();
@@ -1107,6 +1107,8 @@ class WechatController extends CommentoilcardController
                 exit(json_encode(['result'=>'SUCCESS']));
             }elseif($obj_arr['paymentType'] == 'QFPay'){
                 echo 'SUCCESS';exit;
+            }elseif($obj_arr['paymentType'] == 'YEEPay'){
+                echo 'SUCCESS';exit;
             }
             return $this->arrayToXml(['return_code'=>'SUCCESS','return_msg'=>'OK']);
             // return log::record(XML::build($data));
@@ -1120,6 +1122,8 @@ class WechatController extends CommentoilcardController
             }elseif($obj_arr['paymentType'] == 'HjPay'){
                 exit(json_encode(['result'=>'SUCCESS']));
             }elseif($obj_arr['paymentType'] == 'QFPay'){
+                echo 'SUCCESS';exit;
+            }elseif($obj_arr['paymentType'] == 'YEEPay'){
                 echo 'SUCCESS';exit;
             }
            Log::record('签名错误，订单号:'.$obj_arr['out_trade_no']);
