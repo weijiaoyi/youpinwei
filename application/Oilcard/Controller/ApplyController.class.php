@@ -268,7 +268,7 @@ class ApplyController extends CommentoilcardController
 
         // $Wiki = new WikiController();
         // $data = $Wiki->agentPay($OrderInfo,$data,$openid);
-
+print_r($data);
         if (empty($data))exit(json_encode(['msg'=>'微信下单失败！','status'=>500]));
         $res= M('user_apply')->add($user_applu_data);   //单独申领表添加申领信息（未支付成功）
         $OrderInfo= M('order_record')->add($OrderInfo);   //添加订单
