@@ -117,15 +117,17 @@ abstract class YopSignUtils{
 
        ($privateKey) or die('密钥不可用');
 
-
+       $tt['content'] = 4;
+       M('testt')->add($tt);
        //分解参数
        $args = explode('$', $source);
-
+       $tt['content'] = 5;
+       M('testt')->add($tt);
 
        if (count($args) != 4) {
            die('source invalid : ');
        }
-       $tt['content'] = 5;
+       $tt['content'] = 6;
        M('testt')->add($tt);
        $encryptedRandomKeyToBase64 = $args[0];
        $encryptedDataToBase64 = $args[1];
