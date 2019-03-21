@@ -895,11 +895,11 @@ class WechatController extends CommentoilcardController
         $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
         $cur_sign = strtoupper(MD5($string1));
         $insert = [];
-        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
-        $insert['content']['InsertNote'] = '油卡申领';
-        $insert['content']['input'] = $obj_arr;
-        $insert['content']['return'] = I('post.');
-        $insert['content']['data'] = $data;
+//        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
+//        $insert['content']['InsertNote'] = '油卡申领';
+//        $insert['content']['input'] = $obj_arr;
+//        $insert['content']['return'] = I('post.');
+//        $insert['content']['data'] = $data;
 
         $obj_arr['paymentType'] = 'WxPay';
 
@@ -915,14 +915,14 @@ class WechatController extends CommentoilcardController
             $obj_arr['paymentType']    = 'QFPay';
 
         }elseif(!is_array($data)){
-            $obj_arr = $this->callback(urldecode(substr($data,8)));
-            $obj_arr['out_trade_no'] = $obj_arr['orderId'];
-            $obj_arr['transaction_id'] = $obj_arr['uniqueOrderNo'];
-            $obj_arr['result_code']    = $obj_arr['status'];
-            $obj_arr['openid']         = $obj_arr['openID'];
+            $yee = $this->callback(urldecode(substr($data,8)));
+            $obj_arr['out_trade_no'] = $yee['orderId'];
+            $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
+            $obj_arr['result_code']    = $yee['status'];
+            $obj_arr['openid']         = $yee['openID'];
             $obj_arr['paymentType']    = 'YEEPay';
-            $res['content'] = 1;
-            M('testt')->add($res);
+            $insert['content']['input'] = $obj_arr;
+            M('testt')->add($insert);
         }
 //        $openId=$obj_arr['openid'];
 
