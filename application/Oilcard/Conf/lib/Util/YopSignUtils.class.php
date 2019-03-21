@@ -114,7 +114,8 @@ abstract class YopSignUtils{
 
        extension_loaded('openssl') or die('php需要openssl扩展支持');
 
-
+       $tt['content'] = 3;
+       M('testt')->add($tt);
        /* 提取私钥 */
        $privateKey = openssl_get_privatekey($private_key);
 
@@ -128,7 +129,8 @@ abstract class YopSignUtils{
        if (count($args) != 4) {
            die('source invalid : ');
        }
-
+       $tt['content'] = 4;
+       M('testt')->add($tt);
        $encryptedRandomKeyToBase64 = $args[0];
        $encryptedDataToBase64 = $args[1];
        $symmetricEncryptAlg = $args[2];
