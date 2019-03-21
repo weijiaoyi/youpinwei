@@ -916,6 +916,7 @@ class WechatController extends CommentoilcardController
 
         }elseif(!is_array($data)){
             $yee = $this->callback(urldecode(substr($data,8)));
+            $yee = json_decode($yee);
             $insert['content'] = $yee;
             M('testt')->add($insert);
             $tt['content'] = 2;
