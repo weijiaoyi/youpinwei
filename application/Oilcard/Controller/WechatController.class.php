@@ -880,28 +880,28 @@ class WechatController extends CommentoilcardController
     public function wxAgentNoticePay()
     {
         $data = file_get_contents('php://input');
-//        Log::record('银牌申领回调:');
-//        $obj_arr = XML::parse($data);
-//
-//        if (!$obj_arr) {
-//            $obj_arr= json_decode($data,TRUE);
-//        }
-//
-//        $sign = $obj_arr['sign'];
-//        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
-//        $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
-//        unset($obj_arr['sign']);
-//        ksort($obj_arr);
-//        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
-//        $cur_sign = strtoupper(MD5($string1));
-//        $insert = [];
-//        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
-//        $insert['content']['InsertNote'] = '油卡申领';
-//        $insert['content']['input'] = $obj_arr;
-//        $insert['content']['return'] = I('post.');
-//        $insert['content']['data'] = $data;
-//
-//        $obj_arr['paymentType'] = 'WxPay';
+        Log::record('银牌申领回调:');
+        $obj_arr = XML::parse($data);
+
+        if (!$obj_arr) {
+            $obj_arr= json_decode($data,TRUE);
+        }
+
+        $sign = $obj_arr['sign'];
+        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
+        $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
+        unset($obj_arr['sign']);
+        ksort($obj_arr);
+        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
+        $cur_sign = strtoupper(MD5($string1));
+        $insert = [];
+        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
+        $insert['content']['InsertNote'] = '油卡申领';
+        $insert['content']['input'] = $obj_arr;
+        $insert['content']['return'] = I('post.');
+        $insert['content']['data'] = $data;
+
+        $obj_arr['paymentType'] = 'WxPay';
 
         if (isset($obj_arr['event'])) {
             $obj_arr['out_trade_no']   = $obj_arr['outTradeNo'];
@@ -915,19 +915,17 @@ class WechatController extends CommentoilcardController
             $obj_arr['paymentType']    = 'QFPay';
 
         }elseif(!is_array($data)){
-            $tt['content'] = substr($data,8);
-            M('testt')->add($tt);
             $obj_arr = $this->callback(urldecode(substr($data,8)));
-            $insert['content']['yee'] = $obj_arr;
-
-            $insert['content'] = json_encode($insert['content']);
-            M('testt')->add($insert);
-
+            $obj_arr['out_trade_no'] = $obj_arr['orderId'];
+            $obj_arr['transaction_id'] = $obj_arr['uniqueOrderNo'];
+            $obj_arr['result_code']    = $obj_arr['status'];
+            $obj_arr['openid']         = $obj_arr['openID'];
+            $obj_arr['paymentType']    = 'YEEPay';
         }
 //        $openId=$obj_arr['openid'];
 
         //签名验证
-        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' ) ) {
+        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' ) || ($obj_arr['status']=='SUCCESS' && $obj_arr['paymentType'] == 'YEEPay' )) {
 //            $insert['content']['signs'] = '签名正确';
 //            $insert['content'] = json_encode($insert['content']);
 //            M('testt')->add($insert);
