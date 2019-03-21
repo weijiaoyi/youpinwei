@@ -117,8 +117,7 @@ abstract class YopSignUtils{
 
        ($privateKey) or die('密钥不可用');
 
-       $tt['content'] = 4;
-       M('testt')->add($tt);
+
        //分解参数
        $args = explode('$', $source);
 
