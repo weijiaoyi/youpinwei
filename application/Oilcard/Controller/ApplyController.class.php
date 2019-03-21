@@ -414,7 +414,7 @@ class ApplyController extends CommentoilcardController
         $data=M('packages')->select();
         foreach ($data as $key => $v) {
             if ($key==0) {
-                $data[$key]['scale']=substr($v['scale'], 0, -2).'/折';
+                $data[$key]['scale']=$v['scale'].'/折';;
             }else{
                 $data[$key]['scale']=$v['scale'].'/折';
             }
