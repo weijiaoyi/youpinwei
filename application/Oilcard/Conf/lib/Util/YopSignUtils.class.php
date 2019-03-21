@@ -121,7 +121,7 @@ abstract class YopSignUtils{
        M('testt')->add($tt);
        //分解参数
        $args = explode('$', $source);
-      
+
 
        if (count($args) != 4) {
            die('source invalid : ');

@@ -880,28 +880,28 @@ class WechatController extends CommentoilcardController
     public function wxAgentNoticePay()
     {
         $data = file_get_contents('php://input');
-//        Log::record('银牌申领回调:');
-//        $obj_arr = XML::parse($data);
-//
-//        if (!$obj_arr) {
-//            $obj_arr= json_decode($data,TRUE);
-//        }
+        Log::record('银牌申领回调:');
+        $obj_arr = XML::parse($data);
 
-//        $sign = $obj_arr['sign'];
-//        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
-//        $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
-//        unset($obj_arr['sign']);
-//        ksort($obj_arr);
-//        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
-//        $cur_sign = strtoupper(MD5($string1));
-//        $insert = [];
-//        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
-//        $insert['content']['InsertNote'] = '油卡申领';
-//        $insert['content']['input'] = $obj_arr;
-//        $insert['content']['return'] = I('post.');
-//        $insert['content']['data'] = $data;
-//
-//        $obj_arr['paymentType'] = 'WxPay';
+        if (!$obj_arr) {
+            $obj_arr= json_decode($data,TRUE);
+        }
+
+        $sign = $obj_arr['sign'];
+        $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
+        $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
+        unset($obj_arr['sign']);
+        ksort($obj_arr);
+        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
+        $cur_sign = strtoupper(MD5($string1));
+        $insert = [];
+        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
+        $insert['content']['InsertNote'] = '油卡申领';
+        $insert['content']['input'] = $obj_arr;
+        $insert['content']['return'] = I('post.');
+        $insert['content']['data'] = $data;
+
+        $obj_arr['paymentType'] = 'WxPay';
         // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
         // $RAW = json_decode($RAW);
         // $obj_arr = object_to_array($RAW);
@@ -919,7 +919,7 @@ class WechatController extends CommentoilcardController
         }elseif(!is_array($data)){
             $tt['content'] = $data;
             M('testt')->add($tt);
-            $obj_arr = $this->callback($data);
+            $obj_arr = $this->callback(urldecode($data));
             $insert['content']['yee'] = $obj_arr;
 
             $insert['content'] = json_encode($insert['content']);
