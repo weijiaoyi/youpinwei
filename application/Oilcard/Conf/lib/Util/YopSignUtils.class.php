@@ -105,8 +105,6 @@ abstract class YopSignUtils{
   
    static function decrypt($source,$private_Key, $public_Key)
    {
-       $tt['content'] = 2;
-       M('testt')->add($tt);
 
        $private_key = "-----BEGIN RSA PRIVATE KEY-----\n" .
            wordwrap($private_Key, 64, "\n", true) .
@@ -114,8 +112,6 @@ abstract class YopSignUtils{
 
        extension_loaded('openssl') or die('php需要openssl扩展支持');
 
-       $tt['content'] = 3;
-       M('testt')->add($tt);
        /* 提取私钥 */
        $privateKey = openssl_get_privatekey($private_key);
 
