@@ -940,7 +940,7 @@ Ti1eBtEbW5HqLVqH/aX9RPvgN2wcdjJ9AS5Bywhv2p/H8Q6YFcJLzAt7GpXoxAqk
             $obj_arr['result_code']    = $obj_arr['status']==1?'SUCCESS':'FAIL';
             $obj_arr['paymentType']    = 'QFPay';
 
-        }elseif (isset($data['response'])){
+        }elseif (!(is_array($data))){
             $obj_arr = $this->callback($data);
             $insert['content']['yee'] = $obj_arr;
 
