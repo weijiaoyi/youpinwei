@@ -878,6 +878,7 @@ class WechatController extends CommentoilcardController
         if (!$obj_arr) {
             $obj_arr= json_decode($data,TRUE);
         }
+
         $sign = $obj_arr['sign'];
         $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
         $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
@@ -892,6 +893,8 @@ class WechatController extends CommentoilcardController
         $insert['content']['return'] = I('post.');
         $insert['content']['data'] = $data;
 
+            $insert['content'] = json_encode($insert['content']);
+            M('testt')->add($insert);
         $obj_arr['paymentType'] = 'WxPay';
         // $RAW = $GLOBALS['HTTP_RAW_POST_DATA'];
         // $RAW = json_decode($RAW);
@@ -912,9 +915,9 @@ class WechatController extends CommentoilcardController
 
         //签名验证
         if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' )) {
-            $insert['content']['signs'] = '签名正确';
-            $insert['content'] = json_encode($insert['content']);
-            M('testt')->add($insert);
+//            $insert['content']['signs'] = '签名正确';
+//            $insert['content'] = json_encode($insert['content']);
+//            M('testt')->add($insert);
             //获取用户信息 根据微信openid查询对应的用户
             //获取订单信息
             $OrderInfo = M('order_record')->where(['serial_number'=>$obj_arr['out_trade_no']])->find();

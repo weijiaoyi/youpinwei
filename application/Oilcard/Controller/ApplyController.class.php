@@ -234,7 +234,7 @@ class ApplyController extends CommentoilcardController
         /*$wechat = new WechatController();
         $data = $wechat->agentPay($OrderInfo,$data,$openid);*/
         $PayCon = [
-                'body'     => 'ypw',
+                'body'     => '油卡申领',
                 'detail'   => '油卡申领',
                 'attach'   => '油卡申领',
                 'paymoney' => $config['paymoney'],
@@ -258,10 +258,7 @@ class ApplyController extends CommentoilcardController
                 break;
             case '9': //易宝支付
                 $data = $PayMent->_YEEPay($OrderInfo,$Member,$PayCon);
-//                echo 1111;
-//                print_r($data);
                 $data = json_decode($data);
-                
                 $OrderInfo['payment_code'] = 'yeepay';
                 break;
             case '4': //易支付
