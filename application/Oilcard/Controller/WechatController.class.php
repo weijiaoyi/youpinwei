@@ -923,7 +923,7 @@ class WechatController extends CommentoilcardController
         $insert = [];
         $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
         $insert['content']['InsertNote'] = '油卡申领';
-        $insert['content']['input'] = $obj_arr;
+
         $insert['content']['return'] = I('post.');
         $insert['content']['data'] = $data;
 
@@ -949,7 +949,7 @@ class WechatController extends CommentoilcardController
             $obj_arr['openid']         = $yee['openID'];
             $obj_arr['paymentType']    = 'YEEPay';
         }
-
+                    $insert['content']['input'] = $obj_arr;  
         $insert['content'] = json_encode($insert['content']);
      M('testt')->add($insert);
 //     $openId=$obj_arr['openid'];
