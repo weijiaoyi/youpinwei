@@ -10,6 +10,7 @@
 <body>
 
 <div class="wrap js-check-wrap">
+
     <ul class="nav nav-tabs" style="margin-bottom: 20px;">
         <li><a href="<?php echo U('Admin/Deliver/C_deliverList'); ?>">申领订单</a></li>
         <li><a href="<?php echo U('Admin/Deliver/CardBindList'); ?>">绑卡订单</a></li>
@@ -142,9 +143,11 @@
     /** 订单编号(关键字搜索) */
     $(document).on('click','.order-number-pay-keyword',function(){
         var keyword = $('input[name=keyword]').val();
+        var hostUrl=window.location.href;
+
         $.ajax({
             type:'post',
-            url:'http://ysy.xiangjianhai.com/index.php?g=admin&m=order&a=R_orderNumberKeyword',
+            url:hostUrl+'/index.php?g=admin&m=order&a=R_orderNumberKeyword',
             data:{keyword:keyword},
             dataType:'json',
             success:function(result){
@@ -153,5 +156,6 @@
             }
         })
 
-    })
+    });
+
 </script>
