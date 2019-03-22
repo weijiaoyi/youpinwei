@@ -923,10 +923,12 @@ class WechatController extends CommentoilcardController
         $insert = [];
         $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
         $insert['content']['InsertNote'] = '油卡申领';
-        $insert['content']['input'] = $obj_arr;
+
         $insert['content']['return'] = I('post.');
         $insert['content']['data'] = $data;
-        $obj_arr['paymentType'] = 'WxPay';
+
+
+
         if (isset($obj_arr['event'])) {
             $obj_arr['out_trade_no']   = $obj_arr['outTradeNo'];
             $obj_arr['transaction_id'] = $obj_arr['reqId'];
@@ -946,12 +948,13 @@ class WechatController extends CommentoilcardController
             $obj_arr['result_code']    = $yee['status'];
             $obj_arr['openid']         = $yee['openID'];
             $obj_arr['paymentType']    = 'YEEPay';
-            $tt['content'] = json_encode($obj_arr);
-            M('testt')->add($tt);
-
+        }else{
+              $obj_arr['paymentType'] = 'WxPay';
         }
-
-//        $openId=$obj_arr['openid'];
+        $insert['content']['input'] = $obj_arr;
+        $insert['content'] = json_encode($insert['content']);
+     M('testt')->add($insert);
+//     $openId=$obj_arr['openid'];
 
         //签名验证
         if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' ) || ($obj_arr['result_code']=='SUCCESS' && $obj_arr['paymentType'] == 'YEEPay' )) {

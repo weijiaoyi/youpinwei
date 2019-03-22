@@ -296,6 +296,7 @@ right: initial !important;}
 	function autoPlay() {
 		var myAuto = document.getElementById("myaudio");
 		myAuto.play();
+		console.log("autoPlay");
 	}
 
 	setInterval(function() {
@@ -311,7 +312,7 @@ right: initial !important;}
 				}
 			}
 		});
-	}, 10*60*1000);
+	}, 5*60*1000);
 	</script>
 	<script src="__PUBLIC__/js/common.js"></script>
 	<script src="__TMPL__Public/assets/js/index.js"></script>
