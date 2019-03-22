@@ -258,7 +258,7 @@ class ApplyController extends CommentoilcardController
                 break;
             case '9': //易宝支付
                 $data = $PayMent->_YEEPay($OrderInfo,$Member,$PayCon);
-                $data = json_decode($data);
+                $data = json_decode($data,true);
                 $OrderInfo['payment_code'] = 'yeepay';
                 break;
             case '4': //易支付

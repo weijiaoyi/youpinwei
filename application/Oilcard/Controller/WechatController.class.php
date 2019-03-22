@@ -427,6 +427,7 @@ class WechatController extends CommentoilcardController
                 break;
             case '9': //易宝支付
                 $data = $this->_YEEPay($Order,$Member,$PayCon);
+                $data = json_decode($data,true);
                 $Order['payment_code'] = 'yeepay';
                 break;
             case '4': //易支付
@@ -555,10 +556,19 @@ class WechatController extends CommentoilcardController
             $obj_arr['result_code']    = $obj_arr['status']==1?'SUCCESS':'FAIL';
             $obj_arr['paymentType']    = 'QFPay';
 
+        }elseif(!is_array($data)){
+            $yee = $this->callback(urldecode(substr($data,8)));
+             $yee = json_decode($yee,TRUE);
+            $obj_arr['out_trade_no'] = $yee['orderId'];
+            $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
+            $obj_arr['result_code']    = $yee['status'];
+            $obj_arr['openid']         = $yee['openID'];
+            $obj_arr['paymentType']    = 'YEEPay';
+            $tt['content'] = json_encode($obj_arr);
+            M('testt')->add($tt);
+
         }
-
-
-        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' )) {
+        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' ) || ($obj_arr['result_code']=='SUCCESS' && $obj_arr['paymentType'] == 'YEEPay' )) {
             $insert['content']['signs'] = '签名正确';
             $insert['content'] = json_encode($insert['content']);
             //存数据
@@ -677,6 +687,8 @@ class WechatController extends CommentoilcardController
                         exit(json_encode(['result'=>'SUCCESS']));
                     }elseif($obj_arr['paymentType'] == 'QFPay'){
                         echo 'SUCCESS';exit;
+                    }elseif($obj_arr['paymentType'] == 'YEEPay'){
+                        echo 'SUCCESS';exit;
                     }
                     echo 'FAIL';exit;
                 }
@@ -714,6 +726,8 @@ class WechatController extends CommentoilcardController
                             }elseif($obj_arr['paymentType'] == 'HjPay'){
                                 exit(json_encode(['result'=>'SUCCESS']));
                             }elseif($obj_arr['paymentType'] == 'QFPay'){
+                                echo 'SUCCESS';exit;
+                            }elseif($obj_arr['paymentType'] == 'YEEPay'){
                                 echo 'SUCCESS';exit;
                             }
                         }
@@ -779,7 +793,10 @@ class WechatController extends CommentoilcardController
                             exit(json_encode(['result'=>'SUCCESS']));
                         }elseif($obj_arr['paymentType'] == 'QFPay'){
                             echo 'SUCCESS';exit;
+                        }elseif($obj_arr['paymentType'] == 'YEEPay'){
+                            echo 'SUCCESS';exit;
                         }
+
                     }
                     //总收益
                     $AgentSave['total_earnings'] = $Agent['total_earnings'] + $rewardMoney;
@@ -799,6 +816,8 @@ class WechatController extends CommentoilcardController
                         }elseif($obj_arr['paymentType'] == 'HjPay'){
                             exit(json_encode(['result'=>'SUCCESS']));
                         }elseif($obj_arr['paymentType'] == 'QFPay'){
+                            echo 'SUCCESS';exit;
+                        }elseif($obj_arr['paymentType'] == 'YEEPay'){
                             echo 'SUCCESS';exit;
                         }
                     }
@@ -843,7 +862,11 @@ class WechatController extends CommentoilcardController
                 exit(json_encode(['result'=>'SUCCESS']));
             }elseif($obj_arr['paymentType'] == 'QFPay'){
                 echo 'SUCCESS';exit;
+            }elseif($obj_arr['paymentType'] == 'YEEPay'){
+                 echo 'SUCCESS';exit;
             }
+
+
             return $this->arrayToXml($data);
         }else{
             // echo 'FAIL';exit;
@@ -853,7 +876,10 @@ class WechatController extends CommentoilcardController
                 exit(json_encode(['result'=>'SUCCESS']));
             }elseif($obj_arr['paymentType'] == 'QFPay'){
                 echo 'SUCCESS';exit;
+            }elseif($obj_arr['paymentType'] == 'YEEPay'){
+                echo 'SUCCESS';exit;
             }
+
             return $this->arrayToXml(['return_code'=>'FAIL','return_msg'=>'支付失败']);
         }
         
@@ -900,9 +926,7 @@ class WechatController extends CommentoilcardController
         $insert['content']['input'] = $obj_arr;
         $insert['content']['return'] = I('post.');
         $insert['content']['data'] = $data;
-
         $obj_arr['paymentType'] = 'WxPay';
-
         if (isset($obj_arr['event'])) {
             $obj_arr['out_trade_no']   = $obj_arr['outTradeNo'];
             $obj_arr['transaction_id'] = $obj_arr['reqId'];
@@ -1280,11 +1304,23 @@ class WechatController extends CommentoilcardController
             $obj_arr['transaction_id'] = $obj_arr['syssn'];
             $obj_arr['result_code']    = $obj_arr['status']==1?'SUCCESS':'FAIL';
             $obj_arr['paymentType']    = 'QFPay';
-
+        }elseif(!is_array($data)){
+            $yee = $this->callback(urldecode(substr($data,8)));
+             $yee = json_decode($yee,TRUE);
+            $obj_arr['out_trade_no'] = $yee['orderId'];
+            $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
+            $obj_arr['result_code']    = $yee['status'];
+            $obj_arr['openid']         = $yee['openID'];
+            $obj_arr['paymentType']    = 'YEEPay';
+            $tt['content'] = json_encode($obj_arr);
+            M('testt')->add($tt);
         }
+
+
+
 //        $openId=$obj_arr['openid'];
 
-        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' )) {
+        if( ($cur_sign === $sign && $obj_arr['paymentType'] == 'WxPay' ) || ($obj_arr['paymentType'] == 'HjPay' && $obj_arr['tradeStatus']==1) || ($obj_arr['respcd']=='0000' && $obj_arr['paymentType'] == 'QFPay' ) || ($obj_arr['result_code']=='SUCCESS' && $obj_arr['paymentType'] == 'YEEPay' )) {
             if($obj_arr['result_code']=='SUCCESS'){
 
 
@@ -1342,6 +1378,8 @@ class WechatController extends CommentoilcardController
                         exit(json_encode(['result'=>'SUCCESS']));
                     }elseif($obj_arr['paymentType'] == 'QFPay'){
                         echo 'SUCCESS';exit;
+                    }elseif($obj_arr['paymentType'] == 'YEEPay'){
+                        echo 'SUCCESS';exit;
                     }
                     
                 }else{
@@ -1353,7 +1391,10 @@ class WechatController extends CommentoilcardController
                         exit(json_encode(['result'=>'SUCCESS']));
                     }elseif($obj_arr['paymentType'] == 'QFPay'){
                         echo 'SUCCESS';exit;
+                    }elseif($obj_arr['paymentType'] == 'YEEPay'){
+                        echo 'SUCCESS';exit;
                     }
+
                 }
             }else{
                 $insert['content']='支付失败';
@@ -1364,7 +1405,10 @@ class WechatController extends CommentoilcardController
                     exit(json_encode(['result'=>'SUCCESS']));
                 }elseif($obj_arr['paymentType'] == 'QFPay'){
                     echo 'SUCCESS';exit;
+                }elseif($obj_arr['paymentType'] == 'YEEPay'){
+                    echo 'SUCCESS';exit;
                 }
+
             }
         } else {
             $insert['content']='签名错误';
@@ -1375,8 +1419,9 @@ class WechatController extends CommentoilcardController
                 exit(json_encode(['result'=>'SUCCESS']));
             }elseif($obj_arr['paymentType'] == 'QFPay'){
                 echo 'SUCCESS';exit;
+            }elseif($obj_arr['paymentType'] == 'YEEPay'){
+                 echo 'SUCCESS';exit;
             }
-
             
 
 
