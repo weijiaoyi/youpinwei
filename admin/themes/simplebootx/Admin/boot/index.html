@@ -145,6 +145,12 @@ right: initial !important;}
 </head>
 
 <body style="min-width:900px;" screen_capture_injected="true">
+<div>
+	<audio id="myaudio" style="display:none" controls>
+		<source src="https://ypw.upinwe.com/data/upload/admin/Prompt/order_prompt.mp3" type="audio/mpeg" />
+		您的浏览器不支持 audio 元素。
+	</audio>
+</div>
 	<div id="loading"><i class="loadingicon"></i><span>{:L('LOADING')}</span></div>
 	<div id="right_tools_wrapper">
 		<!--<span id="right_tools_clearcache" title="清除缓存" onclick="javascript:openapp('{:U('admin/setting/clearcache')}','right_tool_clearcache','清除缓存');"><i class="fa fa-trash-o right_tool_icon"></i></span>-->
@@ -286,6 +292,26 @@ right: initial !important;}
 		$(closest_a_next).slideToggle(150).parent().toggleClass("open");
 		return false;
 	});
+
+	function autoPlay() {
+		var myAuto = document.getElementById("myaudio");
+		myAuto.play();
+	}
+
+	setInterval(function() {
+		var that=this;
+		var hostUrl=window.location.href;
+		$.ajax({
+			type:"get",
+			url:hostUrl+'index.php?g=admin&m=Prompt&a=siNewOrder',
+			dataType:'json',
+			success:function (res) {
+				if(res.status){
+					autoPlay()
+				}
+			}
+		});
+	}, 10*60*1000);
 	</script>
 	<script src="__PUBLIC__/js/common.js"></script>
 	<script src="__TMPL__Public/assets/js/index.js"></script>
