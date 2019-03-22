@@ -16,7 +16,7 @@ class PromptController extends AdminbaseController
      */
     public function  siNewOrder(){
         $OrderRecordModel = M('order_record');
-        $where='order_type in(1,3) AND order_status = 2 AND is_import = 1 ';
+        $where='order_type = 3 AND order_status = 2 AND is_import = 1 ';
         $news = $OrderRecordModel->where($where)-> count();
         if($news>0){
             exit( json_encode(['status'=>1,'msg'=>'有新的订单']) );
