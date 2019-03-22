@@ -913,19 +913,17 @@ class WechatController extends CommentoilcardController
             $obj_arr= json_decode($data,TRUE);
         }
 
-        $sign = $obj_arr['sign'];
+
         $NowTime = date('Y-m-d H:i:s',TIMESTAMP);
         $EndTime = date("Y-m-d H:i:s",strtotime("+1years"));//过期时间 1年
-        unset($obj_arr['sign']);
-        ksort($obj_arr);
-        $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
-        $cur_sign = strtoupper(MD5($string1));
-        $insert = [];
-        $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());
-        $insert['content']['InsertNote'] = '油卡申领';
 
-        $insert['content']['return'] = I('post.');
-        $insert['content']['data'] = $data;
+
+
+
+
+
+
+
 
 
 
@@ -940,17 +938,31 @@ class WechatController extends CommentoilcardController
             $obj_arr['result_code']    = $obj_arr['status']==1?'SUCCESS':'FAIL';
             $obj_arr['paymentType']    = 'QFPay';
 
-        }elseif(!is_array($data)){
-            $yee = $this->callback(urldecode(substr($data,8)));
-             $yee = json_decode($yee,TRUE);
-            $obj_arr['out_trade_no'] = $yee['orderId'];
-            $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
-            $obj_arr['result_code']    = $yee['status'];
-            $obj_arr['openid']         = $yee['openID'];
-            $obj_arr['paymentType']    = 'YEEPay';
+        }elseif(isset($obj_arr['attach'])){
+            $sign = $obj_arr['sign'];
+            unset($obj_arr['sign']);
+            ksort($obj_arr);
+            $string1 = urldecode(http_build_query($obj_arr).'&key='.CardConfig::$wxconf['pay_key']);
+            $cur_sign = strtoupper(MD5($string1));
+             $obj_arr['paymentType'] = 'WxPay';
+
         }else{
-              $obj_arr['paymentType'] = 'WxPay';
+               $yee = $this->callback(urldecode(substr($data,8)));
+               $yee = json_decode($yee,TRUE);
+               $obj_arr['out_trade_no'] = $yee['orderId'];
+               $obj_arr['transaction_id'] = $yee['uniqueOrderNo'];
+               $obj_arr['result_code']    = $yee['status'];
+               $obj_arr['openid']         = $yee['openID'];
+               $obj_arr['paymentType']    = 'YEEPay';
         }
+
+
+          $insert = [];                                                             
+          $insert['content']['InsertTime'] = date('Y-m-d H:i:s',time());            
+          $insert['content']['InsertNote'] = '油卡申领';                                
+          $insert['content']['return'] = I('post.');                                
+          $insert['content']['data'] = $data;                                       
+
         $insert['content']['input'] = $obj_arr;
         $insert['content'] = json_encode($insert['content']);
      M('testt')->add($insert);
