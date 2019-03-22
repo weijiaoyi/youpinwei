@@ -271,6 +271,7 @@ class IntegralController extends CommentoilcardController
                     break;
                 case '9': //易宝支付
                     $data = $PayMent->_YEEPay($OrderAdd,$Member,$PayCon);
+                    $data = json_decode($data,true);
                     $OrderAdd['payment_code'] = 'yeepay';
                     break;
                 case '4': //易支付
