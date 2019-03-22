@@ -926,6 +926,8 @@ class WechatController extends CommentoilcardController
         $insert['content']['input'] = $obj_arr;
         $insert['content']['return'] = I('post.');
         $insert['content']['data'] = $data;
+         $insert['content'] = json_encode($insert['content']);
+         M('testt')->add($insert);                            
         $obj_arr['paymentType'] = 'WxPay';
         if (isset($obj_arr['event'])) {
             $obj_arr['out_trade_no']   = $obj_arr['outTradeNo'];
@@ -946,9 +948,6 @@ class WechatController extends CommentoilcardController
             $obj_arr['result_code']    = $yee['status'];
             $obj_arr['openid']         = $yee['openID'];
             $obj_arr['paymentType']    = 'YEEPay';
-            $tt['content'] = json_encode($obj_arr);
-            M('testt')->add($tt);
-
         }
 
 //        $openId=$obj_arr['openid'];
